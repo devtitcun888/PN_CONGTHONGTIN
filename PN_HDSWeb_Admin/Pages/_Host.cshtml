@@ -378,6 +378,17 @@
     -->
     <script src="_framework/blazor.server.js"></script>
 
+    <script>
+        // Ẩn loading mặc định sớm hơn nếu DOM đã sẵn sàng
+        document.addEventListener('DOMContentLoaded', function () {
+            setTimeout(function () {
+                if (window.hideAppLoading) {
+                    window.hideAppLoading(0);
+                }
+            }, 800);
+        });
+    </script>
+
 </body>
 </html>
 
@@ -396,17 +407,18 @@
                 var el = document.getElementById('app-loading');
                 if (!el) return;
                 el.classList.add('hide');
-                setTimeout(function () { el.remove(); }, 600);
+                setTimeout(function () { el.remove(); }, 100);
             }, delayMs || 0);
         };
 
-        // FALLBACK: tự ẩn sau 6s nếu Blazor không gọi được
+        // FALLBACK: tự ẩn sớm nếu Blazor/JS interop chưa kịp gọi hideAppLoading
+        // Giảm thời gian chờ để tránh cảm giác "Đang tải hệ thống" bị lâu.
         setTimeout(function () {
             if (!_hidden) {
-                console.warn('[AppLoading] Fallback hide (6s timeout).');
+                console.warn('[AppLoading] Fallback hide (2.5s timeout).');
                 window.hideAppLoading(0);
             }
-        }, 6000);
+        }, 2500);
     })();
 
     // ── BLAZOR RECONNECTION HANDLER ─────────────────────────────────────────

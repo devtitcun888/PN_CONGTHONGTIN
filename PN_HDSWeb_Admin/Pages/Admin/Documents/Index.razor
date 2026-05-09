@@ -1,0 +1,122 @@
+@page "/admin/documents"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminDocumentService AdminDocumentService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Quản lý văn bản công khai</h1>
+            <p>Quản lý các văn bản công khai của trường.</p>
+        </div>
+
+        <div>
+            <input @bind="keyword" placeholder="Tìm kiếm" />
+            <input @bind="status" placeholder="Trạng thái" />
+            <button @onclick="SearchAsync">Tìm</button>
+            <button @onclick="ResetAsync">Xóa lọc</button>
+            <button @onclick='@(() => Nav.NavigateTo("/admin/documents/edit"))'>Thêm mới</button>
+        </div>
+
+        @if (documents == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tiêu đề</th>
+                        <th>Số hiệu</th>
+                        <th>Trạng thái</th>
+                        <th>Ngày tạo</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in documents)
+                    {
+                        <tr>
+                            <td>@item.DocTitle</td>
+                            <td>@item.DocNumber</td>
+                            <td>@item.Status</td>
+                            <td>@item.CreatedAt</td>
+                            <td>
+                                <button @onclick="@(() => Nav.NavigateTo($"/admin/documents/edit/{item.Id}"))">Sửa</button>
+                                <button @onclick="@(() => DeleteAsync(item))">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div>
+                <button @onclick="PrevPageAsync" disabled="@(trang <= 1)">Trang trước</button>
+                <span>Trang @trang / @totalPages</span>
+                <button @onclick="NextPageAsync" disabled="@(trang >= totalPages)">Trang sau</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminDocumentItem>? documents;
+    private string? keyword;
+    private string? status;
+    private int trang = 1;
+    private int pageSize = 20;
+    private int totalCount;
+    private int totalPages => Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        totalCount = await AdminDocumentService.GetDocumentsCountAsync(PN_PublicVariables.MaTruong, keyword, status);
+        documents = await AdminDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, keyword, status, trang, pageSize);
+    }
+
+    private async Task SearchAsync()
+    {
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task ResetAsync()
+    {
+        keyword = string.Empty;
+        status = string.Empty;
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task PrevPageAsync()
+    {
+        if (trang > 1)
+        {
+            trang--;
+            await LoadAsync();
+        }
+    }
+
+    private async Task NextPageAsync()
+    {
+        if (trang < totalPages)
+        {
+            trang++;
+            await LoadAsync();
+        }
+    }
+
+    private async Task DeleteAsync(AdminDocumentItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa văn bản '{item.DocTitle}'?"))
+        {
+            await AdminDocumentService.DeleteDocumentAsync(item.Id ?? string.Empty);
+            await LoadAsync();
+        }
+    }
+}

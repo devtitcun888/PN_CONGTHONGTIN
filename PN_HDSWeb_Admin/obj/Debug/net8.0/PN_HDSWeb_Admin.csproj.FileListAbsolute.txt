@@ -4001,8 +4001,6 @@ D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\PN_HDSW
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Pages\Index.razor.rz.scp.css
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Pages\LoginPages.razor.rz.scp.css
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Shared\TopNavbar.razor.rz.scp.css

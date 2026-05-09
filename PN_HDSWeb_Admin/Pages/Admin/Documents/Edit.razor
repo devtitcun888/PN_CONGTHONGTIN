@@ -1,0 +1,160 @@
+@page "/admin/documents/edit/{Id?}"
+@attribute [Authorize(Roles = "Administrator")]
+@using Microsoft.AspNetCore.Components.Forms
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminDocumentService AdminDocumentService
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminFileStorageService FileStorage
+@inject NavigationManager Nav
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Văn bản</h1>
+            <p>Thêm mới hoặc chỉnh sửa văn bản công khai.</p>
+        </div>
+
+        @if (model == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <div class="admin-form-grid">
+                <label>
+                    Số hiệu
+                    <input class="admin-input" @bind="model.DocNumber" />
+                </label>
+                <label>
+                    Tiêu đề
+                    <input class="admin-input" @bind="model.DocTitle" />
+                </label>
+                <label>
+                    Loại văn bản
+                    <input class="admin-input" @bind="model.DocType" />
+                </label>
+                <label>
+                    Cơ quan ban hành
+                    <input class="admin-input" @bind="model.Issuer" />
+                </label>
+                <label>
+                    Tóm tắt
+                    <textarea class="admin-input" rows="3" @bind="model.Summary"></textarea>
+                </label>
+                <label>
+                    Nội dung
+                    <textarea class="admin-input" rows="8" @bind="model.Content"></textarea>
+                </label>
+                <label>
+                    File đính kèm
+                    <InputFile class="admin-input" OnChange="OnFileSelected" />
+                </label>
+                <label>
+                    Ngày ban hành
+                    <input class="admin-input" type="date" value="@IssuedDateText" @onchange="OnIssuedDateChanged" />
+                </label>
+                <label>
+                    Ngày hiệu lực
+                    <input class="admin-input" type="date" value="@EffectiveDateText" @onchange="OnEffectiveDateChanged" />
+                </label>
+                <label>
+                    Hết hiệu lực
+                    <input class="admin-input" type="date" value="@ExpireDateText" @onchange="OnExpireDateChanged" />
+                </label>
+                <label>
+                    Trạng thái
+                    <select class="admin-input" @bind="model.Status">
+                        <option value="Draft">Nháp</option>
+                        <option value="Pending">Chờ duyệt</option>
+                        <option value="Approved">Đã duyệt</option>
+                        <option value="Published">Đã công khai</option>
+                        <option value="Rejected">Từ chối</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="admin-preview-box">
+                <p><strong>Preview file:</strong></p>
+                @if (!string.IsNullOrWhiteSpace(model.FileUrl))
+                {
+                    <a href="@model.FileUrl" target="_blank">@model.FileUrl</a>
+                }
+                else
+                {
+                    <p>Chưa có file</p>
+                }
+            </div>
+
+            <div class="admin-form-actions">
+                <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
+                <button class="btn btn-secondary" @onclick='@(() => Nav.NavigateTo("/admin/documents"))'>Quay lại</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private AdminDocumentDetail? model;
+    private string? IssuedDateText;
+    private string? EffectiveDateText;
+    private string? ExpireDateText;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Id))
+        {
+            model = await AdminDocumentService.GetDocumentByIdAsync(Id);
+        }
+
+        model ??= new AdminDocumentDetail
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            Status = "Draft",
+            VersionNo = 1
+        };
+
+        IssuedDateText = model.IssuedDate?.ToString("yyyy-MM-dd");
+        EffectiveDateText = model.EffectiveDate?.ToString("yyyy-MM-dd");
+        ExpireDateText = model.ExpireDate?.ToString("yyyy-MM-dd");
+    }
+
+    private Task OnIssuedDateChanged(ChangeEventArgs e)
+    {
+        IssuedDateText = e.Value?.ToString();
+        return Task.CompletedTask;
+    }
+
+    private Task OnEffectiveDateChanged(ChangeEventArgs e)
+    {
+        EffectiveDateText = e.Value?.ToString();
+        return Task.CompletedTask;
+    }
+
+    private Task OnExpireDateChanged(ChangeEventArgs e)
+    {
+        ExpireDateText = e.Value?.ToString();
+        return Task.CompletedTask;
+    }
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+        model!.FileUrl = await FileStorage.SaveFileAsync(file, "documents") ?? model.FileUrl;
+    }
+
+    private async Task SaveAsync()
+    {
+        model!.IssuedDate = DateTime.TryParse(IssuedDateText, out var issued) ? issued : null;
+        model.EffectiveDate = DateTime.TryParse(EffectiveDateText, out var eff) ? eff : null;
+        model.ExpireDate = DateTime.TryParse(ExpireDateText, out var exp) ? exp : null;
+
+        if (string.IsNullOrWhiteSpace(model.Id))
+            await AdminDocumentService.CreateDocumentAsync(model);
+        else
+            await AdminDocumentService.UpdateDocumentAsync(model);
+
+        Nav.NavigateTo("/admin/documents");
+    }
+}

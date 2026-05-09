@@ -1,0 +1,33 @@
+@page "/pages/{Slug}"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicStaticPageService PublicStaticPageService
+
+@if (trang == null)
+{
+    <p>Đang tải hoặc không tìm thấy trang.</p>
+}
+else
+{
+    <div class="public-article">
+        <nav class="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <span>/</span>
+            <span>@trang.Title</span>
+        </nav>
+
+        <article class="article-card">
+            <h1>@trang.Title</h1>
+            <div class="article-content">@((MarkupString)(trang.Content ?? string.Empty))</div>
+        </article>
+    </div>
+}
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+    private PublicStaticPageDetail? trang;
+
+    protected override async Task OnInitializedAsync()
+    {
+        trang = await PublicStaticPageService.GetBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+    }
+}

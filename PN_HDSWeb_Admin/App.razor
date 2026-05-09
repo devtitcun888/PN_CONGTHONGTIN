@@ -1,16 +1,28 @@
-﻿@using System.Security.Claims
-@using PN_HDSWeb_Admin.Authentication
-@inject AuthenticationStateProvider AuthStateProvider
-@inject NavigationManager NavigationManager
+﻿@using PN_HDSWeb_Admin.Authentication
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">
         <Found Context="routeData">
-            <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@GetLayout(routeData.PageType)">
+                <NotAuthorized>
+                    @if (IsAdminRoute(routeData.PageType))
+                    {
+                        <RedirectToLogin />
+                    }
+                    else
+                    {
+                        <LayoutView Layout="@typeof(PublicLayout)">
+                            <div class="alert alert-warning m-5">
+                                <h4>403 - Bạn không có quyền truy cập</h4>
+                            </div>
+                        </LayoutView>
+                    }
+                </NotAuthorized>
+            </AuthorizeRouteView>
             <FocusOnNavigate RouteData="@routeData" Selector="h1:first-child" />
         </Found>
         <NotFound>
-            <LayoutView Layout="@typeof(MainLayout)">
+            <LayoutView Layout="@typeof(PublicLayout)">
                 <div class="alert alert-warning m-5">
                     <h4>404 - Trang không tìm thấy</h4>
                     <a href="/" class="btn btn-primary">Quay lại trang chủ</a>
@@ -19,3 +31,17 @@
         </NotFound>
     </Router>
 </CascadingAuthenticationState>
+
+@code {
+    private Type GetLayout(Type pageType)
+    {
+        return IsAdminRoute(pageType) ? typeof(AdminLayout) : typeof(PublicLayout);
+    }
+
+    private bool IsAdminRoute(Type pageType)
+    {
+        var fullName = pageType.FullName ?? string.Empty;
+        return fullName.Contains("Pages.Admin.", StringComparison.OrdinalIgnoreCase) ||
+               fullName.Contains("Pages.Auth.LoginPagesAdmin", StringComparison.OrdinalIgnoreCase);
+    }
+}

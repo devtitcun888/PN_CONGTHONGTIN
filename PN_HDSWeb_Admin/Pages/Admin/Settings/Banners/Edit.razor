@@ -1,0 +1,149 @@
+@page "/admin/banners/edit/{Id?}"
+@using Microsoft.AspNetCore.Components.Forms
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminBannerService AdminBannerService
+@inject IAdminFileStorageService FileStorage
+@inject NavigationManager Nav
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Banner</h1>
+            <p>Thêm mới hoặc chỉnh sửa banner hiển thị trên website.</p>
+        </div>
+
+        @if (model == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <div class="admin-form-grid">
+                <label>
+                    Tiêu đề
+                    <input class="admin-input" @bind="model.Title" />
+                </label>
+                <label>
+                    Vị trí hiển thị
+                    <select class="admin-input" @bind="model.Position">
+                        <option value="HomeTop">HomeTop</option>
+                        <option value="HomeMiddle">HomeMiddle</option>
+                        <option value="HomeBottom">HomeBottom</option>
+                        <option value="Sidebar">Sidebar</option>
+                    </select>
+                </label>
+                <label>
+                    Link
+                    <input class="admin-input" @bind="model.LinkUrl" />
+                </label>
+                <label>
+                    Thứ tự
+                    <input class="admin-input" type="number" @bind="model.SortOrder" />
+                </label>
+                <label>
+                    Ngày bắt đầu
+                    <input class="admin-input" type="date" value="@StartDateText" @onchange="OnStartDateChanged" />
+                </label>
+                <label>
+                    Ngày kết thúc
+                    <input class="admin-input" type="date" value="@EndDateText" @onchange="OnEndDateChanged" />
+                </label>
+                <label>
+                    Ảnh banner
+                    <InputFile class="admin-input" OnChange="OnImageSelected" />
+                </label>
+                <label>
+                    Trạng thái
+                    <select class="admin-input" @bind="IsActiveText">
+                        <option value="true">Đang bật</option>
+                        <option value="false">Tắt</option>
+                    </select>
+                </label>
+            </div>
+
+            <div class="admin-preview-box">
+                <p><strong>Preview:</strong></p>
+                @if (!string.IsNullOrWhiteSpace(model.ImageUrl))
+                {
+                    <img src="@model.ImageUrl" alt="banner preview" style="max-width:100%;border-radius:12px;" />
+                }
+                else
+                {
+                    <p>Chưa có ảnh</p>
+                }
+            </div>
+
+            <div class="admin-form-actions">
+                <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
+                <button class="btn btn-secondary" @onclick="GoBackAsync">Quay lại</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private AdminBannerDetail? model;
+    private string? StartDateText;
+    private string? EndDateText;
+    private string IsActiveText = "true";
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Id))
+        {
+            model = await AdminBannerService.GetBannerByIdAsync(Id);
+        }
+
+        model ??= new AdminBannerDetail
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            Position = "HomeTop",
+            IsActive = true,
+            SortOrder = 0
+        };
+
+        StartDateText = model.StartDate?.ToString("yyyy-MM-dd");
+        EndDateText = model.EndDate?.ToString("yyyy-MM-dd");
+        IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+    }
+
+    private Task OnStartDateChanged(ChangeEventArgs e)
+    {
+        StartDateText = e.Value?.ToString();
+        return Task.CompletedTask;
+    }
+
+    private Task OnEndDateChanged(ChangeEventArgs e)
+    {
+        EndDateText = e.Value?.ToString();
+        return Task.CompletedTask;
+    }
+
+    private async Task OnImageSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+        model!.ImageUrl = await FileStorage.SaveImageAsync(file, "banners") ?? model.ImageUrl;
+    }
+
+    private Task GoBackAsync()
+    {
+        Nav.NavigateTo("/admin/banners");
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveAsync()
+    {
+        model!.StartDate = DateTime.TryParse(StartDateText, out var s) ? s : null;
+        model.EndDate = DateTime.TryParse(EndDateText, out var en) ? en : null;
+        model.IsActive = bool.TryParse(IsActiveText, out var active) && active;
+
+        if (string.IsNullOrWhiteSpace(model.Id))
+            await AdminBannerService.CreateBannerAsync(model);
+        else
+            await AdminBannerService.UpdateBannerAsync(model);
+
+        Nav.NavigateTo("/admin/banners");
+    }
+}

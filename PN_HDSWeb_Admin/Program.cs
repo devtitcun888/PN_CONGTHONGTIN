@@ -10,29 +10,26 @@ using PN_HDSWeb_Admin.Authentication;
 using MudBlazor.Services;
 using PN_HDSWeb_Library;
 using PN_HDSWeb_Admin.Hubs;
-//using PN_HDSWeb_HocTap.Data;
 using Syncfusion.Licensing;
 using PN_HDSWeb_Components.Data;
 using Radzen;
-using PN_HDSWeb_Admin.Data.Services;
+using PN_HDSWeb_Admin.Services.Auth;
+using PN_HDSWeb_Admin.Services.Schools;
+using PN_HDSWeb_Admin.Services.Admin;
+using PN_HDSWeb_Admin.Services.Content;
 
 var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
 
 builder.Services.AddAuthenticationCore();
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
-// Thêm Authentication & Authorization
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddHttpClient();
-// Thêm logging
 builder.Services.AddLogging();
 
 builder.Services.AddBlazorBootstrap();
-
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 builder.Services.AddMudServices();
 builder.Services.AddDistributedMemoryCache();
@@ -49,27 +46,30 @@ builder.Services.AddResponseCompression(options =>
 builder.Services.AddServerSideBlazor()
     .AddHubOptions(options =>
     {
-        options.ClientTimeoutInterval = TimeSpan.FromMinutes(2);  // Adjust timeout
+        options.ClientTimeoutInterval = TimeSpan.FromMinutes(2);
     });
-//builder.Services.AddScoped<SessionService>();
-//builder.Services.AddSingleton<WeatherForecastService>();
+
 builder.Services.AddScoped<HttpContentService>();
 builder.Services.AddScoped<HttpClient>();
-
 builder.Services.AddScoped<TokenProvider>();
-
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddSingleton<UserAccountService>();
+builder.Services.AddScoped<IAdminLoginService, AdminLoginService>();
+builder.Services.AddScoped<ISchoolService, SchoolService>();
+builder.Services.AddScoped<IAdminAuthorizationService, AdminAuthorizationService>();
+builder.Services.AddScoped<IAdminAccountService, AdminAccountService>();
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+builder.Services.AddScoped<IAdminPostService, AdminPostService>();
+builder.Services.AddScoped<IAdminDocumentService, AdminDocumentService>();
+builder.Services.AddScoped<IAdminBannerService, AdminBannerService>();
+builder.Services.AddScoped<IAdminMenuService, AdminMenuService>();
+builder.Services.AddScoped<IAdminSiteSettingService, AdminSiteSettingService>();
+builder.Services.AddScoped<IAdminFileStorageService, AdminFileStorageService>();
 builder.Services.AddRadzenComponents();
-
-
 builder.Services.AddScoped<BrowserStorageService>();
 builder.Services.AddScoped<TabSessionService>();
 builder.Services.AddScoped<UserState>();
-
 builder.Services.AddAuthenticationCore();
-
 builder.Services.AddAuthorizationCore();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<PN_Sessions>();
@@ -78,25 +78,13 @@ builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdministratorOnly", policy =>
         policy.RequireRole("Administrator"));
-
-    options.AddPolicy("TeacherOnly", policy =>
-        policy.RequireRole("GiaoVien"));
-
-    options.AddPolicy("AdminOrTeacher", policy =>
-        policy.RequireRole("Administrator", "GiaoVien"));
 });
 
 SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBMAY9C3t2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5bdEZjXHxecnZVQGRa");
 
-//anthen
-//Signal R
 builder.Services.AddSignalR();
-//builder.Services.AddHostedService<NotificationServices>();
 
 var app = builder.Build();
-
-// ── HTTP PIPELINE ────────────────────────────────────────────────────────────
-// Thứ tự QUAN TRỌNG: Response Compression phải đứng đầu để compress mọi response
 
 if (!app.Environment.IsDevelopment())
 {
@@ -104,7 +92,6 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
-// Khởi tạo logger
 string error_folder = hJsonLib.hgetValueJF(hConstants.PN_CLIENT_CONFIG_FILE, "LOGS", "error_folder");
 string info_folder = hJsonLib.hgetValueJF(hConstants.PN_CLIENT_CONFIG_FILE, "LOGS", "info_folder");
 Log.Logger = new LoggerConfiguration()
@@ -112,17 +99,10 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File($"{error_folder}\\pn_err-.txt", LogEventLevel.Error, rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
-// ✅ THÊM: Response Compression (Brotli/Gzip) — phải đứng trước StaticFiles
 app.UseResponseCompression();
-
 app.UseHttpsRedirection();
-
-// ✅ UseRouting đặt TRƯỚC MapX (đúng thứ tự chuẩn)
 app.UseRouting();
-
 app.UseSession();
-
-// Static files với cache headers (chỉ 1 lần — đã xóa duplicate)
 app.UseStaticFiles(new StaticFileOptions()
 {
     OnPrepareResponse = r =>
@@ -132,7 +112,7 @@ app.UseStaticFiles(new StaticFileOptions()
             path.EndsWith(".gif") || path.EndsWith(".jpg") ||
             path.EndsWith(".png") || path.EndsWith(".svg") || path.EndsWith(".webp"))
         {
-            TimeSpan maxAge = new TimeSpan(7, 0, 0, 0); // 7 ngày (giảm từ 370 ngày)
+            TimeSpan maxAge = new TimeSpan(7, 0, 0, 0);
             r.Context.Response.Headers.Append("Cache-Control", $"public, max-age={maxAge.TotalSeconds:0}");
         }
     },

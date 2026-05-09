@@ -1,0 +1,78 @@
+@page "/admin/accounts/edit/{Id?}"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Data.Model
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminAccountService AdminAccountService
+@inject NavigationManager Nav
+
+<h1>Chi tiết tài khoản</h1>
+
+@if (model == null)
+{
+    <p>Đang tải...</p>
+}
+else
+{
+    <div>
+        <div>Tên đăng nhập: <input @bind="model.UserName" /></div>
+        <div>Họ tên: <input @bind="model.FullName" /></div>
+        <div>Tên hiển thị: <input @bind="model.DisplayName" /></div>
+        <div>Email: <input @bind="model.Email" /></div>
+        <div>Số điện thoại: <input @bind="model.Phone" /></div>
+        <div>Vai trò: <input @bind="model.Roles" /></div>
+        <div>Loại auth: <input @bind="model.AuthType" /></div>
+        <button @onclick="SaveAsync">Lưu</button>
+    </div>
+}
+
+@code {
+    [Parameter] public string? Id { get; set; }
+
+    private AdminAccountUpsertDto? model;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Id))
+        {
+            var detail = await AdminAccountService.GetAccountByIdAsync(Id);
+            if (detail != null)
+            {
+                model = new AdminAccountUpsertDto
+                {
+                    Id = detail.Id,
+                    MaTruongBo = detail.MaTruongBo ?? PN_PublicVariables.MaTruong,
+                    UserName = detail.UserName ?? string.Empty,
+                    FullName = detail.FullName ?? string.Empty,
+                    DisplayName = detail.DisplayName,
+                    Email = detail.Email,
+                    Phone = detail.Phone,
+                    Roles = detail.Roles ?? "Administrator",
+                    AuthType = detail.AuthType ?? "Local",
+                    SsoUserName = detail.SsoUserName,
+                    SsoUserId = detail.SsoUserId,
+                    DeviceName = detail.DeviceName,
+                    IsActive = detail.IsActive,
+                    IsLocked = detail.IsLocked,
+                    LockReason = detail.LockReason
+                };
+            }
+        }
+
+        model ??= new AdminAccountUpsertDto
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            Roles = "Administrator",
+            AuthType = "Local"
+        };
+    }
+
+    private async Task SaveAsync()
+    {
+        if (string.IsNullOrWhiteSpace(model!.Id))
+            await AdminAccountService.CreateAccountAsync(model);
+        else
+            await AdminAccountService.UpdateAccountAsync(model);
+
+        Nav.NavigateTo("/admin/accounts");
+    }
+}

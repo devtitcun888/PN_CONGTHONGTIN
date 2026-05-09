@@ -1,0 +1,31 @@
+@page "/dashboard"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminDashboardService DashboardService
+
+<h1>Dashboard quản trị</h1>
+
+@if (summary == null)
+{
+    <p>Đang tải...</p>
+}
+else
+{
+    <ul>
+        <li>Tổng bài viết: @summary.TotalPosts</li>
+        <li>Bài chờ duyệt: @summary.PendingPosts</li>
+        <li>Bài đã xuất bản: @summary.PublishedPosts</li>
+        <li>Tổng văn bản: @summary.TotalDocuments</li>
+        <li>Văn bản chờ duyệt: @summary.PendingDocuments</li>
+        <li>Văn bản đã công khai: @summary.PublishedDocuments</li>
+    </ul>
+}
+
+@code {
+    private AdminDashboardSummary? summary;
+
+    protected override async Task OnInitializedAsync()
+    {
+        summary = await DashboardService.GetSummaryAsync(PN_PublicVariables.MaTruong);
+    }
+}

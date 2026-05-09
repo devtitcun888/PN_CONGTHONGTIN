@@ -1,0 +1,138 @@
+@inherits LayoutComponentBase
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicNavigationService PublicNavigationService
+@inject NavigationManager Nav
+
+<div class="public-layout">
+    <header class="public-header">
+        <div class="public-header-top">
+            <div class="public-brand">
+                <strong>@(footer?.SchoolName ?? "Cổng thông tin")</strong>
+            </div>
+            <div class="public-header-actions">
+                <a href="/search">Tìm kiếm</a>
+                <a href="/contact">Liên hệ</a>
+                <button class="public-mobile-toggle" @onclick="ToggleMobileMenu">☰</button>
+            </div>
+        </div>
+
+        <div class="public-searchbar">
+            <input class="public-search-input" placeholder="Nhập từ khóa tìm kiếm..." @bind="SearchKeyword" @bind:event="oninput" />
+            <button class="public-search-btn" @onclick="GoSearch">Tìm kiếm</button>
+        </div>
+
+        <nav class="public-nav @(isMobileMenuOpen ? "open" : string.Empty)">
+            <ul>
+                @if (menus != null)
+                {
+                    @foreach (var item in menus.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder))
+                    {
+                        var children = menus.Where(x => x.ParentId == item.Id).OrderBy(x => x.SortOrder).ToList();
+                        var href = PublicNavigationService.ResolveMenuUrl(item);
+                        var active = IsActiveMenu(href);
+                        <li class="nav-item @(children.Any() ? "has-dropdown" : string.Empty) @(active ? "active" : string.Empty)">
+                            <a href="@href" target="@item.Target">@item.MenuName</a>
+                            @if (children.Any())
+                            {
+                                <ul class="public-dropdown">
+                                    @foreach (var child in children)
+                                    {
+                                        var childHref = PublicNavigationService.ResolveMenuUrl(child);
+                                        <li class="@(IsActiveMenu(childHref) ? "active" : string.Empty)"><a href="@childHref" target="@child.Target">@child.MenuName</a></li>
+                                    }
+                                </ul>
+                            }
+                        </li>
+                    }
+                }
+            </ul>
+        </nav>
+    </header>
+
+    <main class="public-main">
+        <div class="public-container">
+            @if (isLoading)
+            {
+                <div class="page-loading">
+                    <div class="spinner"></div>
+                    <p>Đang tải nội dung...</p>
+                </div>
+            }
+            else
+            {
+                @Body
+            }
+        </div>
+    </main>
+
+    <footer class="public-footer">
+        @if (footer != null)
+        {
+            <div class="public-footer-grid">
+                <div class="footer-brand-block">
+                    @if (!string.IsNullOrWhiteSpace(footer.LogoUrl))
+                    {
+                        <img class="footer-logo" src="@footer.LogoUrl" alt="@footer.SchoolName" />
+                    }
+                    <div>
+                        <strong>@footer.SchoolName</strong>
+                        <p>@footer.Address</p>
+                        <p>@footer.Phone</p>
+                    </div>
+                </div>
+                <div>
+                    <p>Liên hệ người phụ trách: @footer.LeaderName</p>
+                    <div class="footer-links">
+                        @if (!string.IsNullOrWhiteSpace(footer.WebsiteUrl))
+                        {
+                            <a href="@footer.WebsiteUrl" target="_blank">Website</a>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(footer.FacebookUrl))
+                        {
+                            <a href="@footer.FacebookUrl" target="_blank">Facebook</a>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(footer.YoutubeUrl))
+                        {
+                            <a href="@footer.YoutubeUrl" target="_blank">YouTube</a>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(footer.ZaloUrl))
+                        {
+                            <a href="@footer.ZaloUrl" target="_blank">Zalo</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </footer>
+</div>
+
+@code {
+    private List<PublicNavItem>? menus;
+    private PublicFooterInfo? footer;
+    private string SearchKeyword = string.Empty;
+    private bool isMobileMenuOpen;
+    private bool isLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        menus = await PublicNavigationService.GetMenusAsync(PN_PublicVariables.MaTruong);
+        footer = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
+        isLoading = false;
+    }
+
+    private void GoSearch()
+    {
+        var url = string.IsNullOrWhiteSpace(SearchKeyword) ? "/search" : $"/search?q={Uri.EscapeDataString(SearchKeyword)}";
+        Nav.NavigateTo(url);
+    }
+
+    private void ToggleMobileMenu() => isMobileMenuOpen = !isMobileMenuOpen;
+
+    private bool IsActiveMenu(string href)
+    {
+        var current = Nav.Uri;
+        if (string.IsNullOrWhiteSpace(href)) return false;
+        var absolute = Nav.ToAbsoluteUri(current);
+        return absolute.AbsolutePath.TrimEnd('/').Equals(Nav.ToAbsoluteUri(href).AbsolutePath.TrimEnd('/'), StringComparison.OrdinalIgnoreCase);
+    }
+}

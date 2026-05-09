@@ -96,6 +96,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Md_BA_AgentAI\" />
     <Folder Include="wwwroot\Admin\css\" />
   </ItemGroup>
 

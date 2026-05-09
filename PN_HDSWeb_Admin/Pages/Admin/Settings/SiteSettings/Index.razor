@@ -1,0 +1,85 @@
+@page "/admin/settings"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminSiteSettingService AdminSiteSettingService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Cấu hình site</h1>
+            <p>Quản lý các thông số cấu hình cho website.</p>
+        </div>
+
+        <p><button class="btn btn-primary" @onclick="GoCreateAsync">Thêm mới</button></p>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Key</th>
+                        <th>Value</th>
+                        <th>Group</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.SettingKey</td>
+                            <td>@item.SettingValue</td>
+                            <td>@item.SettingGroup</td>
+                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
+                            <td>
+                                <button @onclick="@(() => Nav.NavigateTo($"/admin/settings/edit/{item.Id}"))">Sửa</button>
+                                <button @onclick="@(() => DeleteAsync(item))">Xóa</button>
+                                <button @onclick="@(() => ToggleActiveAsync(item))">@(item.IsActive ? "Tắt" : "Bật")</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminSiteSettingItem>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await AdminSiteSettingService.GetSettingsAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private Task GoCreateAsync()
+    {
+        Nav.NavigateTo("/admin/settings/edit");
+        return Task.CompletedTask;
+    }
+
+    private async Task DeleteAsync(AdminSiteSettingItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa cấu hình '{item.SettingKey}'?"))
+        {
+            await AdminSiteSettingService.DeleteSettingAsync(item.Id ?? string.Empty);
+            items = await AdminSiteSettingService.GetSettingsAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+
+    private async Task ToggleActiveAsync(AdminSiteSettingItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Bạn có muốn {(item.IsActive ? "tắt" : "bật")} cấu hình '{item.SettingKey}'?"))
+        {
+            await AdminSiteSettingService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
+            items = await AdminSiteSettingService.GetSettingsAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+}

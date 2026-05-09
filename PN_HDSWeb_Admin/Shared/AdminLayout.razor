@@ -1,0 +1,22 @@
+@inherits LayoutComponentBase
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavManager
+
+<AuthorizeView>
+    <Authorized>
+        <div class="admin-layout">
+            <aside>
+                <NavMenu />
+            </aside>
+            <main>
+                @Body
+            </main>
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <div class="alert alert-warning m-5">
+            <h4>Bạn cần đăng nhập để vào khu vực quản trị</h4>
+            <a href="/login-admin" class="btn btn-primary">Đăng nhập</a>
+        </div>
+    </NotAuthorized>
+</AuthorizeView>

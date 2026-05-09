@@ -1,0 +1,153 @@
+@page "/"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicHomepageService PublicHomepageService
+
+<div class="public-home">
+    @if (model == null)
+    {
+        <p>Đang tải...</p>
+    }
+    else
+    {
+        <section class="hero-section">
+            <div class="hero-banner">
+                <h1>Chào mừng đến với cổng thông tin</h1>
+                <p>Nơi cập nhật tin tức, văn bản, thông báo và hoạt động của nhà trường.</p>
+            </div>
+        </section>
+
+        @if (model.Banners.Any())
+        {
+            <section class="content-card">
+                <div class="section-head">
+                    <h2>Banner nổi bật</h2>
+                    <div class="carousel-actions">
+                        <button class="btn btn-secondary" @onclick="PrevBanner">‹</button>
+                        <button class="btn btn-secondary" @onclick="NextBanner">›</button>
+                    </div>
+                </div>
+                <div class="banner-carousel" @onmouseenter="() => isPaused = true" @onmouseleave="() => isPaused = false">
+                    @foreach (var item in model.Banners)
+                    {
+                        <a class="banner-item @(IsActiveBanner(item) ? "active" : string.Empty)" href="@item.LinkUrl" @onclick="() => SelectBanner(item)">
+                            @if (!string.IsNullOrWhiteSpace(item.ImageUrl))
+                            {
+                                <img src="@item.ImageUrl" alt="@item.Title" />
+                            }
+                            <div>
+                                <h3>@item.Title</h3>
+                            </div>
+                        </a>
+                    }
+                </div>
+                <div class="banner-dots">
+                    @for (var i = 0; i < model.Banners.Count; i++)
+                    {
+                        <button class="banner-dot @(i == activeBannerIndex ? "active" : string.Empty)" @onclick="() => GoToBanner(i)"></button>
+                    }
+                </div>
+            </section>
+        }
+
+        <section class="content-grid">
+            <div class="content-card">
+                <h2>Tin nổi bật</h2>
+                <div class="post-list">
+                    @foreach (var item in model.FeaturedPosts)
+                    {
+                        <article class="post-item">
+                            @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                            {
+                                <img src="@item.CoverImageUrl" alt="@item.Title" />
+                            }
+                            <div>
+                                <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
+                                <p>@item.Summary</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            </div>
+
+            <div class="content-card">
+                <h2>Văn bản công khai</h2>
+                <ul class="simple-list">
+                    @foreach (var item in model.PublishedDocuments)
+                    {
+                        <li><a href="/documents/@item.Id">@item.DocTitle</a></li>
+                    }
+                </ul>
+            </div>
+        </section>
+
+        <section class="content-grid">
+            <div class="content-card">
+                <h2>Tin mới nhất</h2>
+                <ul class="simple-list">
+                    @foreach (var item in model.LatestPosts)
+                    {
+                        <li><a href="/posts/@item.Slug">@item.Title</a></li>
+                    }
+                </ul>
+            </div>
+
+            <div class="content-card">
+                <h2>Văn bản công khai</h2>
+                <ul class="simple-list">
+                    @foreach (var item in model.PublishedDocuments)
+                    {
+                        <li><a href="/documents/@item.Id">@item.DocTitle</a></li>
+                    }
+                </ul>
+            </div>
+        </section>
+    }
+</div>
+
+@code {
+    private PublicHomepageViewModel? model;
+    private int activeBannerIndex;
+    private bool isPaused;
+
+    protected override async Task OnInitializedAsync()
+    {
+        model = await PublicHomepageService.GetHomepageAsync(PN_PublicVariables.MaTruong);
+        _ = StartAutoSlide();
+    }
+
+    private async Task StartAutoSlide()
+    {
+        while (model != null && model.Banners.Any())
+        {
+            await Task.Delay(5000);
+            if (isPaused) continue;
+            activeBannerIndex = (activeBannerIndex + 1) % model.Banners.Count;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void PrevBanner()
+    {
+        if (model?.Banners.Any() != true) return;
+        activeBannerIndex = (activeBannerIndex - 1 + model.Banners.Count) % model.Banners.Count;
+    }
+
+    private void NextBanner()
+    {
+        if (model?.Banners.Any() != true) return;
+        activeBannerIndex = (activeBannerIndex + 1) % model.Banners.Count;
+    }
+
+    private void GoToBanner(int index) => activeBannerIndex = index;
+
+    private void SelectBanner(PublicBannerItem item)
+    {
+        activeBannerIndex = model?.Banners.IndexOf(item) ?? 0;
+    }
+
+    private bool IsActiveBanner(PublicBannerItem item)
+    {
+        if (model?.Banners == null) return false;
+        return model.Banners.IndexOf(item) == activeBannerIndex;
+    }
+}

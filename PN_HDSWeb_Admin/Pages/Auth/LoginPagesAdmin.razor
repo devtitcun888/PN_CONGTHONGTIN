@@ -1,0 +1,82 @@
+@page "/login-admin"
+@namespace LoginComponent
+@using Microsoft.AspNetCore.WebUtilities
+@using PN_HDSWeb_Admin.Services.Auth
+@using PN_HDSWeb_Admin.Data
+@inject IAdminLoginService AdminLoginService
+@inject HttpContentService HttpContentService
+@inject NavigationManager navManager
+
+<div class="login-admin-shell">
+    <h3>Đăng nhập quản trị</h3>
+    <button @onclick="LoginSSO">Đăng nhập SSO</button>
+    <input @bind="username" placeholder="Tên đăng nhập" />
+    <input @bind="password" type="password" placeholder="Mật khẩu" />
+    <button @onclick="LoginLocal">Đăng nhập tài khoản</button>
+    @if (!string.IsNullOrEmpty(message))
+    {
+        <p>@message</p>
+    }
+</div>
+
+@code {
+    private string username = string.Empty;
+    private string password = string.Empty;
+    private string message = string.Empty;
+    private bool _handledToken;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await TryLoginByTokenFromQueryAsync();
+    }
+
+    private async Task TryLoginByTokenFromQueryAsync()
+    {
+        if (_handledToken)
+            return;
+
+        _handledToken = true;
+
+        var uri = navManager.ToAbsoluteUri(navManager.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        if (!query.TryGetValue("token", out var tokenValues) || string.IsNullOrWhiteSpace(tokenValues.FirstOrDefault()))
+            return;
+
+        var token = tokenValues.First();
+        var result = await AdminLoginService.LoginBySsoAsync(token, navManager.Uri);
+        if (!result.IsSuccess)
+        {
+            message = result.Message;
+            return;
+        }
+
+        await AdminLoginService.UpdateSessionAsync(result.Session!);
+        navManager.NavigateTo("/dashboard", true);
+    }
+
+    private async Task LoginSSO()
+    {
+        message = string.Empty;
+        var ssoUrl = await HttpContentService.HandleDirectToSSO(0, navManager.Uri, PN_PublicVariables.MaTruong);
+        if (ssoUrl == null || string.IsNullOrWhiteSpace(ssoUrl.Result))
+        {
+            message = "Không lấy được URL đăng nhập SSO.";
+            return;
+        }
+
+        navManager.NavigateTo(ssoUrl.Result, true);
+    }
+
+    private async Task LoginLocal()
+    {
+        var result = await AdminLoginService.LoginByLocalAccountAsync(username, password, PN_PublicVariables.MaTruong);
+        if (!result.IsSuccess)
+        {
+            message = result.Message;
+            return;
+        }
+
+        await AdminLoginService.UpdateSessionAsync(result.Session!);
+        navManager.NavigateTo("/dashboard", true);
+    }
+}

@@ -1,0 +1,79 @@
+@page "/admin/banners"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminBannerService AdminBannerService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Quản lý banner</h1>
+            <p>Quản lý banner hiển thị trên website.</p>
+        </div>
+
+        <p><button class="btn btn-primary" @onclick='@(() => Nav.NavigateTo("/admin/banners/edit"))'>Thêm mới</button></p>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tiêu đề</th>
+                        <th>Vị trí</th>
+                        <th>Thứ tự</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Position</td>
+                            <td>@item.SortOrder</td>
+                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
+                            <td>
+                                <button @onclick='@(() => Nav.NavigateTo($"/admin/banners/edit/{item.Id}"))'>Sửa</button>
+                                <button @onclick="() => DeleteAsync(item)">Xóa</button>
+                                <button @onclick="() => ToggleActiveAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminBannerItem>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await AdminBannerService.GetBannersAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private async Task DeleteAsync(AdminBannerItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa banner '{item.Title}'?"))
+        {
+            await AdminBannerService.DeleteBannerAsync(item.Id ?? string.Empty);
+            items = await AdminBannerService.GetBannersAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+
+    private async Task ToggleActiveAsync(AdminBannerItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Bạn có muốn {(item.IsActive ? "tắt" : "bật")} banner '{item.Title}'?"))
+        {
+            await AdminBannerService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
+            items = await AdminBannerService.GetBannersAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+}

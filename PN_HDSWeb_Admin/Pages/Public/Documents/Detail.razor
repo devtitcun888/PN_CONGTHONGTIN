@@ -1,0 +1,66 @@
+@page "/documents/{Id}"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicDocumentService PublicDocumentService
+
+@if (document == null)
+{
+    <p>Đang tải hoặc không tìm thấy văn bản.</p>
+}
+else
+{
+    <div class="public-article">
+        <nav class="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <span>/</span>
+            <a href="/documents">Văn bản công khai</a>
+            <span>/</span>
+            <span>@document.DocTitle</span>
+        </nav>
+
+        <article class="article-card">
+            <h1>@document.DocTitle</h1>
+            <p>Số hiệu: @document.DocNumber</p>
+            <p>Loại văn bản: @document.DocType</p>
+            <p>Ngày ban hành: @document.IssuedDate</p>
+            <p>@document.Summary</p>
+            <div class="article-content">@((MarkupString)(document.Content ?? string.Empty))</div>
+            @if (!string.IsNullOrWhiteSpace(document.FileUrl))
+            {
+                <p><a href="@document.FileUrl" target="_blank">Tải file đính kèm</a></p>
+            }
+        </article>
+
+        @if (relatedDocuments?.Any() == true)
+        {
+            <section class="related-section">
+                <h2>Văn bản liên quan</h2>
+                <div class="related-grid">
+                    @foreach (var item in relatedDocuments)
+                    {
+                        <article class="related-card">
+                            <a href="/documents/@item.Id">
+                                <h3>@item.DocTitle</h3>
+                                <p>@item.DocNumber</p>
+                            </a>
+                        </article>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private PublicDocumentDetail? document;
+    private List<PublicDocumentListItem>? relatedDocuments;
+
+    protected override async Task OnInitializedAsync()
+    {
+        document = await PublicDocumentService.GetDocumentByIdAsync(PN_PublicVariables.MaTruong, Id ?? string.Empty);
+        if (document != null)
+        {
+            relatedDocuments = await PublicDocumentService.GetRelatedDocumentsAsync(PN_PublicVariables.MaTruong, document.DocType, document.Id ?? string.Empty);
+        }
+    }
+}

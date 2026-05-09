@@ -1,0 +1,113 @@
+@page "/admin/posts"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminPostService AdminPostService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<h1>Quản lý bài viết</h1>
+
+<div>
+    <input @bind="keyword" placeholder="Tìm kiếm" />
+    <input @bind="status" placeholder="Trạng thái" />
+    <button @onclick="SearchAsync">Tìm</button>
+    <button @onclick="ResetAsync">Xóa lọc</button>
+    <button @onclick='@(() => Nav.NavigateTo("/admin/posts/edit"))'>Thêm mới</button>
+</div>
+
+@if (posts == null)
+{
+    <p>Đang tải...</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>Tiêu đề</th>
+                <th>Trạng thái</th>
+                <th>Ngày tạo</th>
+                <th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in posts)
+            {
+                <tr>
+                    <td>@item.Title</td>
+                    <td>@item.Status</td>
+                    <td>@item.CreatedAt</td>
+                    <td>
+                        <button @onclick="@(() => Nav.NavigateTo($"/admin/posts/edit/{item.Id}"))">Sửa</button>
+                        <button @onclick="@(() => DeleteAsync(item))">Xóa</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div>
+        <button @onclick="PrevtrangAsync" disabled="@(trang <= 1)">Trang trước</button>
+        <span>Trang @trang / @totaltrangs</span>
+        <button @onclick="NexttrangAsync" disabled="@(trang >= totaltrangs)">Trang sau</button>
+    </div>
+}
+
+@code {
+    private List<AdminPostItem>? posts;
+    private string? keyword;
+    private string? status;
+    private int trang = 1;
+    private int trangSize = 20;
+    private int totalCount;
+    private int totaltrangs => Math.Max(1, (int)Math.Ceiling(totalCount / (double)trangSize));
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        totalCount = await AdminPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, keyword, status);
+        posts = await AdminPostService.GetPostsAsync(PN_PublicVariables.MaTruong, keyword, status, trang, trangSize);
+    }
+
+    private async Task SearchAsync()
+    {
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task ResetAsync()
+    {
+        keyword = string.Empty;
+        status = string.Empty;
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task PrevtrangAsync()
+    {
+        if (trang > 1)
+        {
+            trang--;
+            await LoadAsync();
+        }
+    }
+
+    private async Task NexttrangAsync()
+    {
+        if (trang < totaltrangs)
+        {
+            trang++;
+            await LoadAsync();
+        }
+    }
+
+    private async Task DeleteAsync(AdminPostItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa bài viết '{item.Title}'?"))
+        {
+            await AdminPostService.DeletePostAsync(item.Id ?? string.Empty);
+            await LoadAsync();
+        }
+    }
+}

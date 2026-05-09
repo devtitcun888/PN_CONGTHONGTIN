@@ -1,0 +1,63 @@
+@page "/posts/{Slug}"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicPostService PublicPostService
+
+@if (post == null)
+{
+    <p>Đang tải hoặc không tìm thấy bài viết.</p>
+}
+else
+{
+    <div class="public-article">
+        <nav class="breadcrumb">
+            <a href="/">Trang chủ</a>
+            <span>/</span>
+            <a href="/posts">Tin tức</a>
+            <span>/</span>
+            <span>@post.Title</span>
+        </nav>
+
+        <article class="article-card">
+            <h1>@post.Title</h1>
+            @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+            {
+                <img src="@post.CoverImageUrl" alt="@post.Title" class="article-cover" />
+            }
+            <p class="article-summary">@post.Summary</p>
+            <div class="article-content">@((MarkupString)(post.Content ?? string.Empty))</div>
+        </article>
+
+        @if (relatedPosts?.Any() == true)
+        {
+            <section class="related-section">
+                <h2>Bài liên quan</h2>
+                <div class="related-grid">
+                    @foreach (var item in relatedPosts)
+                    {
+                        <article class="related-card">
+                            <a href="/posts/@item.Slug">
+                                <h3>@item.Title</h3>
+                                <p>@item.Summary</p>
+                            </a>
+                        </article>
+                    }
+                </div>
+            </section>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+    private PublicPostDetail? post;
+    private List<PublicPostListItem>? relatedPosts;
+
+    protected override async Task OnInitializedAsync()
+    {
+        post = await PublicPostService.GetPostBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+        if (post != null)
+        {
+            relatedPosts = await PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty);
+        }
+    }
+}

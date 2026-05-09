@@ -1,0 +1,97 @@
+@page "/posts"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicPostService PublicPostService
+
+<div class="public-article">
+    <nav class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
+        <span>Tin tức</span>
+    </nav>
+
+    <section class="content-card">
+        <h1>Tin tức</h1>
+        <div class="search-panel">
+            <input class="public-search-input" @bind="keyword" placeholder="Từ khóa" />
+            <input class="public-search-input" @bind="categoryId" placeholder="Chuyên mục" />
+            <button class="public-search-btn" @onclick="SearchAsync">Lọc</button>
+        </div>
+    </section>
+
+    <section class="content-card">
+        @if (posts == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (!posts.Any())
+        {
+            <p>Không có bài viết phù hợp.</p>
+        }
+        else
+        {
+            <div class="post-list">
+                @foreach (var item in posts)
+                {
+                    <article class="post-item">
+                        @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                        {
+                            <img src="@item.CoverImageUrl" alt="@item.Title" />
+                        }
+                        <div>
+                            <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
+                            <p>@item.Summary</p>
+                        </div>
+                    </article>
+                }
+            </div>
+
+            <div class="pager">
+                <button class="btn btn-secondary" @onclick="PrevPageAsync" disabled="@(trang <= 1)">Trước</button>
+                <span>Trang @trang / @totalPages</span>
+                <button class="btn btn-secondary" @onclick="NextPageAsync" disabled="@(trang >= totalPages)">Sau</button>
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private List<PublicPostListItem>? posts;
+    private string? keyword;
+    private string? categoryId;
+    private int trang = 1;
+    private int pageSize = 10;
+    private int totalCount;
+    private int totalPages => Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        totalCount = await PublicPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, keyword, categoryId);
+        posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, keyword, categoryId, trang, pageSize);
+    }
+
+    private async Task SearchAsync()
+    {
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task PrevPageAsync()
+    {
+        if (trang > 1)
+        {
+            trang--;
+            await LoadAsync();
+        }
+    }
+
+    private async Task NextPageAsync()
+    {
+        if (trang < totalPages)
+        {
+            trang++;
+            await LoadAsync();
+        }
+    }
+}
