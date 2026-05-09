@@ -1,0 +1,474 @@
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\DangHung_Dev\2023\HBM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\NgocLan_DEV\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\DangHung_Dev\TITKul\Codes\Lan\PN_HDSWeb-new\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool_Dat_13_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool_26_05\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\Titkul\2024\HDSchool_04_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_08_08\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\TITKUL\Source\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_Duc_20240830\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_10_09\HDSchool\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CopyComplete
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\Workspace\HDSchool_20241008\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\LLTP_BACKUP\HDSchool\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\NEWWWWWWW\SRC_PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\ngoct\Desktop\bACKUP\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+D:\18_TITKUL\00_HOST\Bàn giao\FE\WEB\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\ngoct\Desktop\BACKUP SRC_DIEM\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.deps.json
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hDataLibraryN8.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\hUltiLibraryN8.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Newtonsoft.Json.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\System.IdentityModel.Tokens.Jwt.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Tokens.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Logging.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\bin\Release\net8.0\Microsoft.IdentityModel.Abstractions.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.sourcelink.json
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWe.60F16D59.Up2Date
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\refint\PN_HDSWeb_Library.dll
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\PN_HDSWeb_Library.pdb
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Library\obj\Release\net8.0\ref\PN_HDSWeb_Library.dll

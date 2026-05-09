@@ -1,0 +1,246 @@
+@* ── PAGINATION_CUSTOM — Shared Component ── *@
+@* Parameters:
+      TotalItems      : tổng số bản ghi (bắt buộc)
+      PageSize        : số dòng/trang    (default 15)
+      CurrentPage     : trang hiện tại  (default 1)
+      OnPageChanged   : callback khi đổi trang
+      OnPageSizeChanged: callback khi đổi pageSize (optional)
+      ShowPageSizeSelector: hiện dropdown chọn số dòng/trang (default true)
+      ShowInfo        : hiện dòng "Hiển thị X–Y / Z" (default true)
+*@
+
+@if (TotalItems > 0)
+{
+    <div class="pgc-wrap">
+
+        @* ── INFO ── *@
+        @if (ShowInfo)
+        {
+            <div class="pgc-info">
+                @if (TotalPages > 1)
+                {
+                    @:Hiển thị <b>@((CurrentPage - 1) * PageSize + 1)</b>–<b>@Math.Min(CurrentPage * PageSize, TotalItems)</b> / <b>@TotalItems</b> bản ghi
+                }
+                else
+                {
+                    @:Tổng cộng <b>@TotalItems</b> bản ghi
+                }
+            </div>
+        }
+
+        @* ── PAGE BUTTONS ── *@
+        @if (TotalPages > 1)
+        {
+            <div class="pgc-controls">
+                <button class="pgc-btn" disabled="@(CurrentPage <= 1)"
+                        @onclick="() => GoToPage(1)" title="Trang đầu">
+                    <span class="material-icons-round">first_page</span>
+                </button>
+                <button class="pgc-btn" disabled="@(CurrentPage <= 1)"
+                        @onclick="() => GoToPage(CurrentPage - 1)" title="Trang trước">
+                    <span class="material-icons-round">chevron_left</span>
+                </button>
+
+                @foreach (var p in GetPageNumbers())
+                {
+                    if (p == -1)
+                    {
+                        <span class="pgc-dots">…</span>
+                    }
+                    else
+                    {
+                        int pg = p;
+                        <button class="pgc-btn @(pg == CurrentPage ? "pgc-btn-active" : "")"
+                                @onclick="() => GoToPage(pg)">@pg</button>
+                    }
+                }
+
+                <button class="pgc-btn" disabled="@(CurrentPage >= TotalPages)"
+                        @onclick="() => GoToPage(CurrentPage + 1)" title="Trang tiếp">
+                    <span class="material-icons-round">chevron_right</span>
+                </button>
+                <button class="pgc-btn" disabled="@(CurrentPage >= TotalPages)"
+                        @onclick="() => GoToPage(TotalPages)" title="Trang cuối">
+                    <span class="material-icons-round">last_page</span>
+                </button>
+            </div>
+        }
+        else
+        {
+            <div></div>
+        }
+
+        @* ── PAGE SIZE SELECTOR ── *@
+        @if (ShowPageSizeSelector)
+        {
+            <div class="pgc-size">
+                <select class="pgc-size-select" @onchange="OnSizeChanged">
+                    @foreach (var s in PageSizeOptions)
+                    {
+                        <option value="@s" selected="@(s == PageSize)">@s / trang</option>
+                    }
+                </select>
+            </div>
+        }
+
+    </div>
+}
+
+<style>
+    /* ── PAGINATION CUSTOM ── */
+    .pgc-wrap {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 12px 16px;
+        border-top: 1px solid #e2e8f0;
+        flex-wrap: wrap;
+        flex-shrink: 0;
+        background: #f8fafc;
+    }
+
+    .pgc-info {
+        font-size: 0.83rem;
+        color: #64748b;
+        white-space: nowrap;
+    }
+
+    .pgc-controls {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+    .pgc-btn {
+        min-width: 34px;
+        height: 34px;
+        padding: 0 8px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        background: #fff;
+        color: #475569;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.18s;
+        line-height: 1;
+    }
+
+    .pgc-btn:hover:not(:disabled) {
+        border-color: #6366f1;
+        color: #6366f1;
+        background: #ede9fe;
+    }
+
+    .pgc-btn:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+
+    .pgc-btn .material-icons-round { font-size: 18px; }
+
+    .pgc-btn-active {
+        background: #6366f1 !important;
+        color: #fff !important;
+        border-color: #6366f1 !important;
+    }
+
+    .pgc-dots {
+        padding: 0 4px;
+        color: #94a3b8;
+        font-size: 0.9rem;
+        line-height: 34px;
+        user-select: none;
+    }
+
+    .pgc-size { display: flex; align-items: center; }
+
+    .pgc-size-select {
+        height: 34px;
+        padding: 0 8px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        color: #475569;
+        background: #fff;
+        cursor: pointer;
+        outline: none;
+        transition: border-color 0.2s;
+    }
+
+    .pgc-size-select:focus { border-color: #6366f1; }
+
+    /* Responsive */
+    @@media (max-width: 600px) {
+        .pgc-wrap { gap: 8px; }
+        .pgc-info { width: 100%; text-align: center; }
+        .pgc-controls { justify-content: center; flex: 1; }
+    }
+</style>
+
+@code {
+    /// <summary>Tổng số bản ghi (bắt buộc).</summary>
+    [Parameter] public int  TotalItems    { get; set; }
+
+    /// <summary>Số dòng mỗi trang. Default = 15.</summary>
+    [Parameter] public int  PageSize      { get; set; } = 15;
+
+    /// <summary>Trang hiện tại (1-based). Default = 1.</summary>
+    [Parameter] public int  CurrentPage   { get; set; } = 1;
+
+    /// <summary>Callback khi người dùng chuyển trang.</summary>
+    [Parameter] public EventCallback<int> OnPageChanged { get; set; }
+
+    /// <summary>Callback khi người dùng đổi số dòng/trang.</summary>
+    [Parameter] public EventCallback<int> OnPageSizeChanged { get; set; }
+
+    /// <summary>Hiện dropdown chọn số dòng/trang. Default = true.</summary>
+    [Parameter] public bool ShowPageSizeSelector { get; set; } = true;
+
+    /// <summary>Hiện dòng thông tin "Hiển thị X–Y / Z". Default = true.</summary>
+    [Parameter] public bool ShowInfo { get; set; } = true;
+
+    /// <summary>Danh sách lựa chọn số dòng/trang. Default = [10, 15, 25, 50].</summary>
+    [Parameter] public int[] PageSizeOptions { get; set; } = new[] { 10, 15, 25, 50 };
+
+    // ── Computed ──
+    private int TotalPages => TotalItems <= 0 || PageSize <= 0
+        ? 0
+        : (int)Math.Ceiling((double)TotalItems / PageSize);
+
+    private async Task GoToPage(int page)
+    {
+        if (page < 1 || page > TotalPages || page == CurrentPage) return;
+        await OnPageChanged.InvokeAsync(page);
+    }
+
+    private async Task OnSizeChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var sz) && sz > 0)
+            await OnPageSizeChanged.InvokeAsync(sz);
+    }
+
+    private IEnumerable<int> GetPageNumbers()
+    {
+        var pages = new List<int>();
+        if (TotalPages <= 7)
+        {
+            for (int i = 1; i <= TotalPages; i++) pages.Add(i);
+        }
+        else
+        {
+            pages.Add(1);
+            if (CurrentPage > 3) pages.Add(-1);           // …
+            int from = Math.Max(2, CurrentPage - 1);
+            int to   = Math.Min(TotalPages - 1, CurrentPage + 1);
+            for (int i = from; i <= to; i++) pages.Add(i);
+            if (CurrentPage < TotalPages - 2) pages.Add(-1); // …
+            pages.Add(TotalPages);
+        }
+        return pages;
+    }
+}

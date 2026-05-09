@@ -1,0 +1,59 @@
+{
+  "chuyencan":{
+    "danh_sach_account": [
+      {
+        "username": "",
+        "password": ""
+      },
+      {
+        "username": "",
+        "password": ""
+      }
+    ],
+    "link_api":"http://devapichuyencan.truongdientu.vn",
+    "danh_sach_api": [
+      {
+        "tiep_nhan":{
+          "gui-don": "/api/csdl/tiepnhan/chuyencan/gui-don",
+          "gui-nhieu-don": "/api/csdl/tiepnhan/chuyencan/gui-nhieu-don",
+          "cap-nhat-don-dang-ky":"/api/csdl/tiepnhan/chuyencan/cap-nhat-don-dang-ky",
+          "thu-hoi-gui-don":"/api/csdl/tiepnhan/chuyencan/thu-hoi-gui-don",
+          "cap-nhat-duyet-don":"/api/csdl/tiepnhan/chuyencan/cap-nhat-duyet-don",
+          "thu-hoi-don-duyet":"/api/csdl/tiepnhan/chuyencan/thu-hoi-don-duyet",
+          "giao-vien-danh-gia":"/api/csdl/tiepnhan/chuyencan/giao-vien-danh-gia"
+        },
+        "tracuu":{
+          "truong":"/api/csdl/tracuu/chuyencan/truong"
+        }
+      }
+    ]
+  },
+  "hocba":{
+    "danh_sach_account": [
+      {
+        "username": "",
+        "password": ""
+      },
+      {
+        "username": "",
+        "password": ""
+      }
+    ],
+    "link_api":"http://devapichuyencan.truongdientu.vn",
+    "danh_sach_api": [
+      {
+        
+          "gui-don": "/api/csdl/tiepnhan/chuyencan/gui-don",
+          "gui-nhieu-don": "/api/csdl/tiepnhan/chuyencan/gui-nhieu-don",
+          "cap-nhat-don-dang-ky":"/api/csdl/tiepnhan/chuyencan/cap-nhat-don-dang-ky",
+          "thu-hoi-gui-don":"/api/csdl/tiepnhan/chuyencan/thu-hoi-gui-don",
+          "cap-nhat-duyet-don":"/api/csdl/tiepnhan/chuyencan/cap-nhat-duyet-don",
+          "thu-hoi-don-duyet":"/api/csdl/tiepnhan/chuyencan/thu-hoi-don-duyet",
+          "giao-vien-danh-gia":"/api/csdl/tiepnhan/chuyencan/giao-vien-danh-gia"
+      }
+    ]
+  },
+  "thuvien":{
+
+  }
+}

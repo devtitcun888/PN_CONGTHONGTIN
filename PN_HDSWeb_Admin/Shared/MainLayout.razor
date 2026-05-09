@@ -1,0 +1,102 @@
+@inherits LayoutComponentBase
+@inject NavigationManager NavManager
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider AuthStateProvider
+
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<AuthorizeView>
+    <Authorized>
+
+        @if (IsLoading)
+        {
+            <div class="d-flex justify-content-center align-items-center vh-100">
+                <Spinner Type="SpinnerType.Border" Size="SpinnerSize.Large" />
+            </div>
+        }
+        else
+        {
+            <div class="layout-wrapper">
+@*                 <TopNavbar /> *@
+
+                <main class="layout-body">
+                    <div class="layout-content @(IsHomePage ? "" : "is-fluid")">
+                        @if (ShouldShowSubTabs())
+                        {
+                            <div class="sub-tabs-bar">
+                                <NavLink href="" Match="NavLinkMatch.All" class="sub-tab-link">Tổng quan</NavLink>
+                                <NavLink href="teacher-attendance" class="sub-tab-link">Điểm danh giáo viên</NavLink>
+                                <NavLink href="student-attendance" class="sub-tab-link">Điểm danh học sinh</NavLink>
+                            </div>
+                        }
+                        <div class="layout-viewport">
+                            @Body
+                        </div>
+                    </div>
+                </main>
+            </div>
+        }
+
+    </Authorized>
+
+    <NotAuthorized>
+        <LoginComponent.LoginPages />
+    </NotAuthorized>
+</AuthorizeView>
+
+@code {
+    protected bool IsLoading { get; set; }
+
+    protected bool IsOpenMenu { get; set; } = true;
+    private bool IsHomePage =>
+    string.IsNullOrEmpty(NavManager.ToBaseRelativePath(NavManager.Uri)) ||
+    NavManager.Uri.EndsWith("/", StringComparison.OrdinalIgnoreCase);
+
+    private bool ShouldShowSubTabs()
+    {
+        var uri = NavManager.Uri;
+        var relativePath = NavManager.ToBaseRelativePath(uri);
+        return string.IsNullOrEmpty(relativePath) ||
+               relativePath.StartsWith("teacher-attendance") ||
+               relativePath.StartsWith("student-attendance") ||
+               relativePath.StartsWith("attendance-stats");
+    }
+
+    // Ẩn app-loading ngay lập tức khi vào trang Login (user chưa xác thực)
+    // TopNavbar không render trong trường hợp NotAuthorized → phải tự ẩn ở đây
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+        try
+        {
+            var authState = await AuthStateProvider.GetAuthenticationStateAsync();
+            if (!authState.User.Identity?.IsAuthenticated ?? true)
+            {
+                // User chưa đăng nhập → ẩn overlay loading ngay, không cần chờ TopNavbar
+                await JS.InvokeVoidAsync("hideAppLoading", 0);
+            }
+        }
+        catch
+        {
+            // Bỏ qua nếu JS chưa sẵn sàng
+        }
+    }
+
+    protected async Task ShowLoading(int delay = 300)
+    {
+        IsLoading = true;
+        StateHasChanged();
+
+        await Task.Delay(delay);
+
+        IsLoading = false;
+        StateHasChanged();
+    }
+
+    protected void ToggleMenu()
+    {
+        IsOpenMenu = !IsOpenMenu;
+    }
+}

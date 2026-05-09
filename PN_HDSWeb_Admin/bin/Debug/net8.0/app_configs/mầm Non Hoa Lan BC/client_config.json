@@ -1,0 +1,14 @@
+{
+	"CORE_SERVICE": 
+	{		
+		"url1": "http://titkul.ddns.net:9201/pn_coreservice",
+		"url2": "http://localhost:9102/pn_coreservice"		
+	},
+	"LOGS": 
+	{
+		"error_log": true,
+		"error_folder": "c:\\PN_Service\\Logs\\Error",
+		"Info_log": true,
+		"info_folder": "c:\\PN_Service\\Logs\\Info"
+	}
+}

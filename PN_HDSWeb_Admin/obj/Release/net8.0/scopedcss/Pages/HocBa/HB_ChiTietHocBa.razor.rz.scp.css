@@ -1,0 +1,303 @@
+/* =============================
+   GLOBAL PAGE WRAPPER & ANIMATION
+   ============================= */
+.page-wrapper[b-tg0gx75r2b] {
+    max-width: auto;
+    margin: 0 auto;
+    padding: 24px;
+    animation: fadeIn-b-tg0gx75r2b 0.25s ease-out;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+@keyframes fadeIn-b-tg0gx75r2b {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =============================
+   TABS (giữ toàn bộ style theme cũ, chỉ tinh chỉnh spacing)
+   ============================= */
+.tabs[b-tg0gx75r2b] {
+    display: flex;
+    gap: 28px;
+    border-bottom: 2px solid #f3f4f6;
+    margin-bottom: 20px;
+}
+
+.tab-item[b-tg0gx75r2b] {
+    padding: 12px 4px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    color: #6b7280;
+    transition: 0.25s;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+    .tab-item:hover[b-tg0gx75r2b] {
+        color: #003380;
+    }
+
+    .tab-item.active[b-tg0gx75r2b] {
+        color: #003380;
+        font-weight: 700;
+    }
+
+        .tab-item.active[b-tg0gx75r2b]::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            height: 3px;
+            width: 100%;
+            background: #003380;
+            border-radius: 3px 3px 0 0;
+        }
+
+/* -----------------------------
+   SUB TABS
+   ----------------------------- */
+.tabs-sub[b-tg0gx75r2b] {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+}
+
+.btn-tab[b-tg0gx75r2b] {
+    padding: 8px 18px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-tab.active[b-tg0gx75r2b] {
+        background: #2563eb;
+        color: white;
+        border-color: #2563eb;
+    }
+
+/* =============================
+   TOOLBAR
+   ============================= */
+.toolbar[b-tg0gx75r2b] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title[b-tg0gx75r2b] {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.actions[b-tg0gx75r2b] {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+/* =============================
+   SEARCH BOX
+   ============================= */
+.search-box[b-tg0gx75r2b] {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    overflow: hidden;
+    background: white;
+}
+
+.search-input[b-tg0gx75r2b] {
+    padding: 9px 12px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    width: 240px;
+}
+
+.btn-search[b-tg0gx75r2b] {
+    padding: 0 12px;
+    border-left: 1px solid #f3f4f6;
+    color: #6b7280;
+    background: white;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    .btn-search:hover[b-tg0gx75r2b] {
+        color: #003380;
+    }
+
+/* =============================
+   BUTTONS
+   ============================= */
+.btn-blue[b-tg0gx75r2b] {
+    background: #003380;
+    color: white;
+    padding: 9px 20px;
+    border-radius: 8px;
+    border: none;
+    font-weight: 600;
+    transition: 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+    .btn-blue:hover[b-tg0gx75r2b] {
+        background: #002255;
+        transform: translateY(-1px);
+    }
+
+    .btn-blue:disabled[b-tg0gx75r2b] {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+.btn-icon[b-tg0gx75r2b] {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    background: white;
+    color: #6b7280;
+    cursor: pointer;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+}
+
+    .btn-icon:hover[b-tg0gx75r2b] {
+        background: #f3f4f6;
+        color: #003380;
+    }
+
+    .btn-icon.text-danger:hover[b-tg0gx75r2b] {
+        background: #fef2f2;
+        color: #dc2626;
+        border-color: #fee2e2;
+    }
+
+/* =============================
+   GRID PANEL & TABLE
+   ============================= */
+.grid-panel[b-tg0gx75r2b] {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.vnedu-table[b-tg0gx75r2b] {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .vnedu-table th[b-tg0gx75r2b] {
+        background: #f9fafb;
+        padding: 14px 15px;
+        font-size: 13px;
+        font-weight: 600;
+        text-transform: uppercase;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .vnedu-table td[b-tg0gx75r2b] {
+        padding: 14px 15px;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+        font-size: 14px;
+    }
+
+    .vnedu-table tbody tr:hover[b-tg0gx75r2b] {
+        background: #f0f9ff;
+    }
+
+/* =============================
+   BADGES — giữ theme cũ 100%
+   ============================= */
+.badge[b-tg0gx75r2b] {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-cyan[b-tg0gx75r2b] {
+    background: #e0f2fe;
+    color: #0284c7;
+    border: 1px solid #bae6fd;
+}
+
+.badge-yellow[b-tg0gx75r2b] {
+    background: #fef9c3;
+    color: #ca8a04;
+    border: 1px solid #fde047;
+}
+
+.badge-green[b-tg0gx75r2b] {
+    background: #dcfce7;
+    color: #16a34a;
+    border: 1px solid #bbf7d0;
+}
+
+/* =============================
+   STUDENT INFO (TRANG CHI TIẾT)
+   ============================= */
+.student-info-card[b-tg0gx75r2b] {
+    background: white;
+    border-radius: 12px;
+    padding: 25px;
+    margin-bottom: 20px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.student-name[b-tg0gx75r2b] {
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+.info-grid[b-tg0gx75r2b] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+/* =============================
+   BACK LINK
+   ============================= */
+.back-link[b-tg0gx75r2b] {
+    color: #6b7280;
+    font-weight: 600;
+    text-decoration: none;
+    transition: 0.2s;
+}
+
+    .back-link:hover[b-tg0gx75r2b] {
+        color: #003380;
+        transform: translateX(-3px);
+    }

@@ -1,0 +1,45 @@
+﻿@if (IsVisible)
+{
+    <div class="modal-overlay">
+        <div class="login-box" @onclick:stopPropagation="true">
+            <div class="login-header">
+                <h3>Đăng nhập SSO</h3>
+                <button class="btn-close-x" @onclick="CloseModal">✕</button>
+            </div>
+            <div class="login-body">
+                <p class="text-muted">Vui lòng đăng nhập tài khoản Sở để thực hiện đồng bộ.</p>
+
+                <div class="form-group mb-3">
+                    <label>Tài khoản</label>
+                    <input type="text" class="form-control" placeholder="Nhập tài khoản" />
+                </div>
+                <div class="form-group mb-4">
+                    <label>Mật khẩu</label>
+                    <input type="password" class="form-control" placeholder="Nhập mật khẩu" />
+                </div>
+
+                <div class="d-flex justify-content-end gap-2">
+                    <button class="btn btn-secondary" @onclick="CloseModal">Hủy bỏ</button>
+                    <button class="btn btn-primary" @onclick="HandleLogin">Đăng nhập & Đồng bộ</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+
+    private async Task CloseModal()
+    {
+        await OnClose.InvokeAsync(false);
+    }
+
+    private async Task HandleLogin()
+    {
+        await Task.Delay(1000);
+        await OnClose.InvokeAsync(true);
+    }
+}
+

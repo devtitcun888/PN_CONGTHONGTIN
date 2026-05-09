@@ -1,0 +1,87 @@
+@* ── TOAST MESSAGE COMPONENT (Shared) ── *@
+@if (IsVisible)
+{
+    <div class="toast-msg-wrap toast-msg-@Type" role="alert" aria-live="assertive">
+        <span class="material-icons-round toast-msg-icon">@IconName</span>
+        <span class="toast-msg-text">@Message</span>
+        <button class="toast-msg-close" @onclick="Dismiss" title="Đóng">
+            <span class="material-icons-round">close</span>
+        </button>
+    </div>
+}
+
+<style>
+    .toast-msg-wrap {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 99999;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        border-radius: 14px;
+        font-size: 0.92rem;
+        font-weight: 600;
+        box-shadow: 0 10px 32px -4px rgba(0,0,0,0.22);
+        animation: toastSlideIn 0.3s cubic-bezier(0.22,1,0.36,1);
+        max-width: 400px;
+        min-width: 220px;
+        backdrop-filter: blur(4px);
+    }
+
+    @@keyframes toastSlideIn {
+        from { opacity: 0; transform: translateX(40px) scale(0.95); }
+        to   { opacity: 1; transform: translateX(0)   scale(1); }
+    }
+
+    .toast-msg-icon   { font-size: 20px; flex-shrink: 0; }
+    .toast-msg-text   { flex: 1; }
+
+    .toast-msg-close {
+        background: none; border: none; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        padding: 2px; border-radius: 6px; opacity: 0.6;
+        transition: opacity 0.15s, background 0.15s;
+        flex-shrink: 0;
+    }
+    .toast-msg-close:hover { opacity: 1; background: rgba(0,0,0,0.08); }
+    .toast-msg-close .material-icons-round { font-size: 16px; }
+
+    /* success */
+    .toast-msg-success { background: #ecfdf5; color: #065f46; border: 1.5px solid #6ee7b7; }
+    .toast-msg-success .toast-msg-icon { color: #10b981; }
+
+    /* error */
+    .toast-msg-error   { background: #fef2f2; color: #991b1b; border: 1.5px solid #fca5a5; }
+    .toast-msg-error .toast-msg-icon { color: #ef4444; }
+
+    /* warning */
+    .toast-msg-warning { background: #fffbeb; color: #92400e; border: 1.5px solid #fcd34d; }
+    .toast-msg-warning .toast-msg-icon { color: #f59e0b; }
+
+    /* info */
+    .toast-msg-info    { background: #eff6ff; color: #1e40af; border: 1.5px solid #93c5fd; }
+    .toast-msg-info .toast-msg-icon { color: #3b82f6; }
+</style>
+
+@code {
+    [Parameter] public string Message  { get; set; } = "";
+    [Parameter] public string Type     { get; set; } = "success"; // success | error | warning | info
+    [Parameter] public bool   IsVisible{ get; set; } = false;
+    [Parameter] public EventCallback OnDismiss { get; set; }
+
+    private string IconName => Type switch
+    {
+        "success" => "check_circle",
+        "error"   => "error_outline",
+        "warning" => "warning_amber",
+        "info"    => "info",
+        _         => "notifications"
+    };
+
+    private async Task Dismiss()
+    {
+        await OnDismiss.InvokeAsync();
+    }
+}

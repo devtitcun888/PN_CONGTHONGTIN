@@ -1,0 +1,218 @@
+/* --- ANIMATION V�O TRANG --- */
+.page-wrapper[b-8ps53bffae] {
+    animation: fadeIn-b-8ps53bffae 0.3s ease-out;
+    padding-bottom: 40px;
+}
+
+@keyframes fadeIn-b-8ps53bffae {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- 1. TOOLBAR (H�ng 1) --- */
+.toolbar[b-8ps53bffae] {
+    background: white;
+    padding: 15px 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.page-title[b-8ps53bffae] {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+    color: #1f2937;
+}
+
+.filter-group[b-8ps53bffae] {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.form-select[b-8ps53bffae] {
+    padding: 8px 15px;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    outline: none;
+    font-size: 13.5px;
+    background-color: #fff;
+    color: #4b5563;
+    cursor: pointer;
+    transition: 0.2s;
+    width: 200px;
+}
+
+    .form-select:hover[b-8ps53bffae] {
+        border-color: #003380;
+    }
+
+.search-box[b-8ps53bffae] {
+    display: flex;
+    border: 1px solid #e5e7eb;
+    border-radius: 20px;
+    overflow: hidden;
+    height: 36px;
+    transition: 0.2s;
+}
+
+    .search-box:focus-within[b-8ps53bffae] {
+        border-color: #003380;
+        box-shadow: 0 0 0 3px rgba(0, 51, 128, 0.1);
+    }
+
+    .search-box input[b-8ps53bffae] {
+        border: none;
+        padding: 0 15px;
+        width: 220px;
+        outline: none;
+        font-size: 13.5px;
+    }
+
+.btn-search[b-8ps53bffae] {
+    background-color: #003380;
+    color: white;
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+}
+
+/* --- 2. ACTION BAR (H�ng 2 - N�t b?m) --- */
+.action-bar[b-8ps53bffae] {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+/* Base Button Style */
+.btn[b-8ps53bffae] {
+    padding: 9px 20px;
+    border-radius: 8px; 
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+    .btn:hover[b-8ps53bffae] {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    }
+
+    .btn:active[b-8ps53bffae] {
+        transform: translateY(0);
+    }
+
+/* M�u s?c t?ng n�t */
+.btn-blue[b-8ps53bffae] {
+    background: #4D77C3;
+    color: white;
+}
+
+.btn-green[b-8ps53bffae] {
+    background: #3f8f6b;
+    color: white;
+}
+
+.btn-red[b-8ps53bffae] {
+    background: #b45353;
+    color: white;
+}
+
+/* N�t Outline (Xu?t file) */
+.btn-blue-outline[b-8ps53bffae] {
+    background: white;
+    color: #4D77C3;
+    border: 1px solid #4D77C3;
+}
+
+    .btn-blue-outline:hover[b-8ps53bffae] {
+        background: #f0f7ff;
+    }
+
+/* --- 3. TABLE GRID --- */
+.grid-panel[b-8ps53bffae] {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border: 1px solid #f3f4f6;
+}
+
+.vnedu-table[b-8ps53bffae] {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    text-align: center;
+}
+
+    .vnedu-table th[b-8ps53bffae] {
+        background-color: #f9fafb;
+        padding: 16px;
+        font-weight: 600;
+        color: #4b5563;
+        border-bottom: 2px solid #e5e7eb;
+        white-space: nowrap;
+    }
+
+    .vnedu-table td[b-8ps53bffae] {
+        padding: 14px 16px;
+        border-bottom: 1px solid #f3f4f6;
+        color: #374151;
+        vertical-align: middle;
+    }
+
+    .vnedu-table tr:hover[b-8ps53bffae] {
+        background-color: #f0f9ff;
+    }
+
+.text-start[b-8ps53bffae] {
+    text-align: left;
+}
+
+.font-bold[b-8ps53bffae] {
+    font-weight: 500;
+    color: #111827;
+}
+
+/* Status Text Colors */
+.text-red[b-8ps53bffae] {
+    color: #dc2626;
+    font-weight: 500;
+}
+
+.text-black[b-8ps53bffae] {
+    color: #1f2937;
+    font-weight: 500;
+}
+
+/* Badge cho s? m�n */
+.badge-pill[b-8ps53bffae] {
+    background-color: #f3f4f6;
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #4b5563;
+}
+

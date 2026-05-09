@@ -1,0 +1,21 @@
+{
+  "CORE_SERVICE": {
+    "url1": "http://titkul.ddns.net:9201/pn_coreservice",
+    "url2": "http://localhost:9102/pn_coreservice"
+  },
+  "LOGS": {
+    "error_log": true,
+    "error_folder": "D:\\PN_HDSBE\\Logs\\Error",
+    "Info_log": true,
+    "info_folder": "D:\\PN_HDSBE\\Logs\\Info"
+  },
+  "FILE_SERVICE": {
+    "url1": "http://titkul.ddns.net:2031/HDSBE/FileService/V1",
+	"url2":"https://api-fileservices.titkul.com/HDSBE/FileService/V1"
+  },
+  "THONG_TIN": {
+    "login_school": "9200_h2_mnhoanganh",
+    "login_account": "dev_hd_account_dev",
+    "matruongbo": "79777308"
+  }
+}	

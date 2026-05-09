@@ -1,0 +1,121 @@
+﻿@* @using DigHocBaUI.Models
+@using Microsoft.AspNetCore.Components.Forms
+
+@namespace DigHocBaUI.Components.FormComponents
+
+@if (IsVisible)
+{
+    <div class="modal-overlay" @onclick="CloseModal">
+        <div class="modal-box" @onclick:stopPropagation="true" style="position: relative; z-index: 2001;">
+            <div class="modal-header">
+                <h3>@Title</h3>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Họ và tên <span class="required">*</span></label>
+                        <input type="text" class="form-control" @bind="UserData.HoTen" />
+                    </div>
+                    <div class="form-group">
+                        <label>CCCD/ CMND <span class="required">*</span></label>
+                        <input type="text" class="form-control" @bind="UserData.CCCD" />
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày sinh <span class="required">*</span></label>
+                        <input type="text" class="form-control" value="22/06/1994" />
+                    </div>
+                </div>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Giới tính <span class="required">*</span></label>
+                        <select class="form-select-modal"><option>Nữ</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Đơn vị <span class="required">*</span></label>
+                        <select class="form-select-modal"><option>Tiểu học</option></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Chức vụ <span class="required">*</span></label>
+                        <select class="form-select-modal"><option>Giáo viên bộ môn</option></select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Chữ ký <span class="required">*</span></label>
+                    <div class="upload-area" style="position: relative; overflow: hidden;">
+                        @if (string.IsNullOrEmpty(previewImage))
+                        {
+                            <InputFile OnChange="HandleFileSelected" class="hidden-file-input" accept="image/*"
+                                       style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 10;" />
+                            <div class="upload-placeholder">
+                                <span class="upload-icon">☁️</span>
+                                <span>Nhập file ảnh chữ ký tại đây</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="preview-container" style="position: relative; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
+                                <img src="@previewImage" alt="Chữ ký" style="max-height: 100%; max-width: 100%; object-fit: contain;" />
+                                <button type="button" class="btn-remove-img" @onclick="RemoveImage" @onclick:stopPropagation="true"
+                                        style="position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: 2px solid white; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; z-index: 100;">
+                                    ✕
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer" style="position: relative; z-index: 3000;">
+                <button type="button" class="btn-modal" style="background-color: #dc3545; color: #fff" @onclick="CloseModal">Đóng</button>
+                <button type="button" class="btn-modal" style="background-color: blue; color: #fff" @onclick="SaveModal">Lưu</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public GiaoVien UserData { get; set; } = new();
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+
+    // THÊM: Tham số Title để thay đổi tiêu đề
+    [Parameter] public string Title { get; set; } = "Thông tin người dùng";
+
+    private string? previewImage;
+    private string? errorMessage;
+
+    // THÊM: Reset ảnh khi mở form tạo mới (STT = 0)
+    protected override void OnParametersSet()
+    {
+        if (UserData.STT == 0)
+        {
+            previewImage = null;
+            errorMessage = null;
+        }
+    }
+
+    // ... (Giữ nguyên các hàm HandleFileSelected, RemoveImage...)
+    private async Task HandleFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            long maxFileSize = 1024L * 1024L * 50L;
+            try
+            {
+                var resizedFile = await file.RequestImageFileAsync("image/png", 300, 300);
+                var buffer = new byte[resizedFile.Size];
+                await resizedFile.OpenReadStream(maxFileSize).ReadAsync(buffer);
+                var base64 = Convert.ToBase64String(buffer);
+                previewImage = $"data:image/png;base64,{base64}";
+            }
+            catch (Exception ex) { }
+        }
+    }
+
+    private void RemoveImage() { previewImage = null; }
+    private async Task CloseModal() { await OnClose.InvokeAsync(false); }
+    private async Task SaveModal() { await OnClose.InvokeAsync(true); }
+} *@

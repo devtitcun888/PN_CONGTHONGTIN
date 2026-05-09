@@ -1,0 +1,150 @@
+@page "/login"
+@namespace LoginComponent
+@using Microsoft.Extensions.Logging
+@using PN_HDSWeb_Admin.Authentication
+@using System.Net.Http.Headers
+@using System.Text.Json
+@using System.Text.Encodings.Web
+@using hDataLibraryN8
+@using PN_HDSWeb_Admin.Data.Services
+@using PN_HDSWeb_Admin.Data.Model
+@inject UserAccountService userAccountService
+@inject IJSRuntime JS
+@inject AuthenticationStateProvider authStateProvider
+@inject NavigationManager navManager
+@inject HttpContentService httpContent
+@inject HttpClient httpClient
+@inject TokenProvider TokenProvider
+@inject UserState UserState
+@inject IHttpContextAccessor httpContextAccessor
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@mdi/font@6.9.96/css/materialdesignicons.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="loginP-wrapper">
+        <div class="loginP-overlay-backdrop">
+            <div class="loginP-loader-box">
+                <div class="loginP-spinner"></div>
+                <p>Đang tự động đăng nhập vào hệ thống...</p>
+                <small style="color: #94a3b8; display: block; margin-top: 8px;">Vui lòng đợi trong giây lát</small>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .loginP-wrapper {
+        min-height: 100vh;
+        width: 100%;
+        background-color: #f8fafc; /* Nền màu sáng nhẹ nhàng */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-family: 'Inter', sans-serif;
+    }
+
+    .loginP-overlay-backdrop {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .loginP-loader-box {
+        background: white;
+        padding: 40px;
+        border-radius: 16px;
+        text-align: center;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        animation: loginP-slideUp 0.5s ease-out;
+    }
+
+    .loginP-spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e2e8f0;
+        border-top-color: #0081A7;
+        border-radius: 50%;
+        animation: loginP-spin 1s linear infinite;
+        margin: 0 auto 20px auto;
+    }
+
+    .loginP-loader-box p {
+        color: #334155;
+        font-weight: 600;
+        margin: 0;
+        font-size: 16px;
+    }
+
+    @@keyframes loginP-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes loginP-slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+@code {
+    // Hàm này tự động chạy ngay khi component vừa được render lần đầu tiên
+    protected override async Task OnInitializedAsync()
+    {
+        await AutoLoginBypass();
+    }
+
+    private async Task AutoLoginBypass()
+    {
+        try
+        {
+            // Tùy chọn: Delay một chút (500ms) để người dùng nhìn thấy màn hình loading cho mượt mà,
+            // tránh việc trang chớp nháy quá nhanh. Bạn có thể xóa dòng này nếu muốn tốc độ tối đa.
+            await Task.Delay(500);
+
+            // Tạo session giả lập bypass
+            var session = new UserSession
+            {
+                MaUser = "7901012916",
+                MaTruongBo = "79778402",
+                Role = "GiaoVien",
+                TenTruong = "Tiểu học Tân Hưng",
+                UserName = "7901012916",
+                Cap = new string[] { "01" },
+                SessionId = Guid.NewGuid().ToString(),
+                ExpiryTime = DateTime.UtcNow.AddHours(8)
+            };
+
+            // Cập nhật trạng thái xác thực
+            await ((CustomAuthenticationStateProvider)authStateProvider).UpdateAuthenticationState(session);
+
+            // Chuyển hướng người dùng thẳng vào trang dashboard
+            navManager.NavigateTo("/dashboard", true);
+        }
+        catch (Exception ex)
+        {
+            // Nếu có lỗi thì ghi log (bạn có thể thay bằng các cơ chế log hiện tại của bạn)
+            Console.WriteLine($"Lỗi auto login bypass: {ex.Message}");
+        }
+    }
+}

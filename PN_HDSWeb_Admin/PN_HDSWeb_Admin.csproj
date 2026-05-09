@@ -1,0 +1,102 @@
+﻿    <Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId> </UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Pages\DiemCapTHPT\**" />
+    <Compile Remove="Pages\HocTap\**" />
+    <Compile Remove="Pages\QuanLyDiem\**" />
+    <Content Remove="Pages\DiemCapTHPT\**" />
+    <Content Remove="Pages\HocTap\**" />
+    <Content Remove="Pages\QuanLyDiem\**" />
+    <EmbeddedResource Remove="Pages\DiemCapTHPT\**" />
+    <EmbeddedResource Remove="Pages\HocTap\**" />
+    <EmbeddedResource Remove="Pages\QuanLyDiem\**" />
+    <None Remove="Pages\DiemCapTHPT\**" />
+    <None Remove="Pages\HocTap\**" />
+    <None Remove="Pages\QuanLyDiem\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
+    <PackageReference Include="Blazor.Bootstrap" Version="2.1.0" />
+    <PackageReference Include="BlazorDateRangePicker" Version="5.2.0" />
+    <PackageReference Include="BlazorInputFile" Version="0.2.0" />
+    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="Dapper" Version="2.1.28" />
+    <PackageReference Include="DocX" Version="3.0.1" />
+    <PackageReference Include="EPPlus" Version="6.3.0" />
+    <PackageReference Include="FontAwesome" Version="4.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="8.0.7" />
+    <PackageReference Include="MudBlazor" Version="6.17.0" />
+    <PackageReference Include="PDFsharp" Version="6.1.1" />
+    <PackageReference Include="Radzen.Blazor" Version="4.32.8" />
+    <PackageReference Include="Syncfusion.DocIORenderer.Net.Core" Version="26.2.10" />
+    <PackageReference Include="Syncfusion.Licensing" Version="26.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PN_HDSWeb_Library\PN_HDSWeb_Library.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="hDataLibraryN8">
+      <HintPath>LibN8\hDataLibraryN8.dll</HintPath>
+    </Reference>
+    <Reference Include="hUltiLibraryN8">
+      <HintPath>LibN8\hUltiLibraryN8.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Abstractions">
+      <HintPath>LibN8\Microsoft.IdentityModel.Abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.JsonWebTokens">
+      <HintPath>LibN8\Microsoft.IdentityModel.JsonWebTokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Logging">
+      <HintPath>LibN8\Microsoft.IdentityModel.Logging.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Tokens">
+      <HintPath>LibN8\Microsoft.IdentityModel.Tokens.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>LibN8\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql">
+      <HintPath>LibN8\Npgsql.dll</HintPath>
+    </Reference>
+    <Reference Include="Npgsql.Json.NET">
+      <HintPath>LibN8\Npgsql.Json.NET.dll</HintPath>
+    </Reference>
+
+    <Reference Include="PN_HDSWeb_Components">
+      <HintPath>..\PN_HDSWeb_Components\bin\Debug\net8.0\PN_HDSWeb_Components.dll</HintPath>
+    </Reference>
+
+    <Reference Include="PN_HDSWeb_Library">
+      <HintPath>..\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog">
+      <HintPath>LibN8\Serilog.dll</HintPath>
+    </Reference>
+    <Reference Include="Serilog.Sinks.File">
+      <HintPath>LibN8\Serilog.Sinks.File.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlClient">
+      <HintPath>LibN8\System.Data.SqlClient.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IdentityModel.Tokens.Jwt">
+      <HintPath>LibN8\System.IdentityModel.Tokens.Jwt.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Admin\css\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,334 @@
+/* =======================================
+   PAGE WRAPPER
+======================================= */
+.page-wrapper[b-ujwnjrs008] {
+    max-width: auto;
+    margin: 0 auto;
+    padding: 20px;
+    animation: fadeIn-b-ujwnjrs008 0.25s ease-out;
+    font-family: "Inter", system-ui, sans-serif;
+}
+
+@keyframes fadeIn-b-ujwnjrs008 {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =======================================
+   TABS
+======================================= */
+.tabs[b-ujwnjrs008] {
+    display: flex;
+    gap: 28px;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab-item[b-ujwnjrs008] {
+    padding: 12px 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    position: relative;
+    color: #6b7280;
+    transition: 0.2s;
+}
+
+    .tab-item:hover[b-ujwnjrs008] {
+        color: #003380;
+    }
+
+    .tab-item.active[b-ujwnjrs008] {
+        color: #003380;
+        font-weight: 700;
+    }
+
+        .tab-item.active[b-ujwnjrs008]::after {
+            content: "";
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: #003380;
+            border-radius: 3px 3px 0 0;
+        }
+
+/* =======================================
+   TOOLBAR
+======================================= */
+.toolbar[b-ujwnjrs008] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.page-title[b-ujwnjrs008] {
+    font-size: 20px;
+    font-weight: 700;
+    color: #111827;
+}
+
+.actions[b-ujwnjrs008] {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+/* =======================================
+   SEARCH BOX
+======================================= */
+.search-box[b-ujwnjrs008] {
+    display: flex;
+    align-items: center;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #fff;
+}
+
+.search-input[b-ujwnjrs008] {
+    padding: 9px 12px;
+    font-size: 14px;
+    border: none;
+    outline: none;
+    width: 240px;
+}
+
+.btn-search[b-ujwnjrs008] {
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #6b7280;
+}
+
+    .btn-search:hover[b-ujwnjrs008] {
+        color: #003380;
+    }
+
+/* =======================================
+   BUTTONS (CHUẨN THEME BẠN ĐANG DÙNG)
+======================================= */
+.btn-primary[b-ujwnjrs008] {
+    background: #4D77C3;
+    border: 1px solid #4D77C3;
+    color: #fff;
+    padding: 9px 22px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.15s ease-in-out;
+}
+
+    .btn-primary:hover[b-ujwnjrs008] {
+        background: #3B6FB6;
+        border-color: #3B6FB6;
+    }
+
+    .btn-primary:active[b-ujwnjrs008] {
+        background: #355fa1;
+        border-color: #355fa1;
+    }
+
+    .btn-primary:disabled[b-ujwnjrs008] {
+        opacity: 0.55;
+        cursor: not-allowed;
+    }
+
+/* ICON Button */
+.btn-icon[b-ujwnjrs008] {
+    width: 34px;
+    height: 34px;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    color: #4b5563;
+    background: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.15s;
+}
+
+    .btn-icon:hover[b-ujwnjrs008] {
+        background: #f3f4f6;
+        color: #3B6FB6;
+    }
+
+    /* Danger button */
+    .btn-icon.text-danger[b-ujwnjrs008] {
+        border-color: #f4c3c3;
+        color: #c53030;
+    }
+
+        .btn-icon.text-danger:hover[b-ujwnjrs008] {
+            background: #ffecec;
+            border-color: #e38a8a;
+        }
+
+.btn-icon .bi[b-ujwnjrs008] {
+    font-size: 18px;
+    line-height: 1;
+    vertical-align: middle;
+    display: inline-block;
+}
+
+/* =======================================
+   TABLE
+======================================= */
+.grid-panel[b-ujwnjrs008] {
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.04);
+    margin-top: 10px;
+}
+
+.vnedu-table[b-ujwnjrs008] {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .vnedu-table th[b-ujwnjrs008] {
+        background: #f9fafb;
+        padding: 14px 15px;
+        text-transform: uppercase;
+        font-size: 12.5px;
+        font-weight: 700;
+        color: #374151;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .vnedu-table td[b-ujwnjrs008] {
+        padding: 14px 15px;
+        font-size: 14px;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .vnedu-table tbody tr:hover[b-ujwnjrs008] {
+        background: #f0f9ff;
+    }
+
+/* =======================================
+   BADGES
+======================================= */
+.badge[b-ujwnjrs008] {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12.5px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.badge-yellow[b-ujwnjrs008] {
+    background: #fef9c3;
+    border: 1px solid #fde047;
+    color: #b45309;
+}
+
+.badge-green[b-ujwnjrs008] {
+    background: #dcfce7;
+    border: 1px solid #bbf7d0;
+    color: #15803d;
+}
+
+/* =======================================
+   BACK LINK
+======================================= */
+.back-link[b-ujwnjrs008] {
+    font-weight: 600;
+    color: #6b7280;
+    text-decoration: none;
+    transition: .2s;
+}
+
+    .back-link:hover[b-ujwnjrs008] {
+        color: #003380;
+        transform: translateX(-3px);
+    }
+
+/* =======================================
+   DETAIL CARD
+======================================= */
+.student-info-card[b-ujwnjrs008] {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.student-name[b-ujwnjrs008] {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 14px;
+}
+
+.info-grid[b-ujwnjrs008] {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+/* ===========================
+   PAGINATION
+=========================== */
+
+.pagination-container[b-ujwnjrs008] {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 4px;
+    margin-top: 12px;
+}
+
+.pagination-info[b-ujwnjrs008] {
+    font-size: 14px;
+    color: #4b5563;
+}
+
+.pagination-controls[b-ujwnjrs008] {
+    display: flex;
+    gap: 6px;
+}
+
+.page-btn[b-ujwnjrs008] {
+    min-width: 34px;
+    height: 34px;
+    padding: 0 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: white;
+    cursor: pointer;
+    font-size: 14px;
+    color: #374151;
+    transition: 0.15s;
+}
+
+    .page-btn:hover:not(:disabled)[b-ujwnjrs008] {
+        background: #f3f4f6;
+    }
+
+    .page-btn.active[b-ujwnjrs008] {
+        background: #4D77C3;
+        color: white;
+        border-color: #4D77C3;
+    }
+
+    .page-btn:disabled[b-ujwnjrs008] {
+        opacity: .4;
+        cursor: not-allowed;
+    }

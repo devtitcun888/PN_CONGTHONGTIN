@@ -1,0 +1,2 @@
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Admin\wwwroot\css\hud_style.css
+C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Admin\wwwroot\css\style_hoctap.css

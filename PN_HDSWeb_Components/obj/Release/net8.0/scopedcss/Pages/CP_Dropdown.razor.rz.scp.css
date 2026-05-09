@@ -1,0 +1,46 @@
+.btn-group[b-a1mbhbgwpi] {
+    position: relative;
+    cursor: pointer;
+    width: 150px;
+}
+
+    .btn-group input[b-a1mbhbgwpi] {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 150px;
+    }
+
+.dropdown-menu[b-a1mbhbgwpi] {
+    /*top: 93%;*/
+    max-height: 160px;
+    overflow-y: auto;
+}
+
+.btn-group > .icon-chevron-down[b-a1mbhbgwpi]::before {
+    position: absolute;
+    font-size: 10px;
+    right: 10px;
+    top: 34%;
+}
+
+.btn-group .icon-close[b-a1mbhbgwpi] {
+    position: absolute;
+    top: 26%;
+    font-size: 18px;
+    right: 12%;
+    margin-right: 3px;
+    z-index: 10;
+}
+/*Responsive*/
+@media screen and (max-width: 767px) {
+    .dropdown-menu[b-a1mbhbgwpi] {
+        min-width: 100%
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .dropdown-menu[b-a1mbhbgwpi] {
+        min-width: 150%;
+    }
+}

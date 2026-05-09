@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+https://go.microsoft.com/fwlink/?LinkID=208121.
+-->
+<Project>
+  <PropertyGroup>
+    <_PublishTargetUrl>D:\18_TITKUL\00_HOST\Bàn giao\FE\BACKUP 2025\PN_HDSWeb\PN_HDSWeb_Admin\bin\Release\net8.0\publish\</_PublishTargetUrl>
+    <History>True|2026-01-14T14:34:58.6870493Z||;False|2026-01-14T21:32:45.5330363+07:00||;True|2026-01-13T00:58:43.5277205+07:00||;True|2026-01-12T08:42:22.8492890+07:00||;False|2026-01-12T08:40:08.1666390+07:00||;True|2026-01-10T14:53:35.7503743+07:00||;True|2026-01-08T18:09:23.0094851+07:00||;True|2025-12-31T08:41:02.7224791+07:00||;True|2025-12-25T11:27:31.2173641+07:00||;True|2025-12-23T09:11:00.3091283+07:00||;True|2025-12-12T09:22:17.5269117+07:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+</Project>

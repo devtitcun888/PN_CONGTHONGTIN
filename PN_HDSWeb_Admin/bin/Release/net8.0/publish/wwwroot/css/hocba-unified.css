@@ -1,0 +1,311 @@
+.hocba-theme {
+  --hb-primary: #2563eb;
+  --hb-primary-soft: #eff6ff;
+  --hb-text: #1f2937;
+  --hb-muted: #6b7280;
+  --hb-border: #e5e7eb;
+  --hb-surface: #ffffff;
+  --hb-bg: #f5f7fb;
+  --hb-success: #16a34a;
+  --hb-warning: #d97706;
+  --hb-danger: #dc2626;
+  color: var(--hb-text);
+}
+
+.hocba-theme.page-wrapper,
+.hocba-theme.dashboard-container {
+  background: var(--hb-bg);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.hocba-theme .toolbar,
+.hocba-theme .top-header,
+.hocba-theme .header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.hocba-theme .page-title,
+.hocba-theme .title,
+.hocba-theme .page-heading,
+.hocba-theme .welcome-text h1 {
+  margin: 0;
+  color: #0f172a;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.hocba-theme .filter-group,
+.hocba-theme .actions,
+.hocba-theme .header-actions,
+.hocba-theme .header-controls,
+.hocba-theme .toolbar-left {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hocba-theme .form-select,
+.hocba-theme .custom-select,
+.hocba-theme .filter-select,
+.hocba-theme .page-size-select,
+.hocba-theme .search-box input,
+.hocba-theme .search-box-large input {
+  border: 1px solid var(--hb-border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  min-height: 38px;
+  background: #fff;
+  color: var(--hb-text);
+}
+
+.hocba-theme .search-box,
+.hocba-theme .search-box-large,
+.hocba-theme .search-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hocba-theme .btn,
+.hocba-theme .btn-primary,
+.hocba-theme .btn-create,
+.hocba-theme .btn-delete,
+.hocba-theme .btn-search,
+.hocba-theme .btn-search-blue,
+.hocba-theme .btn-sync-green {
+  border: 1px solid transparent;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.hocba-theme .btn-blue,
+.hocba-theme .btn-primary,
+.hocba-theme .btn-create,
+.hocba-theme .btn-search-blue {
+  background: var(--hb-primary);
+  color: #fff;
+}
+
+.hocba-theme .btn-blue-outline {
+  border: 1px solid #bfdbfe;
+  color: var(--hb-primary);
+  background: #fff;
+}
+
+.hocba-theme .btn-green,
+.hocba-theme .btn-sync-green {
+  background: var(--hb-success);
+  color: #fff;
+}
+
+.hocba-theme .btn-red,
+.hocba-theme .btn-delete {
+  background: var(--hb-danger);
+  color: #fff;
+}
+
+.hocba-theme .btn-search {
+  background: #eef2ff;
+  color: #334155;
+}
+
+.hocba-theme .grid-panel {
+  background: var(--hb-surface);
+  border: 1px solid var(--hb-border);
+  border-radius: 12px;
+  padding: 10px;
+  overflow: auto;
+}
+
+.hocba-theme .vnedu-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.hocba-theme .vnedu-table thead th {
+  background: #f8fafc;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
+  border-bottom: 1px solid var(--hb-border);
+  padding: 10px 8px;
+  white-space: nowrap;
+}
+
+.hocba-theme .vnedu-table tbody td {
+  padding: 10px 8px;
+  border-bottom: 1px solid #f1f5f9;
+  font-size: 14px;
+  color: #334155;
+}
+
+.hocba-theme .vnedu-table tbody tr:hover {
+  background: #f8fbff;
+}
+
+.hocba-theme .tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.hocba-theme .tab-item {
+  border: 1px solid var(--hb-border);
+  background: #fff;
+  color: #334155;
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.hocba-theme .tab-item.active {
+  color: #fff;
+  background: var(--hb-primary);
+  border-color: var(--hb-primary);
+}
+
+.hocba-theme .pagination-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 10px 0 4px;
+}
+
+.hocba-theme .pagination-controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.hocba-theme .page-btn {
+  min-width: 32px;
+  height: 32px;
+  border: 1px solid var(--hb-border);
+  border-radius: 8px;
+  background: #fff;
+  color: #334155;
+}
+
+.hocba-theme .page-btn.active {
+  background: var(--hb-primary);
+  color: #fff;
+  border-color: var(--hb-primary);
+}
+
+.hocba-theme .badge,
+.hocba-theme .status-pill,
+.hocba-theme .status-text {
+  border-radius: 999px;
+  padding: 2px 10px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.hocba-theme .done,
+.hocba-theme .badge-green {
+  color: #166534;
+  background: #dcfce7;
+}
+
+.hocba-theme .pending,
+.hocba-theme .badge-yellow {
+  color: #92400e;
+  background: #fef3c7;
+}
+
+.hocba-theme .sync-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.hocba-theme .sync-card {
+  border: 1px solid var(--hb-border);
+  border-radius: 10px;
+  background: #fff;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.hocba-theme .sync-card.active {
+  border-color: var(--hb-primary);
+  box-shadow: 0 0 0 2px #dbeafe inset;
+}
+
+.hocba-theme .card-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.hocba-theme .card-status.green { color: #15803d; }
+.hocba-theme .card-status.red { color: #b91c1c; }
+
+.hocba-theme .dash-header,
+.hocba-theme .kpi-row,
+.hocba-theme .charts-row {
+  display: grid;
+  gap: 12px;
+}
+
+.hocba-theme .dash-header {
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.hocba-theme .kpi-row {
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  margin-bottom: 12px;
+}
+
+.hocba-theme .kpi-card,
+.hocba-theme .chart-card,
+.hocba-theme .recent-section {
+  background: #fff;
+  border: 1px solid var(--hb-border);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.hocba-theme .kpi-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--hb-primary-soft);
+  color: var(--hb-primary);
+  display: grid;
+  place-items: center;
+}
+
+.hocba-theme .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+@media (max-width: 992px) {
+  .hocba-theme.page-wrapper,
+  .hocba-theme.dashboard-container { padding: 10px; }
+
+  .hocba-theme .dash-header { grid-template-columns: 1fr; }
+}

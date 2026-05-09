@@ -1,0 +1,574 @@
+﻿{
+  "baseUrl": "http://hk.titkul.com:7660/ISAPI/AccessControl/UserInfo/Record?format=json",
+  "username": "admin",
+  "password": "dGl0a3VsQDIwMjQ=",
+  "79769510": {
+    "tentruong": "Cat Lai",
+    "cameras": [
+      {
+        "name": "catlai01",
+        "devIndex": "56A54DBE-764F-4368-B21D-03C120FE97ED"
+      },
+      {
+        "name": "catlai02",
+        "devIndex": "F726CC3D-2B9C-4CD5-9FB3-2F77BA00D5C5"
+      },
+      {
+        "name": "catlai03",
+        "devIndex": "76776EB0-F02D-41FC-B6E2-6448E1406399"
+      },
+      {
+        "name": "catlai04",
+        "devIndex": "91CA2FE1-BC19-43FF-B13E-20AAE88D62ED"
+      }
+    ]
+  },
+  "IchiSkill": {
+    "tentruong": "IchiSkill",
+    "cameras": [
+      {
+        "name": "ICHISKILL1",
+        "devIndex": "5E99D8AA-9B83-4E24-98D7-B3D2871BA8DD"
+      },
+      {
+        "name": "ICHISKILL2",
+        "devIndex": "D809F860-7F59-422C-AE33-267347C5D702"
+      },
+      {
+        "name": "ICHISKILL3",
+        "devIndex": "B693F5A8-68BC-41C1-8A22-8467BDC4ABC0"
+      }
+    ]
+  },
+  "TCD0211": {
+    "tentruong": "Trung Cấp Nghề Nhân Đạo",
+    "cameras": [
+      {
+        "name": "tcnhandao01",
+        "devIndex": "15BC00C7-2CAB-434A-A126-20BBEE39901C"
+      },
+      {
+        "name": "tcnhandao02",
+        "devIndex": "9775D536-33FD-4C8A-BD60-5536A97DF365"
+      }
+    ]
+  },
+  "79785334": {
+    "tentruong": "Hoa Phuong 1",
+    "cameras": [
+      {
+        "name": "hoaphuong1c01",
+        "devIndex": "AD5461DD-7A72-40CF-8B1D-6AD24355DB35"
+      },
+      {
+        "name": "hoaphuong1c02",
+        "devIndex": "9BE25C12-3AA4-42C4-AD6B-9B8AD755CA6E"
+      }
+    ]
+  },
+  "PETRO": {
+    "tentruong":"Petro",
+    "cameras": [
+      {
+        "name": "Petro Bac Lieu",
+        "devIndex": "648DC47B-6A24-4C3C-AC70-668B4FE8C8E3"
+      }
+    ]
+},
+  "79000763": {
+    "tentruong":"Can Thanh",
+    "cameras": [
+      {
+        "name": "canthanh01",
+        "devIndex": "8669DF5E-8316-4072-990B-2B1905220C84"
+      },
+      {
+        "name": "canthanh02",
+        "devIndex": "26B3A263-1F99-4A09-835D-8EF9E2009F07"
+      },
+      {
+        "name": "canthanh03",
+        "devIndex": "93C602BB-6AA7-4889-8232-F52A99DBB0FD"
+      }
+    ]
+},
+  "79000748": {
+    "tentruong":"Trung Truc",
+    "cameras": [
+      {
+        "name": "trungtruc01",
+        "devIndex": "522A0A78-EDB5-45AF-8400-361AF8348061"
+      },
+      {
+        "name": "trungtruc02",
+        "devIndex": "6F71056E-F043-434E-AC04-ECCCC012D787"
+      },
+      {
+        "name": "trungtruc03",
+        "devIndex": "4EA04E93-7BEC-4D9E-8172-557C018C2B1A"
+      },
+      {
+        "name": "trungtruc04",
+        "devIndex": "5D1A67B5-9082-4253-A4CF-58FE81FF779E"
+      }
+    ]
+  },
+  "79762901": {
+    "tentruong":"GDTX Thu Duc",
+    "cameras": [
+      {
+        "name": "gdtxthuduc01",
+        "devIndex": "97A7F4F6-5E2F-46DB-B0CB-6FF6B01AEEF6"
+      },
+      {
+        "name": "gdtxthuduc02",
+        "devIndex": "C981EC98-BFCB-4380-92AD-11D0F13CF1E2"
+      },
+      {
+        "name": "gdtxthuduc03",
+        "devIndex": "3B041F10-5F26-4B9D-AFCA-8B8EB15C2A16"
+      },
+      {
+        "name": "gdtxthuduc04",
+        "devIndex": "85183272-86F2-4686-A4C5-5D477AD21B2E"
+      }
+    ]
+  },
+  "79770511": {
+    "tentruong":"Phan Sao Nam",
+    "cameras": [
+      {
+        "name": "phansaonam01",
+        "devIndex": "993EC3E0-DD39-4369-BC16-078F8F6CC7A8"
+      },
+      {
+        "name": "phansaonam02",
+        "devIndex": "B1641AAF-BC51-4965-9178-488486306653"
+      },
+      {
+        "name": "phansaonam03",
+        "devIndex": "85236289-8BBD-45A1-B437-86398A8221AB"
+      }
+    ]
+  },
+  "79778402": {
+    "tentruong":"Tan Hung",
+    "cameras": [
+      {
+        "name": "tanhung01",
+        "devIndex": "20367950-0C0D-4A3C-BB3E-8C645A229E93"
+      },
+      {
+        "name": "tanhung02",
+        "devIndex": "9C399CB2-7A18-49AB-A4B3-4225DF3EC59F"
+      },
+      {
+        "name": "tanhung03",
+        "devIndex": "29819368-F070-4FDB-B010-433CD9A21173"
+      },
+      {
+        "name": "tanhung04",
+        "devIndex": "4C6CC3D1-3AD7-4FA7-B795-C9934C7935DD"
+      },
+      {
+        "name": "tanhung05",
+        "devIndex": "D01F2DAB-204E-48D1-A98D-A7EBDB0B9ED5"
+      },
+      {
+        "name": "tanhung06",
+        "devIndex": "69026953-1D14-4911-B34E-A05601C2A2D8"
+      }
+    ]
+  },
+  "79770509": {
+    "tentruong":"Bach Dang",
+    "cameras": [
+      {
+        "name": "bachdang01",
+        "devIndex": "E382A7CE-CD51-48EF-99EF-3D1C894FC867"
+      },
+      {
+        "name": "bachdang02",
+        "devIndex": "B5E0A66E-96F6-4E74-BB60-BC7BB7A29C46"
+      },
+      {
+        "name": "bachdang03",
+        "devIndex": "9630AF15-D189-47EE-93F9-6740C2EBA76F"
+      }, {
+        "name": "bachdang04",
+        "devIndex": "1078D017-E78B-4653-8CB0-3351D1F61AF9"
+      },
+      {
+        "name": "bachdang05",
+        "devIndex": "176D66A7-6629-42FC-8FB8-F281BFADE7F7"
+      },
+      {
+        "name": "bachdang06",
+        "devIndex": "17104205-05D5-4A9A-AEC8-30F0677222FC"
+      }
+    ]
+  }, 
+  "75000F12": {
+    "tentruong":"Luong The Vinh",
+    "cameras": [
+      {
+        "name": "luongthevinhBT01",
+        "devIndex": "30742641-EB0B-4AE6-B945-DB9086637989"
+      },
+      {
+        "name": "luongthevinhBT02",
+        "devIndex": "51677913-0491-4AE3-95B4-EAFE0AFFAE01"
+      },
+      {
+        "name": "luongthevinh01",
+        "devIndex": "C8D1A76E-DDFA-48C7-A81B-298E952037F1"
+      }, {
+        "name": "luongthevinh02",
+        "devIndex": "29BFEB97-25AA-41E8-86CE-9EBA964D4591"
+      },
+      {
+        "name": "luongthevinh03",
+        "devIndex": "702E7CDD-184A-41C3-BFE1-26E16E6D0142"
+      },
+      {
+        "name": "luongthevinh04",
+        "devIndex": "29EDF312-2089-46EB-A450-A92269D4DA07"
+      }
+    ]
+  }, 
+  "79772405": {
+    "tentruong":"Tran Van On",
+    "cameras": [
+      {
+        "name": "tranvanon01",
+        "devIndex": "F9EC1377-787F-4990-84DA-0C417B9FB814"
+      }
+    ]
+  }, 
+  "79767502": {
+    "tentruong":"Le Loi TP",
+    "cameras": [
+      {
+        "name": "leloitp01",
+        "devIndex": "76791AF3-6F1D-4CE8-8230-654492F9D969"
+      },
+      {
+        "name": "leloitp02",
+        "devIndex": "57BD3AE6-A275-42A8-884C-5791D030E040"
+      },
+      {
+        "name": "leloitp03",
+        "devIndex": "2236F110-DCB0-4837-9531-E26495EBB82D"
+      }, {
+        "name": "leloitp04",
+        "devIndex": "CF7FD5AC-4DCF-4614-B92F-9E46A3E1D4EF"
+      },
+      {
+        "name": "leloitp05",
+        "devIndex": "75C457B8-6D2C-4C6A-A235-AA0AA9D27148"
+      },
+      {
+        "name": "leloitp06",
+        "devIndex": "7B7A012E-C259-4614-B2A9-7B795773B616"
+      },
+      {
+        "name": "leloitp07",
+        "devIndex": "8F38E19A-C929-4426-ACAB-E0898B457496"
+      }
+    ]
+  }, 
+  "79777406": {
+    "tentruong":"Binh Tri 1",
+    "cameras": [
+      {
+        "name": "binhtri01",
+        "devIndex": "C38038FB-DBF2-4D8C-9A78-3BA6CE7F3443"
+      },
+      {
+        "name": "binhtri02",
+        "devIndex": "D1A66761-6BF1-4131-83C0-887C27E8BE24"
+      },
+      {
+        "name": "binhtri03",
+        "devIndex": "1E1DED61-EA3B-4F03-9BD1-86017805853E"
+      },
+      { 
+        "name": "binhtri04",
+        "devIndex": "20FE8CA2-EBE6-4BDD-B221-08CC8E305F3A"
+      },
+      {
+        "name": "binhtri05",
+        "devIndex": "8D2FE5E3-C6BE-4836-8B08-4BBD84BA9397"
+      },
+      {
+        "Lame": "binhtri06",
+        "devIndex": "7511C326-A06A-4FCB-BFB9-B870A5D17B9A"
+      }
+    ]
+  }, 
+  "79777412": {
+    "tentruong":"Le Cong Phep",
+    "cameras": [
+      {
+        "name": "lecongphep01",
+        "devIndex": "04BCEEC5-7BF4-431A-86C4-CC6F1833AE6"
+      },
+      {
+        "name": "lecongphep02",
+        "devIndex": "CEBAB77B-838A-4055-9472-D358472B070A"
+      },
+      {
+        "name": "lecongphep03",
+        "devIndex": "979AC183-7CBE-4DB5-8931-63754A7452E5"
+      },
+      { 
+        "name": "lecongphep04",
+        "devIndex": "FA018769-9400-483D-9E49-05A544A98726"
+      },
+      {
+        "name": "lecongphep05",
+        "devIndex": "15C4CBDB-6B60-4285-A7C3-FA56160409A5"
+      },
+      {
+        "Lame": "lecongphep06",
+        "devIndex": "122CDA15-B17D-4D6A-8639-3BD91900D599"
+      }
+    ]
+  }, 
+  "79000749": {
+    "tentruong":"Han Thuyen",
+    "cameras": [
+      {
+        "name": "hanthuyen01",
+        "devIndex": "4FE9F37D-3086-44B6-96B7-70D1220CBCEE"
+      },
+      {
+        "name": "hanthuyen02",
+        "devIndex": "C929CF7B-F54B-4FDA-ABB0-2E534829BC29"
+      },
+      {
+        "name": "hanthuyen03",
+        "devIndex": "323BB55F-816B-4F04-ADEC-6CAF9C7D89FE"
+      },
+      { 
+        "name": "hanthuyen04",
+        "devIndex": "99DF9AB8-1390-4C15-9C45-359282D45C6F"
+      },
+      {
+        "name": "hanthuyen05",
+        "devIndex": "80625B02-B90A-4C2D-8C7C-36A9FA830E8D"
+      },
+      {
+        "Lame": "hanthuyen06",
+        "devIndex": "E0276F09-342C-4E99-A61A-CA882696893F"
+      },
+      {
+        "Lame": "hanthuyen07",
+        "devIndex": "9E1B3883-CEDA-4453-AF6E-AF4AE7A8B4B2"
+      }
+    ]
+  }, 
+  "79785514": {
+    "tentruong":"Dong Den",
+    "cameras": [
+      {
+        "name": "dongden01",
+        "devIndex": "B3889277-A439-4922-A8B7-3E8468AA5919"
+      },
+      {
+        "name": "dongden02",
+        "devIndex": "E3BD08CF-03AF-4608-A41D-92536FCB24B5"
+      },
+      {
+        "name": "dongden03",
+        "devIndex": "447ED984-D74D-465F-A7F5-C3552681154B"
+      },
+      { 
+        "name": "dongden04",
+        "devIndex": "E25FDE91-701D-42C2-8260-1DA2627CE5C9"
+      },
+      {
+        "name": "dongden05",
+        "devIndex": "51B65C6F-46F7-45D2-A005-DCD85DD90333"
+      },
+      {
+        "Lame": "dongden06",
+        "devIndex": "E3496125-1A95-4100-A7F8-BBBB9A95BA36"
+      },
+      {
+        "Lame": "dongden07",
+        "devIndex": "DF861EF5-F97C-4B06-B060-23D3F746F497"
+      }
+    ]
+  }, 
+  "79785515": {
+    "tentruong":"Vinh Loc A",
+    "cameras": [
+      {
+        "name": "vinhloca01",
+        "devIndex": "2B2E7A61-0D24-459B-B089-FDBC9A66D3AF"
+      },
+      {
+        "name": "vinhloca02",
+        "devIndex": "839015B7-F58C-4857-8480-C065EDB43770"
+      },
+      {
+        "name": "vinhloca03",
+        "devIndex": "84D11C1A-4741-43A0-A54A-2E10484A62FA"
+      },
+      { 
+        "name": "vinhloca04",
+        "devIndex": "266AD686-05E7-4F28-8819-EFE8D79F73F1"
+      },
+      {
+        "name": "vinhloca05",
+        "devIndex": "51B65C6F-46F7-45D2-A005-DCD85DD90333"
+      },
+      {
+        "Lame": "vinhloca06",
+        "devIndex": "512FC218-4791-441A-81AC-73C74E720C19"
+      }
+    ]
+  }, 
+  "79777513": {
+    "tentruong":"Tan Tao A",
+    "cameras": [
+      {
+        "name": "tantaoa01",
+        "devIndex": "78458A6A-4779-48B9-9919-046CE0037EB1"
+      },
+      {
+        "name": "tantaoa02",
+        "devIndex": "20F2D9D6-971B-4AB4-89E6-387BAC13049F"
+      },
+      {
+        "name": "tantaoa03",
+        "devIndex": "2C63F209-995B-4814-81AD-7B29883861BA"
+      },
+      { 
+        "name": "tantaoa04",
+        "devIndex": "61E03AE0-B491-4784-8D5D-0515414289AC"
+      },
+      {
+        "name": "tantaoa05",
+        "devIndex": "619BCBF7-F5A1-46AB-844F-3C7340F30894"
+      },
+      {
+        "Lame": "tantaoa06",
+        "devIndex": "619BCBF7-F5A1-46AB-844F-3C7340F30894"
+      },
+      {
+        "name": "tantaoa07",
+        "devIndex": "5F849181-F8BC-42F1-8A06-C39B00B18A55"
+      },
+      {
+        "Lame": "tantaoa08",
+        "devIndex": "1C544442-BBB9-4E25-97CE-86EE466D2058"
+      },
+      {
+        "Lame": "tantaoa09",
+        "devIndex": "3FC3A557-5782-436F-A3C9-D7B89EDAE3C4"
+      },
+      {
+        "name": "tantaoa10",
+        "devIndex": "9011AA9C-112C-4AB0-B551-4D6185584A2A"
+      },
+      {
+        "Lame": "tantaoa11",
+        "devIndex": "6B8962F1-4D4E-483A-AE42-38DFBCE9AAA3"
+      }
+    ]
+  }, 
+  "79777504": {
+    "tentruong":"Binh Tri Dong",
+    "cameras": [
+      {
+        "name": "binhtridonga02",
+        "devIndex": "F1B34EEA-4C97-48B1-A28F-290F243412FE"
+      },
+      {
+        "name": "binhtridonga03",
+        "devIndex": "31E077AA-276A-4CB8-9BF7-ADAD7B7F8ED9"
+      },
+      {
+        "name": "binhtridonga04",
+        "devIndex": "F46D70EA-DA9A-475A-AB95-F79134DAFBFA"
+      },
+      { 
+        "name": "binhtridonga06",
+        "devIndex": "8E0BE75C-3F2E-4249-B843-ADA9D3F97B5F"
+      },
+      {
+        "name": "binhtridonga07",
+        "devIndex": "5207995D-487A-4D29-9804-D0B39B93C39A"
+      }
+    ]
+  }, 
+  "79777403": {
+    "tentruong":"An Lac 3",
+    "cameras": [
+      {
+        "name": "anlac3c01",
+        "devIndex": "DCD56DCD-D08B-4CBC-B14E-DFAB5BA393CD"
+      },
+      {
+        "name": "anlac3c02",
+        "devIndex": "D476D13F-4829-463E-8506-3C16A6030F6E"
+      },
+      {
+        "name": "anlac3c03",
+        "devIndex": "3213C2A3-54AA-40E4-A38E-D9E4BC999DCA"
+    ]
+  }, 
+  "79000762": {
+    "tentruong":"Binh Khanh",
+    "cameras": [
+      {
+        "name": "binhkhanh01",
+        "devIndex": "61BC90E1-D9BC-470E-84B6-950D6F727C51"
+      },
+      {
+        "name": "binhkhanh02",
+        "devIndex": "DD7D1961-E9F0-4A79-9B57-EF973A5166B9"
+      },
+      {
+        "name": "binhkhanh03",
+        "devIndex": "6EFB8B62-9949-4866-8521-94BDE92AABF9"
+	  },
+      {
+        "name": "binhkhanh04",
+        "devIndex": "9C876D8D-CE19-45A4-8C0F-993C1D5921ED"
+	  },
+      {
+        "name": "binhkhanh05",
+        "devIndex": "A11778DE-A936-45A3-B778-BA954FE5E1A6"
+	  }
+    ]
+  }, 
+  "TCD0211": {
+    "tentruong":"TC Nhan Dao",
+    "cameras": [
+      {
+        "name": "tcnhandao01",
+        "devIndex": "15BC00C7-2CAB-434A-A126-20BBEE39901C"
+      },
+      {
+        "name": "tcnhandao02",
+        "devIndex": "9775D536-33FD-4C8A-BD60-5536A97DF365"
+      }
+    ]
+  }, 
+  "7900004004": {
+    "tentruong":"Binh Thanh",
+    "cameras": [
+      {
+        "name": "tcbinhthanh01",
+        "devIndex": "52CBF1AA-703C-4C30-BA72-022D1F8F94EB"
+      },
+      {
+        "name": "tcbinhthanh02",
+        "devIndex": "EB39358E-56AA-4175-B49B-A1AD0D9CC194"
+      }
+    ]
+  }
+}

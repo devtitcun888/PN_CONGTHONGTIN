@@ -1,0 +1,22 @@
+{
+  "LOGININFO": {
+    "applicationname": "WebApp",
+    "databasegroup": "D",
+    "databasegroupvalue": "D: IsDevelopment; T: IsTesting; P: IsProduction; R: isRunning"
+  },
+  "LOGINID": {
+    "hd_system": "d004d750-1604-4de8-b338-21cb4a73938b",
+    "hd_index": "86d1a8a1-ea6e-42ea-a623-5b92772913b8",
+    "hd_database": "b50e880b-0b40-444d-bc5e-e9a37a52b1a3",
+    "hd_school_dev": "806c58ab-cd76-467d-9ed3-e5d50e045aaf",
+    "dev_hd_school_dev": "51f57c71-c667-4961-875e-2149d7e9b493",
+    "dev_hd_index": "be2a3070-d57c-426d-9bbf-2dd96136d5bb",
+	"hd_titkul": "a1f4410c-bb26-4ea3-85c5-7829676a40d3",
+	"hd_79778402":"e78634d6-6c2b-47d5-8b4d-ab3685e9ae1f",
+	"dev_hd_attendence": "95ff5b1f-6c8c-4e0b-ac46-c92f9629b5b6",
+	"9200_hd_index": "03467c99-13f9-4392-8e0d-e93d1bc193bd", 
+	"9200_hd_tanhungq7": "8e78b144-4427-412e-be56-21646b888f8d",
+	"dev_hd_account_dev": "0df8094a-cfd9-4d04-90ad-6e39a06cb083",
+	"hd_catlai":"ee5140b6-a735-4d7e-abaf-dbbc932f8e09",
+  }
+}

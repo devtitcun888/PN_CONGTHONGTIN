@@ -1,0 +1,42 @@
+.pagination .page-item .page-link[b-yb9i73hnwl] {
+    font-size: .8em;
+}
+
+.border-item[b-yb9i73hnwl] {
+    border-style: solid;
+    border-width: thin;
+    width: auto;
+    height: 30px;
+}
+
+.dropdown-myitem[b-yb9i73hnwl] {
+    text-align: center;
+    border-style: solid;
+    border-width: thin;
+    padding: 5px;
+    align-content: center;
+}
+
+label[b-yb9i73hnwl] {
+}
+
+/*Responsive*/
+@media screen and (max-width: 767px) {
+    .pagination .page-item .page-link[b-yb9i73hnwl] {
+        padding: 8px 12px;
+    }
+
+    .container-fluid[b-yb9i73hnwl] {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}
+
+@media screen and (min-width: 768px) {
+    .container-fluid[b-yb9i73hnwl] {
+        width: 100%;
+        margin-right: auto;
+        margin-left: auto;
+    }
+}

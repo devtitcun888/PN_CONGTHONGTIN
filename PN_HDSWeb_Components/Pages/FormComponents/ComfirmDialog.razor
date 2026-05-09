@@ -1,0 +1,42 @@
+﻿@if (Visible)
+{
+    <div class="confirm-overlay">
+        <div class="confirm-box">
+            <h3 class="confirm-title">@Title</h3>
+            <p class="confirm-message">@Message</p>
+
+            <div class="confirm-actions">
+                <button class="btn-secondary" @onclick="Cancel">Hủy</button>
+                <button class="btn-primary" @onclick="Confirm">Xác nhận</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string Title { get; set; } = "Xác nhận";
+    [Parameter] public string Message { get; set; } = "Bạn có chắc muốn thực hiện hành động này?";
+    [Parameter] public EventCallback<bool> OnClose { get; set; }
+
+    private bool Visible = false;
+
+    public void Show(string title, string message)
+    {
+        Title = title;
+        Message = message;
+        Visible = true;
+        StateHasChanged();
+    }
+
+    private async Task Confirm()
+    {
+        Visible = false;
+        await OnClose.InvokeAsync(true);
+    }
+
+    private async Task Cancel()
+    {
+        Visible = false;
+        await OnClose.InvokeAsync(false);
+    }
+}

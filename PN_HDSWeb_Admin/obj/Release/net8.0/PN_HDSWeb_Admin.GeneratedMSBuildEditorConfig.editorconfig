@@ -1,0 +1,307 @@
+is_global = true
+build_property.TargetFramework = net8.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v8.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = PN_HDSWeb_Admin
+build_property.RootNamespace = PN_HDSWeb_Admin
+build_property.ProjectDir = C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Admin\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 8.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\mac\source\repos\bv\PN_HDSWeb\PN_HDSWeb_Admin
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 8.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/CauHinhHeThong/CH_DongBoDuLieu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F1SGluaEhlVGhvbmdcQ0hfRG9uZ0JvRHVMaWV1LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/CauHinhHeThong/CH_QuanLyThongTin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2F1SGluaEhlVGhvbmdcQ0hfUXVhbkx5VGhvbmdUaW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/DaoTao/DT_QuanLyMonHoc_HocKy.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFvVGFvXERUX1F1YW5MeU1vbkhvY19Ib2NLeS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/DaoTao/DT_ThoiKhoaBieu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGFvVGFvXERUX1Rob2lLaG9hQmlldS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/DynamicPages.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRHluYW1pY1BhZ2VzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/LoginPagesAdmin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlc0FkbWluLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/MainMenu/QuanLyHocTapModule.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbk1lbnVcUXVhbkx5SG9jVGFwTW9kdWxlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/MainMenu/TruongHocModule.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTWFpbk1lbnVcVHJ1b25nSG9jTW9kdWxlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/CauHinh/Diem_CauHinhCotDiem.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxDYXVIaW5oXERpZW1fQ2F1SGluaENvdERpZW0ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/CauHinh/Diem_CauHinhMonHocTheoLop.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxDYXVIaW5oXERpZW1fQ2F1SGluaE1vbkhvY1RoZW9Mb3AucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/CauHinh/Diem_QuanLyDotNhapDiem.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxDYXVIaW5oXERpZW1fUXVhbkx5RG90TmhhcERpZW0ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/CauHinh/Diem_QuanLyKhoaSoDiem.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxDYXVIaW5oXERpZW1fUXVhbkx5S2hvYVNvRGllbS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_MonHoc_HoatDong_C1_Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX01vbkhvY19Ib2F0RG9uZ19DMV9JbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_MonHoc_HoatDong_CKViewV1.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX01vbkhvY19Ib2F0RG9uZ19DS1ZpZXdWMS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_MonHoc_HoatDong_GKViewV1.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX01vbkhvY19Ib2F0RG9uZ19HS1ZpZXdWMS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_NangLuc_PhamChat_C1_Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX05hbmdMdWNfUGhhbUNoYXRfQzFfSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_NangLuc_PhamChat_CKViewV1.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX05hbmdMdWNfUGhhbUNoYXRfQ0tWaWV3VjEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_NangLuc_PhamChat_GKViewV1.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX05hbmdMdWNfUGhhbUNoYXRfR0tWaWV3VjEucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/DiemCapTieuHoc/DGDK_TongHopBangDiem.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxEaWVtQ2FwVGlldUhvY1xER0RLX1RvbmdIb3BCYW5nRGllbS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/QuanLyDiem/TongKet/TK_NopDiemCSDLNganh.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUXVhbkx5RGllbVxUb25nS2V0XFRLX05vcERpZW1DU0RMTmdhbmgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/RedirectToLogin.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUmVkaXJlY3RUb0xvZ2luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/ThongBao/HoatDongHangNgay/HDHN_TrangChu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGhvbmdCYW9cSG9hdERvbmdIYW5nTmdheVxIREhOX1RyYW5nQ2h1LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/ThongBao/TB_QuanLyBaoBai.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGhvbmdCYW9cVEJfUXVhbkx5QmFvQmFpLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/ThongBao/TB_QuanLyThongBao.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGhvbmdCYW9cVEJfUXVhbkx5VGhvbmdCYW8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/ThongBao/TB_ThucDonTuan.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGhvbmdCYW9cVEJfVGh1Y0RvblR1YW4ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/ThongBao/ThuVienSo/TVS_TrangChu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVGhvbmdCYW9cVGh1VmllblNvXFRWU19UcmFuZ0NodS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TrangChu/Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJhbmdDaHVcRGFzaGJvYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TrangChu/Home_DiemDanhGiaoVien.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJhbmdDaHVcSG9tZV9EaWVtRGFuaEdpYW9WaWVuLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TrangChu/Home_DiemDanhHocSinh.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJhbmdDaHVcSG9tZV9EaWVtRGFuaEhvY1NpbmgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TrangChu/Home_ThongKe.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJhbmdDaHVcSG9tZV9UaG9uZ0tlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_BanDaiDienChaMeHocSinh.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0JhbkRhaURpZW5DaGFNZUhvY1NpbmgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_HienTuongNhacNho.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0hpZW5UdW9uZ05oYWNOaG8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_HieuTruongNhanXet.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0hpZXVUcnVvbmdOaGFuWGV0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0luZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_KeHoachChuNhiem.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0tlSG9hY2hDaHVOaGllbS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_KeHoachGiaoDuc.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0tlSG9hY2hHaWFvRHVjLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_KeHoachThang.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX0tlSG9hY2hUaGFuZy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_QLHocSinh.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX1FMSG9jU2luaC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_QLHocSinhTheoTo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX1FMSG9jU2luaFRoZW9Uby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_SoDoLopHoc.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX1NvRG9Mb3BIb2MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_TheoDoiTienBo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX1RoZW9Eb2lUaWVuQm8ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/SoChuNhiem/SCN_TongQuan.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFNvQ2h1TmhpZW1cU0NOX1RvbmdRdWFuLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/Test.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFRlc3QucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/TH_DonNghiPhepHocSinh.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFRIX0Rvbk5naGlQaGVwSG9jU2luaC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/TH_QuanLyHocSinhBanTru.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFRIX1F1YW5MeUhvY1NpbmhCYW5UcnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/TH_QuanLyPhanCongChuyenMon.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFRIX1F1YW5MeVBoYW5Db25nQ2h1eWVuTW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/TH_QuanLyThongTinNhanSu.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFRIX1F1YW5MeVRob25nVGluTmhhblN1LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/GlobalLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEdsb2JhbExheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/Pagination_Custom.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBhZ2luYXRpb25fQ3VzdG9tLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/SurveyPrompt.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFN1cnZleVByb21wdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/ToastMessage.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFRvYXN0TWVzc2FnZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_ChiTietHocBa.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfQ2hpVGlldEhvY0JhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-tg0gx75r2b
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_DangKyChuKySo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfRGFuZ0t5Q2h1S3lTby5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-g55445xegk
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_DanhGiaTongHop.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfRGFuaEdpYVRvbmdIb3AucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-th8mrb557q
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_Dashboard.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfRGFzaGJvYXJkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-x27u7043eu
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_KhoiTaoHocBa.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfS2hvaVRhb0hvY0JhLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-8ps53bffae
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_KySoMonHoc.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfS3lTb01vbkhvYy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-qya1zj4aey
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_PhanCongGiangDay.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfUGhhbkNvbmdHaWFuZ0RheS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-5m2do1xnf3
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_PhatHanhHocBa.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfUGhhdEhhbmhIb2NCYS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-ujwnjrs008
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/HocBa/HB_QuanLyDongBo.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSG9jQmFcSEJfUXVhbkx5RG9uZ0JvLnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-c8fk8h6pfg
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-i9mi63yu6g
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/LoginPages.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-arwxkqcnbc
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/TruongHoc/TH_QuanLyThongTinHocSinh.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcVHJ1b25nSG9jXFRIX1F1YW5MeVRob25nVGluSG9jU2luaC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-p9ssz44qs7
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/HocBaLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEhvY0JhTGF5b3V0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = b-57mhff309m
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-6z5hrdlpay
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/NavMenu.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = b-ky02en4pmj
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Shared/TopNavbar.razor]
+build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFRvcE5hdmJhci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = b-dgjiytbfcj
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mac/source/repos/bv/PN_HDSWeb/PN_HDSWeb_Admin/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
