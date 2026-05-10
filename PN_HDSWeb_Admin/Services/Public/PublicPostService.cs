@@ -11,6 +11,7 @@ public interface IPublicPostService
     Task<int> GetPostsCountAsync(string maTruongBo, string? keyword = null, string? categoryId = null);
     Task<PublicPostDetail?> GetPostBySlugAsync(string maTruongBo, string slug);
     Task<List<PublicPostListItem>> GetRelatedPostsAsync(string maTruongBo, string? categoryId, string currentPostId, int take = 4);
+    Task<List<PublicPostListItem>> GetPostsByTagIdAsync(string maTruongBo, string tagId, int page = 1, int pageSize = 30);
 }
 
 public class PublicPostService : IPublicPostService
@@ -29,10 +30,12 @@ public class PublicPostService : IPublicPostService
         var offset = Math.Max(page - 1, 0) * pageSize;
         var where = BuildWhere(maTruongBo, keyword, categoryId);
         var sql = $@"
-            SELECT id, title, slug, summary, cover_image_url, publish_at, category_id
-            FROM posts
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id,
+                   c.category_name, c.slug AS category_slug
+            FROM posts p
+            LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
             {where}
-            ORDER BY publish_at DESC, created_at DESC
+            ORDER BY p.publish_at DESC, p.created_at DESC
             LIMIT {pageSize} OFFSET {offset}";
 
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
@@ -45,7 +48,7 @@ public class PublicPostService : IPublicPostService
 
     public async Task<int> GetPostsCountAsync(string maTruongBo, string? keyword = null, string? categoryId = null)
     {
-        var sql = $"SELECT COUNT(*) AS total FROM posts {BuildWhere(maTruongBo, keyword, categoryId)}";
+        var sql = $"SELECT COUNT(*) AS total FROM posts p {BuildWhere(maTruongBo, keyword, categoryId)}";
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
         return dt.Rows.Count == 0 || dt.Rows[0]["total"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["total"]);
     }
@@ -53,12 +56,14 @@ public class PublicPostService : IPublicPostService
     public async Task<PublicPostDetail?> GetPostBySlugAsync(string maTruongBo, string slug)
     {
         var sql = $@"
-            SELECT id, title, slug, summary, content, cover_image_url, publish_at, category_id
-            FROM posts
-            WHERE ma_truong_bo = '{Escape(maTruongBo)}'
-              AND slug = '{Escape(slug)}'
-              AND is_deleted = FALSE
-              AND status = 'Published'
+            SELECT p.id, p.title, p.slug, p.summary, p.content, p.cover_image_url, p.publish_at, p.category_id,
+                   c.category_name, c.slug AS category_slug
+            FROM posts p
+            LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
+            WHERE p.ma_truong_bo = '{Escape(maTruongBo)}'
+              AND p.slug = '{Escape(slug)}'
+              AND p.is_deleted = FALSE
+              AND p.status = 'Published'
             LIMIT 1";
 
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
@@ -68,17 +73,44 @@ public class PublicPostService : IPublicPostService
 
     public async Task<List<PublicPostListItem>> GetRelatedPostsAsync(string maTruongBo, string? categoryId, string currentPostId, int take = 4)
     {
-        var categoryFilter = string.IsNullOrWhiteSpace(categoryId) ? string.Empty : $"AND category_id = '{Escape(categoryId)}'";
+        var categoryFilter = string.IsNullOrWhiteSpace(categoryId) ? string.Empty : $"AND p.category_id = '{Escape(categoryId)}'";
         var sql = $@"
-            SELECT id, title, slug, summary, cover_image_url, publish_at, category_id
-            FROM posts
-            WHERE ma_truong_bo = '{Escape(maTruongBo)}'
-              AND is_deleted = FALSE
-              AND status = 'Published'
-              AND id <> '{Escape(currentPostId)}'
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id,
+                   c.category_name, c.slug AS category_slug
+            FROM posts p
+            LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
+            WHERE p.ma_truong_bo = '{Escape(maTruongBo)}'
+              AND p.is_deleted = FALSE
+              AND p.status = 'Published'
+              AND p.id <> '{Escape(currentPostId)}'
               {categoryFilter}
-            ORDER BY publish_at DESC, created_at DESC
+            ORDER BY p.publish_at DESC, p.created_at DESC
             LIMIT {take}";
+
+        var result = new List<PublicPostListItem>();
+        var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            result.Add(MapListItem(row));
+        }
+        return result;
+    }
+
+    public async Task<List<PublicPostListItem>> GetPostsByTagIdAsync(string maTruongBo, string tagId, int page = 1, int pageSize = 30)
+    {
+        var offset = Math.Max(page - 1, 0) * pageSize;
+        var sql = $@"
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id,
+                   c.category_name, c.slug AS category_slug
+            FROM posts p
+            INNER JOIN post_tag_map m ON m.post_id = p.id
+            LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
+            WHERE p.ma_truong_bo = '{Escape(maTruongBo)}'
+              AND p.is_deleted = FALSE
+              AND p.status = 'Published'
+              AND m.tag_id = '{Escape(tagId)}'
+            ORDER BY p.publish_at DESC, p.created_at DESC
+            LIMIT {pageSize} OFFSET {offset}";
 
         var result = new List<PublicPostListItem>();
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
@@ -93,20 +125,20 @@ public class PublicPostService : IPublicPostService
     {
         var clauses = new List<string>
         {
-            "is_deleted = FALSE",
-            "status = 'Published'",
-            $"ma_truong_bo = '{Escape(maTruongBo)}'"
+            "p.is_deleted = FALSE",
+            "p.status = 'Published'",
+            $"p.ma_truong_bo = '{Escape(maTruongBo)}'"
         };
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             var k = Escape(keyword);
-            clauses.Add($"(title ILIKE '%{k}%' OR summary ILIKE '%{k}%')");
+            clauses.Add($"(p.title ILIKE '%{k}%' OR p.summary ILIKE '%{k}%')");
         }
 
         if (!string.IsNullOrWhiteSpace(categoryId))
         {
-            clauses.Add($"category_id = '{Escape(categoryId)}'");
+            clauses.Add($"p.category_id = '{Escape(categoryId)}'");
         }
 
         return "WHERE " + string.Join(" AND ", clauses);
@@ -119,7 +151,10 @@ public class PublicPostService : IPublicPostService
         Slug = row["slug"]?.ToString(),
         Summary = row["summary"]?.ToString(),
         CoverImageUrl = row["cover_image_url"]?.ToString(),
-        PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"])
+        PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
+        CategoryId = row.Table.Columns.Contains("category_id") ? row["category_id"]?.ToString() : null,
+        CategoryName = row.Table.Columns.Contains("category_name") ? row["category_name"]?.ToString() : null,
+        CategorySlug = row.Table.Columns.Contains("category_slug") ? row["category_slug"]?.ToString() : null
     };
 
     private static PublicPostDetail MapDetail(DataRow row) => new()
@@ -131,7 +166,9 @@ public class PublicPostService : IPublicPostService
         Content = row["content"]?.ToString(),
         CoverImageUrl = row["cover_image_url"]?.ToString(),
         PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
-        CategoryId = row["category_id"]?.ToString()
+        CategoryId = row["category_id"]?.ToString(),
+        CategoryName = row.Table.Columns.Contains("category_name") ? row["category_name"]?.ToString() : null,
+        CategorySlug = row.Table.Columns.Contains("category_slug") ? row["category_slug"]?.ToString() : null
     };
 
     private static string Escape(string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty : value.Replace("'", "''");
@@ -145,6 +182,10 @@ public class PublicPostListItem
     public string? Summary { get; set; }
     public string? CoverImageUrl { get; set; }
     public DateTime? PublishAt { get; set; }
+    public string? CategoryId { get; set; }
+    public string? CategoryName { get; set; }
+    public string? CategorySlug { get; set; }
+    public List<PublicPostTagItem> Tags { get; set; } = [];
 }
 
 public class PublicPostDetail
@@ -157,4 +198,6 @@ public class PublicPostDetail
     public string? CoverImageUrl { get; set; }
     public DateTime? PublishAt { get; set; }
     public string? CategoryId { get; set; }
+    public string? CategoryName { get; set; }
+    public string? CategorySlug { get; set; }
 }

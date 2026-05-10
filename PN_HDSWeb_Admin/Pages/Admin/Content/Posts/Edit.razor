@@ -1,7 +1,14 @@
 @page "/admin/posts/edit/{Id?}"
 @attribute [Authorize(Roles = "Administrator")]
+@using Microsoft.AspNetCore.Components.Forms
 @using PN_HDSWeb_Admin.Services.Content
+@using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminPostService AdminPostService
+@inject IAdminPostCategoryService AdminPostCategoryService
+@inject IAdminPostTagService AdminPostTagService
+@inject IAdminPostTagMapService AdminPostTagMapService
+@inject IAdminPostMediaService AdminPostMediaService
+@inject IAdminFileStorageService FileStorage
 @inject NavigationManager Nav
 
 <div class="admin-form-shell">
@@ -11,13 +18,23 @@
             <p>Thêm mới hoặc chỉnh sửa bài viết của trường.</p>
         </div>
 
-        @if (model == null)
+        @if (model == null || categories == null || tags == null)
         {
             <p>Đang tải...</p>
         }
         else
         {
             <div class="admin-form-grid">
+                <label>
+                    Chuyên mục
+                    <select class="admin-input" @bind="model.CategoryId">
+                        <option value="">-- Chọn chuyên mục --</option>
+                        @foreach (var cat in categories)
+                        {
+                            <option value="@cat.Id">@cat.CategoryName</option>
+                        }
+                    </select>
+                </label>
                 <label>
                     Tiêu đề
                     <input class="admin-input" @bind="model.Title" />
@@ -27,12 +44,20 @@
                     <input class="admin-input" @bind="model.Slug" />
                 </label>
                 <label>
+                    Mã loại bài
+                    <input class="admin-input" @bind="model.PostType" placeholder="news, announcement..." />
+                </label>
+                <label>
                     Tóm tắt
                     <textarea class="admin-input" rows="3" @bind="model.Summary"></textarea>
                 </label>
                 <label>
                     Nội dung
                     <textarea class="admin-input" rows="8" @bind="model.Content"></textarea>
+                </label>
+                <label>
+                    Ảnh đại diện
+                    <input class="admin-input" @bind="model.CoverImageUrl" />
                 </label>
                 <label>
                     Trạng thái
@@ -44,11 +69,61 @@
                         <option value="Rejected">Từ chối</option>
                     </select>
                 </label>
+                <label>
+                    Nổi bật
+                    <input type="checkbox" @bind="model.IsFeatured" />
+                </label>
+                <label>
+                    Thứ tự
+                    <input class="admin-input" type="number" @bind="model.SortOrder" />
+                </label>
+            </div>
+
+            <div class="admin-section">
+                <h3>Tags</h3>
+                <div style="display:flex; flex-wrap:wrap; gap:12px;">
+                    @foreach (var tag in tags)
+                    {
+                        <label style="display:flex; gap:8px; align-items:center;">
+                            <input type="checkbox" checked="@(selectedTagIds.Contains(tag.Id ?? string.Empty))" @onchange="(e) => ToggleTag(tag.Id, e)" />
+                            <span>@tag.TagName</span>
+                        </label>
+                    }
+                </div>
+            </div>
+
+            <div class="admin-section">
+                <h3>Media</h3>
+                <div class="admin-form-grid">
+                    <label>
+                        Loại media
+                        <select class="admin-input" @bind="mediaModel.MediaType">
+                            <option value="image">image</option>
+                            <option value="video">video</option>
+                            <option value="file">file</option>
+                        </select>
+                    </label>
+                    <label>
+                        Caption
+                        <input class="admin-input" @bind="mediaModel.Caption" />
+                    </label>
+                    <label>
+                        Upload file
+                        <InputFile OnChange="OnMediaSelected" />
+                    </label>
+                </div>
+                <div class="admin-form-actions">
+                    <button class="btn btn-secondary" type="button" @onclick="AddMediaAsync">Thêm media</button>
+                </div>
             </div>
 
             <div class="admin-form-actions">
                 <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                <button class="btn btn-secondary" @onclick="@(() => Nav.NavigateTo("/admin/posts"))">Quay lại</button>
+                <button class="btn btn-secondary" type="button" @onclick="GoBack">Quay lại</button>
+                @if (!string.IsNullOrWhiteSpace(model.Id))
+                {
+                    <button class="btn btn-secondary" type="button" @onclick="GoMedia">Quản lý media</button>
+                }
             </div>
         }
     </div>
@@ -57,12 +132,22 @@
 @code {
     [Parameter] public string? Id { get; set; }
     private AdminPostDetail? model;
+    private List<AdminPostCategoryItem>? categories;
+    private List<AdminPostTagItem>? tags;
+    private List<string> selectedTagIds = new();
+    private IBrowserFile? selectedMediaFile;
+    private AdminPostMediaDetail mediaModel = new() { MediaType = "image", SortOrder = 0 };
 
     protected override async Task OnInitializedAsync()
     {
+        categories = await AdminPostCategoryService.GetActiveCategoriesAsync(PN_PublicVariables.MaTruong);
+        tags = await AdminPostTagService.GetActiveTagsAsync(PN_PublicVariables.MaTruong);
+
         if (!string.IsNullOrWhiteSpace(Id))
         {
             model = await AdminPostService.GetPostByIdAsync(Id);
+            selectedTagIds = await AdminPostTagMapService.GetTagIdsByPostIdAsync(Id);
+            mediaModel.PostId = Id;
         }
 
         model ??= new AdminPostDetail
@@ -70,15 +155,70 @@
             MaTruongBo = PN_PublicVariables.MaTruong,
             Status = "Draft"
         };
+
+        mediaModel.MaTruongBo = PN_PublicVariables.MaTruong;
+    }
+
+    private void ToggleTag(string? tagId, ChangeEventArgs e)
+    {
+        if (string.IsNullOrWhiteSpace(tagId)) return;
+        var checkedValue = e.Value?.ToString();
+        if (checkedValue == "true" || checkedValue == "on")
+        {
+            if (!selectedTagIds.Contains(tagId)) selectedTagIds.Add(tagId);
+        }
+        else
+        {
+            selectedTagIds.Remove(tagId);
+        }
+    }
+
+    private Task OnMediaSelected(InputFileChangeEventArgs e)
+    {
+        selectedMediaFile = e.File;
+        return Task.CompletedTask;
+    }
+
+    private async Task AddMediaAsync()
+    {
+        if (string.IsNullOrWhiteSpace(model?.Id) || selectedMediaFile == null)
+            return;
+
+        var saved = await FileStorage.SaveFileAsync(selectedMediaFile, "posts");
+        if (string.IsNullOrWhiteSpace(saved)) return;
+
+        mediaModel.PostId = model.Id;
+        mediaModel.FileUrl = saved;
+        mediaModel.FileName = selectedMediaFile.Name;
+        mediaModel.FileSize = selectedMediaFile.Size;
+        mediaModel.MimeType = selectedMediaFile.ContentType;
+        mediaModel.CreatedBy = "system";
+
+        await AdminPostMediaService.CreateMediaAsync(mediaModel);
+        selectedMediaFile = null;
     }
 
     private async Task SaveAsync()
     {
         if (string.IsNullOrWhiteSpace(model!.Id))
+        {
             await AdminPostService.CreatePostAsync(model);
+            var saved = await AdminPostService.GetPostsAsync(PN_PublicVariables.MaTruong, model.Title, model.Status, 1, 1);
+            model.Id = saved.FirstOrDefault()?.Id;
+        }
         else
+        {
             await AdminPostService.UpdatePostAsync(model);
+        }
+
+        if (!string.IsNullOrWhiteSpace(model.Id))
+        {
+            await AdminPostTagMapService.ReplaceTagsAsync(model.Id, selectedTagIds);
+        }
 
         Nav.NavigateTo("/admin/posts");
     }
+
+    private void GoBack() => Nav.NavigateTo("/admin/posts");
+    private void GoMedia() => Nav.NavigateTo($"/admin/posts/{model?.Id}/media");
 }

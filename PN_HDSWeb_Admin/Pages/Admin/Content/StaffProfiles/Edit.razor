@@ -1,0 +1,155 @@
+@page "/admin/staff-profiles/edit/{Id?}"
+@attribute [Authorize(Roles = "Administrator")]
+@using Microsoft.AspNetCore.Components.Forms
+@using PN_HDSWeb_Admin.Services.Admin
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminStaffProfileService StaffProfileService
+@inject IAdminFileStorageService FileStorage
+@inject NavigationManager Nav
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>@(IsEditMode ? "Sửa hồ sơ nhân sự" : "Thêm hồ sơ nhân sự")</h1>
+            <p>Quản lý hồ sơ dùng cho trang cơ cấu tổ chức công khai.</p>
+        </div>
+
+        @if (model == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <div class="admin-form-grid">
+                <label>
+                    Nhóm
+                    <select class="admin-input" @bind="model.GroupName">
+                        @foreach (var group in GroupOptions)
+                        {
+                            <option value="@group">@group</option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Họ tên
+                    <input class="admin-input" @bind="model.FullName" />
+                </label>
+                <label>
+                    Vị trí / Chức vụ
+                    <input class="admin-input" @bind="model.PositionName" placeholder="Hiệu trưởng, Phó hiệu trưởng..." />
+                </label>
+                <label>
+                    Trình độ
+                    <input class="admin-input" @bind="model.Qualification" />
+                </label>
+                <label>
+                    Thông tin chứng chỉ
+                    <input class="admin-input" @bind="model.CertificateInfo" />
+                </label>
+                <label>
+                    Email
+                    <input class="admin-input" @bind="model.Email" />
+                </label>
+                <label>
+                    Số điện thoại
+                    <input class="admin-input" @bind="model.Phone" />
+                </label>
+                <label>
+                    Avatar URL
+                    <input class="admin-input" @bind="model.AvatarUrl" />
+                </label>
+                <label>
+                    Upload avatar
+                    <InputFile OnChange="OnAvatarSelected" />
+                </label>
+                <label>
+                    Thứ tự
+                    <input class="admin-input" type="number" @bind="model.SortOrder" />
+                </label>
+                <label>
+                    Công khai
+                    <select class="admin-input" @bind="IsPublicText">
+                        <option value="true">Có</option>
+                        <option value="false">Không</option>
+                    </select>
+                </label>
+                <label>
+                    Trạng thái
+                    <select class="admin-input" @bind="IsActiveText">
+                        <option value="true">Đang bật</option>
+                        <option value="false">Tắt</option>
+                    </select>
+                </label>
+                <label class="span-2">
+                    Mô tả / tiểu sử
+                    <textarea class="admin-input" rows="7" @bind="model.Bio"></textarea>
+                </label>
+            </div>
+
+            <div class="admin-form-actions">
+                <button class="btn btn-primary" type="button" @onclick="SaveAsync">Lưu</button>
+                <button class="btn btn-secondary" type="button" @onclick="GoBack">Quay lại</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private AdminStaffProfileDetail? model;
+    private string IsPublicText = "true";
+    private string IsActiveText = "true";
+    private IBrowserFile? avatarFile;
+    private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
+    private static readonly string[] GroupOptions = ["Ban giám hiệu", "Tổ / Phòng ban", "Giáo viên", "Văn phòng", "Khác"];
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Id))
+        {
+            model = await StaffProfileService.GetStaffProfileByIdAsync(Id);
+        }
+
+        model ??= new AdminStaffProfileDetail
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            IsPublic = true,
+            IsActive = true,
+            SortOrder = 0
+        };
+
+        model.MaTruongBo ??= PN_PublicVariables.MaTruong;
+        IsPublicText = model.IsPublic.ToString().ToLowerInvariant();
+        IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+    }
+
+    private Task OnAvatarSelected(InputFileChangeEventArgs e)
+    {
+        avatarFile = e.File;
+        return Task.CompletedTask;
+    }
+
+    private async Task SaveAsync()
+    {
+        model!.IsPublic = bool.TryParse(IsPublicText, out var isPublic) && isPublic;
+        model.IsActive = bool.TryParse(IsActiveText, out var isActive) && isActive;
+
+        if (avatarFile != null)
+        {
+            var saved = await FileStorage.SaveFileAsync(avatarFile, "staff-profiles");
+            if (!string.IsNullOrWhiteSpace(saved))
+            {
+                model.AvatarUrl = saved;
+            }
+        }
+
+        if (string.IsNullOrWhiteSpace(model.Id))
+            await StaffProfileService.CreateStaffProfileAsync(model);
+        else
+            await StaffProfileService.UpdateStaffProfileAsync(model);
+
+        Nav.NavigateTo("/admin/staff-profiles");
+    }
+
+    private void GoBack() => Nav.NavigateTo("/admin/staff-profiles");
+}

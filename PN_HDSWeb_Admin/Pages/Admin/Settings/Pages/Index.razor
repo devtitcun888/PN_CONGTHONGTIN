@@ -1,7 +1,90 @@
 @page "/admin/pages"
+@attribute [Authorize(Roles = "Administrator")]
 @using PN_HDSWeb_Admin.Services.Admin
-@inject IAdminSiteSettingService AdminSiteSettingService
+@inject IAdminStaticPageService AdminStaticPageService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
 
-<h1>Quản lý trang tĩnh</h1>
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Quản lý trang tĩnh</h1>
+            <p>CRUD các trang nội dung tĩnh hiển thị ngoài public site.</p>
+        </div>
 
-<p>Trang này sẽ nối CRUD trang tĩnh ở bước tiếp theo.</p>
+        <div class="admin-form-actions">
+            <button type="button" class="btn btn-primary" @onclick="GoCreate">Thêm mới</button>
+        </div>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (items.Count == 0)
+        {
+            <p>Chưa có trang tĩnh nào.</p>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Tiêu đề</th>
+                        <th>Slug</th>
+                        <th>Code</th>
+                        <th>Trạng thái</th>
+                        <th>Thứ tự</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.Title</td>
+                            <td>@item.Slug</td>
+                            <td>@item.PageCode</td>
+                            <td>@item.Status</td>
+                            <td>@item.SortOrder</td>
+                            <td>
+                                <button type="button" class="btn btn-secondary" @onclick="() => Edit(item)">Sửa</button>
+                                <button type="button" class="btn btn-secondary" @onclick="() => ToggleAsync(item)">@(item.Status == "Published" ? "Ẩn" : "Hiện")</button>
+                                <button type="button" class="btn btn-secondary" @onclick="() => DeleteAsync(item)">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminStaticPageItem>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await AdminStaticPageService.GetPagesAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private void GoCreate() => Nav.NavigateTo("/admin/pages/edit");
+    private void Edit(AdminStaticPageItem item) => Nav.NavigateTo($"/admin/pages/edit/{item.Id}");
+
+    private async Task DeleteAsync(AdminStaticPageItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa trang '{item.Title}'?"))
+        {
+            await AdminStaticPageService.DeletePageAsync(item.Id ?? string.Empty);
+            items = await AdminStaticPageService.GetPagesAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+
+    private async Task ToggleAsync(AdminStaticPageItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Đổi trạng thái trang '{item.Title}'?"))
+        {
+            await AdminStaticPageService.SetActiveAsync(item.Id ?? string.Empty, item.Status != "Published");
+            items = await AdminStaticPageService.GetPagesAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+}

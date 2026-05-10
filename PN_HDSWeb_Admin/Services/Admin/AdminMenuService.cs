@@ -86,11 +86,12 @@ public class AdminMenuService : IAdminMenuService
 
     public async Task<bool> CreateMenuAsync(AdminMenuDetail model)
     {
+        var parentIdSql = ToNullableBigIntSql(model.ParentId);
         var sql = $@"
             INSERT INTO menus
             (ma_truong_bo, menu_name, parent_id, url, target, sort_order, is_active, created_at, updated_at, is_deleted)
             VALUES
-            ('{Escape(model.MaTruongBo)}', '{Escape(model.MenuName)}', '{Escape(model.ParentId)}', '{Escape(model.Url)}',
+            ('{Escape(model.MaTruongBo)}', '{Escape(model.MenuName)}', {parentIdSql}, '{Escape(model.Url)}',
              '{Escape(model.Target)}', {model.SortOrder}, {(model.IsActive ? "TRUE" : "FALSE")}, NOW(), NOW(), FALSE)";
 
         return await RunAsync(sql, "CreateMenuAsync");
@@ -98,10 +99,11 @@ public class AdminMenuService : IAdminMenuService
 
     public async Task<bool> UpdateMenuAsync(AdminMenuDetail model)
     {
+        var parentIdSql = ToNullableBigIntSql(model.ParentId);
         var sql = $@"
             UPDATE menus
                SET menu_name = '{Escape(model.MenuName)}',
-                   parent_id = '{Escape(model.ParentId)}',
+                   parent_id = {parentIdSql},
                    url = '{Escape(model.Url)}',
                    target = '{Escape(model.Target)}',
                    sort_order = {model.SortOrder},
@@ -149,6 +151,11 @@ public class AdminMenuService : IAdminMenuService
     }
 
     private static string Escape(string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty : value.Replace("'", "''");
+
+    private static string ToNullableBigIntSql(string? value)
+    {
+        return string.IsNullOrWhiteSpace(value) ? "NULL" : $"'{Escape(value)}'";
+    }
 }
 
 public class AdminMenuItem

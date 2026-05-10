@@ -9,8 +9,8 @@ namespace PN_HDSWeb_Admin.Services.Content;
 
 public interface IAdminDocumentService
 {
-    Task<List<AdminDocumentItem>> GetDocumentsAsync(string maTruongBo, string? keyword = null, string? status = null, int page = 1, int pageSize = 20);
-    Task<int> GetDocumentsCountAsync(string maTruongBo, string? keyword = null, string? status = null);
+    Task<List<AdminDocumentItem>> GetDocumentsAsync(string maTruongBo, string? keyword = null, string? status = null, string? documentTypeId = null, int page = 1, int pageSize = 20);
+    Task<int> GetDocumentsCountAsync(string maTruongBo, string? keyword = null, string? status = null, string? documentTypeId = null);
     Task<AdminDocumentDetail?> GetDocumentByIdAsync(string id);
     Task<bool> CreateDocumentAsync(AdminDocumentDetail model);
     Task<bool> UpdateDocumentAsync(AdminDocumentDetail model);
@@ -29,16 +29,18 @@ public class AdminDocumentService : IAdminDocumentService
         _fileStorage = fileStorage;
     }
 
-    public async Task<List<AdminDocumentItem>> GetDocumentsAsync(string maTruongBo, string? keyword = null, string? status = null, int page = 1, int pageSize = 20)
+    public async Task<List<AdminDocumentItem>> GetDocumentsAsync(string maTruongBo, string? keyword = null, string? status = null, string? documentTypeId = null, int page = 1, int pageSize = 20)
     {
         var result = new List<AdminDocumentItem>();
         var offset = Math.Max(page - 1, 0) * pageSize;
-        var where = BuildWhere(maTruongBo, keyword, status);
+        var where = BuildWhere(maTruongBo, keyword, status, documentTypeId);
         var sql = $@"
-            SELECT id, doc_title, doc_number, status, issued_date, created_at
-            FROM documents
+            SELECT d.id, d.doc_title, d.doc_number, d.doc_type, d.status, d.issued_date, d.created_at,
+                   d.document_type_id, dt.type_name, dt.slug AS type_slug
+            FROM documents d
+            LEFT JOIN document_types dt ON dt.id = d.document_type_id AND dt.is_deleted = FALSE
             {where}
-            ORDER BY created_at DESC
+            ORDER BY d.created_at DESC
             LIMIT {pageSize} OFFSET {offset}";
 
         try
@@ -51,6 +53,10 @@ public class AdminDocumentService : IAdminDocumentService
                     Id = row["id"]?.ToString(),
                     DocTitle = row["doc_title"]?.ToString(),
                     DocNumber = row["doc_number"]?.ToString(),
+                    DocType = row["doc_type"]?.ToString(),
+                    DocumentTypeId = row["document_type_id"]?.ToString(),
+                    DocumentTypeName = row["type_name"]?.ToString() ?? row["doc_type"]?.ToString(),
+                    DocumentTypeSlug = row["type_slug"]?.ToString(),
                     Status = row["status"]?.ToString(),
                     IssuedDate = row["issued_date"] == DBNull.Value ? null : Convert.ToDateTime(row["issued_date"]),
                     CreatedAt = row["created_at"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["created_at"])
@@ -66,10 +72,10 @@ public class AdminDocumentService : IAdminDocumentService
         return result;
     }
 
-    public async Task<int> GetDocumentsCountAsync(string maTruongBo, string? keyword = null, string? status = null)
+    public async Task<int> GetDocumentsCountAsync(string maTruongBo, string? keyword = null, string? status = null, string? documentTypeId = null)
     {
-        var where = BuildWhere(maTruongBo, keyword, status);
-        var sql = $"SELECT COUNT(*) AS total FROM documents {where}";
+        var where = BuildWhere(maTruongBo, keyword, status, documentTypeId);
+        var sql = $"SELECT COUNT(*) AS total FROM documents d {where}";
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
         return dt.Rows.Count == 0 || dt.Rows[0]["total"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["total"]);
     }
@@ -77,8 +83,8 @@ public class AdminDocumentService : IAdminDocumentService
     public async Task<AdminDocumentDetail?> GetDocumentByIdAsync(string id)
     {
         var sql = $@"
-            SELECT id, ma_truong_bo, doc_number, doc_title, doc_type, issuer, summary, content, file_url,
-                   status, version_no, issued_date, effective_date, expire_date, is_deleted
+            SELECT id, ma_truong_bo, document_type_id, doc_number, doc_title, doc_type, doc_code, issuer, summary, content, file_url,
+                   status, version_no, issued_date, effective_date, expiry_date, is_deleted
             FROM documents
             WHERE id = '{Escape(id)}' AND is_deleted = FALSE
             LIMIT 1";
@@ -90,9 +96,11 @@ public class AdminDocumentService : IAdminDocumentService
         {
             Id = row["id"]?.ToString(),
             MaTruongBo = row["ma_truong_bo"]?.ToString(),
+            DocumentTypeId = row["document_type_id"]?.ToString(),
             DocNumber = row["doc_number"]?.ToString(),
             DocTitle = row["doc_title"]?.ToString(),
             DocType = row["doc_type"]?.ToString(),
+            DocCode = row["doc_code"]?.ToString(),
             Issuer = row["issuer"]?.ToString(),
             Summary = row["summary"]?.ToString(),
             Content = row["content"]?.ToString(),
@@ -101,7 +109,7 @@ public class AdminDocumentService : IAdminDocumentService
             VersionNo = row["version_no"] == DBNull.Value ? 1 : Convert.ToInt32(row["version_no"]),
             IssuedDate = row["issued_date"] == DBNull.Value ? null : Convert.ToDateTime(row["issued_date"]),
             EffectiveDate = row["effective_date"] == DBNull.Value ? null : Convert.ToDateTime(row["effective_date"]),
-            ExpireDate = row["expire_date"] == DBNull.Value ? null : Convert.ToDateTime(row["expire_date"])
+            ExpireDate = row["expiry_date"] == DBNull.Value ? null : Convert.ToDateTime(row["expiry_date"])
         };
     }
 
@@ -109,10 +117,10 @@ public class AdminDocumentService : IAdminDocumentService
     {
         var sql = $@"
             INSERT INTO documents
-            (ma_truong_bo, doc_number, doc_title, doc_type, issuer, summary, content, file_url,
-             status, version_no, issued_date, effective_date, expire_date, created_at, updated_at, is_deleted)
+            (ma_truong_bo, document_type_id, doc_type, doc_number, doc_title, doc_code, issuer, summary, content, file_url,
+             status, version_no, issued_date, effective_date, expiry_date, created_at, updated_at, is_deleted)
             VALUES
-            ('{Escape(model.MaTruongBo)}', '{Escape(model.DocNumber)}', '{Escape(model.DocTitle)}', '{Escape(model.DocType)}',
+            ('{Escape(model.MaTruongBo)}', {ToNullableBigIntSql(model.DocumentTypeId)}, '{Escape(model.DocType)}', '{Escape(model.DocNumber)}', '{Escape(model.DocTitle)}', '{Escape(model.DocCode)}',
              '{Escape(model.Issuer)}', '{Escape(model.Summary)}', '{Escape(model.Content)}', '{Escape(model.FileUrl)}',
              '{Escape(model.Status)}', {model.VersionNo},
              {(model.IssuedDate.HasValue ? $"'{model.IssuedDate:yyyy-MM-dd}'" : "NULL")},
@@ -126,9 +134,11 @@ public class AdminDocumentService : IAdminDocumentService
     {
         var sql = $@"
             UPDATE documents
-               SET doc_number = '{Escape(model.DocNumber)}',
-                   doc_title = '{Escape(model.DocTitle)}',
+               SET document_type_id = {ToNullableBigIntSql(model.DocumentTypeId)},
                    doc_type = '{Escape(model.DocType)}',
+                   doc_number = '{Escape(model.DocNumber)}',
+                   doc_title = '{Escape(model.DocTitle)}',
+                   doc_code = '{Escape(model.DocCode)}',
                    issuer = '{Escape(model.Issuer)}',
                    summary = '{Escape(model.Summary)}',
                    content = '{Escape(model.Content)}',
@@ -137,7 +147,7 @@ public class AdminDocumentService : IAdminDocumentService
                    version_no = {model.VersionNo},
                    issued_date = {(model.IssuedDate.HasValue ? $"'{model.IssuedDate:yyyy-MM-dd}'" : "NULL")},
                    effective_date = {(model.EffectiveDate.HasValue ? $"'{model.EffectiveDate:yyyy-MM-dd}'" : "NULL")},
-                   expire_date = {(model.ExpireDate.HasValue ? $"'{model.ExpireDate:yyyy-MM-dd}'" : "NULL")},
+                   expiry_date = {(model.ExpireDate.HasValue ? $"'{model.ExpireDate:yyyy-MM-dd}'" : "NULL")},
                    updated_at = NOW()
              WHERE id = '{Escape(model.Id)}'";
 
@@ -169,24 +179,31 @@ public class AdminDocumentService : IAdminDocumentService
         }
     }
 
-    private static string BuildWhere(string maTruongBo, string? keyword, string? status)
+    private static string BuildWhere(string maTruongBo, string? keyword, string? status, string? documentTypeId)
     {
         var clauses = new List<string>
         {
-            "is_deleted = FALSE",
-            $"ma_truong_bo = '{Escape(maTruongBo)}'"
+            "d.is_deleted = FALSE",
+            $"d.ma_truong_bo = '{Escape(maTruongBo)}'"
         };
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             var k = Escape(keyword);
-            clauses.Add($"(doc_title ILIKE '%{k}%' OR doc_number ILIKE '%{k}%')");
+            clauses.Add($"(d.doc_title ILIKE '%{k}%' OR d.doc_number ILIKE '%{k}%' OR d.doc_type ILIKE '%{k}%')");
         }
         if (!string.IsNullOrWhiteSpace(status))
         {
-            clauses.Add($"status = '{Escape(status)}'");
+            clauses.Add($"d.status = '{Escape(status)}'");
+        }
+        if (!string.IsNullOrWhiteSpace(documentTypeId))
+        {
+            clauses.Add($"d.document_type_id = {ToNullableBigIntSql(documentTypeId)}");
         }
         return "WHERE " + string.Join(" AND ", clauses);
     }
+
+    private static string ToNullableBigIntSql(string? value)
+        => string.IsNullOrWhiteSpace(value) ? "NULL" : $"'{Escape(value)}'";
 
     private static string Escape(string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty : value.Replace("'", "''");
 }
@@ -196,6 +213,10 @@ public class AdminDocumentItem
     public string? Id { get; set; }
     public string? DocTitle { get; set; }
     public string? DocNumber { get; set; }
+    public string? DocType { get; set; }
+    public string? DocumentTypeId { get; set; }
+    public string? DocumentTypeName { get; set; }
+    public string? DocumentTypeSlug { get; set; }
     public string? Status { get; set; }
     public DateTime? IssuedDate { get; set; }
     public DateTime CreatedAt { get; set; }
@@ -205,9 +226,11 @@ public class AdminDocumentDetail
 {
     public string? Id { get; set; }
     public string? MaTruongBo { get; set; }
+    public string? DocumentTypeId { get; set; }
     public string? DocNumber { get; set; }
     public string? DocTitle { get; set; }
     public string? DocType { get; set; }
+    public string? DocCode { get; set; }
     public string? Issuer { get; set; }
     public string? Summary { get; set; }
     public string? Content { get; set; }

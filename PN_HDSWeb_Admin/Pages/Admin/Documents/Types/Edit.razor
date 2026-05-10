@@ -1,0 +1,112 @@
+@page "/admin/document-types/edit/{Id?}"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminDocumentTypeService AdminDocumentTypeService
+@inject NavigationManager Nav
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>@(IsEditMode ? "Sửa loại văn bản" : "Thêm loại văn bản")</h1>
+            <p>Thiết lập loại văn bản chuẩn để dùng ở màn hình tạo văn bản.</p>
+        </div>
+
+        @if (model == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <div class="admin-settings-layout">
+                <div class="admin-settings-form">
+                    <div class="admin-form-grid">
+                        <label>
+                            Mã loại
+                            <input class="admin-input" @bind="model.TypeCode" placeholder="Ví dụ: QD" />
+                        </label>
+                        <label>
+                            Tên loại
+                            <input class="admin-input" @bind="model.TypeName" placeholder="Ví dụ: Quyết định" />
+                        </label>
+                        <label>
+                            Slug
+                            <input class="admin-input" @bind="model.Slug" placeholder="quyet-dinh" />
+                        </label>
+                        <label>
+                            Thứ tự
+                            <input class="admin-input" type="number" @bind="model.SortOrder" />
+                        </label>
+                        <label class="span-2">
+                            Mô tả
+                            <textarea class="admin-input admin-textarea" rows="3" @bind="model.Description"></textarea>
+                        </label>
+                        <label>
+                            Trạng thái
+                            <select class="admin-input" @bind="IsActiveText">
+                                <option value="true">Đang bật</option>
+                                <option value="false">Tắt</option>
+                            </select>
+                        </label>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="button" class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
+                        <button type="button" class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
+                    </div>
+                </div>
+
+                <aside class="admin-preview-box">
+                    <h3>Gợi ý dùng nhanh</h3>
+                    <p><strong>Mã:</strong> @model.TypeCode</p>
+                    <p><strong>Tên:</strong> @model.TypeName</p>
+                    <p><strong>Slug:</strong> @model.Slug</p>
+                    <div>
+                        <strong>Ví dụ chuẩn</strong>
+                        <ul class="simple-list">
+                            <li>QD — Quyết định</li>
+                            <li>TB — Thông báo</li>
+                            <li>KH — Kế hoạch</li>
+                            <li>CV — Công văn</li>
+                        </ul>
+                    </div>
+                </aside>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private AdminDocumentTypeDetail? model;
+    private string IsActiveText = "true";
+    private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(Id))
+            model = await AdminDocumentTypeService.GetDocumentTypeByIdAsync(Id);
+
+        model ??= new AdminDocumentTypeDetail
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            SortOrder = 0,
+            IsActive = true
+        };
+
+        IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+    }
+
+    private async Task SaveAsync()
+    {
+        model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
+
+        if (string.IsNullOrWhiteSpace(model.Id))
+            await AdminDocumentTypeService.CreateDocumentTypeAsync(model);
+        else
+            await AdminDocumentTypeService.UpdateDocumentTypeAsync(model);
+
+        Nav.NavigateTo("/admin/document-types");
+    }
+
+    private void GoBack() => Nav.NavigateTo("/admin/document-types");
+}

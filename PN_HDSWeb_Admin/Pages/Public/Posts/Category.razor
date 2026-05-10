@@ -1,0 +1,192 @@
+@page "/posts/category/{Slug}"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicPostCategoryService PublicPostCategoryService
+@inject IPublicPostService PublicPostService
+
+<div class="public-article">
+    <nav class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
+        <a href="/posts">Bài viết</a>
+        @foreach (var node in breadcrumbNodes)
+        {
+            <span>/</span>
+            <a href="/posts/category/@node.Slug">@node.CategoryName</a>
+        }
+    </nav>
+
+    <section class="content-card category-hero-card">
+        @if (category == null)
+        {
+            <p>Đang tải hoặc không tìm thấy chuyên mục.</p>
+        }
+        else
+        {
+            <div class="section-head">
+                <div>
+                    <h1>@category.CategoryName</h1>
+                    <p>@category.Description</p>
+                </div>
+                <a class="btn btn-secondary" href="/posts">Tất cả bài viết</a>
+            </div>
+        }
+    </section>
+
+    @if (childCategories?.Any() == true)
+    {
+        <section class="content-card category-tree-card">
+            <div class="section-head">
+                <h2>Chuyên mục con</h2>
+            </div>
+            <div class="category-chip-grid">
+                @foreach (var child in childCategories)
+                {
+                    <a class="category-chip" href="/posts/category/@child.Slug">
+                        <span class="category-chip-title">@child.CategoryName</span>
+                        <span class="category-chip-sub">@child.Description</span>
+                    </a>
+                }
+            </div>
+        </section>
+    }
+
+    @if (childCategoryGroups?.Any() == true)
+    {
+        @foreach (var group in childCategoryGroups)
+        {
+            <section class="content-card category-group-card">
+                <div class="section-head">
+                    <div>
+                        <h2>@group.Category.CategoryName</h2>
+                        <p>@group.Category.Description</p>
+                    </div>
+                    <a class="btn btn-secondary" href="/posts/category/@group.Category.Slug">Xem chuyên mục</a>
+                </div>
+
+                <div class="category-group-layout">
+                    <a class="category-feature-card" href="/posts/category/@group.Category.Slug">
+                        @if (!string.IsNullOrWhiteSpace(GetGroupCover(group)))
+                        {
+                            <img src="@GetGroupCover(group)" alt="@group.Category.CategoryName" />
+                        }
+                        <div class="category-feature-overlay">
+                            <span class="chip active">@group.Category.CategoryName</span>
+                            <h3>@group.Category.CategoryName</h3>
+                            <p>@(group.Category.Description ?? "Xem các bài viết trong chuyên mục này.")</p>
+                        </div>
+                    </a>
+
+                    @if (group.Posts.Any())
+                    {
+                        <div class="post-grid compact">
+                            @foreach (var item in group.Posts)
+                            {
+                                <article class="post-card">
+                                    @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                                    {
+                                        <a href="/posts/@item.Slug"><img class="post-card-image" src="@item.CoverImageUrl" alt="@item.Title" /></a>
+                                    }
+                                    <div class="post-card-body">
+                                        <div class="post-card-meta">
+                                            <span class="post-date">@(item.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
+                                        </div>
+                                        <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
+                                        <p>@item.Summary</p>
+                                    </div>
+                                </article>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="empty-state">Chưa có bài viết trong chuyên mục này.</div>
+                    }
+                </div>
+            </section>
+        }
+    }
+    else
+    {
+        <section class="content-card category-group-card">
+            @if (posts == null)
+            {
+                <p>Đang tải...</p>
+            }
+            else if (!posts.Any())
+            {
+                <div class="empty-state">Chưa có bài viết trong chuyên mục này.</div>
+            }
+            else
+            {
+                <div class="post-grid">
+                    @foreach (var item in posts)
+                    {
+                        <article class="post-card">
+                            @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                            {
+                                <a href="/posts/@item.Slug"><img class="post-card-image" src="@item.CoverImageUrl" alt="@item.Title" /></a>
+                            }
+                            <div class="post-card-body">
+                                <div class="post-card-meta">
+                                    <span class="post-date">@(item.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
+                                </div>
+                                <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
+                                <p>@item.Summary</p>
+                            </div>
+                        </article>
+                    }
+                </div>
+            }
+        </section>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+    private PublicPostCategoryDetail? category;
+    private List<PublicPostListItem>? posts;
+    private List<PublicPostCategoryItem>? allCategories;
+    private List<PublicPostCategoryItem> breadcrumbNodes = [];
+    private List<PublicPostCategoryItem> childCategories = [];
+    private List<(PublicPostCategoryItem Category, List<PublicPostListItem> Posts)> childCategoryGroups = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        allCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        category = await PublicPostCategoryService.GetCategoryBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+
+        if (category != null && allCategories != null)
+        {
+            breadcrumbNodes = BuildBreadcrumb(category, allCategories);
+            childCategories = allCategories.Where(x => x.ParentId == category.Id).OrderBy(x => x.SortOrder).ToList();
+
+            if (childCategories.Any())
+            {
+                foreach (var child in childCategories)
+                {
+                    var childPosts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, child.Id, 1, 30);
+                    childCategoryGroups.Add((child, childPosts));
+                }
+            }
+            else
+            {
+                posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, category.Id, 1, 30);
+            }
+        }
+    }
+
+    private static List<PublicPostCategoryItem> BuildBreadcrumb(PublicPostCategoryDetail current, List<PublicPostCategoryItem> all)
+    {
+        var result = new List<PublicPostCategoryItem>();
+        var node = all.FirstOrDefault(x => x.Id == current.Id);
+        while (node != null)
+        {
+            result.Insert(0, node);
+            node = all.FirstOrDefault(x => x.Id == node.ParentId);
+        }
+        return result;
+    }
+
+    private static string? GetGroupCover((PublicPostCategoryItem Category, List<PublicPostListItem> Posts) group)
+        => group.Posts.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.CoverImageUrl))?.CoverImageUrl;
+}

@@ -223,6 +223,99 @@ CREATE TABLE IF NOT EXISTS post_media (
 CREATE INDEX IF NOT EXISTS ix_post_media_post_id ON post_media(post_id);
 CREATE INDEX IF NOT EXISTS ix_post_media_truong_type ON post_media(ma_truong_bo, media_type);
 
+-- Seed mẫu cho post_media
+INSERT INTO post_media (ma_truong_bo, post_id, media_type, file_name, file_url, thumbnail_url, file_size, mime_type, sort_order, caption, created_at, created_by, is_deleted)
+VALUES
+('7900004033', 1, 'image', 'chi-bo-1.jpg', '/uploads/posts/chi-bo-1.jpg', NULL, 182344, 'image/jpeg', 1, 'Ảnh đại hội chi bộ', NOW(), 'system', FALSE),
+('7900004033', 2, 'image', 'cong-doan-truong.jpg', '/uploads/posts/cong-doan-truong.jpg', NULL, 164221, 'image/jpeg', 1, 'Hoạt động công đoàn', NOW(), 'system', FALSE),
+('7900004033', 3, 'image', 'chi-doan-giao-vien-1.jpg', '/uploads/posts/chi-doan-giao-vien-1.jpg', NULL, 154812, 'image/jpeg', 1, 'Phong trào chi đoàn giáo viên', NOW(), 'system', FALSE),
+('7900004033', 4, 'image', 'lien-doi-phong-trao.jpg', '/uploads/posts/lien-doi-phong-trao.jpg', NULL, 154812, 'image/jpeg', 1, 'Phong trào liên đội', NOW(), 'system', FALSE),
+('7900004033', 5, 'image', 'to-chuyen-mon.jpg', '/uploads/posts/to-chuyen-mon.jpg', NULL, 148912, 'image/jpeg', 1, 'Tổ chuyên môn', NOW(), 'system', FALSE),
+('7900004033', 6, 'image', 'van-phong.jpg', '/uploads/posts/van-phong.jpg', NULL, 133123, 'image/jpeg', 1, 'Hướng dẫn nhập học', NOW(), 'system', FALSE),
+('7900004033', 7, 'image', 'to-tu-van.jpg', '/uploads/posts/to-tu-van.jpg', NULL, 143212, 'image/jpeg', 1, 'Tổ tư vấn', NOW(), 'system', FALSE),
+('7900004033', 8, 'image', 'ban-giam-hieu.jpg', '/uploads/posts/ban-giam-hieu.jpg', NULL, 152889, 'image/jpeg', 1, 'Ban giám hiệu', NOW(), 'system', FALSE),
+('7900004033', 9, 'image', 'gioi-thieu-chung.jpg', '/uploads/posts/gioi-thieu-chung.jpg', NULL, 143212, 'image/jpeg', 1, 'Ảnh giới thiệu chung', NOW(), 'system', FALSE)
+ON CONFLICT DO NOTHING;
+
+-- Seed mẫu cho post_categories
+INSERT INTO post_categories (ma_truong_bo, category_code, category_name, slug, parent_id, description, sort_order, is_active, created_by, updated_by, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 'GT', 'Giới thiệu', 'gioi-thieu', NULL, 'Nhóm nội dung giới thiệu nhà trường', 1, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN', 'Tin tức', 'tin-tuc', NULL, 'Nhóm bài viết tin tức chung', 2, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'HD', 'Hoạt động', 'hoat-dong', NULL, 'Nhóm bài viết hoạt động', 3, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'VB', 'Văn bản công khai', 'van-ban-cong-khai', NULL, 'Nhóm nội dung văn bản công khai', 4, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TS', 'Tuyển sinh', 'tuyen-sinh', NULL, 'Nhóm thông tin tuyển sinh', 5, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'LH', 'Liên hệ', 'lien-he', NULL, 'Trang liên hệ', 6, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'GT1', 'Giới thiệu chung', 'gioi-thieu-chung', 1, 'Giới thiệu chung về nhà trường', 1, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'GT2', 'Cơ cấu tổ chức', 'co-cau-to-chuc', 1, 'Cơ cấu tổ chức nhà trường', 2, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'GT3', 'Danh bạ liên hệ', 'danh-ba-lien-he', 1, 'Danh bạ liên hệ', 3, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN1', 'Chi bộ', 'chi-bo', 2, 'Hoạt động chi bộ', 1, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN2', 'Công đoàn trường', 'cong-doan-truong', 2, 'Hoạt động công đoàn', 2, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN3', 'Chi đoàn giáo viên', 'chi-doan-giao-vien', 2, 'Hoạt động chi đoàn giáo viên', 3, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN4', 'Liên đội', 'lien-doi', 2, 'Hoạt động liên đội', 4, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN5', 'Tổ chuyên môn', 'to-chuyen-mon', 2, 'Hoạt động tổ chuyên môn', 5, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN6', 'Văn phòng', 'van-phong', 2, 'Hoạt động văn phòng', 6, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN7', 'Tổ tư vấn, hỗ trợ học sinh', 'to-tu-van-ho-tro-hoc-sinh', 2, 'Tổ tư vấn hỗ trợ học sinh', 7, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN8', 'Hội đồng trường', 'hoi-dong-truong', 2, 'Hội đồng trường', 8, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TIN9', 'Ban giám hiệu', 'ban-giam-hieu', 2, 'Ban giám hiệu', 9, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'HD1', 'Hoạt động học sinh', 'hoat-dong-hoc-sinh', 3, 'Hoạt động của học sinh', 1, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'HD2', 'Sự kiện', 'su-kien', 3, 'Các sự kiện của trường', 2, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'VB1', 'Thông báo', 'thong-bao', 4, 'Thông báo công khai', 1, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'VB2', 'Quy chế', 'quy-che', 4, 'Quy chế, quy định', 2, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TS1', 'Thông báo tuyển sinh', 'thong-bao-tuyen-sinh', 5, 'Thông báo tuyển sinh', 1, TRUE, 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'TS2', 'Hướng dẫn nhập học', 'huong-dan-nhap-hoc', 5, 'Hướng dẫn nhập học', 2, TRUE, 'system', 'system', NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, slug)
+DO UPDATE SET
+    category_code = EXCLUDED.category_code,
+    category_name = EXCLUDED.category_name,
+    parent_id = EXCLUDED.parent_id,
+    description = EXCLUDED.description,
+    sort_order = EXCLUDED.sort_order,
+    is_active = EXCLUDED.is_active,
+    updated_at = NOW();
+
+-- Seed mẫu cho post_tags
+INSERT INTO post_tags (ma_truong_bo, tag_name, slug, is_active, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 'Học sinh', 'hoc-sinh', TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'Giáo viên', 'giao-vien', TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'Tuyển sinh', 'tuyen-sinh', TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'Sự kiện', 'su-kien', TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'Thông báo', 'thong-bao', TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'Nổi bật', 'noi-bat', TRUE, NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, slug)
+DO UPDATE SET
+    tag_name = EXCLUDED.tag_name,
+    is_active = EXCLUDED.is_active,
+    updated_at = NOW();
+
+-- Seed mẫu cho posts
+INSERT INTO posts (ma_truong_bo, category_id, title, slug, summary, content, cover_image_url, post_type, status, is_featured, sort_order, publish_at, expire_at, view_count, created_by, updated_by, approved_by, approved_at, rejected_by, rejected_at, reject_reason, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 10, 'Đại hội Chi đoàn giáo viên nhiệm kỳ mới', 'dai-hoi-chi-doan-giao-vien-nhiem-ky-moi', 'Chi đoàn giáo viên tổ chức đại hội nhiệm kỳ mới, đề ra phương hướng hoạt động.', '<h2>Đại hội Chi đoàn giáo viên</h2><p>Nội dung bài viết mẫu về đại hội chi đoàn giáo viên.</p>', '/uploads/posts/dai-hoi-chi-doan-giao-vien.jpg', 'news', 'Published', TRUE, 1, NOW(), NULL, 132, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 11, 'Công đoàn trường tổ chức hoạt động chăm lo đoàn viên', 'cong-doan-truong-to-chuc-hoat-dong-cham-lo-doan-vien', 'Công đoàn trường đẩy mạnh hoạt động chăm lo đời sống đoàn viên.', '<h2>Công đoàn trường</h2><p>Nội dung bài viết mẫu về hoạt động công đoàn.</p>', '/uploads/posts/cong-doan-truong.jpg', 'news', 'Published', FALSE, 2, NOW(), NULL, 98, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 14, 'Liên đội triển khai phong trào thi đua mới', 'lien-doi-trien-khai-phong-trao-thi-dua-moi', 'Liên đội phát động phong trào thi đua sôi nổi trong toàn trường.', '<h2>Liên đội</h2><p>Nội dung bài viết mẫu về phong trào thi đua của liên đội.</p>', '/uploads/posts/lien-doi-phong-trao.jpg', 'news', 'Published', TRUE, 3, NOW(), NULL, 86, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 15, 'Tổ chuyên môn triển khai kế hoạch học kỳ', 'to-chuyen-mon-trien-khai-ke-hoach-hoc-ky', 'Tổ chuyên môn thống nhất kế hoạch giảng dạy học kỳ.', '<h2>Tổ chuyên môn</h2><p>Nội dung bài viết mẫu về kế hoạch tổ chuyên môn.</p>', '/uploads/posts/to-chuyen-mon.jpg', 'news', 'Published', FALSE, 4, NOW(), NULL, 74, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 18, 'Thông báo tuyển sinh lớp 10 năm học 2026-2027', 'thong-bao-tuyen-sinh-lop-10-nam-hoc-2026-2027', 'Nhà trường thông báo tuyển sinh lớp 10 năm học mới.', '<h2>Thông báo tuyển sinh</h2><p>Nội dung thông báo tuyển sinh mẫu.</p>', '/uploads/posts/tuyen-sinh-lop-10.jpg', 'announcement', 'Published', TRUE, 5, NOW(), NULL, 203, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 19, 'Hướng dẫn nhập học và nộp hồ sơ', 'huong-dan-nhap-hoc-va-nop-ho-so', 'Hướng dẫn chi tiết quy trình nhập học cho học sinh mới.', '<h2>Hướng dẫn nhập học</h2><p>Nội dung hướng dẫn nhập học mẫu.</p>', '/uploads/posts/huong-dan-nhap-hoc.jpg', 'guide', 'Published', FALSE, 6, NOW(), NULL, 121, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 1, 'Giới thiệu chung về nhà trường', 'gioi-thieu-chung-ve-nha-truong', 'Khái quát lịch sử, sứ mệnh và tầm nhìn của nhà trường.', '<h2>Giới thiệu chung</h2><p>Nội dung giới thiệu chung về nhà trường.</p>', '/uploads/posts/gioi-thieu-chung.jpg', 'introduce', 'Published', FALSE, 7, NOW(), NULL, 167, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 2, 'Cơ cấu tổ chức và nhiệm vụ các bộ phận', 'co-cau-to-chuc-va-nhiem-vu-cac-bo-phan', 'Giới thiệu cơ cấu tổ chức và chức năng nhiệm vụ các bộ phận.', '<h2>Cơ cấu tổ chức</h2><p>Nội dung cơ cấu tổ chức mẫu.</p>', '/uploads/posts/co-cau-to-chuc.jpg', 'introduce', 'Published', FALSE, 8, NOW(), NULL, 104, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, slug)
+DO UPDATE SET
+    category_id = EXCLUDED.category_id,
+    title = EXCLUDED.title,
+    summary = EXCLUDED.summary,
+    content = EXCLUDED.content,
+    cover_image_url = EXCLUDED.cover_image_url,
+    post_type = EXCLUDED.post_type,
+    status = EXCLUDED.status,
+    is_featured = EXCLUDED.is_featured,
+    sort_order = EXCLUDED.sort_order,
+    publish_at = EXCLUDED.publish_at,
+    view_count = EXCLUDED.view_count,
+    updated_at = NOW(),
+    updated_by = EXCLUDED.updated_by;
+
 CREATE TABLE IF NOT EXISTS document_types (
     id              BIGSERIAL PRIMARY KEY,
     ma_truong_bo    VARCHAR(50) NOT NULL,
@@ -238,6 +331,45 @@ CREATE TABLE IF NOT EXISTS document_types (
     CONSTRAINT uq_document_types_truong_slug UNIQUE (ma_truong_bo, slug)
 );
 
+-- Seed mẫu cho document_types
+INSERT INTO document_types (ma_truong_bo, type_code, type_name, slug, description, sort_order, is_active, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 'QD', 'Quyết định', 'quyet-dinh', 'Văn bản quyết định', 1, TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'TB', 'Thông báo', 'thong-bao', 'Văn bản thông báo', 2, TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'KH', 'Kế hoạch', 'ke-hoach', 'Văn bản kế hoạch', 3, TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'CV', 'Công văn', 'cong-van', 'Văn bản công văn', 4, TRUE, NOW(), NOW(), FALSE),
+('7900004033', 'BC', 'Báo cáo', 'bao-cao', 'Văn bản báo cáo', 5, TRUE, NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, slug)
+DO UPDATE SET
+    type_code = EXCLUDED.type_code,
+    type_name = EXCLUDED.type_name,
+    description = EXCLUDED.description,
+    sort_order = EXCLUDED.sort_order,
+    is_active = EXCLUDED.is_active,
+    updated_at = NOW();
+
+-- Seed mẫu cho posts
+INSERT INTO posts (ma_truong_bo, category_id, title, slug, summary, content, cover_image_url, post_type, status, is_featured, sort_order, publish_at, expire_at, view_count, created_by, updated_by, approved_by, approved_at, rejected_by, rejected_at, reject_reason, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 1, 'Khai giảng năm học mới 2026-2027', 'khai-giang-nam-hoc-moi-2026-2027', 'Lễ khai giảng được tổ chức trang trọng tại sân trường.', '<p>Lễ khai giảng năm học mới diễn ra với nhiều hoạt động ý nghĩa.</p>', '/uploads/posts/khai-giang.jpg', 'news', 'Published', TRUE, 1, NOW(), NULL, 120, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 2, 'Thông báo lịch học học kỳ I', 'thong-bao-lich-hoc-hk1', 'Thông báo điều chỉnh lịch học học kỳ I.', '<p>Nội dung thông báo lịch học học kỳ I.</p>', '/uploads/posts/thong-bao-lich-hoc.jpg', 'announcement', 'Published', FALSE, 2, NOW(), NULL, 86, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 3, 'Hội thao chào mừng ngày Nhà giáo Việt Nam', 'hoi-thao-chao-mung-20-11', 'Hoạt động thể thao sôi nổi của học sinh toàn trường.', '<p>Hội thao là hoạt động thường niên của trường.</p>', '/uploads/posts/hoi-thao.jpg', 'event', 'Pending', FALSE, 3, NOW(), NULL, 34, 'system', 'system', NULL, NULL, NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 4, 'Dọn vệ sinh khuôn viên trường', 'don-ve-sinh-khuon-vien-truong', 'Hoạt động tổng vệ sinh chuẩn bị năm học mới.', '<p>Đoàn viên và học sinh tham gia dọn vệ sinh khuôn viên.</p>', '/uploads/posts/don-ve-sinh.jpg', 'activity', 'Draft', FALSE, 4, NOW(), NULL, 12, 'system', 'system', NULL, NULL, NULL, NULL, NULL, NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, slug)
+DO UPDATE SET
+    category_id = EXCLUDED.category_id,
+    title = EXCLUDED.title,
+    summary = EXCLUDED.summary,
+    content = EXCLUDED.content,
+    cover_image_url = EXCLUDED.cover_image_url,
+    post_type = EXCLUDED.post_type,
+    status = EXCLUDED.status,
+    is_featured = EXCLUDED.is_featured,
+    sort_order = EXCLUDED.sort_order,
+    publish_at = EXCLUDED.publish_at,
+    expire_at = EXCLUDED.expire_at,
+    updated_at = NOW();
+
 CREATE TABLE IF NOT EXISTS documents (
     id                  BIGSERIAL PRIMARY KEY,
     ma_truong_bo        VARCHAR(50) NOT NULL,
@@ -251,6 +383,7 @@ CREATE TABLE IF NOT EXISTS documents (
     effective_date      DATE,
     expiry_date         DATE,
     summary             TEXT,
+    content             TEXT,
     file_url            TEXT NOT NULL,
     file_name           VARCHAR(255),
     file_size           BIGINT,
@@ -273,6 +406,33 @@ CREATE TABLE IF NOT EXISTS documents (
 CREATE INDEX IF NOT EXISTS ix_documents_truong_status_date ON documents(ma_truong_bo, status, issued_date);
 CREATE INDEX IF NOT EXISTS ix_documents_truong_type ON documents(ma_truong_bo, document_type_id);
 
+-- Seed mẫu cho documents
+INSERT INTO documents (ma_truong_bo, document_type_id, doc_type, doc_number, doc_title, doc_code, issuer, issued_date, effective_date, expiry_date, summary, content, file_url, file_name, file_size, mime_type, status, version_no, created_by, updated_by, approved_by, approved_at, rejected_by, rejected_at, reject_reason, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 1, 'Quyết định', '01/QD-THPTM', 'Quyết định về việc thành lập tổ chuyên môn', 'QD01', 'Hiệu trưởng', '2026-05-10', '2026-05-10', NULL, 'Quyết định thành lập tổ chuyên môn năm học mới.', '<h2>Quyết định</h2><p>Nội dung mẫu cho quyết định thành lập tổ chuyên môn.</p>', '/uploads/documents/01-QD-THPTM.pdf', '01-QD-THPTM.pdf', 102400, 'application/pdf', 'Published', 1, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 2, 'Thông báo', '02/TB-THPTM', 'Thông báo lịch họp hội đồng', 'TB02', 'Văn phòng', '2026-05-09', '2026-05-09', NULL, 'Thông báo lịch họp hội đồng giáo viên.', '<h2>Thông báo</h2><p>Nội dung mẫu cho thông báo lịch họp.</p>', '/uploads/documents/02-TB-THPTM.pdf', '02-TB-THPTM.pdf', 78412, 'application/pdf', 'Published', 1, 'system', 'system', 'system', NOW(), NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 3, 'Kế hoạch', '03/KH-THPTM', 'Kế hoạch tổ chức hoạt động ngoại khóa', 'KH03', 'Ban giám hiệu', '2026-05-08', '2026-05-08', NULL, 'Kế hoạch tổ chức hoạt động ngoại khóa tháng 5.', '<h2>Kế hoạch</h2><p>Nội dung mẫu cho kế hoạch hoạt động ngoại khóa.</p>', '/uploads/documents/03-KH-THPTM.pdf', '03-KH-THPTM.pdf', 91234, 'application/pdf', 'Pending', 1, 'system', 'system', NULL, NULL, NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 4, 'Công văn', '04/CV-THPTM', 'Công văn về việc phối hợp tuyên truyền', 'CV04', 'Phòng hành chính', '2026-05-07', '2026-05-07', NULL, 'Công văn phối hợp tuyên truyền nội bộ.', '<h2>Công văn</h2><p>Nội dung mẫu cho công văn phối hợp tuyên truyền.</p>', '/uploads/documents/04-CV-THPTM.pdf', '04-CV-THPTM.pdf', 66550, 'application/pdf', 'Draft', 1, 'system', 'system', NULL, NULL, NULL, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 5, 'Báo cáo', '05/BC-THPTM', 'Báo cáo tổng kết hoạt động', 'BC05', 'Văn phòng', '2026-05-06', '2026-05-06', NULL, 'Báo cáo tổng kết hoạt động tháng 5.', '<h2>Báo cáo</h2><p>Nội dung mẫu cho báo cáo tổng kết.</p>', '/uploads/documents/05-BC-THPTM.pdf', '05-BC-THPTM.pdf', 123456, 'application/pdf', 'Rejected', 1, 'system', 'system', NULL, NULL, 'admin', NOW(), 'Sai định dạng biểu mẫu', NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, doc_number, issued_date)
+DO UPDATE SET
+    document_type_id = EXCLUDED.document_type_id,
+    doc_type = EXCLUDED.doc_type,
+    doc_title = EXCLUDED.doc_title,
+    doc_code = EXCLUDED.doc_code,
+    issuer = EXCLUDED.issuer,
+    effective_date = EXCLUDED.effective_date,
+    expiry_date = EXCLUDED.expiry_date,
+    summary = EXCLUDED.summary,
+    content = EXCLUDED.content,
+    file_url = EXCLUDED.file_url,
+    file_name = EXCLUDED.file_name,
+    file_size = EXCLUDED.file_size,
+    mime_type = EXCLUDED.mime_type,
+    status = EXCLUDED.status,
+    version_no = EXCLUDED.version_no,
+    updated_at = NOW();
+
 CREATE TABLE IF NOT EXISTS document_versions (
     id              BIGSERIAL PRIMARY KEY,
     ma_truong_bo    VARCHAR(50) NOT NULL,
@@ -285,6 +445,41 @@ CREATE TABLE IF NOT EXISTS document_versions (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT uq_document_versions UNIQUE (document_id, version_no)
 );
+
+-- Seed mẫu cho document_versions
+INSERT INTO document_versions (ma_truong_bo, document_id, version_no, file_url, file_name, change_summary, created_by, created_at)
+VALUES
+('7900004033', 1, 1, '/uploads/documents/01-QD-THPTM-v1.pdf', '01-QD-THPTM-v1.pdf', 'Phiên bản đầu tiên của quyết định', 'system', NOW()),
+('7900004033', 2, 1, '/uploads/documents/02-TB-THPTM-v1.pdf', '02-TB-THPTM-v1.pdf', 'Phiên bản đầu tiên của thông báo', 'system', NOW()),
+('7900004033', 3, 1, '/uploads/documents/03-KH-THPTM-v1.pdf', '03-KH-THPTM-v1.pdf', 'Phiên bản đầu tiên của kế hoạch', 'system', NOW()),
+('7900004033', 4, 1, '/uploads/documents/04-CV-THPTM-v1.pdf', '04-CV-THPTM-v1.pdf', 'Phiên bản đầu tiên của công văn', 'system', NOW()),
+('7900004033', 5, 1, '/uploads/documents/05-BC-THPTM-v1.pdf', '05-BC-THPTM-v1.pdf', 'Phiên bản đầu tiên của báo cáo', 'system', NOW())
+ON CONFLICT (document_id, version_no)
+DO UPDATE SET
+    file_url = EXCLUDED.file_url,
+    file_name = EXCLUDED.file_name,
+    change_summary = EXCLUDED.change_summary;
+
+-- Seed mẫu cho post_media
+INSERT INTO post_media (ma_truong_bo, post_id, media_type, file_name, file_url, thumbnail_url, file_size, mime_type, sort_order, caption, created_at, created_by, is_deleted)
+VALUES
+('7900004033', 1, 'image', 'khai-giang-1.jpg', '/uploads/posts/khai-giang-1.jpg', NULL, 120344, 'image/jpeg', 1, 'Ảnh khai giảng', NOW(), 'system', FALSE),
+('7900004033', 1, 'image', 'khai-giang-2.jpg', '/uploads/posts/khai-giang-2.jpg', NULL, 110233, 'image/jpeg', 2, 'Khoảnh khắc chào cờ', NOW(), 'system', FALSE),
+('7900004033', 2, 'file', 'lich-hoc.pdf', '/uploads/posts/lich-hoc.pdf', NULL, 50234, 'application/pdf', 1, 'File thông báo lịch học', NOW(), 'system', FALSE),
+('7900004033', 3, 'image', 'hoi-thao.jpg', '/uploads/posts/hoi-thao.jpg', NULL, 89012, 'image/jpeg', 1, 'Ảnh hội thao', NOW(), 'system', FALSE)
+ON CONFLICT DO NOTHING;
+
+-- Seed mẫu cho post_tag_map
+INSERT INTO post_tag_map (post_id, tag_id, created_at)
+VALUES
+(1, 1, NOW()),
+(1, 4, NOW()),
+(2, 5, NOW()),
+(2, 3, NOW()),
+(3, 4, NOW()),
+(4, 2, NOW())
+ON CONFLICT (post_id, tag_id)
+DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS staff_profiles (
     id              BIGSERIAL PRIMARY KEY,
@@ -365,7 +560,7 @@ CREATE TABLE IF NOT EXISTS events (
     is_deleted      BOOLEAN NOT NULL DEFAULT FALSE
 );
 
-CREATE TABLE IF NOT EXISTS site_pages (
+CREATE TABLE IF NOT EXISTS static_pages (
     id              BIGSERIAL PRIMARY KEY,
     ma_truong_bo    VARCHAR(50) NOT NULL,
     page_code       VARCHAR(50),
@@ -381,8 +576,28 @@ CREATE TABLE IF NOT EXISTS site_pages (
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     is_deleted      BOOLEAN NOT NULL DEFAULT FALSE,
-    CONSTRAINT uq_site_pages_truong_slug UNIQUE (ma_truong_bo, slug)
+    CONSTRAINT uq_static_pages_truong_slug UNIQUE (ma_truong_bo, slug)
 );
+
+-- Seed mẫu cho static_pages
+INSERT INTO static_pages (ma_truong_bo, page_code, title, slug, content, status, sort_order, meta_title, meta_description, created_by, updated_by, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 'gioi-thieu', 'Giới thiệu nhà trường', 'gioi-thieu', '<h2>Giới thiệu nhà trường</h2><p>Đây là nội dung giới thiệu mẫu cho trang tĩnh.</p>', 'Published', 1, 'Giới thiệu nhà trường', 'Trang giới thiệu chính thức của nhà trường', 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'quy-che', 'Quy chế hoạt động', 'quy-che', '<h2>Quy chế hoạt động</h2><p>Nội dung quy chế hoạt động mẫu.</p>', 'Published', 2, 'Quy chế hoạt động', 'Trang quy chế hoạt động của nhà trường', 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'ban-giam-hieu', 'Ban giám hiệu', 'ban-giam-hieu', '<h2>Ban giám hiệu</h2><p>Thông tin ban giám hiệu mẫu.</p>', 'Published', 3, 'Ban giám hiệu', 'Thông tin ban giám hiệu nhà trường', 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'lien-he', 'Liên hệ', 'lien-he', '<h2>Liên hệ</h2><p>Thông tin liên hệ mẫu của nhà trường.</p>', 'Published', 4, 'Liên hệ', 'Trang thông tin liên hệ nhà trường', 'system', 'system', NOW(), NOW(), FALSE),
+('7900004033', 'so-do-to-chuc', 'Sơ đồ tổ chức', 'so-do-to-chuc', '<h2>Sơ đồ tổ chức</h2><p>Nội dung sơ đồ tổ chức mẫu.</p>', 'Draft', 5, 'Sơ đồ tổ chức', 'Trang sơ đồ tổ chức mẫu', 'system', 'system', NOW(), NOW(), FALSE)
+ON CONFLICT (ma_truong_bo, slug)
+DO UPDATE SET
+    page_code = EXCLUDED.page_code,
+    title = EXCLUDED.title,
+    content = EXCLUDED.content,
+    status = EXCLUDED.status,
+    sort_order = EXCLUDED.sort_order,
+    meta_title = EXCLUDED.meta_title,
+    meta_description = EXCLUDED.meta_description,
+    updated_at = NOW(),
+    updated_by = EXCLUDED.updated_by;
 
 CREATE TABLE IF NOT EXISTS menus (
     id              BIGSERIAL PRIMARY KEY,
@@ -392,12 +607,24 @@ CREATE TABLE IF NOT EXISTS menus (
     url             TEXT,
     target          VARCHAR(20),
     sort_order      INT NOT NULL DEFAULT 0,
+    page_slug       VARCHAR(255),
+    page_type       VARCHAR(50),
     is_active       BOOLEAN NOT NULL DEFAULT TRUE,
     icon_class      VARCHAR(255),
     created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     is_deleted      BOOLEAN NOT NULL DEFAULT FALSE
 );
+
+-- Seed mẫu cho menus
+INSERT INTO menus (ma_truong_bo, menu_name, parent_id, url, target, sort_order, page_slug, page_type, is_active, icon_class, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 'GIỚI THIỆU', NULL, '/pages/gioi-thieu', '_self', 1, 'gioi-thieu', 'static_page', TRUE, 'fa-solid fa-circle-info', NOW(), NOW(), FALSE),
+('7900004033', 'TIN TỨC', NULL, '/posts', '_self', 2, NULL, 'post_list', TRUE, 'fa-solid fa-newspaper', NOW(), NOW(), FALSE),
+('7900004033', 'VĂN BẢN CÔNG KHAI', NULL, '/posts/category/van-ban-cong-khai', '_self', 3, NULL, 'post_category', TRUE, 'fa-solid fa-file-lines', NOW(), NOW(), FALSE),
+('7900004033', 'TUYỂN SINH', NULL, '/posts/category/tuyen-sinh', '_self', 4, NULL, 'post_category', TRUE, 'fa-solid fa-graduation-cap', NOW(), NOW(), FALSE),
+('7900004033', 'LIÊN HỆ', NULL, '/pages/lien-he', '_self', 5, 'lien-he', 'static_page', TRUE, 'fa-solid fa-phone', NOW(), NOW(), FALSE)
+ON CONFLICT DO NOTHING;
 
 CREATE TABLE IF NOT EXISTS banners (
     id              BIGSERIAL PRIMARY KEY,
@@ -415,6 +642,14 @@ CREATE TABLE IF NOT EXISTS banners (
     is_deleted      BOOLEAN NOT NULL DEFAULT FALSE
 );
 
+-- Seed mẫu cho banners
+INSERT INTO banners (ma_truong_bo, title, image_url, link_url, position, sort_order, is_active, start_date, end_date, created_at, updated_at, is_deleted)
+VALUES
+('7900004033', 'Banner khai giảng', '/uploads/banners/banner-khai-giang.jpg', '/posts/khai-giang-nam-hoc-moi-2026-2027', 'HomeTop', 1, TRUE, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 'Banner thông báo', '/uploads/banners/banner-thong-bao.jpg', '/posts/thong-bao-lich-hoc-hk1', 'HomeTop', 2, TRUE, NULL, NULL, NOW(), NOW(), FALSE),
+('7900004033', 'Banner tuyển sinh', '/uploads/banners/banner-tuyen-sinh.jpg', '/posts/category/tuyen-sinh', 'HomeMiddle', 1, TRUE, NULL, NULL, NOW(), NOW(), FALSE)
+ON CONFLICT DO NOTHING;
+
 CREATE TABLE IF NOT EXISTS site_settings (
     id              BIGSERIAL PRIMARY KEY,
     ma_truong_bo    VARCHAR(50) NOT NULL,
@@ -427,6 +662,40 @@ CREATE TABLE IF NOT EXISTS site_settings (
     updated_by      VARCHAR(100),
     CONSTRAINT uq_site_settings_truong_key UNIQUE (ma_truong_bo, setting_key)
 );
+
+-- Seed mẫu cho site_settings
+INSERT INTO site_settings (ma_truong_bo, setting_key, setting_value, setting_group, description, is_active, updated_at, updated_by)
+VALUES
+('7900004033', 'site_name', 'Cổng thông tin điện tử Trường THPT Mẫu', 'general', 'Tên hệ thống hiển thị trên public site', TRUE, NOW(), 'system'),
+('7900004033', 'site_slogan', 'Kết nối - Minh bạch - Hiệu quả', 'general', 'Khẩu hiệu của website', TRUE, NOW(), 'system'),
+('7900004033', 'school_logo', '/uploads/logo-truong.png', 'school', 'Đường dẫn logo của trường', TRUE, NOW(), 'system'),
+('7900004033', 'school_address', 'Số 12, Đường Nguyễn Văn A, Quận 1, TP.HCM', 'school', 'Địa chỉ trường', TRUE, NOW(), 'system'),
+('7900004033', 'contact_hotline', '02812345678', 'contact', 'Số hotline liên hệ nhanh', TRUE, NOW(), 'system'),
+('7900004033', 'contact_email', 'contact@truongmau.edu.vn', 'contact', 'Email liên hệ', TRUE, NOW(), 'system'),
+('7900004033', 'contact_facebook', 'https://facebook.com/truongmau', 'contact', 'Link Facebook', TRUE, NOW(), 'system'),
+('7900004033', 'contact_youtube', 'https://youtube.com/@truongmau', 'contact', 'Link Youtube', TRUE, NOW(), 'system'),
+('7900004033', 'contact_zalo', 'https://zalo.me/0123456789', 'contact', 'Link Zalo', TRUE, NOW(), 'system'),
+('7900004033', 'footer_json_info', '{"diachi_truong":"Số 12, Đường Nguyễn Văn A, Quận 1, TP.HCM","logo_truong":"/uploads/logo-truong.png","so_dien_thoai":"02812345678","ho_ten":"Nguyễn Văn Hiệu","website_url":"https://truongmau.edu.vn","facebook_url":"https://facebook.com/truongmau","youtube_url":"https://youtube.com/@truongmau","zalo_url":"https://zalo.me/0123456789"}', 'footer', 'JSON cấu hình footer công khai', TRUE, NOW(), 'system'),
+('7900004033', 'homepage_featured_posts_limit', '6', 'homepage', 'Số bài viết nổi bật hiển thị trên trang chủ', TRUE, NOW(), 'system'),
+('7900004033', 'homepage_latest_posts_limit', '10', 'homepage', 'Số bài viết mới nhất hiển thị trên trang chủ', TRUE, NOW(), 'system'),
+('7900004033', 'homepage_documents_limit', '10', 'homepage', 'Số văn bản công khai hiển thị trên trang chủ', TRUE, NOW(), 'system'),
+('7900004033', 'feature_news_enabled', 'true', 'feature', 'Bật/tắt module tin tức', TRUE, NOW(), 'system'),
+('7900004033', 'feature_documents_enabled', 'true', 'feature', 'Bật/tắt module văn bản', TRUE, NOW(), 'system'),
+('7900004033', 'feature_banners_enabled', 'true', 'feature', 'Bật/tắt module banner', TRUE, NOW(), 'system'),
+('7900004033', 'feature_search_enabled', 'true', 'feature', 'Bật/tắt chức năng tìm kiếm', TRUE, NOW(), 'system'),
+('7900004033', 'seo_title', 'Cổng thông tin điện tử Trường THPT Mẫu', 'seo', 'Tiêu đề SEO mặc định', TRUE, NOW(), 'system'),
+('7900004033', 'seo_description', 'Trang thông tin chính thức của Trường THPT Mẫu', 'seo', 'Mô tả SEO mặc định', TRUE, NOW(), 'system'),
+('7900004033', 'seo_keywords', 'truong,thpt,cong thong tin, tin tuc, van ban', 'seo', 'Từ khóa SEO mặc định', TRUE, NOW(), 'system'),
+('7900004033', 'brand_primary_color', '#1d4ed8', 'general', 'Màu chủ đạo thương hiệu', TRUE, NOW(), 'system'),
+('7900004033', 'brand_secondary_color', '#0f172a', 'general', 'Màu phụ thương hiệu', TRUE, NOW(), 'system')
+ON CONFLICT (ma_truong_bo, setting_key)
+DO UPDATE SET
+    setting_value = EXCLUDED.setting_value,
+    setting_group = EXCLUDED.setting_group,
+    description = EXCLUDED.description,
+    is_active = EXCLUDED.is_active,
+    updated_at = NOW(),
+    updated_by = EXCLUDED.updated_by;
 
 CREATE TABLE IF NOT EXISTS audit_logs (
     id              BIGSERIAL PRIMARY KEY,
@@ -494,3 +763,4 @@ WHERE NOT EXISTS (SELECT 1 FROM roles WHERE role_code = 'Administrator');
 
 ## 5. Kết luận
 Bộ SQL này đã bổ sung bảng tài khoản và các bảng lõi còn thiếu cho portal, dùng được cho PostgreSQL và phù hợp với mô hình 2 luồng login.
+

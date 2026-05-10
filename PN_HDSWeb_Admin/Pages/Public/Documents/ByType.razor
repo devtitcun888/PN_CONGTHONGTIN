@@ -1,0 +1,70 @@
+@page "/documents/by-type/{Slug}"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicDocumentTypeService PublicDocumentTypeService
+@inject IPublicDocumentService PublicDocumentService
+
+<div class="public-article">
+    <nav class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
+        <a href="/documents">Văn bản công khai</a>
+        <span>/</span>
+        <span>@(type?.TypeName ?? Slug)</span>
+    </nav>
+
+    <section class="content-card">
+        @if (type == null)
+        {
+            <p>Đang tải hoặc không tìm thấy loại văn bản.</p>
+        }
+        else
+        {
+            <h1>@type.TypeName</h1>
+            <p>@type.Description</p>
+        }
+    </section>
+
+    <section class="content-card">
+        <div class="section-head">
+            <h2>Văn bản theo loại</h2>
+            <a class="btn btn-secondary" href="/documents/types">Danh sách loại</a>
+        </div>
+
+        @if (documents == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (!documents.Any())
+        {
+            <p>Không có văn bản nào thuộc loại này.</p>
+        }
+        else
+        {
+            <div class="search-result-list">
+                @foreach (var item in documents)
+                {
+                    <article class="search-result-item">
+                        <h3><a href="/documents/@item.Id">@item.DocTitle</a></h3>
+                        <p>@item.DocNumber</p>
+                        <p>@(type?.TypeName ?? "")</p>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    [Parameter] public string? Slug { get; set; }
+    private PublicDocumentTypeDetail? type;
+    private List<PublicDocumentListItem>? documents;
+
+    protected override async Task OnInitializedAsync()
+    {
+        type = await PublicDocumentTypeService.GetDocumentTypeBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+        if (type != null)
+        {
+            documents = await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, null, type.Id, 1, 20);
+        }
+    }
+}

@@ -107,7 +107,7 @@ public class PublicHomepageService : IPublicHomepageService
         return list;
     }
 
-    private async Task<List<PublicDocumentItem>> GetPublishedDocumentsAsync(string maTruongBo)
+    private async Task<List<PublicDocumentItem>>    GetPublishedDocumentsAsync(string maTruongBo)
     {
         var list = new List<PublicDocumentItem>();
         var sql = $@"
@@ -153,6 +153,14 @@ public class PublicHomepageViewModel
     public List<PublicPostItem> FeaturedPosts { get; set; } = [];
     public List<PublicPostItem> LatestPosts { get; set; } = [];
     public List<PublicDocumentItem> PublishedDocuments { get; set; } = [];
+
+    public string? SiteName { get; set; }
+    public string? SiteTitle { get; set; }
+    public string? SiteSlogan { get; set; }
+    public string? SiteLogo { get; set; }
+    public string? ContactHotline { get; set; }
+    public string? ContactEmail { get; set; }
+    public string? ContactAddress { get; set; }
 }
 
 public class PublicBannerItem

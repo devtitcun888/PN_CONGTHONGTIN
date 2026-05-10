@@ -3,23 +3,94 @@
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminDashboardService DashboardService
 
-<h1>Dashboard quản trị</h1>
+<div class="admin-dashboard">
+    <section class="dashboard-hero">
+        <div>
+            <span class="dashboard-kicker">Tổng quan hệ thống</span>
+            <h1>Dashboard quản trị</h1>
+            <p>Theo dõi nhanh tình trạng nội dung, tài liệu và các chỉ số vận hành của cổng thông tin.</p>
+        </div>
 
-@if (summary == null)
-{
-    <p>Đang tải...</p>
-}
-else
-{
-    <ul>
-        <li>Tổng bài viết: @summary.TotalPosts</li>
-        <li>Bài chờ duyệt: @summary.PendingPosts</li>
-        <li>Bài đã xuất bản: @summary.PublishedPosts</li>
-        <li>Tổng văn bản: @summary.TotalDocuments</li>
-        <li>Văn bản chờ duyệt: @summary.PendingDocuments</li>
-        <li>Văn bản đã công khai: @summary.PublishedDocuments</li>
-    </ul>
-}
+        <div class="dashboard-hero-card">
+            <div>
+                <small>Đơn vị quản lý</small>
+                <strong>@PN_PublicVariables.MaTruong</strong>
+            </div>
+            <div>
+                <small>Trạng thái</small>
+                <strong>Đang hoạt động</strong>
+            </div>
+        </div>
+    </section>
+
+    @if (summary == null)
+    {
+        <div class="dashboard-loading">
+            <div class="spinner"></div>
+            <p>Đang tải dữ liệu dashboard...</p>
+        </div>
+    }
+    else
+    {
+        <section class="dashboard-grid">
+            <article class="dashboard-card accent-blue">
+                <span>Tổng bài viết</span>
+                <strong>@summary.TotalPosts</strong>
+                <small>Toàn bộ bài viết trong hệ thống</small>
+            </article>
+            <article class="dashboard-card accent-amber">
+                <span>Bài chờ duyệt</span>
+                <strong>@summary.PendingPosts</strong>
+                <small>Cần kiểm tra và xuất bản</small>
+            </article>
+            <article class="dashboard-card accent-emerald">
+                <span>Bài đã xuất bản</span>
+                <strong>@summary.PublishedPosts</strong>
+                <small>Đang hiển thị ngoài site</small>
+            </article>
+            <article class="dashboard-card accent-violet">
+                <span>Tổng văn bản</span>
+                <strong>@summary.TotalDocuments</strong>
+                <small>Văn bản và tài liệu công khai</small>
+            </article>
+            <article class="dashboard-card accent-rose">
+                <span>Văn bản chờ duyệt</span>
+                <strong>@summary.PendingDocuments</strong>
+                <small>Chờ kiểm duyệt nội dung</small>
+            </article>
+            <article class="dashboard-card accent-cyan">
+                <span>Văn bản đã công khai</span>
+                <strong>@summary.PublishedDocuments</strong>
+                <small>Đã sẵn sàng cho người dùng</small>
+            </article>
+        </section>
+
+        <section class="dashboard-panels">
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h2>Hoạt động nhanh</h2>
+                </div>
+                <div class="quick-actions">
+                    <a class="quick-action" href="/admin/content/posts/edit">Tạo bài viết</a>
+                    <a class="quick-action" href="/admin/documents/edit">Tạo văn bản</a>
+                    <a class="quick-action" href="/admin/banners/edit">Quản lý banner</a>
+                    <a class="quick-action" href="/admin/settings/menus/edit">Cấu hình menu</a>
+                </div>
+            </div>
+
+            <div class="dashboard-panel">
+                <div class="section-head">
+                    <h2>Gợi ý vận hành</h2>
+                </div>
+                <ul class="dashboard-notes">
+                    <li>Kiểm tra các bài viết chờ duyệt trước khi xuất bản.</li>
+                    <li>Đảm bảo banner và menu đã khớp với cấu trúc site public.</li>
+                    <li>Cập nhật footer trong cột JSON <code>thongtin</code> của bảng <code>l_truong</code>.</li>
+                </ul>
+            </div>
+        </section>
+    }
+</div>
 
 @code {
     private AdminDashboardSummary? summary;

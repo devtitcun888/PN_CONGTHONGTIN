@@ -34,12 +34,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWNjb3VudHNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Categories/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xDYXRlZ29yaWVzXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Categories/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xDYXRlZ29yaWVzXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xFZGl0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Media/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xNZWRpYVxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/StaffProfiles/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxTdGFmZlByb2ZpbGVzXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/StaffProfiles/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxTdGFmZlByb2ZpbGVzXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Dashboard/Index.razor]
@@ -52,6 +72,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Documents/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRG9jdW1lbnRzXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Documents/Types/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRG9jdW1lbnRzXFR5cGVzXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Documents/Types/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRG9jdW1lbnRzXFR5cGVzXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Documents/Versions/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRG9jdW1lbnRzXFZlcnNpb25zXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Settings/Banners/Edit.razor]
@@ -68,6 +100,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Settings/Menus/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cU2V0dGluZ3NcTWVudXNcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Settings/Pages/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cU2V0dGluZ3NcUGFnZXNcRWRpdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Settings/Pages/Index.razor]
@@ -94,6 +130,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXENvbnRhY3RcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Documents/ByType.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXERvY3VtZW50c1xCeVR5cGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Documents/Detail.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXERvY3VtZW50c1xEZXRhaWwucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
@@ -102,8 +142,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXERvY3VtZW50c1xJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Documents/Types.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXERvY3VtZW50c1xUeXBlcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Home/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXEhvbWVcSW5kZXgucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Organization/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXE9yZ2FuaXphdGlvblxJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Pages/Index.razor]
@@ -114,12 +162,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFBhZ2VzXExpc3QucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Posts/Category.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFBvc3RzXENhdGVnb3J5LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Posts/Detail.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFBvc3RzXERldGFpbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Posts/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFBvc3RzXEluZGV4LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Posts/Tag.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFBvc3RzXFRhZy5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Search/Index.razor]

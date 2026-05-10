@@ -4,19 +4,50 @@
 
 <AuthorizeView>
     <Authorized>
-        <div class="admin-layout">
-            <aside>
+        <div class="admin-shell">
+            <aside class="admin-sidebar">
+                <div class="admin-brand">
+                    <div class="admin-brand-badge">PN</div>
+                    <div>
+                        <strong>Cổng thông tin</strong>
+                        <span>Admin Console</span>
+                    </div>
+                </div>
+
                 <NavMenu />
             </aside>
-            <main>
-                @Body
-            </main>
+
+            <div class="admin-content-wrap">
+                <header class="admin-topbar">
+                    <button class="admin-sidebar-toggle" type="button" aria-label="Mở menu">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+
+                    <div class="admin-topbar-search">
+                        <input type="search" placeholder="Tìm nhanh module, bài viết, văn bản..." />
+                    </div>
+
+                    <div class="admin-topbar-actions">
+                        <a class="admin-pill-link" href="/">Xem site</a>
+                        <a class="admin-pill-link" href="/logout">Đăng xuất</a>
+                    </div>
+                </header>
+
+                <main class="admin-main">
+                    @Body
+                </main>
+            </div>
         </div>
     </Authorized>
     <NotAuthorized>
-        <div class="alert alert-warning m-5">
-            <h4>Bạn cần đăng nhập để vào khu vực quản trị</h4>
-            <a href="/login-admin" class="btn btn-primary">Đăng nhập</a>
+        <div class="admin-login-guard">
+            <div class="admin-login-card">
+                <h4>Bạn cần đăng nhập để vào khu vực quản trị</h4>
+                <p>Vui lòng xác thực để tiếp tục sử dụng hệ thống admin.</p>
+                <a href="/login-admin" class="btn btn-primary">Đăng nhập</a>
+            </div>
         </div>
     </NotAuthorized>
 </AuthorizeView>

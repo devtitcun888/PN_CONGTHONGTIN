@@ -2,17 +2,18 @@
 @attribute [Authorize(Roles = "Administrator")]
 @using PN_HDSWeb_Admin.Services.Content
 @inject IAdminPostService AdminPostService
+@inject IAdminPostCategoryService AdminPostCategoryService
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
 <h1>Quản lý bài viết</h1>
 
-<div>
-    <input @bind="keyword" placeholder="Tìm kiếm" />
-    <input @bind="status" placeholder="Trạng thái" />
-    <button @onclick="SearchAsync">Tìm</button>
-    <button @onclick="ResetAsync">Xóa lọc</button>
-    <button @onclick='@(() => Nav.NavigateTo("/admin/posts/edit"))'>Thêm mới</button>
+<div class="search-panel">
+    <input class="public-search-input" @bind="keyword" placeholder="Tìm kiếm" />
+    <input class="public-search-input" @bind="status" placeholder="Trạng thái" />
+    <button class="public-search-btn" @onclick="SearchAsync">Tìm</button>
+    <button class="btn btn-secondary" @onclick="ResetAsync">Xóa lọc</button>
+    <button class="btn btn-primary" @onclick='@(() => Nav.NavigateTo("/admin/posts/edit"))'>Thêm mới</button>
 </div>
 
 @if (posts == null)

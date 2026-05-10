@@ -18,11 +18,20 @@ else
         </nav>
 
         <article class="article-card">
-            <h1>@document.DocTitle</h1>
-            <p>Số hiệu: @document.DocNumber</p>
-            <p>Loại văn bản: @document.DocType</p>
-            <p>Ngày ban hành: @document.IssuedDate</p>
-            <p>@document.Summary</p>
+            <div class="section-head" style="margin-bottom: 10px;">
+                <h1>@document.DocTitle</h1>
+                @if (!string.IsNullOrWhiteSpace(document.TypeName))
+                {
+                    <span class="chip active">@document.TypeName</span>
+                }
+            </div>
+            <p><strong>Số hiệu:</strong> @document.DocNumber</p>
+            <p><strong>Loại văn bản:</strong> @(document.TypeName ?? "Chưa phân loại")</p>
+            <p><strong>Ngày ban hành:</strong> @document.IssuedDate</p>
+            @if (!string.IsNullOrWhiteSpace(document.Summary))
+            {
+                <p><strong>Tóm tắt:</strong> @document.Summary</p>
+            }
             <div class="article-content">@((MarkupString)(document.Content ?? string.Empty))</div>
             @if (!string.IsNullOrWhiteSpace(document.FileUrl))
             {
@@ -60,7 +69,7 @@ else
         document = await PublicDocumentService.GetDocumentByIdAsync(PN_PublicVariables.MaTruong, Id ?? string.Empty);
         if (document != null)
         {
-            relatedDocuments = await PublicDocumentService.GetRelatedDocumentsAsync(PN_PublicVariables.MaTruong, document.DocType, document.Id ?? string.Empty);
+            relatedDocuments = await PublicDocumentService.GetRelatedDocumentsAsync(PN_PublicVariables.MaTruong, document.DocumentTypeId, document.Id ?? string.Empty);
         }
     }
 }

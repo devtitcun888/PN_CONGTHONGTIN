@@ -1,0 +1,88 @@
+@page "/admin/post-categories"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminPostCategoryService AdminPostCategoryService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Chuyên mục bài viết</h1>
+            <p>Quản lý chuyên mục cho module bài viết.</p>
+        </div>
+
+        <div class="admin-form-actions">
+            <button class="btn btn-primary" @onclick="GoCreate">Thêm mới</button>
+        </div>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (!items.Any())
+        {
+            <p>Chưa có chuyên mục nào.</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên</th>
+                        <th>Slug</th>
+                        <th>Thứ tự</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.CategoryName</td>
+                            <td>@item.Slug</td>
+                            <td>@item.SortOrder</td>
+                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
+                            <td>
+                                <button @onclick="() => Edit(item)">Sửa</button>
+                                <button @onclick="() => ToggleAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
+                                <button @onclick="() => DeleteAsync(item)">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminPostCategoryItem>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await AdminPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private void GoCreate() => Nav.NavigateTo("/admin/post-categories/edit");
+    private void Edit(AdminPostCategoryItem item) => Nav.NavigateTo($"/admin/post-categories/edit/{item.Id}");
+
+    private async Task ToggleAsync(AdminPostCategoryItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Đổi trạng thái chuyên mục '{item.CategoryName}'?"))
+        {
+            await AdminPostCategoryService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
+            items = await AdminPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+
+    private async Task DeleteAsync(AdminPostCategoryItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa chuyên mục '{item.CategoryName}'?"))
+        {
+            await AdminPostCategoryService.DeleteCategoryAsync(item.Id ?? string.Empty);
+            items = await AdminPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+}

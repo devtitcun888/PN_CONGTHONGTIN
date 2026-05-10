@@ -10,6 +10,7 @@ public interface IPublicNavigationService
     Task<List<PublicNavItem>> GetMenusAsync(string maTruongBo);
     Task<List<PublicBannerItem>> GetBannersAsync(string maTruongBo);
     Task<PublicFooterInfo> GetFooterAsync(string maTruongBo);
+    Task<Dictionary<string, string>> GetSiteSettingsAsync(string maTruongBo);
     string ResolveMenuUrl(PublicNavItem item);
 }
 
@@ -84,8 +85,7 @@ public class PublicNavigationService : IPublicNavigationService
     public async Task<PublicFooterInfo> GetFooterAsync(string maTruongBo)
     {
         var sql = $@"
-            SELECT tentruong, diachi_truong, logo_truong, hieutruong->>'so_dien_thoai' AS phone, hieutruong->>'ho_ten' AS leader,
-                   website_url, facebook_url, youtube_url, zalo_url
+            SELECT tentruong, thongtin
             FROM l_truong
             WHERE ma_truong_bo = '{Escape(maTruongBo)}'
             LIMIT 1";
@@ -97,18 +97,32 @@ public class PublicNavigationService : IPublicNavigationService
         }
 
         var row = dt.Rows[0];
-        return new PublicFooterInfo
+        var thongTinJson = row["thongtin"]?.ToString();
+        var footer = ParseFooterInfo(thongTinJson);
+        footer.SchoolName = row["tentruong"]?.ToString();
+        return footer;
+    }
+
+    public async Task<Dictionary<string, string>> GetSiteSettingsAsync(string maTruongBo)
+    {
+        var sql = $@"
+            SELECT setting_key, setting_value
+            FROM site_settings
+            WHERE ma_truong_bo = '{Escape(maTruongBo)}'
+              AND is_active = TRUE
+            ORDER BY setting_group, setting_key";
+
+        var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+        foreach (DataRow row in dt.Rows)
         {
-            SchoolName = row["tentruong"]?.ToString(),
-            Address = row["diachi_truong"]?.ToString(),
-            LogoUrl = row["logo_truong"]?.ToString(),
-            Phone = row["phone"]?.ToString(),
-            LeaderName = row["leader"]?.ToString(),
-            WebsiteUrl = row["website_url"]?.ToString(),
-            FacebookUrl = row["facebook_url"]?.ToString(),
-            YoutubeUrl = row["youtube_url"]?.ToString(),
-            ZaloUrl = row["zalo_url"]?.ToString()
-        };
+            var key = row["setting_key"]?.ToString();
+            var value = row["setting_value"]?.ToString();
+            if (!string.IsNullOrWhiteSpace(key))
+                result[key] = value ?? string.Empty;
+        }
+
+        return result;
     }
 
     public string ResolveMenuUrl(PublicNavItem item)
@@ -126,6 +140,39 @@ public class PublicNavigationService : IPublicNavigationService
             "document" when !string.IsNullOrWhiteSpace(item.PageSlug) => $"/documents/{item.PageSlug}",
             _ => "/"
         };
+    }
+
+    private static PublicFooterInfo ParseFooterInfo(string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return new PublicFooterInfo();
+
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            return new PublicFooterInfo
+            {
+                Address = GetString(root, "diachi_truong"),
+                LogoUrl = GetString(root, "logo_truong"),
+                Phone = GetString(root, "so_dien_thoai"),
+                LeaderName = GetString(root, "ho_ten"),
+                WebsiteUrl = GetString(root, "website_url"),
+                FacebookUrl = GetString(root, "facebook_url"),
+                YoutubeUrl = GetString(root, "youtube_url"),
+                ZaloUrl = GetString(root, "zalo_url")
+            };
+        }
+        catch
+        {
+            return new PublicFooterInfo();
+        }
+    }
+
+    private static string? GetString(System.Text.Json.JsonElement root, string key)
+    {
+        return root.TryGetProperty(key, out var value) ? value.ToString() : null;
     }
 
     private static string Escape(string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty : value.Replace("'", "''");

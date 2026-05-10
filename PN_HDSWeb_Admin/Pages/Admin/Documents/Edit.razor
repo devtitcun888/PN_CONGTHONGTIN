@@ -3,6 +3,7 @@
 @using Microsoft.AspNetCore.Components.Forms
 @using PN_HDSWeb_Admin.Services.Content
 @inject IAdminDocumentService AdminDocumentService
+@inject IAdminDocumentTypeService AdminDocumentTypeService
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminFileStorageService FileStorage
 @inject NavigationManager Nav
@@ -14,7 +15,7 @@
             <p>Thêm mới hoặc chỉnh sửa văn bản công khai.</p>
         </div>
 
-        @if (model == null)
+        @if (model == null || documentTypes == null)
         {
             <p>Đang tải...</p>
         }
@@ -31,7 +32,17 @@
                 </label>
                 <label>
                     Loại văn bản
-                    <input class="admin-input" @bind="model.DocType" />
+                    <select class="admin-input" @bind="SelectedDocumentTypeId">
+                        <option value="">-- Chọn loại văn bản --</option>
+                        @foreach (var type in documentTypes)
+                        {
+                            <option value="@type.Id">@type.TypeName</option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Mã loại hiển thị
+                    <input class="admin-input" @bind="model.DocType" placeholder="Ví dụ: Quyết định" />
                 </label>
                 <label>
                     Cơ quan ban hành
@@ -86,8 +97,8 @@
             </div>
 
             <div class="admin-form-actions">
-                <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                <button class="btn btn-secondary" @onclick='@(() => Nav.NavigateTo("/admin/documents"))'>Quay lại</button>
+                <button type="button" class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
+                <button type="button" class="btn btn-secondary" @onclick='@(() => Nav.NavigateTo("/admin/documents"))'>Quay lại</button>
             </div>
         }
     </div>
@@ -96,12 +107,16 @@
 @code {
     [Parameter] public string? Id { get; set; }
     private AdminDocumentDetail? model;
+    private List<AdminDocumentTypeItem>? documentTypes;
+    private string? SelectedDocumentTypeId;
     private string? IssuedDateText;
     private string? EffectiveDateText;
     private string? ExpireDateText;
 
     protected override async Task OnInitializedAsync()
     {
+        documentTypes = await AdminDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+
         if (!string.IsNullOrWhiteSpace(Id))
         {
             model = await AdminDocumentService.GetDocumentByIdAsync(Id);
@@ -114,6 +129,7 @@
             VersionNo = 1
         };
 
+        SelectedDocumentTypeId = model.DocumentTypeId ?? string.Empty;
         IssuedDateText = model.IssuedDate?.ToString("yyyy-MM-dd");
         EffectiveDateText = model.EffectiveDate?.ToString("yyyy-MM-dd");
         ExpireDateText = model.ExpireDate?.ToString("yyyy-MM-dd");
@@ -149,6 +165,11 @@
         model!.IssuedDate = DateTime.TryParse(IssuedDateText, out var issued) ? issued : null;
         model.EffectiveDate = DateTime.TryParse(EffectiveDateText, out var eff) ? eff : null;
         model.ExpireDate = DateTime.TryParse(ExpireDateText, out var exp) ? exp : null;
+        model.DocumentTypeId = SelectedDocumentTypeId;
+
+        var selectedType = documentTypes?.FirstOrDefault(x => x.Id == SelectedDocumentTypeId);
+        if (selectedType != null && string.IsNullOrWhiteSpace(model.DocType))
+            model.DocType = selectedType.TypeName;
 
         if (string.IsNullOrWhiteSpace(model.Id))
             await AdminDocumentService.CreateDocumentAsync(model);

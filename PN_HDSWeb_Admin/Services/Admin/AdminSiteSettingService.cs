@@ -163,3 +163,40 @@ public class AdminSiteSettingDetail
     public string? Description { get; set; }
     public bool IsActive { get; set; }
 }
+
+public static class SiteSettingKeys
+{
+    public const string SiteName = "site_name";
+    public const string SiteSlogan = "site_slogan";
+    public const string SchoolName = "school_name";
+    public const string SchoolLogo = "school_logo";
+    public const string SchoolFavicon = "school_favicon";
+    public const string SchoolAddress = "school_address";
+    public const string SchoolPhone = "school_phone";
+    public const string SchoolEmail = "school_email";
+    public const string SchoolWebsite = "school_website";
+    public const string ContactHotline = "contact_hotline";
+    public const string ContactPhone = "contact_phone";
+    public const string ContactEmail = "contact_email";
+    public const string ContactFacebook = "contact_facebook";
+    public const string ContactYoutube = "contact_youtube";
+    public const string ContactZalo = "contact_zalo";
+    public const string ContactMapUrl = "contact_map_url";
+    public const string FooterText = "footer_text";
+    public const string FooterShowLogo = "footer_show_logo";
+    public const string FooterShowContact = "footer_show_contact";
+    public const string FooterShowSocial = "footer_show_social";
+    public const string FooterJsonInfo = "footer_json_info";
+    public const string BrandPrimaryColor = "brand_primary_color";
+    public const string BrandSecondaryColor = "brand_secondary_color";
+    public const string HomepageFeaturedPostsLimit = "homepage_featured_posts_limit";
+    public const string HomepageLatestPostsLimit = "homepage_latest_posts_limit";
+    public const string HomepageDocumentsLimit = "homepage_documents_limit";
+    public const string FeatureNewsEnabled = "feature_news_enabled";
+    public const string FeatureDocumentsEnabled = "feature_documents_enabled";
+    public const string FeatureBannersEnabled = "feature_banners_enabled";
+    public const string FeatureSearchEnabled = "feature_search_enabled";
+    public const string SeoTitle = "seo_title";
+    public const string SeoDescription = "seo_description";
+    public const string SeoKeywords = "seo_keywords";
+}

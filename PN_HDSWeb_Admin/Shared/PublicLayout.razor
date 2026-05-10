@@ -1,6 +1,9 @@
 @inherits LayoutComponentBase
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicNavigationService PublicNavigationService
+@inject IPublicStaticPageService PublicStaticPageService
+@inject IPublicPostCategoryService PublicPostCategoryService
+@inject IPublicDocumentTypeService PublicDocumentTypeService
 @inject NavigationManager Nav
 
 <div class="public-layout">
@@ -27,24 +30,62 @@
                 {
                     @foreach (var item in menus.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder))
                     {
-                        var children = menus.Where(x => x.ParentId == item.Id).OrderBy(x => x.SortOrder).ToList();
-                        var href = PublicNavigationService.ResolveMenuUrl(item);
+                        var href = GetMenuHref(item);
                         var active = IsActiveMenu(href);
-                        <li class="nav-item @(children.Any() ? "has-dropdown" : string.Empty) @(active ? "active" : string.Empty)">
+                        var categoryChildren = GetPostCategoryChildrenForMenu(item);
+                        var childMenus = menus.Where(x => x.ParentId == item.Id).OrderBy(x => x.SortOrder).ToList();
+                        var hasDropdown = childMenus.Any() || categoryChildren.Any();
+                        <li class="nav-item @(hasDropdown ? "has-dropdown" : string.Empty) @(active ? "active" : string.Empty)">
                             <a href="@href" target="@item.Target">@item.MenuName</a>
-                            @if (children.Any())
+                            @if (hasDropdown)
                             {
                                 <ul class="public-dropdown">
-                                    @foreach (var child in children)
+                                    @foreach (var child in childMenus)
                                     {
-                                        var childHref = PublicNavigationService.ResolveMenuUrl(child);
+                                        var childHref = GetMenuHref(child);
                                         <li class="@(IsActiveMenu(childHref) ? "active" : string.Empty)"><a href="@childHref" target="@child.Target">@child.MenuName</a></li>
+                                    }
+                                    @foreach (var cat in categoryChildren)
+                                    {
+                                        <li><a href="/posts/category/@cat.Slug">@cat.CategoryName</a></li>
                                     }
                                 </ul>
                             }
                         </li>
                     }
                 }
+
+                <li class="nav-item @(IsActiveMenu("/documents") ? "active" : string.Empty) has-dropdown">
+                    <a href="/documents">Văn bản công khai</a>
+                    @if (documentTypes != null && documentTypes.Any())
+                    {
+                        <ul class="public-dropdown">
+                            <li><a href="/documents">Tất cả văn bản</a></li>
+                            @foreach (var type in documentTypes)
+                            {
+                                <li><a href="/documents/type/@type.Slug">@type.TypeName</a></li>
+                            }
+                        </ul>
+                    }
+                </li>
+
+                <li class="nav-item @(IsActiveMenu("/organization") ? "active" : string.Empty)">
+                    <a href="/organization">Cơ cấu tổ chức</a>
+                </li>
+
+                @if (staticPages != null && staticPages.Any())
+                {
+                    <li class="nav-item has-dropdown">
+                        <a href="#">Trang tĩnh</a>
+                        <ul class="public-dropdown">
+                            @foreach (var trang in staticPages)
+                            {
+                                <li><a href="/pages/@trang.Slug">@trang.Title</a></li>
+                            }
+                        </ul>
+                    </li>
+                }
+
             </ul>
         </nav>
     </header>
@@ -108,6 +149,9 @@
 
 @code {
     private List<PublicNavItem>? menus;
+    private List<PublicStaticPageMenuItem>? staticPages;
+    private List<PublicPostCategoryItem>? postCategories;
+    private List<PublicDocumentTypeItem>? documentTypes;
     private PublicFooterInfo? footer;
     private string SearchKeyword = string.Empty;
     private bool isMobileMenuOpen;
@@ -116,6 +160,9 @@
     protected override async Task OnInitializedAsync()
     {
         menus = await PublicNavigationService.GetMenusAsync(PN_PublicVariables.MaTruong);
+        staticPages = await PublicStaticPageService.GetPagesByMenuAsync(PN_PublicVariables.MaTruong);
+        postCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        documentTypes = await PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
         footer = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
         isLoading = false;
     }
@@ -127,6 +174,45 @@
     }
 
     private void ToggleMobileMenu() => isMobileMenuOpen = !isMobileMenuOpen;
+
+    private List<PublicPostCategoryItem> GetPostCategoryChildrenForMenu(PublicNavItem menu)
+    {
+        if (postCategories == null || postCategories.Count == 0 || menu == null)
+            return new List<PublicPostCategoryItem>();
+
+        var categoryRootSlug = ResolveCategoryRootSlug(menu);
+        if (string.IsNullOrWhiteSpace(categoryRootSlug))
+            return new List<PublicPostCategoryItem>();
+
+        var root = postCategories.FirstOrDefault(x => string.Equals(x.Slug, categoryRootSlug, StringComparison.OrdinalIgnoreCase));
+        if (root?.Id == null)
+            return new List<PublicPostCategoryItem>();
+
+        return postCategories.Where(x => x.ParentId == root.Id).OrderBy(x => x.SortOrder).ToList();
+    }
+
+    private string GetMenuHref(PublicNavItem menu) => PublicNavigationService.ResolveMenuUrl(menu);
+
+    private string? ResolveCategoryRootSlug(PublicNavItem menu)
+    {
+        if (!string.IsNullOrWhiteSpace(menu.PageSlug))
+            return menu.PageSlug;
+
+        var href = PublicNavigationService.ResolveMenuUrl(menu);
+        if (href.Contains("/posts/category/", StringComparison.OrdinalIgnoreCase))
+            return href.Split('/').LastOrDefault();
+
+        var name = menu.MenuName?.Trim().ToLowerInvariant();
+        return name switch
+        {
+            "tin tức" => "tin-tuc",
+            "giới thiệu" => "gioi-thieu",
+            "văn bản công khai" => "van-ban-cong-khai",
+            "tuyển sinh" => "tuyen-sinh",
+            "hoạt động" => "hoat-dong",
+            _ => null
+        };
+    }
 
     private bool IsActiveMenu(string href)
     {

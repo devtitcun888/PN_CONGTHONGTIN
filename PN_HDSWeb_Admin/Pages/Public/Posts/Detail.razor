@@ -1,6 +1,8 @@
 @page "/posts/{Slug}"
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicPostService PublicPostService
+@inject IPublicPostMediaService PublicPostMediaService
+@inject IPublicPostTagService PublicPostTagService
 
 @if (post == null)
 {
@@ -12,25 +14,65 @@ else
         <nav class="breadcrumb">
             <a href="/">Trang chủ</a>
             <span>/</span>
-            <a href="/posts">Tin tức</a>
+            <a href="/posts">Bài viết</a>
             <span>/</span>
             <span>@post.Title</span>
         </nav>
 
-        <article class="article-card">
-            <h1>@post.Title</h1>
-            @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+        <article class="article-card post-detail-card">
+            <div class="post-detail-hero">
+                @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+                {
+                    <img class="post-detail-cover" src="@post.CoverImageUrl" alt="@post.Title" />
+                }
+                <div class="post-detail-head">
+                    <div class="section-head" style="margin-bottom:10px;">
+                        <h1>@post.Title</h1>
+                        @if (!string.IsNullOrWhiteSpace(post.CategoryName))
+                        {
+                            <a class="chip active" href="/posts/category/@post.CategorySlug">@post.CategoryName</a>
+                        }
+                    </div>
+                    <p class="post-detail-summary">@post.Summary</p>
+                    <div class="post-card-meta">
+                        <span class="post-date">@(post.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
+                    </div>
+                </div>
+            </div>
+
+            @if (postTags?.Any() == true)
             {
-                <img src="@post.CoverImageUrl" alt="@post.Title" class="article-cover" />
+                <div class="tag-row" style="margin: 14px 0;">
+                    @foreach (var tag in postTags)
+                    {
+                        <a class="chip" href="/posts/tag/@tag.Slug">@tag.TagName</a>
+                    }
+                </div>
             }
-            <p class="article-summary">@post.Summary</p>
+
             <div class="article-content">@((MarkupString)(post.Content ?? string.Empty))</div>
         </article>
+
+        @if (media?.Any() == true)
+        {
+            <section class="content-card">
+                <h2>Media</h2>
+                <div class="search-result-list">
+                    @foreach (var item in media)
+                    {
+                        <article class="search-result-item">
+                            <a href="@item.FileUrl" target="_blank">@item.FileName</a>
+                            <p>@item.Caption</p>
+                        </article>
+                    }
+                </div>
+            </section>
+        }
 
         @if (relatedPosts?.Any() == true)
         {
             <section class="related-section">
-                <h2>Bài liên quan</h2>
+                <h2>Bài viết liên quan</h2>
                 <div class="related-grid">
                     @foreach (var item in relatedPosts)
                     {
@@ -50,6 +92,8 @@ else
 @code {
     [Parameter] public string? Slug { get; set; }
     private PublicPostDetail? post;
+    private List<PublicPostMediaItem>? media;
+    private List<PublicPostTagItem>? postTags;
     private List<PublicPostListItem>? relatedPosts;
 
     protected override async Task OnInitializedAsync()
@@ -57,6 +101,8 @@ else
         post = await PublicPostService.GetPostBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
         if (post != null)
         {
+            media = await PublicPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, post.Id ?? string.Empty);
+            postTags = await PublicPostTagService.GetTagsByPostIdAsync(post.Id ?? string.Empty);
             relatedPosts = await PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty);
         }
     }

@@ -1,0 +1,48 @@
+@page "/documents/types"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicDocumentTypeService PublicDocumentTypeService
+
+<div class="public-article">
+    <nav class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
+        <span>Loại văn bản</span>
+    </nav>
+
+    <section class="content-card">
+        <h1>Loại văn bản</h1>
+        <p>Danh sách các loại văn bản công khai theo trường.</p>
+    </section>
+
+    <section class="content-card">
+        @if (types == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (!types.Any())
+        {
+            <p>Chưa có loại văn bản nào.</p>
+        }
+        else
+        {
+            <div class="search-result-list">
+                @foreach (var item in types)
+                {
+                    <article class="search-result-item">
+                        <h3><a href="/documents/type/@item.Slug">@item.TypeName</a></h3>
+                        <p>@item.Description</p>
+                    </article>
+                }
+            </div>
+        }
+    </section>
+</div>
+
+@code {
+    private List<PublicDocumentTypeItem>? types;
+
+    protected override async Task OnInitializedAsync()
+    {
+        types = await PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+    }
+}

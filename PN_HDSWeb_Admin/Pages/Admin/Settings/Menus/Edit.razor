@@ -2,7 +2,6 @@
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminMenuService AdminMenuService
 @inject NavigationManager Nav
-
 <div class="admin-form-shell">
     <div class="admin-form-card">
         <div class="admin-form-header">
@@ -51,7 +50,7 @@
 
             <div class="admin-form-actions">
                 <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                <button class="btn btn-secondary" @onclick="() => Nav.NavigateTo(\"/admin/menus\")">Quay lại</button>
+                <button class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
             </div>
         }
     </div>
@@ -89,6 +88,11 @@
         else
             await AdminMenuService.UpdateMenuAsync(model);
 
+        Nav.NavigateTo("/admin/menus");
+    }
+
+    private void GoBack()
+    {
         Nav.NavigateTo("/admin/menus");
     }
 }

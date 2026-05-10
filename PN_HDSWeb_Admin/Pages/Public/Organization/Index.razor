@@ -1,0 +1,239 @@
+@page "/organization"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicStaffProfileService PublicStaffProfileService
+
+<div class="public-article organization-page">
+    <nav class="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
+        <span>Cơ cấu tổ chức</span>
+    </nav>
+
+    <section class="content-card organization-hero">
+        <div class="organization-hero-copy">
+            <span class="hero-kicker">Cơ cấu tổ chức</span>
+            <h1>Ban giám hiệu và các bộ phận trong nhà trường</h1>
+            <p>Danh sách nhân sự công khai được sắp xếp theo từng nhóm, hiển thị theo dạng thẻ trực quan giống bố cục giới thiệu của nhà trường.</p>
+        </div>
+        <div class="organization-hero-stats">
+            <div>
+                <strong>@TotalProfiles</strong>
+                <span>Nhân sự công khai</span>
+            </div>
+            <div>
+                <strong>@TotalGroups</strong>
+                <span>Nhóm / phòng ban</span>
+            </div>
+        </div>
+    </section>
+
+    @if (groups == null)
+    {
+        <section class="content-card"><p>Đang tải...</p></section>
+    }
+    else if (!groups.Any())
+    {
+        <section class="content-card"><p>Chưa có hồ sơ nhân sự công khai.</p></section>
+    }
+    else
+    {
+        <section class="content-card organization-nav-card">
+            <div class="section-head organization-section-head">
+                <div>
+                    <h2>Chọn phòng ban / nhóm</h2>
+                    <p>Nhảy nhanh tới từng nhóm nhân sự.</p>
+                </div>
+            </div>
+            <div class="organization-nav-chips">
+                @foreach (var group in groups)
+                {
+                    <a class="organization-chip" href="#@Slugify(group.GroupName)">
+                        <span>@group.GroupName</span>
+                        <small>@group.Items.Count thành viên</small>
+                    </a>
+                }
+            </div>
+        </section>
+
+        @foreach (var group in groups)
+        {
+            var isLeadership = IsLeadershipGroup(group.GroupName);
+            <section class="content-card organization-group-card" id="@Slugify(group.GroupName)">
+                <div class="section-head organization-group-head">
+                    <div>
+                        <span class="group-badge">@GetGroupLabel(group.GroupName)</span>
+                        <h2>@group.GroupName</h2>
+                        <p>@GetGroupDescription(group.GroupName)</p>
+                    </div>
+                    <div class="organization-group-count">
+                        <strong>@group.Items.Count</strong>
+                        <span>nhân sự</span>
+                    </div>
+                </div>
+
+                @if (isLeadership)
+                {
+                    <div class="leadership-layout">
+                        <div class="leadership-main-card">
+                            @if (group.Items.Any())
+                            {
+                                var leader = group.Items.First();
+                                <article class="staff-card staff-card-featured staff-card-leadership">
+                                    <div class="staff-avatar-wrap">
+                                        @if (!string.IsNullOrWhiteSpace(leader.AvatarUrl))
+                                        {
+                                            <img class="staff-avatar staff-avatar-large" src="@leader.AvatarUrl" alt="@leader.FullName" />
+                                        }
+                                        else
+                                        {
+                                            <div class="staff-avatar staff-avatar-placeholder staff-avatar-large">@GetInitials(leader.FullName)</div>
+                                        }
+                                    </div>
+                                    <div class="staff-card-body">
+                                        <h3>@leader.FullName</h3>
+                                        <p class="staff-position">@leader.PositionName</p>
+                                        @if (!string.IsNullOrWhiteSpace(leader.Qualification))
+                                        {
+                                            <p class="staff-meta">@leader.Qualification</p>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(leader.Email))
+                                        {
+                                            <p class="staff-meta">@leader.Email</p>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(leader.Phone))
+                                        {
+                                            <p class="staff-meta">@leader.Phone</p>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(leader.Bio))
+                                        {
+                                            <p class="staff-bio">@leader.Bio</p>
+                                        }
+                                    </div>
+                                </article>
+                            }
+                        </div>
+
+                        @if (group.Items.Skip(1).Any())
+                        {
+                            <div class="leadership-side-grid">
+                                @foreach (var item in group.Items.Skip(1))
+                                {
+                                    <article class="staff-card staff-card-side">
+                                        <div class="staff-avatar-wrap">
+                                            @if (!string.IsNullOrWhiteSpace(item.AvatarUrl))
+                                            {
+                                                <img class="staff-avatar" src="@item.AvatarUrl" alt="@item.FullName" />
+                                            }
+                                            else
+                                            {
+                                                <div class="staff-avatar staff-avatar-placeholder">@GetInitials(item.FullName)</div>
+                                            }
+                                        </div>
+                                        <div class="staff-card-body">
+                                            <h3>@item.FullName</h3>
+                                            <p class="staff-position">@item.PositionName</p>
+                                            @if (!string.IsNullOrWhiteSpace(item.Qualification))
+                                            {
+                                                <p class="staff-meta">@item.Qualification</p>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.Email))
+                                            {
+                                                <p class="staff-meta">@item.Email</p>
+                                            }
+                                            @if (!string.IsNullOrWhiteSpace(item.Phone))
+                                            {
+                                                <p class="staff-meta">@item.Phone</p>
+                                            }
+                                        </div>
+                                    </article>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="staff-grid">
+                        @foreach (var item in group.Items)
+                        {
+                            <article class="staff-card">
+                                <div class="staff-avatar-wrap">
+                                    @if (!string.IsNullOrWhiteSpace(item.AvatarUrl))
+                                    {
+                                        <img class="staff-avatar" src="@item.AvatarUrl" alt="@item.FullName" />
+                                    }
+                                    else
+                                    {
+                                        <div class="staff-avatar staff-avatar-placeholder">@GetInitials(item.FullName)</div>
+                                    }
+                                </div>
+                                <div class="staff-card-body">
+                                    <h3>@item.FullName</h3>
+                                    <p class="staff-position">@item.PositionName</p>
+                                    @if (!string.IsNullOrWhiteSpace(item.Qualification))
+                                    {
+                                        <p class="staff-meta">@item.Qualification</p>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.Email))
+                                    {
+                                        <p class="staff-meta">@item.Email</p>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.Phone))
+                                    {
+                                        <p class="staff-meta">@item.Phone</p>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(item.Bio))
+                                    {
+                                        <p class="staff-bio">@item.Bio</p>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+            </section>
+        }
+    }
+</div>
+
+@code {
+    private List<PublicStaffProfileGroupItem>? groups;
+    private int TotalProfiles => groups?.Sum(x => x.Items.Count) ?? 0;
+    private int TotalGroups => groups?.Count ?? 0;
+
+    protected override async Task OnInitializedAsync()
+    {
+        groups = await PublicStaffProfileService.GetPublicStaffProfileGroupsAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private static string Slugify(string value)
+        => value.Trim().ToLowerInvariant().Replace(" ", "-").Replace("/", "-");
+
+    private static string GetGroupLabel(string groupName) => groupName switch
+    {
+        "Ban giám hiệu" => "Lãnh đạo",
+        "Tổ / Phòng ban" => "Phòng ban",
+        "Giáo viên" => "Giáo viên",
+        "Văn phòng" => "Văn phòng",
+        _ => "Nhóm"
+    };
+
+    private static bool IsLeadershipGroup(string groupName)
+        => string.Equals(groupName, "Ban giám hiệu", StringComparison.OrdinalIgnoreCase);
+
+    private static string GetGroupDescription(string groupName) => groupName switch
+    {
+        "Ban giám hiệu" => "Nhóm lãnh đạo nhà trường",
+        "Tổ / Phòng ban" => "Nhóm các tổ chuyên môn và phòng ban",
+        "Giáo viên" => "Danh sách giáo viên công khai",
+        "Văn phòng" => "Nhân sự khối văn phòng",
+        _ => "Danh sách nhân sự công khai"
+    };
+
+    private static string GetInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return "?";
+        var parts = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length == 1 ? parts[0][0].ToString().ToUpperInvariant() : string.Concat(parts[^2][0], parts[^1][0]).ToUpperInvariant();
+    }
+}

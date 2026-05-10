@@ -1,20 +1,36 @@
 @page "/posts"
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicPostService PublicPostService
+@inject IPublicPostCategoryService PublicPostCategoryService
+@inject IPublicPostTagService PublicPostTagService
 
 <div class="public-article">
     <nav class="breadcrumb">
         <a href="/">Trang chủ</a>
         <span>/</span>
-        <span>Tin tức</span>
+        <span>Bài viết</span>
     </nav>
 
     <section class="content-card">
-        <h1>Tin tức</h1>
+        <div class="section-head">
+            <h1>Bài viết</h1>
+            <a class="btn btn-secondary" href="/posts">Tất cả</a>
+        </div>
+
         <div class="search-panel">
             <input class="public-search-input" @bind="keyword" placeholder="Từ khóa" />
-            <input class="public-search-input" @bind="categoryId" placeholder="Chuyên mục" />
             <button class="public-search-btn" @onclick="SearchAsync">Lọc</button>
+        </div>
+
+        <div class="chip-group" style="margin-top: 14px; display:flex; gap:8px; flex-wrap:wrap;">
+            <button type="button" class="chip @(string.IsNullOrWhiteSpace(selectedCategoryId) ? "active" : string.Empty)" @onclick="ClearCategory">Tất cả chuyên mục</button>
+            @if (categories != null)
+            {
+                @foreach (var cat in categories)
+                {
+                    <button type="button" class="chip @(selectedCategoryId == cat.Id ? "active" : string.Empty)" @onclick="() => SelectCategory(cat.Id)">@cat.CategoryName</button>
+                }
+            }
         </div>
     </section>
 
@@ -29,17 +45,30 @@
         }
         else
         {
-            <div class="post-list">
+            <div class="post-grid">
                 @foreach (var item in posts)
                 {
-                    <article class="post-item">
+                    <article class="post-card">
                         @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
                         {
-                            <img src="@item.CoverImageUrl" alt="@item.Title" />
+                            <a href="/posts/@item.Slug"><img class="post-card-image" src="@item.CoverImageUrl" alt="@item.Title" /></a>
                         }
-                        <div>
+                        <div class="post-card-body">
+                            <div class="post-card-meta">
+                                @if (!string.IsNullOrWhiteSpace(item.CategoryName))
+                                {
+                                    <a class="chip active" href="/posts/category/@item.CategorySlug">@item.CategoryName</a>
+                                }
+                                <span class="post-date">@(item.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
+                            </div>
                             <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
                             <p>@item.Summary</p>
+                            <div class="tag-row">
+                                @foreach (var tag in item.Tags ?? new List<PublicPostTagItem>())
+                                {
+                                    <a class="chip" href="/posts/tag/@tag.Slug">@tag.TagName</a>
+                                }
+                            </div>
                         </div>
                     </article>
                 }
@@ -56,23 +85,49 @@
 
 @code {
     private List<PublicPostListItem>? posts;
+    private List<PublicPostCategoryItem>? categories;
     private string? keyword;
-    private string? categoryId;
+    private string? selectedCategoryId;
     private int trang = 1;
     private int pageSize = 10;
     private int totalCount;
     private int totalPages => Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
 
-    protected override async Task OnInitializedAsync() => await LoadAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        categories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        await LoadAsync();
+    }
 
     private async Task LoadAsync()
     {
-        totalCount = await PublicPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, keyword, categoryId);
-        posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, keyword, categoryId, trang, pageSize);
+        totalCount = await PublicPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, keyword, selectedCategoryId);
+        posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, keyword, selectedCategoryId, trang, pageSize);
+        if (posts != null)
+        {
+            foreach (var post in posts)
+            {
+                post.Tags = string.IsNullOrWhiteSpace(post.Id) ? new List<PublicPostTagItem>() : await PublicPostTagService.GetTagsByPostIdAsync(post.Id);
+            }
+        }
     }
 
     private async Task SearchAsync()
     {
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task SelectCategory(string? categoryId)
+    {
+        selectedCategoryId = categoryId;
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task ClearCategory()
+    {
+        selectedCategoryId = null;
         trang = 1;
         await LoadAsync();
     }

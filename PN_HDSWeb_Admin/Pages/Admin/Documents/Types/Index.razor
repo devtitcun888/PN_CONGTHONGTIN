@@ -1,0 +1,90 @@
+@page "/admin/document-types"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminDocumentTypeService AdminDocumentTypeService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Loại văn bản</h1>
+            <p>Quản lý danh mục loại văn bản chuẩn cho team nhập liệu.</p>
+        </div>
+
+        <div class="admin-form-actions">
+            <button type="button" class="btn btn-primary" @onclick="GoCreate">Thêm mới</button>
+        </div>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (items.Count == 0)
+        {
+            <p>Chưa có loại văn bản nào.</p>
+        }
+        else
+        {
+            <table class="admin-table">
+                <thead>
+                    <tr>
+                        <th>Mã</th>
+                        <th>Tên loại</th>
+                        <th>Slug</th>
+                        <th>Thứ tự</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.TypeCode</td>
+                            <td>@item.TypeName</td>
+                            <td>@item.Slug</td>
+                            <td>@item.SortOrder</td>
+                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
+                            <td>
+                                <button type="button" class="btn btn-secondary" @onclick="() => Edit(item)">Sửa</button>
+                                <button type="button" class="btn btn-secondary" @onclick="() => ToggleAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
+                                <button type="button" class="btn btn-secondary" @onclick="() => DeleteAsync(item)">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminDocumentTypeItem>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await AdminDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private void GoCreate() => Nav.NavigateTo("/admin/document-types/edit");
+    private void Edit(AdminDocumentTypeItem item) => Nav.NavigateTo($"/admin/document-types/edit/{item.Id}");
+
+    private async Task ToggleAsync(AdminDocumentTypeItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Đổi trạng thái loại văn bản '{item.TypeName}'?"))
+        {
+            await AdminDocumentTypeService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
+            items = await AdminDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+
+    private async Task DeleteAsync(AdminDocumentTypeItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa loại văn bản '{item.TypeName}'?"))
+        {
+            await AdminDocumentTypeService.DeleteDocumentTypeAsync(item.Id ?? string.Empty);
+            items = await AdminDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+}

@@ -32,10 +32,12 @@ public class AdminPostService : IAdminPostService
         var where = BuildWhere(maTruongBo, keyword, status);
 
         var sql = $@"
-            SELECT id, title, slug, status, publish_at, created_at
-            FROM posts
+            SELECT p.id, p.title, p.slug, p.status, p.publish_at, p.created_at,
+                   p.category_id, c.category_name
+            FROM posts p
+            LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
             {where}
-            ORDER BY created_at DESC
+            ORDER BY p.created_at DESC
             LIMIT {pageSize} OFFSET {offset}";
 
         try
@@ -48,6 +50,8 @@ public class AdminPostService : IAdminPostService
                     Id = row["id"]?.ToString(),
                     Title = row["title"]?.ToString(),
                     Slug = row["slug"]?.ToString(),
+                    CategoryId = row["category_id"]?.ToString(),
+                    CategoryName = row["category_name"]?.ToString(),
                     Status = row["status"]?.ToString(),
                     PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
                     CreatedAt = row["created_at"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["created_at"])
@@ -66,7 +70,7 @@ public class AdminPostService : IAdminPostService
     public async Task<int> GetPostsCountAsync(string maTruongBo, string? keyword = null, string? status = null)
     {
         var where = BuildWhere(maTruongBo, keyword, status);
-        var sql = $"SELECT COUNT(*) AS total FROM posts {where}";
+        var sql = $"SELECT COUNT(*) AS total FROM posts p {where}";
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
         if (dt.Rows.Count == 0) return 0;
         return dt.Rows[0]["total"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["total"]);
@@ -160,17 +164,17 @@ public class AdminPostService : IAdminPostService
     {
         var clauses = new List<string>
         {
-            "is_deleted = FALSE",
-            $"ma_truong_bo = '{Escape(maTruongBo)}'"
+            "p.is_deleted = FALSE",
+            $"p.ma_truong_bo = '{Escape(maTruongBo)}'"
         };
         if (!string.IsNullOrWhiteSpace(keyword))
         {
             var k = Escape(keyword);
-            clauses.Add($"(title ILIKE '%{k}%' OR slug ILIKE '%{k}%' OR summary ILIKE '%{k}%')");
+            clauses.Add($"(p.title ILIKE '%{k}%' OR p.slug ILIKE '%{k}%' OR p.summary ILIKE '%{k}%')");
         }
         if (!string.IsNullOrWhiteSpace(status))
         {
-            clauses.Add($"status = '{Escape(status)}'");
+            clauses.Add($"p.status = '{Escape(status)}'");
         }
         return "WHERE " + string.Join(" AND ", clauses);
     }
@@ -207,6 +211,8 @@ public class AdminPostItem
     public string? Id { get; set; }
     public string? Title { get; set; }
     public string? Slug { get; set; }
+    public string? CategoryId { get; set; }
+    public string? CategoryName { get; set; }
     public string? Status { get; set; }
     public DateTime? PublishAt { get; set; }
     public DateTime CreatedAt { get; set; }

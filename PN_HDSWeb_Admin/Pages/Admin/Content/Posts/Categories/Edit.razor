@@ -1,0 +1,143 @@
+@page "/admin/post-categories/edit/{Id?}"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminPostCategoryService AdminPostCategoryService
+@inject NavigationManager Nav
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>@(IsEditMode ? "Sửa chuyên mục" : "Thêm chuyên mục")</h1>
+            <p>Quản lý chuyên mục bài viết theo cấu trúc cha/con.</p>
+        </div>
+
+        @if (model == null || allCategories == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <div class="admin-form-grid">
+                <label>
+                    Mã chuyên mục
+                    <input class="admin-input" @bind="model.CategoryCode" placeholder="VD: TIN01" />
+                </label>
+                <label>
+                    Tên chuyên mục
+                    <input class="admin-input" @bind="model.CategoryName" placeholder="VD: Chi bộ" />
+                </label>
+                <label>
+                    Slug
+                    <input class="admin-input" @bind="model.Slug" placeholder="chi-bo" />
+                </label>
+                <label>
+                    Chuyên mục cha
+                    <select class="admin-input" @bind="model.ParentId">
+                        <option value="">-- Không có --</option>
+                        @foreach (var option in ParentOptions)
+                        {
+                            <option value="@option.Item1">@option.Item2</option>
+                        }
+                    </select>
+                </label>
+                <label>
+                    Thứ tự
+                    <input class="admin-input" type="number" @bind="model.SortOrder" />
+                </label>
+                <label>
+                    Trạng thái
+                    <select class="admin-input" @bind="IsActiveText">
+                        <option value="true">Đang bật</option>
+                        <option value="false">Tắt</option>
+                    </select>
+                </label>
+                <label class="span-2">
+                    Mô tả
+                    <textarea class="admin-input" rows="4" @bind="model.Description"></textarea>
+                </label>
+            </div>
+
+            <div class="admin-preview-box">
+                <h3>Cây danh mục hiện có</h3>
+                <ul class="simple-list">
+                    @foreach (var item in GetTreeLines(allCategories.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder), 0))
+                    {
+                        <li>@((MarkupString)item)</li>
+                    }
+                </ul>
+            </div>
+
+            <div class="admin-form-actions">
+                <button class="btn btn-primary" type="button" @onclick="SaveAsync">Lưu</button>
+                <button class="btn btn-secondary" type="button" @onclick="GoBack">Quay lại</button>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private AdminPostCategoryDetail? model;
+    private List<AdminPostCategoryItem>? allCategories;
+    private string IsActiveText = "true";
+    private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
+
+    private IEnumerable<(string Item1, string Item2)> ParentOptions =>
+        allCategories == null || model == null
+            ? Enumerable.Empty<(string Item1, string Item2)>()
+            : allCategories
+                .Where(x => x.Id != model.Id)
+                .Select(x => (x.Id ?? string.Empty, FormatLabel(x)))
+                .Where(x => !string.IsNullOrWhiteSpace(x.Item1));
+
+    protected override async Task OnInitializedAsync()
+    {
+        allCategories = await AdminPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+
+        if (!string.IsNullOrWhiteSpace(Id))
+        {
+            model = await AdminPostCategoryService.GetCategoryByIdAsync(Id);
+        }
+
+        model ??= new AdminPostCategoryDetail
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            IsActive = true,
+            SortOrder = 0
+        };
+
+        model.MaTruongBo ??= PN_PublicVariables.MaTruong;
+        IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+    }
+
+    private async Task SaveAsync()
+    {
+        model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
+
+        if (string.IsNullOrWhiteSpace(model.Id))
+            await AdminPostCategoryService.CreateCategoryAsync(model);
+        else
+            await AdminPostCategoryService.UpdateCategoryAsync(model);
+
+        Nav.NavigateTo("/admin/post-categories");
+    }
+
+    private void GoBack() => Nav.NavigateTo("/admin/post-categories");
+
+    private static string FormatLabel(AdminPostCategoryItem item)
+        => string.IsNullOrWhiteSpace(item.ParentId) ? item.CategoryName ?? string.Empty : $"├─ {item.CategoryName}";
+
+    private IEnumerable<string> GetTreeLines(IEnumerable<AdminPostCategoryItem> roots, int level)
+    {
+        foreach (var root in roots)
+        {
+            var indent = new string('·', level * 2);
+            yield return $"{indent}{root.CategoryName} <small style='color:#64748b'>({root.Slug})</small>";
+            var children = allCategories?.Where(x => x.ParentId == root.Id).OrderBy(x => x.SortOrder) ?? Enumerable.Empty<AdminPostCategoryItem>();
+            foreach (var child in GetTreeLines(children, level + 1))
+            {
+                yield return child;
+            }
+        }
+    }
+}

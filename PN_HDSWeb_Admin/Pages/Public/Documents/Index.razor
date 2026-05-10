@@ -1,6 +1,7 @@
 @page "/documents"
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicDocumentService PublicDocumentService
+@inject IPublicDocumentTypeService PublicDocumentTypeService
 
 <div class="public-article">
     <nav class="breadcrumb">
@@ -13,8 +14,18 @@
         <h1>Văn bản công khai</h1>
         <div class="search-panel">
             <input class="public-search-input" @bind="keyword" placeholder="Từ khóa" />
-            <input class="public-search-input" @bind="docType" placeholder="Loại văn bản" />
-            <button class="public-search-btn" @onclick="SearchAsync">Lọc</button>
+            <button class="public-search-btn" type="button" @onclick="SearchAsync">Lọc</button>
+        </div>
+
+        <div class="chip-group" style="margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="chip @(string.IsNullOrWhiteSpace(selectedTypeId) ? "active" : string.Empty)" @onclick="ClearTypeFilter">Tất cả</button>
+            @if (types != null)
+            {
+                @foreach (var type in types)
+                {
+                    <button type="button" class="chip @(selectedTypeId == type.Id ? "active" : string.Empty)" @onclick="() => SelectType(type.Id)">@type.TypeName</button>
+                }
+            }
         </div>
     </section>
 
@@ -35,6 +46,10 @@
                     <article class="search-result-item">
                         <h3><a href="/documents/@item.Id">@item.DocTitle</a></h3>
                         <p>@item.DocNumber</p>
+                        @if (!string.IsNullOrWhiteSpace(item.TypeName))
+                        {
+                            <p>@item.TypeName</p>
+                        }
                     </article>
                 }
             </div>
@@ -50,23 +65,42 @@
 
 @code {
     private List<PublicDocumentListItem>? documents;
+    private List<PublicDocumentTypeItem>? types;
     private string? keyword;
-    private string? docType;
+    private string? selectedTypeId;
     private int trang = 1;
     private int pageSize = 10;
     private int totalCount;
     private int totalPages => Math.Max(1, (int)Math.Ceiling(totalCount / (double)pageSize));
 
-    protected override async Task OnInitializedAsync() => await LoadAsync();
+    protected override async Task OnInitializedAsync()
+    {
+        types = await PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+        await LoadAsync();
+    }
 
     private async Task LoadAsync()
     {
-        totalCount = await PublicDocumentService.GetDocumentsCountAsync(PN_PublicVariables.MaTruong, keyword, docType);
-        documents = await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, keyword, docType, trang, pageSize);
+        totalCount = await PublicDocumentService.GetDocumentsCountAsync(PN_PublicVariables.MaTruong, keyword, selectedTypeId);
+        documents = await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, keyword, selectedTypeId, trang, pageSize);
     }
 
     private async Task SearchAsync()
     {
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task SelectType(string? typeId)
+    {
+        selectedTypeId = typeId;
+        trang = 1;
+        await LoadAsync();
+    }
+
+    private async Task ClearTypeFilter()
+    {
+        selectedTypeId = null;
         trang = 1;
         await LoadAsync();
     }

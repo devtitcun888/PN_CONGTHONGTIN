@@ -1,0 +1,111 @@
+@page "/admin/pages/edit/{Id?}"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminStaticPageService AdminStaticPageService
+@inject NavigationManager Nav
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>@(IsEditMode ? "Sửa trang tĩnh" : "Thêm trang tĩnh")</h1>
+            <p>Nhập nội dung để hiển thị ngoài public site.</p>
+        </div>
+
+        @if (model == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else
+        {
+            <div class="admin-settings-layout">
+                <div class="admin-settings-form">
+                    <div class="admin-form-grid">
+                        <label>
+                            Mã trang
+                            <input class="admin-input" @bind="model.PageCode" placeholder="about-us" />
+                        </label>
+                        <label>
+                            Slug
+                            <input class="admin-input" @bind="model.Slug" placeholder="gioi-thieu" />
+                        </label>
+                        <label class="span-2">
+                            Tiêu đề
+                            <input class="admin-input" @bind="model.Title" placeholder="Giới thiệu" />
+                        </label>
+                        <label>
+                            Trạng thái
+                            <select class="admin-input" @bind="model.Status">
+                                <option value="Draft">Draft</option>
+                                <option value="Published">Published</option>
+                            </select>
+                        </label>
+                        <label>
+                            Thứ tự
+                            <input class="admin-input" type="number" @bind="model.SortOrder" />
+                        </label>
+                        <label class="span-2">
+                            SEO Title
+                            <input class="admin-input" @bind="model.MetaTitle" />
+                        </label>
+                        <label class="span-2">
+                            SEO Description
+                            <textarea class="admin-input admin-textarea" rows="3" @bind="model.MetaDescription"></textarea>
+                        </label>
+                        <label class="span-2">
+                            Nội dung
+                            <textarea class="admin-input admin-textarea" rows="14" @bind="model.Content"></textarea>
+                        </label>
+                    </div>
+
+                    <div class="admin-form-actions">
+                        <button type="button" class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
+                        <button type="button" class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
+                    </div>
+                </div>
+
+                <aside class="admin-preview-box">
+                    <h3>Xem nhanh</h3>
+                    <p><strong>Slug:</strong> @model.Slug</p>
+                    <p><strong>Trạng thái:</strong> @model.Status</p>
+                    <p><strong>Đường dẫn public:</strong> /pages/@model.Slug</p>
+                    <div class="admin-preview-content">
+                        @((MarkupString)(model.Content ?? "<em>Chưa có nội dung</em>"))
+                    </div>
+                </aside>
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Id { get; set; }
+    private AdminStaticPageDetail? model;
+    private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (IsEditMode)
+        {
+            model = await AdminStaticPageService.GetPageByIdAsync(Id!);
+        }
+
+        model ??= new AdminStaticPageDetail
+        {
+            MaTruongBo = PN_PublicVariables.MaTruong,
+            Status = "Draft",
+            SortOrder = 0
+        };
+    }
+
+    private async Task SaveAsync()
+    {
+        if (string.IsNullOrWhiteSpace(model!.Id))
+            await AdminStaticPageService.CreatePageAsync(model);
+        else
+            await AdminStaticPageService.UpdatePageAsync(model);
+
+        Nav.NavigateTo("/admin/pages");
+    }
+
+    private void GoBack() => Nav.NavigateTo("/admin/pages");
+}

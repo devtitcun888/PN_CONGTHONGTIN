@@ -1,0 +1,159 @@
+@page "/admin/staff-profiles"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminStaffProfileService StaffProfileService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Cơ cấu tổ chức</h1>
+            <p>Quản lý hồ sơ nhân sự, ban giám hiệu và các bộ phận hiển thị công khai.</p>
+        </div>
+
+        <div class="search-panel">
+            <input class="public-search-input" @bind="keyword" placeholder="Tìm theo tên / vị trí / trình độ" />
+            <select class="public-search-input" @bind="publicFilter">
+                <option value="">Tất cả hiển thị</option>
+                <option value="true">Công khai</option>
+                <option value="false">Ẩn</option>
+            </select>
+            <select class="public-search-input" @bind="activeFilter">
+                <option value="">Tất cả trạng thái</option>
+                <option value="true">Đang bật</option>
+                <option value="false">Tắt</option>
+            </select>
+            <button class="public-search-btn" type="button" @onclick="SearchAsync">Tìm</button>
+            <button class="btn btn-secondary" type="button" @onclick="ResetAsync">Xóa lọc</button>
+            <button class="btn btn-primary" type="button" @onclick="GoCreate">Thêm mới</button>
+        </div>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (!items.Any())
+        {
+            <p>Chưa có hồ sơ nào.</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ảnh</th>
+                        <th>Họ tên</th>
+                        <th>Nhóm</th>
+                        <th>Vị trí</th>
+                        <th>Trình độ</th>
+                        <th>Thứ tự</th>
+                        <th>Công khai</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrWhiteSpace(item.AvatarUrl))
+                                {
+                                    <img src="@item.AvatarUrl" alt="@item.FullName" style="width:56px;height:56px;object-fit:cover;border-radius:12px;" />
+                                }
+                                else
+                                {
+                                    <div style="width:56px;height:56px;border-radius:12px;background:#e2e8f0;display:grid;place-items:center;">No</div>
+                                }
+                            </td>
+                            <td>
+                                <strong>@item.FullName</strong><br />
+                                <small>@item.Email</small>
+                            </td>
+                            <td>@item.GroupName</td>
+                            <td>@item.PositionName</td>
+                            <td>@item.Qualification</td>
+                            <td>@item.SortOrder</td>
+                            <td>@(item.IsPublic ? "Có" : "Không")</td>
+                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
+                            <td>
+                                <button @onclick="() => Edit(item)">Sửa</button>
+                                <button @onclick="() => TogglePublicAsync(item)">@(item.IsPublic ? "Ẩn" : "Công khai")</button>
+                                <button @onclick="() => ToggleActiveAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
+                                <button @onclick="() => DeleteAsync(item)">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminStaffProfileItem>? items;
+    private string? keyword;
+    private string? publicFilter;
+    private string? activeFilter;
+
+    protected override async Task OnInitializedAsync() => await LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        bool? isPublic = publicFilter switch
+        {
+            "true" => true,
+            "false" => false,
+            _ => null
+        };
+        bool? isActive = activeFilter switch
+        {
+            "true" => true,
+            "false" => false,
+            _ => null
+        };
+
+        items = await StaffProfileService.GetStaffProfilesAsync(PN_PublicVariables.MaTruong, keyword, isPublic, isActive);
+    }
+
+    private async Task SearchAsync() => await LoadAsync();
+
+    private async Task ResetAsync()
+    {
+        keyword = string.Empty;
+        publicFilter = string.Empty;
+        activeFilter = string.Empty;
+        await LoadAsync();
+    }
+
+    private void GoCreate() => Nav.NavigateTo("/admin/staff-profiles/edit");
+    private void Edit(AdminStaffProfileItem item) => Nav.NavigateTo($"/admin/staff-profiles/edit/{item.Id}");
+
+    private async Task TogglePublicAsync(AdminStaffProfileItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Bạn có muốn {(item.IsPublic ? "ẩn" : "công khai")} hồ sơ '{item.FullName}'?"))
+        {
+            await StaffProfileService.SetPublicAsync(item.Id ?? string.Empty, !item.IsPublic);
+            await LoadAsync();
+        }
+    }
+
+    private async Task ToggleActiveAsync(AdminStaffProfileItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Bạn có muốn {(item.IsActive ? "tắt" : "bật")} hồ sơ '{item.FullName}'?"))
+        {
+            await StaffProfileService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
+            await LoadAsync();
+        }
+    }
+
+    private async Task DeleteAsync(AdminStaffProfileItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa hồ sơ '{item.FullName}'?"))
+        {
+            await StaffProfileService.DeleteStaffProfileAsync(item.Id ?? string.Empty);
+            await LoadAsync();
+        }
+    }
+}
