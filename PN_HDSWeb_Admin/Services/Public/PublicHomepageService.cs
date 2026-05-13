@@ -25,7 +25,10 @@ public class PublicHomepageService : IPublicHomepageService
         var model = new PublicHomepageViewModel();
         try
         {
-            model.Banners = await GetBannersAsync(maTruongBo);
+            model.Banners = await GetBannersAsync(maTruongBo, "HomeTop");
+            model.HomeMiddleBanners = await GetBannersAsync(maTruongBo, "HomeMiddle");
+            model.HomeBottomBanners = await GetBannersAsync(maTruongBo, "HomeBottom");
+            model.SidebarBanners = await GetBannersAsync(maTruongBo, "Sidebar");
             model.FeaturedPosts = await GetFeaturedPostsAsync(maTruongBo);
             model.LatestPosts = await GetLatestPostsAsync(maTruongBo);
             model.PublishedDocuments = await GetPublishedDocumentsAsync(maTruongBo);
@@ -39,7 +42,7 @@ public class PublicHomepageService : IPublicHomepageService
         return model;
     }
 
-    private async Task<List<PublicBannerItem>> GetBannersAsync(string maTruongBo)
+    private async Task<List<PublicBannerItem>> GetBannersAsync(string maTruongBo, string position)
     {
         var list = new List<PublicBannerItem>();
         var sql = $@"
@@ -48,6 +51,7 @@ public class PublicHomepageService : IPublicHomepageService
             WHERE ma_truong_bo = '{Escape(maTruongBo)}'
               AND is_deleted = FALSE
               AND is_active = TRUE
+              AND position = '{Escape(position)}'
             ORDER BY sort_order ASC, created_at DESC";
 
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
@@ -150,6 +154,9 @@ public class PublicHomepageService : IPublicHomepageService
 public class PublicHomepageViewModel
 {
     public List<PublicBannerItem> Banners { get; set; } = [];
+    public List<PublicBannerItem> HomeMiddleBanners { get; set; } = [];
+    public List<PublicBannerItem> HomeBottomBanners { get; set; } = [];
+    public List<PublicBannerItem> SidebarBanners { get; set; } = [];
     public List<PublicPostItem> FeaturedPosts { get; set; } = [];
     public List<PublicPostItem> LatestPosts { get; set; } = [];
     public List<PublicDocumentItem> PublishedDocuments { get; set; } = [];

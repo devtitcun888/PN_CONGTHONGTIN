@@ -4065,6 +4065,7 @@ wwwroot\js\ckeditor-interop.js
 wwwroot\js\excelfunctions.js
 wwwroot\js\hub-grid.js
 wwwroot\js\jsfunction.js
+wwwroot\js\public-header.js
 wwwroot\js\scn-khcn.js
 wwwroot\js\scn-khen.js
 wwwroot\js\secureStorage.js
@@ -6061,4 +6062,7 @@ wwwroot\plugins\uplot\uPlot.esm.js
 wwwroot\plugins\uplot\uPlot.iife.js
 wwwroot\plugins\uplot\uPlot.iife.min.js
 wwwroot\plugins\uplot\uPlot.min.css
+wwwroot\uploads\banners\TITKUL_20260510180716684.png
 wwwroot\uploads\banners\pngtree-a-background-of-orange-blue-and-yellow-gradients-with-gritty-appearance-image_16233934_20260510115909150.jpg
+wwwroot\uploads\banners\pngtree-tender-yellow-fresh-horizontal-background-picture-image_1090148_20260510173446336.jpg
+wwwroot\uploads\banners\result_TITKUL_20260511030654458.png

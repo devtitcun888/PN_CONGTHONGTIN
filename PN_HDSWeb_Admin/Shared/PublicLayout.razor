@@ -1,31 +1,83 @@
 @inherits LayoutComponentBase
+@implements IDisposable
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicNavigationService PublicNavigationService
 @inject IPublicStaticPageService PublicStaticPageService
 @inject IPublicPostCategoryService PublicPostCategoryService
 @inject IPublicDocumentTypeService PublicDocumentTypeService
+@inject IJSRuntime JS
 @inject NavigationManager Nav
 
+<style>
+    .public-header {
+        position: sticky !important;
+        top: 0 !important;
+        z-index: 1000 !important;
+        background: #ffffff !important;
+        will-change: transform, box-shadow;
+        transition: box-shadow .22s ease, background-color .22s ease;
+    }
+
+    .public-header.collapsed {
+        box-shadow: 0 10px 30px rgba(15, 23, 42, .16) !important;
+    }
+
+    .public-header-banner {
+        width: 100%;
+        overflow: hidden;
+        max-height: 220px;
+        opacity: 1;
+        transform: translateY(0) scaleY(1);
+        transform-origin: top center;
+        transition: max-height .38s cubic-bezier(.22, 1, .36, 1), opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
+        will-change: max-height, opacity, transform;
+    }
+
+    .public-header-banner.collapsed {
+        max-height: 0 !important;
+        opacity: 0 !important;
+        transform: translateY(-10px) scaleY(.96);
+    }
+
+    .public-banner-strip {
+        width: 100%;
+        max-height: 220px;
+        aspect-ratio: 1200 / 220;
+        overflow: hidden;
+        background: linear-gradient(112deg, #395e77, #3587f5);
+    }
+
+    .public-banner-strip img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        object-position: center center;
+        display: block;
+    }
+</style>
+
 <div class="public-layout">
-    <header class="public-header">
-        <div class="public-header-top">
-            <div class="public-brand">
-                <strong>@(footer?.SchoolName ?? "Cổng thông tin")</strong>
-            </div>
-            <div class="public-header-actions">
-                <a href="/search">Tìm kiếm</a>
-                <a href="/contact">Liên hệ</a>
-                <button class="public-mobile-toggle" @onclick="ToggleMobileMenu">☰</button>
-            </div>
+    <header class="public-header @(isHeaderCollapsed ? "collapsed" : string.Empty)">
+        <div class="public-header-banner @(isHeaderCollapsed ? "collapsed" : string.Empty)">
+            @if (modelBanner?.Any() == true)
+            {
+                <div class="public-banner-strip">
+                    @foreach (var banner in modelBanner.Take(1))
+                    {
+                        <img src="@banner.ImageUrl" alt="@banner.Title" />
+                    }
+                </div>
+            }
         </div>
 
-        <div class="public-searchbar">
-            <input class="public-search-input" placeholder="Nhập từ khóa tìm kiếm..." @bind="SearchKeyword" @bind:event="oninput" />
-            <button class="public-search-btn" @onclick="GoSearch">Tìm kiếm</button>
-        </div>
-
-        <nav class="public-nav @(isMobileMenuOpen ? "open" : string.Empty)">
+        <nav class="public-nav @(isMobileMenuOpen ? "open" : string.Empty) @(isHeaderCollapsed ? "sticky" : string.Empty)">
+            <button class="public-mobile-toggle" @onclick="ToggleMobileMenu">☰ Menu</button>
             <ul>
+                <li class="nav-item @(IsActiveMenu("/") ? "active" : string.Empty)">
+                    <a href="/" title="Trang chủ">⌂</a>
+                </li>
                 @if (menus != null)
                 {
                     @foreach (var item in menus.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder))
@@ -86,8 +138,24 @@
                     </li>
                 }
 
+                <li class="nav-item public-grid-trigger">
+                    <a href="#" title="Danh mục">▦</a>
+                </li>
             </ul>
         </nav>
+
+        <div class="public-info-searchbar">
+            <div class="public-info-date">Thứ @CurrentDateTimeText</div>
+            <div class="public-info-spacer"></div>
+            <div class="public-language-links">
+                <a href="#">VN</a>
+                <a href="#">EN</a>
+            </div>
+            <div class="public-search-mini">
+                <input @bind="SearchKeyword" @bind:event="oninput" @onkeydown="HandleSearchKeyDown" placeholder="Từ khóa tìm kiếm..." />
+                <button type="button" @onclick="GoSearch" title="Tìm kiếm">🔍</button>
+            </div>
+        </div>
     </header>
 
     <main class="public-main">
@@ -152,10 +220,16 @@
     private List<PublicStaticPageMenuItem>? staticPages;
     private List<PublicPostCategoryItem>? postCategories;
     private List<PublicDocumentTypeItem>? documentTypes;
+    private List<PublicBannerItem>? modelBanner;
     private PublicFooterInfo? footer;
     private string SearchKeyword = string.Empty;
     private bool isMobileMenuOpen;
     private bool isLoading = true;
+    private bool isHeaderCollapsed;
+    private DateTime currentDateTime = DateTime.Now;
+    private System.Threading.Timer? clockTimer;
+    private DotNetObjectReference<PublicLayout>? dotNetRef;
+    private string CurrentDateTimeText => currentDateTime.ToString("dddd, dd/MM/yyyy HH:mm:ss", new System.Globalization.CultureInfo("vi-VN"));
 
     protected override async Task OnInitializedAsync()
     {
@@ -163,14 +237,51 @@
         staticPages = await PublicStaticPageService.GetPagesByMenuAsync(PN_PublicVariables.MaTruong);
         postCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
         documentTypes = await PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+        modelBanner = await PublicNavigationService.GetBannersAsync(PN_PublicVariables.MaTruong);
         footer = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
+        clockTimer = new System.Threading.Timer(_ => InvokeAsync(() =>
+        {
+            currentDateTime = DateTime.Now;
+            StateHasChanged();
+        }), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
         isLoading = false;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            dotNetRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("publicHeader.init", dotNetRef);
+        }
+    }
+
+    [JSInvokable]
+    public void SetHeaderCollapsed(bool collapsed)
+    {
+        if (isHeaderCollapsed == collapsed)
+            return;
+
+        isHeaderCollapsed = collapsed;
+        InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        clockTimer?.Dispose();
+        dotNetRef?.Dispose();
     }
 
     private void GoSearch()
     {
         var url = string.IsNullOrWhiteSpace(SearchKeyword) ? "/search" : $"/search?q={Uri.EscapeDataString(SearchKeyword)}";
         Nav.NavigateTo(url);
+    }
+
+    private void HandleSearchKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            GoSearch();
     }
 
     private void ToggleMobileMenu() => isMobileMenuOpen = !isMobileMenuOpen;
