@@ -7,21 +7,30 @@ function createBlazorUploadAdapter(loader, bridge) {
             const file = await loader.file;
             if (!file) throw new Error('Không thể đọc file ảnh.');
 
-            const bytes = new Uint8Array(await file.arrayBuffer());
-            const url = await bridge.invokeMethodAsync(
-                'UploadEditorImageAsync',
-                Array.from(bytes),
-                file.name,
-                file.type || 'application/octet-stream'
+            // Đọc file thành ArrayBuffer rồi convert sang Base64
+            const arrayBuffer = await file.arrayBuffer();
+            const base64 = btoa(
+                String.fromCharCode(...new Uint8Array(arrayBuffer))
             );
 
-            if (!url) throw new Error('Tải ảnh lên thất bại.');
+            let url;
+            try {
+                url = await bridge.invokeMethodAsync(
+                    'UploadEditorImageAsync',
+                    base64,          // ← string base64, không phải Array
+                    file.name,
+                    file.type || 'application/octet-stream'
+                );
+            } catch (err) {
+                throw new Error(`Upload thất bại: ${err.message || err}`);
+            }
+
+            if (!url) throw new Error('Server không trả về URL ảnh.');
             return { default: url };
         },
         abort() { }
     };
 }
-
 function getCKEditorCore() {
     return window.CKEDITOR;
 }
@@ -246,6 +255,27 @@ export async function initializeEditor(editorId, placeholder, initialData, dotNe
 export function getEditorData(editorId) {
     const editor = editors.get(editorId);
     if (!editor) return '';
+
+    return editor.getData();
+}
+
+// Thêm vào ckeditor-interop.js
+
+export async function waitForUploadsAndGetData(editorId) {
+    const editor = editors.get(editorId);
+    if (!editor) return '';
+
+    const fileRepository = editor.plugins.get('FileRepository');
+
+    // Chờ tất cả loader hoàn thành
+    const loaders = [...fileRepository.loaders];
+    if (loaders.length > 0) {
+        await Promise.allSettled(
+            loaders.map(loader => loader.upload().catch(() => { }))
+        );
+        // Thêm delay nhỏ để CKEditor cập nhật DOM
+        await new Promise(r => setTimeout(r, 200));
+    }
 
     return editor.getData();
 }

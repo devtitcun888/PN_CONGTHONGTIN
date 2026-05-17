@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PN_HDSWeb_Admin")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7bdefd004332e849df9e418ae72aaaa489aa938a")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+dc2f755ad16f349bdb6f0c91bd52e3616b27ecb3")]
 [assembly: System.Reflection.AssemblyProductAttribute("PN_HDSWeb_Admin")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PN_HDSWeb_Admin")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

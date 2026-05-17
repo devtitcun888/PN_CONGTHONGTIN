@@ -6066,3 +6066,4 @@ wwwroot\uploads\banners\TITKUL_20260510180716684.png
 wwwroot\uploads\banners\pngtree-a-background-of-orange-blue-and-yellow-gradients-with-gritty-appearance-image_16233934_20260510115909150.jpg
 wwwroot\uploads\banners\pngtree-tender-yellow-fresh-horizontal-background-picture-image_1090148_20260510173446336.jpg
 wwwroot\uploads\banners\result_TITKUL_20260511030654458.png
+wwwroot\uploads\posts\310803_20260517133348548.jpg
