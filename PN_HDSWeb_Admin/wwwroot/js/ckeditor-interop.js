@@ -26,20 +26,16 @@ function getCKEditorCore() {
     return window.CKEDITOR;
 }
 
-function getPremiumFeatures() {
-    return window.CKEDITOR_PREMIUM_FEATURES;
-}
-
 function waitForScripts(timeoutMs = 10000) {
     return new Promise((resolve, reject) => {
-        if (getCKEditorCore()?.ClassicEditor && getPremiumFeatures()) {
+        if (getCKEditorCore()?.ClassicEditor) {
             resolve();
             return;
         }
 
         const start = Date.now();
         const timer = setInterval(() => {
-            if (getCKEditorCore()?.ClassicEditor && getPremiumFeatures()) {
+            if (getCKEditorCore()?.ClassicEditor) {
                 clearInterval(timer);
                 resolve();
                 return;
@@ -89,7 +85,6 @@ function pickPlugins(source, names, label = 'plugin') {
 
 function createEditorConfig(placeholder, initialData, dotNetRef, licenseKey, containerIds) {
     const CKEDITOR = getCKEditorCore();
-    const PREMIUM = getPremiumFeatures();
 
     const editorPluginNames = [
         'Essentials',
@@ -128,25 +123,19 @@ function createEditorConfig(placeholder, initialData, dotNetRef, licenseKey, con
         'Fullscreen'
     ];
 
-    const collaborationChannelId = containerIds?.channelId;
-    const enableCollaboration = Boolean(collaborationChannelId);
-
     const premiumPluginNames = [];
 
     const { plugins: plugins, missing: missingEditorPlugins, rejected: rejectedEditorPlugins } = pickPlugins(CKEDITOR, editorPluginNames, 'CKEDITOR');
-    const { plugins: premiumPlugins, missing: missingPremiumPlugins, rejected: rejectedPremiumPlugins } = pickPlugins(PREMIUM, premiumPluginNames, 'CKEDITOR_PREMIUM_FEATURES');
+    const { plugins: premiumPlugins, missing: missingPremiumPlugins, rejected: rejectedPremiumPlugins } = pickPlugins(window.CKEDITOR_PREMIUM_FEATURES, premiumPluginNames, 'CKEDITOR_PREMIUM_FEATURES');
 
     if (missingEditorPlugins.length || missingPremiumPlugins.length || rejectedEditorPlugins.length || rejectedPremiumPlugins.length) {
         console.warn('CKEditor plugins filtered', {
             missingEditorPlugins,
             missingPremiumPlugins,
             rejectedEditorPlugins,
-            rejectedPremiumPlugins,
-            channelId: collaborationChannelId || null
+            rejectedPremiumPlugins
         });
     }
-
-    const getEl = (id) => id ? document.getElementById(id) : null;
 
     const config = {
         toolbar: {
@@ -217,15 +206,6 @@ function createEditorConfig(placeholder, initialData, dotNetRef, licenseKey, con
         }
     };
 
-    if (containerIds) {
-        if (containerIds.annotationsId) {
-            config.sidebar = { container: getEl(containerIds.annotationsId) };
-        }
-        if (containerIds.wordCountId) {
-            config.wordCount = { container: getEl(containerIds.wordCountId) };
-        }
-    }
-
     return config;
 }
 
@@ -265,7 +245,9 @@ export async function initializeEditor(editorId, placeholder, initialData, dotNe
 
 export function getEditorData(editorId) {
     const editor = editors.get(editorId);
-    return editor ? editor.getData() : '';
+    if (!editor) return '';
+
+    return editor.getData();
 }
 
 export function setEditorData(editorId, data) {

@@ -62,22 +62,9 @@
                     </span>
 
                     <!-- CKEditor 5 Premium Container -->
-                    <div class="main-container">
-                        <div class="presence" id="editor-presence"></div>
-                        <div class="editor-container editor-container_classic-editor editor-container_include-annotations editor-container_include-word-count editor-container_include-fullscreen" id="editor-container">
-                            <div class="editor-container__editor-wrapper">
-                                <div class="editor-container__editor">
-                                    <div id="@EditorId"></div>
-                                    <div class="editor_container__word-count" id="editor-word-count"></div>
-                                </div>
-                                <div class="editor-container__sidebar" id="editor-annotations"></div>
-                            </div>
-                        </div>
-                        <div class="revision-history" id="editor-revision-history">
-                            <div class="revision-history__wrapper">
-                                <div class="revision-history__editor" id="editor-revision-history-editor"></div>
-                                <div class="revision-history__sidebar" id="editor-revision-history-sidebar"></div>
-                            </div>
+                    <div class="admin-rich-editor-shell">
+                        <div class="admin-rich-editor">
+                            <div id="@EditorId"></div>
                         </div>
                     </div>
 
@@ -146,17 +133,14 @@
                     </label>
                 </div>
                 <div class="admin-form-actions">
-                    <button class="btn btn-secondary" type="button" @onclick="AddMediaAsync">Thêm media</button>
+                    <button class="btn btn-secondary" type="button" @onclick="AddMediaAsync" disabled="@(model == null || selectedMediaFile == null)">Thêm media</button>
                 </div>
             </div>
 
             <div class="admin-form-actions">
-                <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
+                <button class="btn btn-primary" type="button" @onclick="SaveAsync">Lưu</button>
                 <button class="btn btn-secondary" type="button" @onclick="GoBack">Quay lại</button>
-                @if (!string.IsNullOrWhiteSpace(model.Id))
-                {
-                    <button class="btn btn-secondary" type="button" @onclick="GoMedia">Quản lý media</button>
-                }
+                <button class="btn btn-secondary" type="button" @onclick="GoMedia" disabled="@string.IsNullOrWhiteSpace(model.Id)">Quản lý media</button>
             </div>
         }
     </div>
@@ -167,20 +151,19 @@
     @@import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,400;0,700;1,400;1,700&display=swap');
     @@media print { body { margin: 0!important; } }
     :root { --ck-content-font-family: Lato; --ck-sidebar-width: 270px; }
-    .main-container { font-family: var(--ck-content-font-family); width: fit-content; margin-left: auto; margin-right: auto; }
-    .main-container .presence { margin-bottom: 8px; }
-    .editor-container__editor-wrapper { display: flex; width: fit-content; }
-    .editor-container_include-annotations .editor-container__editor .ck.ck-editor__editable { margin-right: 0; }
-    .editor-container_classic-editor .editor-container__editor { min-width: 795px; max-width: 795px; }
-    .editor-container__sidebar { min-width: var(--ck-sidebar-width); max-width: var(--ck-sidebar-width); margin-top: 28px; margin-left: 10px; margin-right: 10px; }
-    .revision-history { display: none; }
-    .revision-history__wrapper { display: flex; }
-    .revision-history__wrapper .ck.ck-editor { margin: 0; width: 795px; }
-    .revision-history__wrapper .revision-history__sidebar { border: 1px solid var(--ck-color-base-border); border-left: 0; width: var(--ck-sidebar-width); min-height: 100%; }
-    .revision-history__wrapper .revision-history__sidebar .ck-revision-history-sidebar { height: 100%; }
-    .editor_container__word-count .ck-word-count { color: var(--ck-color-text); display: flex; height: 20px; gap: var(--ck-spacing-small); justify-content: flex-end; font-size: var(--ck-font-size-base); line-height: var(--ck-line-height-base); font-family: var(--ck-font-face); padding: var(--ck-spacing-small) var(--ck-spacing-standard); }
-    .editor-container_include-word-count.editor-container_classic-editor .editor_container__word-count { border: 1px solid var(--ck-color-base-border); border-radius: var(--ck-border-radius); border-top-left-radius: 0; border-top-right-radius: 0; border-top: none; }
-    .editor-container_include-word-count.editor-container_classic-editor .editor-container__editor .ck-editor .ck-editor__editable { border-radius: 0; }
+    .admin-rich-editor-shell { border: 1px solid var(--public-border); border-radius: 18px; background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%); box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04); padding: 12px; transition: border-color .2s ease, box-shadow .2s ease, transform .2s ease; }
+    .admin-rich-editor-shell:focus-within { border-color: rgba(37, 99, 235, 0.45); box-shadow: 0 16px 30px rgba(37, 99, 235, 0.12); transform: translateY(-1px); }
+    .admin-rich-editor { min-height: 520px; }
+    .admin-rich-editor .ck.ck-editor { width: 100%; }
+    .admin-rich-editor .ck.ck-editor__top { position: sticky; top: 0; z-index: 3; }
+    .admin-rich-editor .ck.ck-toolbar { border: 0 !important; border-radius: 16px 16px 0 0; background: #f8fbff; border-bottom: 1px solid var(--public-border) !important; }
+    .admin-rich-editor .ck.ck-toolbar .ck-button { border-radius: 10px; }
+    .admin-rich-editor .ck.ck-toolbar .ck-dropdown__panel,
+    .admin-rich-editor .ck.ck-toolbar .ck-list__panel { z-index: 9999; }
+    .admin-rich-editor .ck.ck-toolbar .ck-button.ck-on { background: rgba(37, 99, 235, 0.12); color: var(--public-primary-dark); }
+    .admin-rich-editor .ck.ck-editor__main > .ck-editor__editable { min-height: 440px; border: 0 !important; border-radius: 0 0 16px 16px; padding: 18px 20px; background: white; box-shadow: inset 0 1px 0 rgba(15, 23, 42, 0.04); }
+    .admin-rich-editor .ck.ck-editor__main > .ck-editor__editable.ck-focused { box-shadow: inset 0 0 0 2px rgba(37, 99, 235, 0.12); }
+    .editor-container__sidebar, .revision-history, .editor_container__word-count, .main-container { display: none; }
 </style>
 
 <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/47.6.1/ckeditor5.css" crossorigin />
@@ -609,18 +592,6 @@
         {
             dotNetRef ??= DotNetObjectReference.Create(this);
 
-            var containerIds = new
-            {
-                presenceId = "editor-presence",
-                annotationsId = "editor-annotations",
-                revisionHistoryContainerId = "editor-container",
-                revisionHistoryViewerId = "editor-revision-history",
-                revisionHistoryEditorId = "editor-revision-history-editor",
-                revisionHistorySidebarId = "editor-revision-history-sidebar",
-                wordCountId = "editor-word-count",
-                channelId = string.IsNullOrWhiteSpace(model.Id) ? null : $"post-{model.Id}"
-            };
-
             ckEditorModule ??= await JS.InvokeAsync<IJSObjectReference>("import", "./js/ckeditor-interop.js");
 
             await ckEditorModule.InvokeVoidAsync(
@@ -630,7 +601,7 @@
                 editorContent ?? string.Empty,
                 dotNetRef,
                 PN_PublicVariables.LicenceEditor,
-                containerIds
+                null
             );
 
             editorReady = true;
@@ -665,7 +636,7 @@
 
     private async Task AddMediaAsync()
     {
-        if (string.IsNullOrWhiteSpace(model?.Id) || selectedMediaFile == null)
+        if (model == null || selectedMediaFile == null)
             return;
 
         var saved = await FileStorage.SaveFileAsync(selectedMediaFile, "posts");
@@ -678,18 +649,26 @@
         mediaModel.MimeType = selectedMediaFile.ContentType;
         mediaModel.CreatedBy = "system";
 
+        if (string.IsNullOrWhiteSpace(model.Id))
+        {
+            return;
+        }
+
         await AdminPostMediaService.CreateMediaAsync(mediaModel);
         selectedMediaFile = null;
     }
 
     private async Task SaveAsync()
     {
-        if (editorReady)
+        if (model == null)
+            return;
+
+        if (editorReady && ckEditorModule != null)
         {
-            model!.Content = await JS.InvokeAsync<string>("getCKEditorData", EditorId);
+            model.Content = await ckEditorModule.InvokeAsync<string>("getEditorData", EditorId);
         }
 
-        if (string.IsNullOrWhiteSpace(model!.Id))
+        if (string.IsNullOrWhiteSpace(model.Id))
         {
             await AdminPostService.CreatePostAsync(model);
             var saved = await AdminPostService.GetPostsAsync(PN_PublicVariables.MaTruong, model.Title, model.Status, 1, 1);
@@ -715,6 +694,13 @@
             try
             {
                 await ckEditorModule.InvokeVoidAsync("destroyEditor", EditorId);
+            }
+            catch
+            {
+            }
+
+            try
+            {
                 await ckEditorModule.DisposeAsync();
             }
             catch
@@ -753,5 +739,11 @@
     }
 
     private void GoBack() => Nav.NavigateTo("/admin/posts");
-    private void GoMedia() => Nav.NavigateTo($"/admin/posts/{model?.Id}/media");
+    private void GoMedia()
+    {
+        if (!string.IsNullOrWhiteSpace(model?.Id))
+        {
+            Nav.NavigateTo($"/admin/posts/{model.Id}/media");
+        }
+    }
 }
