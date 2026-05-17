@@ -32,7 +32,7 @@ public class AdminPostService : IAdminPostService
         var where = BuildWhere(maTruongBo, keyword, status);
 
         var sql = $@"
-            SELECT p.id, p.title, p.slug, p.status, p.publish_at, p.created_at,
+            SELECT p.id, p.title, p.slug, p.post_type, p.is_featured, p.status, p.publish_at, p.created_at,
                    p.category_id, c.category_name
             FROM posts p
             LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
@@ -52,7 +52,9 @@ public class AdminPostService : IAdminPostService
                     Slug = row["slug"]?.ToString(),
                     CategoryId = row["category_id"]?.ToString(),
                     CategoryName = row["category_name"]?.ToString(),
+                    PostType = row["post_type"]?.ToString(),
                     Status = row["status"]?.ToString(),
+                    IsFeatured = row["is_featured"] != DBNull.Value && Convert.ToBoolean(row["is_featured"]),
                     PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
                     CreatedAt = row["created_at"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["created_at"])
                 });
@@ -213,7 +215,9 @@ public class AdminPostItem
     public string? Slug { get; set; }
     public string? CategoryId { get; set; }
     public string? CategoryName { get; set; }
+    public string? PostType { get; set; }
     public string? Status { get; set; }
+    public bool IsFeatured { get; set; }
     public DateTime? PublishAt { get; set; }
     public DateTime CreatedAt { get; set; }
 }

@@ -64,7 +64,7 @@ function isConstructiblePlugin(plugin) {
         typeof plugin.prototype.afterInit === 'function' ||
         typeof plugin.prototype.destroy === 'function'
     );
-}
+    }
 
 function pickPlugins(source, names, label = 'plugin') {
     const missing = [];
