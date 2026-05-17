@@ -22,6 +22,9 @@ namespace PN_HDSWeb_Library
         public static readonly string BieuPhiConn= hJsonLib.hgetValueJF(beFileConfig, "CAU_HINH", "bp_conn");
         public static readonly string IsBanTru= hJsonLib.hgetValueJF(beFileConfig, "CAU_HINH", "is_bantru");
 
+        public static readonly string LicenceEditor = hJsonLib.hgetValueJF(beFileConfig, "CKEDITOR", "licence");
+        public static readonly string CKEditorTokenUrl = "https://cwrl76qnu4dt.cke-cs.com/token/dev/a5f19d39fbd429b3518536cd16742211082b958a8dc9bd163362c411209e?limit=10";
+        public static readonly string CKEditorWebSocketUrl = "wss://cwrl76qnu4dt.cke-cs.com/ws";
         public PN_PublicVariables()
         {
         }

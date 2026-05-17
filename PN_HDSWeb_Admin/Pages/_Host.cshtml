@@ -24,7 +24,9 @@
 
     <!-- MUD BLAZOR -->
     <link rel="stylesheet" href="_content/MudBlazor/MudBlazor.min.css" />
-
+    <!-- CKEditor Styles -->
+@*     <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5/47.6.1/ckeditor5.css" crossorigin />
+    <link rel="stylesheet" href="https://cdn.ckeditor.com/ckeditor5-premium-features/47.6.1/ckeditor5-premium-features.css" crossorigin /> *@
     <!--
         GOOGLE FONTS — Tải ASYNC (không block render)
         Trick: media="print" → browser load không block → onload chuyển về media="all"
@@ -62,7 +64,6 @@
 
     <!-- QUILL RICH TEXT EDITOR -->
     <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.7/quill.snow.css" />
-
     <!-- BLAZOR CSS ISOLATION — Bắt buộc có để các file .razor.css hoạt động -->
     @* <link rel="stylesheet" href="PN_HDSWeb_Admin.styles.css" /> *@
 
@@ -370,7 +371,9 @@
 
     <!-- QUILL JS + CKEDITOR + SCN KHEN EDITOR -->
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js" defer></script>
-    <script src="https://cdn.ckeditor.com/ckeditor5/48.1.0/ckeditor5.umd.js" defer></script>
+@*     <script src="https://cdn.ckeditor.com/ckeditor5/47.6.1/ckeditor5.umd.js" crossorigin="anonymous" defer></script>
+    <script src="https://cdn.ckeditor.com/ckeditor5-premium-features/47.6.1/ckeditor5-premium-features.umd.js" crossorigin="anonymous" defer></script> *@
+ @*    <script src="https://cdn.ckbox.io/ckbox/2.9.2/ckbox.js" crossorigin="anonymous" defer></script> *@
     <script src="/js/scn-khen.js" defer></script>
     <script src="/js/scn-khcn.js" defer></script>
 

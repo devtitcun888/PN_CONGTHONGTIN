@@ -5,6 +5,7 @@ namespace PN_HDSWeb_Admin.Services.Admin;
 public interface IAdminFileStorageService
 {
     Task<string?> SaveImageAsync(IBrowserFile file, string subFolder);
+    Task<string?> SaveImageAsync(byte[] fileBytes, string fileName, string contentType, string subFolder);
     Task<string?> SaveFileAsync(IBrowserFile file, string subFolder);
 }
 
@@ -19,6 +20,9 @@ public class AdminFileStorageService : IAdminFileStorageService
 
     public async Task<string?> SaveImageAsync(IBrowserFile file, string subFolder)
         => await SaveAsync(file, subFolder);
+
+    public async Task<string?> SaveImageAsync(byte[] fileBytes, string fileName, string contentType, string subFolder)
+        => await SaveAsync(new MemoryFileUpload(fileBytes, fileName, contentType), subFolder);
 
     public async Task<string?> SaveFileAsync(IBrowserFile file, string subFolder)
         => await SaveAsync(file, subFolder);
@@ -40,5 +44,26 @@ public class AdminFileStorageService : IAdminFileStorageService
         await stream.CopyToAsync(fs);
 
         return $"/uploads/{subFolder}/{fileName}";
+    }
+
+    private sealed class MemoryFileUpload : IBrowserFile
+    {
+        private readonly byte[] _bytes;
+
+        public MemoryFileUpload(byte[] bytes, string name, string contentType)
+        {
+            _bytes = bytes;
+            Name = name;
+            ContentType = contentType;
+            LastModified = DateTimeOffset.UtcNow;
+        }
+
+        public string Name { get; }
+        public string ContentType { get; }
+        public DateTimeOffset LastModified { get; }
+        public long Size => _bytes.LongLength;
+
+        public Stream OpenReadStream(long maxAllowedSize = 512000, CancellationToken cancellationToken = default)
+            => new MemoryStream(_bytes, writable: false);
     }
 }

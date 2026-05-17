@@ -25,6 +25,9 @@
 	  "bieuphi_conn":"Server=duchm;Database=HKDPro_New;User Id=sa;Password=123;",
 	  "is_bantru": "false"
   },
+  "CKEDITOR":{
+	  "licence":"eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3ODAyNzE5OTksImp0aSI6Ijk4NGM1Nzg1LTAwN2ItNDdlZC1hOGFhLWRjY2QyNWE3YzcxOSIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiLCJzaCJdLCJ3aGl0ZUxhYmVsIjp0cnVlLCJsaWNlbnNlVHlwZSI6InRyaWFsIiwiZmVhdHVyZXMiOlsiKiJdLCJ2YyI6Ijk2NTNiZWRhIn0.XcIFtbcPwXxYbrLuxRJQU_zzxFCib28MzhDowAXWr6pEo2Cl1K6dmLjocLoGcUj3-vxNyKa4Vhd5mLvf4e96ww"
+  },
   "HIKVISION": {
     "base_url": "http://hk.titkul.com:7660",
     "username": "admin",
