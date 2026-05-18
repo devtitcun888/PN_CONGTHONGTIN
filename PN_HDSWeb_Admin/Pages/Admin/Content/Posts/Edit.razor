@@ -957,25 +957,32 @@
                         <h2>Tags</h2>
                     </div>
                     <div class="ep-card-body">
-                        @if (tags.Any())
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px;">
+                            <div>
+                                <div style="font-size:13px;font-weight:600;color:var(--ep-text);">Chọn tag cho bài viết</div>
+                                <div class="ep-label-hint" style="margin-top:4px;">Quản lý tag tại mục riêng trong danh mục bài viết.</div>
+                            </div>
+                            <a href="/admin/post-tags" class="ep-btn ep-btn-ghost ep-btn-sm" style="text-decoration:none;">Quản lý tag</a>
+                        </div>
+
+                        @if (tags?.Any() == true)
                         {
                             <div class="ep-tags-grid">
                                 @foreach (var tag in tags)
                                 {
                                     var isActive = selectedTagIds.Contains(tag.Id ?? string.Empty);
-                                    <label class="ep-tag-chip @(isActive ? "active" : "")">
-                                        <input type="checkbox"
-                                               checked="@isActive"
-                                               @onchange="(e) => ToggleTag(tag.Id, e)" />
+                                    <button type="button"
+                                            class="ep-tag-chip @(isActive ? "active" : "")"
+                                            @onclick="() => ToggleTag(tag.Id)">
                                         <span class="ep-tag-dot"></span>
                                         @tag.TagName
-                                    </label>
+                                    </button>
                                 }
                             </div>
                         }
                         else
                         {
-                            <p style="font-size:13px;color:var(--ep-text-3);text-align:center;padding:12px 0;">Chưa có tag nào.</p>
+                            <p style="font-size:13px;color:var(--ep-text-3);text-align:center;padding:12px 0;">Chưa có tag nào. Hãy tạo tag ở trang quản lý tag.</p>
                         }
                     </div>
                 </div>
@@ -1011,24 +1018,60 @@
                                     <strong>Nhấn để chọn tệp</strong> hoặc kéo thả vào đây<br />
                                     <span style="font-size:12px;color:var(--ep-text-3);">PNG, JPG, GIF, PDF, DOC, MP4…</span>
                                 </p>
-                                <InputFile OnChange="OnMediaSelected" />
+                                <InputFile OnChange="OnMediaSelected" multiple />
                             </label>
-                            @if (selectedMediaFile != null)
+                            @if (selectedMediaFiles.Any())
                             {
-                                <div class="ep-attachment-preview">
-                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
-                                    <span><strong>@selectedMediaFile.Name</strong> · @FormatFileSize(selectedMediaFile.Size)</span>
+                                <div style="margin-top:10px;display:flex;flex-direction:column;gap:8px;">
+                                    @foreach (var file in selectedMediaFiles)
+                                    {
+                                        <div class="ep-attachment-preview">
+                                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12" /></svg>
+                                            <span><strong>@file.Name</strong> · @FormatFileSize(file.Size)</span>
+                                        </div>
+                                    }
                                 </div>
                             }
                         </div>
-                        <div style="display:flex;justify-content:flex-end;">
-                            <button class="ep-btn ep-btn-ghost ep-btn-sm" type="button"
-                                    @onclick="AddMediaAsync"
-                                    disabled="@(model == null || selectedMediaFile == null)">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
-                                Đính kèm tệp
-                            </button>
-                        </div>
+                        @if (mediaItems.Any())
+                        {
+                            <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
+                                @foreach (var media in mediaItems)
+                                {
+                                    <div class="ep-card" style="box-shadow:none;border-style:solid;border-width:1px;">
+                                        <div class="ep-card-body" style="padding:14px;">
+                                            <div style="display:flex;justify-content:space-between;gap:12px;align-items:flex-start;">
+                                                <div style="flex:1;min-width:0;">
+                                                    <div style="font-weight:600;font-size:13px;word-break:break-word;">@media.FileName</div>
+                                                    <a href="@media.FileUrl" target="_blank" rel="noopener noreferrer" style="font-size:12px;word-break:break-word;">@media.FileUrl</a>
+                                                </div>
+                                                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;">
+@*                                                     <label class="ep-btn ep-btn-ghost ep-btn-sm" style="position:relative;overflow:hidden;">
+                                                        <InputFile OnChange="(e) => OnReplaceMediaSelected(media.Id, e)" accept="image/*,.pdf,.doc,.docx,.mp4,.mov,.avi" style="position:absolute;inset:0;opacity:0;cursor:pointer;" />
+                                                        Đổi file
+                                                    </label> *@
+                                                    <select class="ep-input" style="min-width:130px;" @bind="media.MediaType">
+                                                        <option value="image">Hình ảnh</option>
+                                                        <option value="video">Video</option>
+                                                        <option value="file">File</option>
+                                                    </select>
+                                                    <button type="button" class="ep-btn ep-btn-danger ep-btn-sm" @onclick="() => DeleteMediaAsync(media)">Xóa</button>
+                                                </div>
+                                            </div>
+                                            <div class="ep-field" style="margin-top:12px;margin-bottom:0;">
+                                                <label class="ep-label">Mô tả</label>
+                                                <input class="ep-input" @bind="media.Caption" placeholder="Nhập mô tả tệp..." />
+                                            </div>
+                                            @if (replacementMediaFiles.ContainsKey(media.Id ?? string.Empty))
+                                            {
+                                                <div class="ep-label-hint" style="margin-top:8px;">Đã chọn file mới, sẽ thay thế khi bấm lưu bài viết.</div>
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        <div class="ep-label-hint" style="margin-top:8px;">Tệp đính kèm sẽ được lưu khi bấm lưu bài viết.</div>
                     </div>
                 </div>
             </div>
@@ -1182,8 +1225,16 @@
                                 </div>
                             }
                         </div>
+                        <div class="ep-field" style="margin-top:12px;">
+                            <label class="ep-label">Chọn ảnh đại diện</label>
+                            <InputFile OnChange="OnCoverSelected" accept="image/*" />
+                            @if (selectedCoverFile != null)
+                            {
+                                <div class="ep-label-hint" style="margin-top:6px;">Ảnh sẽ được tải lên khi lưu bài viết.</div>
+                            }
+                        </div>
                         <input class="ep-input" @bind="model.CoverImageUrl" @bind:event="oninput"
-                               placeholder="https://... hoặc /uploads/..." />
+                               placeholder="/uploads/posts/covers/..." />
                     </div>
                 </div>
             </div>
@@ -1203,8 +1254,11 @@
     private AdminPostDetail? model;
     private List<AdminPostCategoryItem>? categories;
     private List<AdminPostTagItem>? tags;
+    private List<AdminPostMediaItem> mediaItems = new();
     private List<string> selectedTagIds = new();
-    private IBrowserFile? selectedMediaFile;
+    private List<IBrowserFile> selectedMediaFiles = new();
+    private Dictionary<string, IBrowserFile> replacementMediaFiles = new();
+    private IBrowserFile? selectedCoverFile;
     private AdminPostMediaDetail mediaModel = new() { MediaType = "image", SortOrder = 0 };
     private DotNetObjectReference<Edit>? dotNetRef;
     private IJSObjectReference? ckEditorModule;
@@ -1222,6 +1276,7 @@
         {
             model = await AdminPostService.GetPostByIdAsync(Id);
             selectedTagIds = await AdminPostTagMapService.GetTagIdsByPostIdAsync(Id);
+            mediaItems = await AdminPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, Id);
             mediaModel.PostId = Id;
         }
 
@@ -1332,38 +1387,46 @@
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", url);
     }
 
-    private void ToggleTag(string? tagId, ChangeEventArgs e)
+    private void ToggleTag(string? tagId)
     {
         if (string.IsNullOrWhiteSpace(tagId)) return;
-        var isChecked = e.Value?.ToString() == "true" || e.Value?.ToString() == "on";
-        if (isChecked) { if (!selectedTagIds.Contains(tagId)) selectedTagIds.Add(tagId); }
-        else selectedTagIds.Remove(tagId);
+
+        if (selectedTagIds.Contains(tagId))
+            selectedTagIds.Remove(tagId);
+        else
+            selectedTagIds.Add(tagId);
+    }
+
+    private Task OnCoverSelected(InputFileChangeEventArgs e)
+    {
+        selectedCoverFile = e.File;
+        return Task.CompletedTask;
     }
 
     private Task OnMediaSelected(InputFileChangeEventArgs e)
     {
-        selectedMediaFile = e.File;
+        selectedMediaFiles = e.GetMultipleFiles().ToList();
         return Task.CompletedTask;
     }
 
-    private async Task AddMediaAsync()
+    private void OnReplaceMediaSelected(string? mediaId, InputFileChangeEventArgs e)
     {
-        if (model == null || selectedMediaFile == null) return;
+        if (string.IsNullOrWhiteSpace(mediaId)) return;
+        var file = e.File;
+        if (file != null)
+            replacementMediaFiles[mediaId] = file;
+    }
 
-        var saved = await FileStorage.SaveFileAsync(selectedMediaFile, "posts");
-        if (string.IsNullOrWhiteSpace(saved)) return;
+    private async Task DeleteMediaAsync(AdminPostMediaItem media)
+    {
+        if (model == null || string.IsNullOrWhiteSpace(media.Id)) return;
 
-        mediaModel.PostId = model.Id;
-        mediaModel.FileUrl = saved;
-        mediaModel.FileName = selectedMediaFile.Name;
-        mediaModel.FileSize = selectedMediaFile.Size;
-        mediaModel.MimeType = selectedMediaFile.ContentType;
-        mediaModel.CreatedBy = "system";
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"Xóa tệp đính kèm '{media.FileName}'?");
+        if (!confirmed) return;
 
-        if (string.IsNullOrWhiteSpace(model.Id)) return;
-
-        await AdminPostMediaService.CreateMediaAsync(mediaModel);
-        selectedMediaFile = null;
+        await AdminPostMediaService.DeleteMediaAsync(media.Id);
+        mediaItems = await AdminPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, model.Id!);
+        replacementMediaFiles.Remove(media.Id);
     }
 
     private async Task SaveAsync()
@@ -1386,11 +1449,70 @@
             await AdminPostService.UpdatePostAsync(model);
         }
 
-        if (!string.IsNullOrWhiteSpace(model.Id))
-            await AdminPostTagMapService.ReplaceTagsAsync(model.Id, selectedTagIds);
+        if (string.IsNullOrWhiteSpace(model.Id))
+            return;
+
+        if (selectedCoverFile != null)
+        {
+            var savedCover = await FileStorage.SaveImageAsync(selectedCoverFile, "posts/covers");
+            if (!string.IsNullOrWhiteSpace(savedCover))
+                model.CoverImageUrl = savedCover;
+            selectedCoverFile = null;
+        }
+
+        if (selectedMediaFiles.Any())
+        {
+            foreach (var file in selectedMediaFiles)
+            {
+                var detail = new AdminPostMediaDetail
+                {
+                    PostId = model.Id,
+                    MaTruongBo = PN_PublicVariables.MaTruong,
+                    MediaType = mediaModel.MediaType,
+                    Caption = mediaModel.Caption,
+                    SortOrder = mediaModel.SortOrder,
+                    CreatedBy = "system",
+                    FileName = file.Name,
+                    FileSize = file.Size,
+                    MimeType = file.ContentType
+                };
+
+                await AdminPostMediaService.CreateMediaFromFileAsync(detail, file, "posts/media");
+            }
+
+            selectedMediaFiles.Clear();
+        }
+
+        foreach (var media in mediaItems.ToList())
+        {
+            if (replacementMediaFiles.TryGetValue(media.Id ?? string.Empty, out var newFile))
+            {
+                var replaceDetail = new AdminPostMediaDetail
+                {
+                    Id = media.Id,
+                    PostId = model.Id,
+                    MaTruongBo = PN_PublicVariables.MaTruong,
+                    MediaType = media.MediaType,
+                    Caption = media.Caption,
+                    SortOrder = media.SortOrder,
+                    CreatedBy = "system",
+                    FileName = media.FileName,
+                    FileSize = media.FileSize,
+                    MimeType = media.MimeType
+                };
+
+                await AdminPostMediaService.ReplaceMediaFileAsync(replaceDetail, newFile, "posts/media");
+            }
+        }
+
+        replacementMediaFiles.Clear();
+        mediaItems = await AdminPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, model.Id);
+
+        await AdminPostTagMapService.ReplaceTagsAsync(model.Id, selectedTagIds);
 
         Nav.NavigateTo("/admin/posts");
     }
+
 
     private static string FormatFileSize(long bytes)
     {
@@ -1416,7 +1538,7 @@
     {
         var fileBytes = Convert.FromBase64String(base64Data);
         var file = new BrowserFileUpload(fileBytes, fileName, contentType);
-        return await FileStorage.SaveImageAsync(file, "posts");
+        return await FileStorage.SaveImageAsync(file, "posts/covers");
     }
 
     private sealed class BrowserFileUpload : IBrowserFile

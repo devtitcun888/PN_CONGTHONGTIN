@@ -7,6 +7,7 @@ public interface IAdminFileStorageService
     Task<string?> SaveImageAsync(IBrowserFile file, string subFolder);
     Task<string?> SaveImageAsync(byte[] fileBytes, string fileName, string contentType, string subFolder);
     Task<string?> SaveFileAsync(IBrowserFile file, string subFolder);
+    Task<bool> DeleteFileAsync(string? fileUrl);
 }
 
 public class AdminFileStorageService : IAdminFileStorageService
@@ -26,6 +27,25 @@ public class AdminFileStorageService : IAdminFileStorageService
 
     public async Task<string?> SaveFileAsync(IBrowserFile file, string subFolder)
         => await SaveAsync(file, subFolder);
+
+    public Task<bool> DeleteFileAsync(string? fileUrl)
+    {
+        if (string.IsNullOrWhiteSpace(fileUrl)) return Task.FromResult(false);
+
+        var relativePath = fileUrl.TrimStart('/').Replace('/', Path.DirectorySeparatorChar);
+        var fullPath = Path.Combine(_env.WebRootPath, relativePath);
+        if (!File.Exists(fullPath)) return Task.FromResult(false);
+
+        try
+        {
+            File.Delete(fullPath);
+            return Task.FromResult(true);
+        }
+        catch
+        {
+            return Task.FromResult(false);
+        }
+    }
 
     private async Task<string?> SaveAsync(IBrowserFile file, string subFolder)
     {

@@ -4,77 +4,456 @@
 @inject IAdminStaticPageService AdminStaticPageService
 @inject NavigationManager Nav
 
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
-            <h1>@(IsEditMode ? "Sửa trang tĩnh" : "Thêm trang tĩnh")</h1>
-            <p>Nhập nội dung để hiển thị ngoài public site.</p>
-        </div>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
-        @if (model == null)
-        {
-            <p>Đang tải...</p>
+    :root {
+        --pe-bg: #f4f6fb;
+        --pe-surface: #ffffff;
+        --pe-surface-2: #f8fafd;
+        --pe-border: #e4e9f2;
+        --pe-border-focus: #3b6ef6;
+        --pe-primary: #3b6ef6;
+        --pe-primary-hover: #2554e0;
+        --pe-primary-soft: #eef2fe;
+        --pe-text: #0f1b35;
+        --pe-text-2: #5a6a8a;
+        --pe-text-3: #a0aec0;
+        --pe-radius: 14px;
+        --pe-radius-sm: 9px;
+        --pe-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --pe-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
+        --pe-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .pe-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .pe-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--pe-bg);
+        min-height: 100vh;
+        color: var(--pe-text);
+    }
+
+    /* Breadcrumb */
+    .pe-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        gap: 12px;
+    }
+
+    .pe-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--pe-text-2);
+    }
+
+        .pe-breadcrumb a {
+            color: var(--pe-primary);
+            text-decoration: none;
+            font-weight: 500;
         }
-        else
-        {
-            <div class="admin-settings-layout">
-                <div class="admin-settings-form">
-                    <div class="admin-form-grid">
-                        <label>
-                            Mã trang
-                            <input class="admin-input" @bind="model.PageCode" placeholder="about-us" />
-                        </label>
-                        <label>
-                            Slug
-                            <input class="admin-input" @bind="model.Slug" placeholder="gioi-thieu" />
-                        </label>
-                        <label class="span-2">
-                            Tiêu đề
-                            <input class="admin-input" @bind="model.Title" placeholder="Giới thiệu" />
-                        </label>
-                        <label>
-                            Trạng thái
-                            <select class="admin-input" @bind="model.Status">
-                                <option value="Draft">Draft</option>
-                                <option value="Published">Published</option>
-                            </select>
-                        </label>
-                        <label>
-                            Thứ tự
-                            <input class="admin-input" type="number" @bind="model.SortOrder" />
-                        </label>
-                        <label class="span-2">
-                            SEO Title
-                            <input class="admin-input" @bind="model.MetaTitle" />
-                        </label>
-                        <label class="span-2">
-                            SEO Description
-                            <textarea class="admin-input admin-textarea" rows="3" @bind="model.MetaDescription"></textarea>
-                        </label>
-                        <label class="span-2">
-                            Nội dung
-                            <textarea class="admin-input admin-textarea" rows="14" @bind="model.Content"></textarea>
-                        </label>
-                    </div>
 
-                    <div class="admin-form-actions">
-                        <button type="button" class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                        <button type="button" class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
+            .pe-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .pe-breadcrumb-sep {
+        color: var(--pe-text-3);
+    }
+
+    .pe-breadcrumb-current {
+        color: var(--pe-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .pe-hero {
+        padding: 24px 32px 0;
+    }
+
+        .pe-hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -.3px;
+            line-height: 1.2;
+        }
+
+        .pe-hero p {
+            margin-top: 4px;
+            font-size: 13.5px;
+            color: var(--pe-text-2);
+        }
+
+    /* Layout */
+    .pe-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+        padding: 24px 32px 40px;
+        max-width: 1400px;
+    }
+
+    @@media (max-width: 1100px) {
+        .pe-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .pe-topbar, .pe-hero {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .pe-layout {
+            padding: 20px;
+        }
+    }
+
+    /* Card */
+    .pe-card {
+        background: var(--pe-surface);
+        border: 1px solid var(--pe-border);
+        border-radius: var(--pe-radius);
+        box-shadow: var(--pe-shadow);
+        overflow: hidden;
+        animation: pe-fadeup .3s ease both;
+    }
+
+    .pe-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 16px;
+        border-bottom: 1px solid var(--pe-border);
+        background: var(--pe-surface-2);
+    }
+
+    .pe-card-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--pe-primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--pe-primary);
+        flex-shrink: 0;
+    }
+
+    .pe-card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--pe-text);
+    }
+
+    .pe-card-body {
+        padding: 22px;
+    }
+
+    /* Form */
+    .pe-field {
+        margin-bottom: 18px;
+    }
+
+        .pe-field:last-child {
+            margin-bottom: 0;
+        }
+
+    .pe-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--pe-text-2);
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .pe-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--pe-border);
+        border-radius: var(--pe-radius-sm);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--pe-text);
+        background: var(--pe-surface);
+        transition: border-color var(--pe-transition), box-shadow var(--pe-transition);
+        outline: none;
+    }
+
+        .pe-input:focus {
+            border-color: var(--pe-border-focus);
+            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+        }
+
+    textarea.pe-input {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+
+    select.pe-input {
+        cursor: pointer;
+    }
+
+    /* Buttons */
+    .pe-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        border-radius: var(--pe-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--pe-transition);
+        white-space: nowrap;
+    }
+
+        .pe-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+    .pe-btn-primary {
+        background: var(--pe-primary);
+        color: white;
+        border-color: var(--pe-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+        .pe-btn-primary:hover:not(:disabled) {
+            background: var(--pe-primary-hover);
+            border-color: var(--pe-primary-hover);
+            box-shadow: 0 4px 18px rgba(59,110,246,.35);
+            transform: translateY(-1px);
+        }
+
+    .pe-btn-ghost {
+        background: transparent;
+        color: var(--pe-text-2);
+        border-color: var(--pe-border);
+    }
+
+        .pe-btn-ghost:hover:not(:disabled) {
+            border-color: var(--pe-text-2);
+            color: var(--pe-text);
+            background: var(--pe-surface-2);
+        }
+
+    .pe-btn-sm {
+        padding: 7px 14px;
+        font-size: 12.5px;
+    }
+
+    /* Preview Box */
+    .pe-preview-card {
+        background: var(--pe-surface);
+        border: 1px solid var(--pe-border);
+        border-radius: var(--pe-radius);
+        padding: 22px;
+        box-shadow: var(--pe-shadow);
+        font-size: 13px;
+        color: var(--pe-text-2);
+    }
+
+        .pe-preview-card h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--pe-text);
+            margin-bottom: 16px;
+        }
+
+        .pe-preview-card p {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .pe-preview-card strong {
+            font-weight: 600;
+        }
+
+    .pe-preview-content {
+        margin-top: 14px;
+        padding-top: 14px;
+        border-top: 1px solid var(--pe-border);
+        max-height: 300px;
+        overflow-y: auto;
+    }
+
+    /* Action bar */
+    .pe-action-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    /* Loading */
+    .pe-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 50vh;
+        color: var(--pe-text-2);
+        font-size: 14px;
+    }
+
+    .pe-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--pe-border);
+        border-top-color: var(--pe-primary);
+        border-radius: 50%;
+        animation: pe-spin .75s linear infinite;
+    }
+
+    @@keyframes pe-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes pe-fadeup {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .pe-main-col > .pe-card {
+        animation-delay: .06s;
+    }
+
+    .pe-side-col > .pe-card {
+        animation-delay: .1s;
+    }
+</style>
+
+<div class="pe-root">
+    <!-- Breadcrumb -->
+    <div class="pe-topbar">
+        <nav class="pe-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="pe-breadcrumb-sep">›</span>
+            <a href="/admin/pages">Trang tĩnh</a>
+            <span class="pe-breadcrumb-sep">›</span>
+            <span class="pe-breadcrumb-current">@(IsEditMode ? "Chỉnh sửa" : "Tạo mới")</span>
+        </nav>
+        <button class="pe-btn pe-btn-ghost pe-btn-sm" type="button" @onclick="GoBack">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+            Quay lại
+        </button>
+    </div>
+
+    <!-- Hero -->
+    <div class="pe-hero">
+        <h1>@(IsEditMode ? "Sửa trang tĩnh" : "Thêm trang tĩnh")</h1>
+        <p>Nhập nội dung để hiển thị ngoài public site.</p>
+    </div>
+
+    @if (model == null)
+    {
+        <div class="pe-loading">
+            <div class="pe-spinner"></div>
+            <span>Đang tải dữ liệu...</span>
+        </div>
+    }
+    else
+    {
+        <div class="pe-layout">
+            <!-- Cột chính: Form -->
+            <div class="pe-main-col">
+                <div class="pe-card">
+                    <div class="pe-card-header">
+                        <div class="pe-card-header-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        </div>
+                        <h2>Thông tin trang</h2>
+                    </div>
+                    <div class="pe-card-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="pe-field">
+                                <label class="pe-label">Mã trang</label>
+                                <input class="pe-input" @bind="model.PageCode" placeholder="about-us" />
+                            </div>
+                            <div class="pe-field">
+                                <label class="pe-label">Slug</label>
+                                <input class="pe-input" @bind="model.Slug" placeholder="gioi-thieu" />
+                            </div>
+                            <div class="pe-field" style="grid-column:1/-1;">
+                                <label class="pe-label">Tiêu đề</label>
+                                <input class="pe-input" @bind="model.Title" placeholder="Giới thiệu" />
+                            </div>
+                            <div class="pe-field">
+                                <label class="pe-label">Trạng thái</label>
+                                <select class="pe-input" @bind="model.Status">
+                                    <option value="Draft">Nháp</option>
+                                    <option value="Published">Xuất bản</option>
+                                </select>
+                            </div>
+                            <div class="pe-field">
+                                <label class="pe-label">Thứ tự</label>
+                                <input class="pe-input" type="number" @bind="model.SortOrder" min="0" />
+                            </div>
+                            <div class="pe-field" style="grid-column:1/-1;">
+                                <label class="pe-label">SEO Title</label>
+                                <input class="pe-input" @bind="model.MetaTitle" placeholder="Tiêu đề SEO..." />
+                            </div>
+                            <div class="pe-field" style="grid-column:1/-1;">
+                                <label class="pe-label">SEO Description</label>
+                                <textarea class="pe-input" rows="3" @bind="model.MetaDescription" placeholder="Mô tả SEO..."></textarea>
+                            </div>
+                            <div class="pe-field" style="grid-column:1/-1;">
+                                <label class="pe-label">Nội dung</label>
+                                <textarea class="pe-input" rows="14" @bind="model.Content" placeholder="Nhập nội dung HTML..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="pe-action-bar">
+                            <button type="button" class="pe-btn pe-btn-primary" @onclick="SaveAsync">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                                Lưu
+                            </button>
+                            <button type="button" class="pe-btn pe-btn-ghost" @onclick="GoBack">Hủy</button>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <aside class="admin-preview-box">
+            <!-- Cột phụ: Preview -->
+            <div class="pe-side-col">
+                <div class="pe-preview-card">
                     <h3>Xem nhanh</h3>
                     <p><strong>Slug:</strong> @model.Slug</p>
                     <p><strong>Trạng thái:</strong> @model.Status</p>
-                    <p><strong>Đường dẫn public:</strong> /pages/@model.Slug</p>
-                    <div class="admin-preview-content">
-                        @((MarkupString)(model.Content ?? "<em>Chưa có nội dung</em>"))
+                    <p style="word-break:break-all;"><strong>Đường dẫn public:</strong> /pages/@model.Slug</p>
+                    <div class="pe-preview-content">
+                        @((MarkupString)(string.IsNullOrWhiteSpace(model.Content) ? "<em style='color:var(--pe-text-3)'>Chưa có nội dung</em>" : model.Content))
                     </div>
-                </aside>
+                </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code {

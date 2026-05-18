@@ -5,56 +5,471 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+    :root {
+        --pc-bg: #f4f6fb;
+        --pc-surface: #ffffff;
+        --pc-surface-2: #f8fafd;
+        --pc-border: #e4e9f2;
+        --pc-primary: #3b6ef6;
+        --pc-primary-hover: #2554e0;
+        --pc-primary-soft: #eef2fe;
+        --pc-text: #0f1b35;
+        --pc-text-2: #5a6a8a;
+        --pc-text-3: #94a3b8;
+        --pc-success: #22c55e;
+        --pc-success-soft: #f0fdf4;
+        --pc-danger: #ef4444;
+        --pc-danger-soft: #fff5f5;
+        --pc-radius: 16px;
+        --pc-radius-sm: 10px;
+        --pc-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --pc-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .pc-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .pc-root {
+        min-height: 100vh;
+        background: var(--pc-bg);
+        font-family: 'Be Vietnam Pro', sans-serif;
+        color: var(--pc-text);
+    }
+
+    /* ── Topbar ── */
+    .pc-topbar {
+        padding: 20px 32px 0;
+    }
+
+    .pc-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--pc-text-2);
+    }
+
+        .pc-breadcrumb a {
+            color: var(--pc-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .pc-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .pc-breadcrumb-sep {
+        color: var(--pc-text-3);
+    }
+
+    .pc-breadcrumb-current {
+        color: var(--pc-text);
+        font-weight: 600;
+    }
+
+    /* ── Hero ── */
+    .pc-hero {
+        padding: 20px 32px 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .pc-hero-text h1 {
+        font-family: 'Instrument Serif', serif;
+        font-size: 30px;
+        font-weight: 400;
+        line-height: 1.2;
+        letter-spacing: -.3px;
+        color: var(--pc-text);
+    }
+
+    .pc-hero-text p {
+        margin-top: 6px;
+        font-size: 13.5px;
+        color: var(--pc-text-2);
+    }
+
+    /* ── Toolbar ── */
+    .pc-toolbar {
+        padding: 20px 32px 0;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    /* ── Buttons ── */
+    .pc-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 18px;
+        border-radius: var(--pc-radius-sm);
+        border: 1.5px solid transparent;
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--pc-transition);
+        white-space: nowrap;
+    }
+
+    .pc-btn-primary {
+        background: var(--pc-primary);
+        border-color: var(--pc-primary);
+        color: white;
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+        .pc-btn-primary:hover {
+            background: var(--pc-primary-hover);
+            border-color: var(--pc-primary-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 18px rgba(59,110,246,.35);
+        }
+
+    .pc-btn-ghost {
+        background: var(--pc-surface);
+        border-color: var(--pc-border);
+        color: var(--pc-text-2);
+    }
+
+        .pc-btn-ghost:hover {
+            border-color: var(--pc-primary);
+            background: var(--pc-primary-soft);
+            color: var(--pc-primary);
+        }
+
+    .pc-btn-danger {
+        background: none;
+        border: none;
+        color: var(--pc-danger);
+        padding: 8px 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background var(--pc-transition);
+        font-family: inherit;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+        .pc-btn-danger:hover {
+            background: var(--pc-danger-soft);
+        }
+
+    /* ── Content ── */
+    .pc-content {
+        padding: 20px 32px 40px;
+    }
+
+    /* ── Card ── */
+    .pc-card {
+        background: var(--pc-surface);
+        border: 1px solid var(--pc-border);
+        border-radius: var(--pc-radius);
+        box-shadow: var(--pc-shadow);
+        overflow: hidden;
+        animation: pc-fadeup .35s ease both;
+    }
+
+    @@keyframes pc-fadeup {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* ── Table ── */
+    .pc-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .pc-table thead tr {
+            background: var(--pc-surface-2);
+            border-bottom: 1px solid var(--pc-border);
+        }
+
+        .pc-table th {
+            padding: 12px 16px;
+            text-align: left;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            font-weight: 700;
+            color: var(--pc-text-3);
+            white-space: nowrap;
+        }
+
+        .pc-table td {
+            padding: 14px 16px;
+            font-size: 13.5px;
+            color: var(--pc-text);
+            border-bottom: 1px solid var(--pc-border);
+            vertical-align: middle;
+        }
+
+        .pc-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .pc-table tbody tr {
+            transition: background var(--pc-transition);
+        }
+
+            .pc-table tbody tr:hover {
+                background: var(--pc-surface-2);
+            }
+
+    /* ── Category ── */
+    .pc-category-name {
+        font-weight: 600;
+        color: var(--pc-text);
+    }
+
+    .pc-slug {
+        font-family: monospace;
+        font-size: 12px;
+        color: var(--pc-text-2);
+        background: var(--pc-primary-soft);
+        padding: 4px 8px;
+        border-radius: 7px;
+        display: inline-flex;
+        align-items: center;
+    }
+
+    /* ── Badge ── */
+    .pc-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+        .pc-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+    .pc-badge-active {
+        background: var(--pc-success-soft);
+        color: #166534;
+    }
+
+        .pc-badge-active .dot {
+            background: var(--pc-success);
+        }
+
+    .pc-badge-inactive {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+        .pc-badge-inactive .dot {
+            background: #94a3b8;
+        }
+
+    /* ── Actions ── */
+    .pc-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+    }
+
+    /* ── Empty / Loading ── */
+    .pc-loading,
+    .pc-empty {
+        padding: 60px 24px;
+        text-align: center;
+        color: var(--pc-text-3);
+        font-size: 14px;
+    }
+
+        .pc-empty h3 {
+            font-size: 15px;
+            color: var(--pc-text-2);
+            margin-bottom: 6px;
+        }
+
+    /* ── Responsive ── */
+    @@media (max-width: 768px) {
+        .pc-topbar,
+        .pc-hero,
+        .pc-toolbar,
+        .pc-content {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .pc-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .pc-card {
+            overflow-x: auto;
+        }
+
+        .pc-table {
+            min-width: 720px;
+        }
+    }
+</style>
+
+<div class="pc-root">
+
+    <!-- Topbar -->
+    <div class="pc-topbar">
+        <nav class="pc-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="pc-breadcrumb-sep">›</span>
+            <span class="pc-breadcrumb-current">Chuyên mục bài viết</span>
+        </nav>
+    </div>
+
+    <!-- Hero -->
+    <div class="pc-hero">
+        <div class="pc-hero-text">
             <h1>Chuyên mục bài viết</h1>
             <p>Quản lý chuyên mục cho module bài viết.</p>
         </div>
+    </div>
 
-        <div class="admin-form-actions">
-            <button class="btn btn-primary" @onclick="GoCreate">Thêm mới</button>
-        </div>
+    <!-- Toolbar -->
+    <div class="pc-toolbar">
+        <button class="pc-btn pc-btn-primary" @onclick="GoCreate">
+            <svg width="15" height="15" viewBox="0 0 24 24"
+                 fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
+            Thêm mới
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="pc-content">
 
         @if (items == null)
         {
-            <p>Đang tải...</p>
+            <div class="pc-loading">
+                Đang tải dữ liệu...
+            </div>
         }
         else if (!items.Any())
         {
-            <p>Chưa có chuyên mục nào.</p>
+            <div class="pc-card">
+                <div class="pc-empty">
+                    <h3>Chưa có chuyên mục</h3>
+                    <p>Bắt đầu bằng cách tạo chuyên mục đầu tiên.</p>
+                </div>
+            </div>
         }
         else
         {
-            <table>
-                <thead>
-                    <tr>
-                        <th>Tên</th>
-                        <th>Slug</th>
-                        <th>Thứ tự</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in items)
-                    {
+            <div class="pc-card">
+
+                <table class="pc-table">
+
+                    <thead>
                         <tr>
-                            <td>@item.CategoryName</td>
-                            <td>@item.Slug</td>
-                            <td>@item.SortOrder</td>
-                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
-                            <td>
-                                <button @onclick="() => Edit(item)">Sửa</button>
-                                <button @onclick="() => ToggleAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
-                                <button @onclick="() => DeleteAsync(item)">Xóa</button>
-                            </td>
+                            <th>Tên chuyên mục</th>
+                            <th>Slug</th>
+                            <th>Thứ tự</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var item in items)
+                        {
+                            <tr>
+
+                                <td>
+                                    <div class="pc-category-name">
+                                        @item.CategoryName
+                                    </div>
+                                </td>
+
+                                <td>
+                                    <span class="pc-slug">
+                                        /@item.Slug
+                                    </span>
+                                </td>
+
+                                <td>
+                                    @item.SortOrder
+                                </td>
+
+                                <td>
+                                    @if (item.IsActive)
+                                    {
+                                        <span class="pc-badge pc-badge-active">
+                                            <span class="dot"></span>
+                                            Đang bật
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="pc-badge pc-badge-inactive">
+                                            <span class="dot"></span>
+                                            Đã tắt
+                                        </span>
+                                    }
+                                </td>
+
+                                <td>
+                                    <div class="pc-actions">
+
+                                        <button class="pc-btn pc-btn-ghost"
+                                                @onclick="() => Edit(item)">
+                                            Sửa
+                                        </button>
+
+                                        <button class="pc-btn pc-btn-ghost"
+                                                @onclick="() => ToggleAsync(item)">
+                                            @(item.IsActive ? "Tắt" : "Bật")
+                                        </button>
+
+                                        <button class="pc-btn-danger"
+                                                @onclick="() => DeleteAsync(item)">
+                                            Xóa
+                                        </button>
+
+                                    </div>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+
+            </div>
         }
+
     </div>
+
 </div>
 
 @code {

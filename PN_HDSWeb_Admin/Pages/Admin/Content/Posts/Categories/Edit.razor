@@ -4,75 +4,406 @@
 @inject IAdminPostCategoryService AdminPostCategoryService
 @inject NavigationManager Nav
 
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
-            <h1>@(IsEditMode ? "Sửa chuyên mục" : "Thêm chuyên mục")</h1>
-            <p>Quản lý chuyên mục bài viết theo cấu trúc cha/con.</p>
-        </div>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
-        @if (model == null || allCategories == null)
-        {
-            <p>Đang tải...</p>
-        }
-        else
-        {
-            <div class="admin-form-grid">
-                <label>
-                    Mã chuyên mục
-                    <input class="admin-input" @bind="model.CategoryCode" placeholder="VD: TIN01" />
-                </label>
-                <label>
-                    Tên chuyên mục
-                    <input class="admin-input" @bind="model.CategoryName" placeholder="VD: Chi bộ" />
-                </label>
-                <label>
-                    Slug
-                    <input class="admin-input" @bind="model.Slug" placeholder="chi-bo" />
-                </label>
-                <label>
-                    Chuyên mục cha
-                    <select class="admin-input" @bind="model.ParentId">
-                        <option value="">-- Không có --</option>
-                        @foreach (var option in ParentOptions)
-                        {
-                            <option value="@option.Item1">@option.Item2</option>
-                        }
-                    </select>
-                </label>
-                <label>
-                    Thứ tự
-                    <input class="admin-input" type="number" @bind="model.SortOrder" />
-                </label>
-                <label>
-                    Trạng thái
-                    <select class="admin-input" @bind="IsActiveText">
-                        <option value="true">Đang bật</option>
-                        <option value="false">Tắt</option>
-                    </select>
-                </label>
-                <label class="span-2">
-                    Mô tả
-                    <textarea class="admin-input" rows="4" @bind="model.Description"></textarea>
-                </label>
-            </div>
+    :root {
+        --pc-bg: #f4f6fb;
+        --pc-surface: #ffffff;
+        --pc-surface-2: #f8fafd;
+        --pc-border: #e4e9f2;
+        --pc-border-focus: #3b6ef6;
+        --pc-primary: #3b6ef6;
+        --pc-primary-hover: #2554e0;
+        --pc-primary-soft: #eef2fe;
+        --pc-text: #0f1b35;
+        --pc-text-2: #5a6a8a;
+        --pc-text-3: #a0aec0;
+        --pc-radius: 14px;
+        --pc-radius-sm: 9px;
+        --pc-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --pc-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
+        --pc-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
 
-            <div class="admin-preview-box">
-                <h3>Cây danh mục hiện có</h3>
-                <ul class="simple-list">
-                    @foreach (var item in GetTreeLines(allCategories.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder), 0))
-                    {
-                        <li>@((MarkupString)item)</li>
-                    }
-                </ul>
-            </div>
+    .pc-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-            <div class="admin-form-actions">
-                <button class="btn btn-primary" type="button" @onclick="SaveAsync">Lưu</button>
-                <button class="btn btn-secondary" type="button" @onclick="GoBack">Quay lại</button>
-            </div>
-        }
+    .pc-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--pc-bg);
+        min-height: 100vh;
+        color: var(--pc-text);
+    }
+
+    /* Breadcrumb */
+    .pc-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        gap: 12px;
+    }
+
+    .pc-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--pc-text-2);
+    }
+
+    .pc-breadcrumb a {
+        color: var(--pc-primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .pc-breadcrumb a:hover { text-decoration: underline; }
+
+    .pc-breadcrumb-sep { color: var(--pc-text-3); }
+
+    .pc-breadcrumb-current {
+        color: var(--pc-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .pc-hero {
+        padding: 24px 32px 0;
+    }
+
+    .pc-hero h1 {
+        font-family: 'Instrument Serif', serif;
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -.3px;
+        line-height: 1.2;
+    }
+
+    .pc-hero p {
+        margin-top: 4px;
+        font-size: 13.5px;
+        color: var(--pc-text-2);
+    }
+
+    /* Layout */
+    .pc-layout {
+        display: grid;
+        grid-template-columns: 1fr 340px;
+        gap: 24px;
+        padding: 24px 32px 40px;
+        max-width: 1400px;
+    }
+
+    @@media (max-width: 1100px) {
+        .pc-layout { grid-template-columns: 1fr; }
+        .pc-topbar, .pc-hero { padding-left: 20px; padding-right: 20px; }
+        .pc-layout { padding: 20px; }
+    }
+
+    /* Card */
+    .pc-card {
+        background: var(--pc-surface);
+        border: 1px solid var(--pc-border);
+        border-radius: var(--pc-radius);
+        box-shadow: var(--pc-shadow);
+        overflow: hidden;
+        animation: pc-fadeup .3s ease both;
+    }
+
+    .pc-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 16px;
+        border-bottom: 1px solid var(--pc-border);
+        background: var(--pc-surface-2);
+    }
+
+    .pc-card-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--pc-primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--pc-primary);
+        flex-shrink: 0;
+    }
+
+    .pc-card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--pc-text);
+    }
+
+    .pc-card-body { padding: 22px; }
+
+    /* Form */
+    .pc-field { margin-bottom: 18px; }
+    .pc-field:last-child { margin-bottom: 0; }
+
+    .pc-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--pc-text-2);
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .pc-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--pc-border);
+        border-radius: var(--pc-radius-sm);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--pc-text);
+        background: var(--pc-surface);
+        transition: border-color var(--pc-transition), box-shadow var(--pc-transition);
+        outline: none;
+    }
+
+    .pc-input:focus {
+        border-color: var(--pc-border-focus);
+        box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+    }
+
+    textarea.pc-input {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+
+    select.pc-input { cursor: pointer; }
+
+    /* Buttons */
+    .pc-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        border-radius: var(--pc-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--pc-transition);
+        white-space: nowrap;
+    }
+
+    .pc-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .pc-btn-primary {
+        background: var(--pc-primary);
+        color: white;
+        border-color: var(--pc-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+    .pc-btn-primary:hover:not(:disabled) {
+        background: var(--pc-primary-hover);
+        border-color: var(--pc-primary-hover);
+        box-shadow: 0 4px 18px rgba(59,110,246,.35);
+        transform: translateY(-1px);
+    }
+
+    .pc-btn-ghost {
+        background: transparent;
+        color: var(--pc-text-2);
+        border-color: var(--pc-border);
+    }
+
+    .pc-btn-ghost:hover:not(:disabled) {
+        border-color: var(--pc-text-2);
+        color: var(--pc-text);
+        background: var(--pc-surface-2);
+    }
+
+    .pc-btn-sm { padding: 7px 14px; font-size: 12.5px; }
+
+    /* Tree view (preview) */
+    .pc-tree-card {
+        background: var(--pc-surface);
+        border: 1px solid var(--pc-border);
+        border-radius: var(--pc-radius);
+        padding: 22px;
+        box-shadow: var(--pc-shadow);
+        font-size: 13px;
+        color: var(--pc-text-2);
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+    .pc-tree-card h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--pc-text);
+        margin-bottom: 16px;
+    }
+
+    .pc-tree-item {
+        padding: 4px 0;
+        font-size: 13px;
+        white-space: nowrap;
+    }
+
+    .pc-tree-item span.slug {
+        color: var(--pc-text-3);
+        font-size: 12px;
+        margin-left: 6px;
+    }
+
+    .pc-action-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    /* Loading */
+    .pc-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 50vh;
+        color: var(--pc-text-2);
+        font-size: 14px;
+    }
+
+    .pc-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--pc-border);
+        border-top-color: var(--pc-primary);
+        border-radius: 50%;
+        animation: pc-spin .75s linear infinite;
+    }
+
+    @@keyframes pc-spin { to { transform: rotate(360deg); } }
+    @@keyframes pc-fadeup {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .pc-main-col > .pc-card { animation-delay: .06s; }
+    .pc-side-col > .pc-card { animation-delay: .1s; }
+</style>
+
+<div class="pc-root">
+    <!-- Breadcrumb -->
+    <div class="pc-topbar">
+        <nav class="pc-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="pc-breadcrumb-sep">›</span>
+            <a href="/admin/post-categories">Chuyên mục bài viết</a>
+            <span class="pc-breadcrumb-sep">›</span>
+            <span class="pc-breadcrumb-current">@(IsEditMode ? "Chỉnh sửa" : "Tạo mới")</span>
+        </nav>
+        <button class="pc-btn pc-btn-ghost pc-btn-sm" type="button" @onclick="GoBack">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+            Quay lại
+        </button>
     </div>
+
+    <!-- Hero -->
+    <div class="pc-hero">
+        <h1>@(IsEditMode ? "Sửa chuyên mục" : "Thêm chuyên mục")</h1>
+        <p>Quản lý chuyên mục bài viết theo cấu trúc cha/con.</p>
+    </div>
+
+    @if (model == null || allCategories == null)
+    {
+        <div class="pc-loading">
+            <div class="pc-spinner"></div>
+            <span>Đang tải dữ liệu...</span>
+        </div>
+    }
+    else
+    {
+        <div class="pc-layout">
+            <!-- Form cột trái -->
+            <div class="pc-main-col">
+                <div class="pc-card">
+                    <div class="pc-card-header">
+                        <div class="pc-card-header-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        </div>
+                        <h2>Thông tin chuyên mục</h2>
+                    </div>
+                    <div class="pc-card-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="pc-field">
+                                <label class="pc-label">Mã chuyên mục</label>
+                                <input class="pc-input" @bind="model.CategoryCode" placeholder="VD: TIN01" />
+                            </div>
+                            <div class="pc-field">
+                                <label class="pc-label">Tên chuyên mục</label>
+                                <input class="pc-input" @bind="model.CategoryName" placeholder="VD: Chi bộ" />
+                            </div>
+                            <div class="pc-field">
+                                <label class="pc-label">Slug</label>
+                                <input class="pc-input" @bind="model.Slug" placeholder="chi-bo" />
+                            </div>
+                            <div class="pc-field">
+                                <label class="pc-label">Chuyên mục cha</label>
+                                <select class="pc-input" @bind="model.ParentId">
+                                    <option value="">-- Không có --</option>
+                                    @foreach (var option in ParentOptions)
+                                    {
+                                        <option value="@option.Item1">@option.Item2</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="pc-field">
+                                <label class="pc-label">Thứ tự</label>
+                                <input class="pc-input" type="number" @bind="model.SortOrder" min="0" />
+                            </div>
+                            <div class="pc-field">
+                                <label class="pc-label">Trạng thái</label>
+                                <select class="pc-input" @bind="IsActiveText">
+                                    <option value="true">Đang bật</option>
+                                    <option value="false">Tắt</option>
+                                </select>
+                            </div>
+                            <div class="pc-field" style="grid-column:1/-1;">
+                                <label class="pc-label">Mô tả</label>
+                                <textarea class="pc-input" rows="4" @bind="model.Description" placeholder="Mô tả về chuyên mục..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="pc-action-bar">
+                            <button type="button" class="pc-btn pc-btn-primary" @onclick="SaveAsync">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                                Lưu
+                            </button>
+                            <button type="button" class="pc-btn pc-btn-ghost" @onclick="GoBack">Hủy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cây danh mục cột phải -->
+            <div class="pc-side-col">
+                <div class="pc-tree-card">
+                    <h3>Cây danh mục hiện có</h3>
+                    @foreach (var line in GetTreeLines(allCategories.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder), 0))
+                    {
+                        <div class="pc-tree-item">@((MarkupString)line)</div>
+                    }
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -132,7 +463,7 @@
         foreach (var root in roots)
         {
             var indent = new string('·', level * 2);
-            yield return $"{indent}{root.CategoryName} <small style='color:#64748b'>({root.Slug})</small>";
+            yield return $"{indent}{root.CategoryName} <span class=\"slug\">({root.Slug})</span>";
             var children = allCategories?.Where(x => x.ParentId == root.Id).OrderBy(x => x.SortOrder) ?? Enumerable.Empty<AdminPostCategoryItem>();
             foreach (var child in GetTreeLines(children, level + 1))
             {

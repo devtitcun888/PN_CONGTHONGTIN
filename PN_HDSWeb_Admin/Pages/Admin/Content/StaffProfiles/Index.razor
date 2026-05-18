@@ -5,88 +5,685 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+    :root {
+        --pf-bg: #f4f6fb;
+        --pf-surface: #ffffff;
+        --pf-surface-2: #f8fafd;
+        --pf-border: #e4e9f2;
+        --pf-border-focus: #3b6ef6;
+        --pf-primary: #3b6ef6;
+        --pf-primary-hover: #2554e0;
+        --pf-primary-soft: #eef2fe;
+        --pf-text: #0f1b35;
+        --pf-text-2: #5a6a8a;
+        --pf-text-3: #a0aec0;
+        --pf-danger: #e53e3e;
+        --pf-danger-soft: #fff5f5;
+        --pf-success: #22c55e;
+        --pf-success-soft: #f0fdf4;
+        --pf-warning: #f59e0b;
+        --pf-radius: 14px;
+        --pf-radius-sm: 9px;
+        --pf-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --pf-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .pf-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .pf-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--pf-bg);
+        min-height: 100vh;
+        color: var(--pf-text);
+    }
+
+    /* Breadcrumb */
+    .pf-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .pf-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--pf-text-2);
+    }
+
+        .pf-breadcrumb a {
+            color: var(--pf-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .pf-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .pf-breadcrumb-sep {
+        color: var(--pf-text-3);
+    }
+
+    .pf-breadcrumb-current {
+        color: var(--pf-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .pf-hero {
+        padding: 20px 32px 0;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .pf-hero-text h1 {
+        font-family: 'Instrument Serif', serif;
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -.3px;
+        line-height: 1.2;
+    }
+
+    .pf-hero-text p {
+        margin-top: 4px;
+        font-size: 13.5px;
+        color: var(--pf-text-2);
+    }
+
+    /* Toolbar */
+    .pf-toolbar {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 20px 32px 0;
+        flex-wrap: wrap;
+    }
+
+    .pf-search-wrap {
+        position: relative;
+        flex: 1;
+        min-width: 200px;
+        max-width: 340px;
+    }
+
+    .pf-search-icon {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--pf-text-3);
+        display: flex;
+        align-items: center;
+    }
+
+    .pf-input {
+        width: 100%;
+        padding: 9px 14px 9px 38px;
+        border: 1.5px solid var(--pf-border);
+        border-radius: var(--pf-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        color: var(--pf-text);
+        background: var(--pf-surface);
+        outline: none;
+        transition: border-color var(--pf-transition), box-shadow var(--pf-transition);
+    }
+
+        .pf-input:focus {
+            border-color: var(--pf-border-focus);
+            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+        }
+
+        .pf-input::placeholder {
+            color: var(--pf-text-3);
+        }
+
+    .pf-select {
+        padding: 9px 14px;
+        border: 1.5px solid var(--pf-border);
+        border-radius: var(--pf-radius-sm);
+        font-size: 13.5px;
+        background: var(--pf-surface);
+        color: var(--pf-text);
+        cursor: pointer;
+        outline: none;
+        transition: border-color var(--pf-transition), box-shadow var(--pf-transition);
+        min-width: 160px;
+    }
+
+        .pf-select:focus {
+            border-color: var(--pf-border-focus);
+            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+        }
+
+    .pf-spacer {
+        flex: 1;
+    }
+
+    /* Buttons */
+    .pf-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 9px 18px;
+        border-radius: var(--pf-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--pf-transition);
+        white-space: nowrap;
+    }
+
+        .pf-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+    .pf-btn-primary {
+        background: var(--pf-primary);
+        color: white;
+        border-color: var(--pf-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+        .pf-btn-primary:hover:not(:disabled) {
+            background: var(--pf-primary-hover);
+            border-color: var(--pf-primary-hover);
+            box-shadow: 0 4px 18px rgba(59,110,246,.35);
+            transform: translateY(-1px);
+        }
+
+    .pf-btn-ghost {
+        background: var(--pf-surface);
+        color: var(--pf-text-2);
+        border-color: var(--pf-border);
+    }
+
+        .pf-btn-ghost:hover:not(:disabled) {
+            border-color: var(--pf-text-2);
+            color: var(--pf-text);
+            background: var(--pf-surface-2);
+        }
+
+    .pf-btn-icon {
+        background: none;
+        color: var(--pf-text-2);
+        border: none;
+        padding: 5px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 13px;
+        transition: all var(--pf-transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        font-weight: 600;
+    }
+
+        .pf-btn-icon:hover {
+            background: var(--pf-primary-soft);
+            color: var(--pf-primary);
+        }
+
+    .pf-btn-danger-ghost {
+        background: none;
+        color: var(--pf-danger);
+        border: none;
+        padding: 5px 8px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: 13px;
+        transition: background var(--pf-transition);
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+    }
+
+        .pf-btn-danger-ghost:hover {
+            background: var(--pf-danger-soft);
+        }
+
+    /* Content */
+    .pf-content {
+        padding: 20px 32px 40px;
+    }
+
+    /* Card */
+    .pf-card {
+        background: var(--pf-surface);
+        border: 1px solid var(--pf-border);
+        border-radius: var(--pf-radius);
+        box-shadow: var(--pf-shadow);
+        overflow: hidden;
+        animation: pf-fadeup .35s ease both;
+    }
+
+    @@keyframes pf-fadeup {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Table */
+    .pf-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+        .pf-table thead tr {
+            background: var(--pf-surface-2);
+            border-bottom: 1px solid var(--pf-border);
+        }
+
+        .pf-table th {
+            padding: 11px 16px;
+            font-size: 11.5px;
+            font-weight: 700;
+            color: var(--pf-text-3);
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+            .pf-table th:last-child {
+                text-align: right;
+            }
+
+        .pf-table tbody tr {
+            border-bottom: 1px solid var(--pf-border);
+            transition: background var(--pf-transition);
+        }
+
+            .pf-table tbody tr:last-child {
+                border-bottom: none;
+            }
+
+            .pf-table tbody tr:hover {
+                background: var(--pf-surface-2);
+            }
+
+        .pf-table td {
+            padding: 14px 16px;
+            font-size: 13.5px;
+            color: var(--pf-text);
+            vertical-align: middle;
+        }
+
+            .pf-table td:last-child {
+                text-align: right;
+            }
+
+    /* Avatar cell */
+    .pf-avatar {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--pf-radius-sm);
+        object-fit: cover;
+        background: var(--pf-surface-2);
+        border: 1px solid var(--pf-border);
+    }
+
+    .pf-avatar-placeholder {
+        width: 48px;
+        height: 48px;
+        border-radius: var(--pf-radius-sm);
+        background: #e2e8f0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    /* Name cell */
+    .pf-name {
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .pf-email {
+        font-size: 12px;
+        color: var(--pf-text-3);
+        margin-top: 2px;
+    }
+
+    /* Badges */
+    .pf-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+        .pf-badge .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+
+    .badge-active {
+        background: var(--pf-success-soft);
+        color: #166534;
+    }
+
+        .badge-active .dot {
+            background: var(--pf-success);
+        }
+
+    .badge-inactive {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+        .badge-inactive .dot {
+            background: #94a3b8;
+        }
+
+    .badge-public {
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
+
+        .badge-public .dot {
+            background: #3b82f6;
+        }
+
+    .badge-private {
+        background: #f8fafc;
+        color: #64748b;
+    }
+
+        .badge-private .dot {
+            background: #cbd5e1;
+        }
+
+    /* Actions */
+    .pf-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 2px;
+    }
+
+    /* Loading / Empty */
+    .pf-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 40vh;
+        color: var(--pf-text-2);
+        font-size: 14px;
+    }
+
+    .pf-spinner {
+        width: 26px;
+        height: 26px;
+        border: 3px solid var(--pf-border);
+        border-top-color: var(--pf-primary);
+        border-radius: 50%;
+        animation: pf-spin .75s linear infinite;
+    }
+
+    @@keyframes pf-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .pf-empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 24px;
+        text-align: center;
+        color: var(--pf-text-3);
+    }
+
+    .pf-empty-icon {
+        width: 56px;
+        height: 56px;
+        background: var(--pf-surface-2);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        color: var(--pf-text-3);
+    }
+
+    .pf-empty h3 {
+        font-size: 15px;
+        color: var(--pf-text-2);
+        font-weight: 600;
+        margin-bottom: 6px;
+    }
+
+    .pf-empty p {
+        font-size: 13px;
+    }
+
+    @@media (max-width: 768px) {
+        .pf-topbar, .pf-hero, .pf-toolbar, .pf-content {
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .pf-hero {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+    }
+</style>
+
+<div class="pf-root">
+    <!-- Breadcrumb -->
+    <div class="pf-topbar">
+        <nav class="pf-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="pf-breadcrumb-sep">›</span>
+            <span class="pf-breadcrumb-current">Cơ cấu tổ chức</span>
+        </nav>
+    </div>
+
+    <!-- Hero -->
+    <div class="pf-hero">
+        <div class="pf-hero-text">
             <h1>Cơ cấu tổ chức</h1>
             <p>Quản lý hồ sơ nhân sự, ban giám hiệu và các bộ phận hiển thị công khai.</p>
         </div>
+        <button class="pf-btn pf-btn-primary" @onclick="GoCreate">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+            Thêm mới
+        </button>
+    </div>
 
-        <div class="search-panel">
-            <input class="public-search-input" @bind="keyword" placeholder="Tìm theo tên / vị trí / trình độ" />
-            <select class="public-search-input" @bind="publicFilter">
-                <option value="">Tất cả hiển thị</option>
-                <option value="true">Công khai</option>
-                <option value="false">Ẩn</option>
-            </select>
-            <select class="public-search-input" @bind="activeFilter">
-                <option value="">Tất cả trạng thái</option>
-                <option value="true">Đang bật</option>
-                <option value="false">Tắt</option>
-            </select>
-            <button class="public-search-btn" type="button" @onclick="SearchAsync">Tìm</button>
-            <button class="btn btn-secondary" type="button" @onclick="ResetAsync">Xóa lọc</button>
-            <button class="btn btn-primary" type="button" @onclick="GoCreate">Thêm mới</button>
+    <!-- Toolbar -->
+    <div class="pf-toolbar">
+        <div class="pf-search-wrap">
+            <span class="pf-search-icon">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            </span>
+            <input class="pf-input" @bind="keyword" @bind:event="oninput" placeholder="Tìm theo tên, vị trí, trình độ..." />
         </div>
 
+        <select class="pf-select" @bind="publicFilter">
+            <option value="">Tất cả hiển thị</option>
+            <option value="true">Công khai</option>
+            <option value="false">Ẩn</option>
+        </select>
+
+        <select class="pf-select" @bind="activeFilter">
+            <option value="">Tất cả trạng thái</option>
+            <option value="true">Đang bật</option>
+            <option value="false">Tắt</option>
+        </select>
+
+        <button class="pf-btn pf-btn-ghost" @onclick="SearchAsync">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
+            Tìm
+        </button>
+
+        <button class="pf-btn pf-btn-ghost" @onclick="ResetAsync">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 .49-3.51" /></svg>
+            Xóa lọc
+        </button>
+    </div>
+
+    <!-- Content -->
+    <div class="pf-content">
         @if (items == null)
         {
-            <p>Đang tải...</p>
+            <div class="pf-loading">
+                <div class="pf-spinner"></div>
+                <span>Đang tải dữ liệu...</span>
+            </div>
         }
         else if (!items.Any())
         {
-            <p>Chưa có hồ sơ nào.</p>
+            <div class="pf-card">
+                <div class="pf-empty">
+                    <div class="pf-empty-icon">
+                        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" /><circle cx="9" cy="7" r="4" /><path d="M23 21v-2a4 4 0 0 0-3-3.87" /><path d="M16 3.13a4 4 0 0 1 0 7.75" /></svg>
+                    </div>
+                    <h3>Chưa có hồ sơ nhân sự nào</h3>
+                    <p>Nhấn "Thêm mới" để tạo hồ sơ đầu tiên.</p>
+                </div>
+            </div>
         }
         else
         {
-            <table>
-                <thead>
-                    <tr>
-                        <th>Ảnh</th>
-                        <th>Họ tên</th>
-                        <th>Nhóm</th>
-                        <th>Vị trí</th>
-                        <th>Trình độ</th>
-                        <th>Thứ tự</th>
-                        <th>Công khai</th>
-                        <th>Trạng thái</th>
-                        <th>Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in items)
-                    {
+            <div class="pf-card">
+                <table class="pf-table">
+                    <thead>
                         <tr>
-                            <td>
-                                @if (!string.IsNullOrWhiteSpace(item.AvatarUrl))
-                                {
-                                    <img src="@item.AvatarUrl" alt="@item.FullName" style="width:56px;height:56px;object-fit:cover;border-radius:12px;" />
-                                }
-                                else
-                                {
-                                    <div style="width:56px;height:56px;border-radius:12px;background:#e2e8f0;display:grid;place-items:center;">No</div>
-                                }
-                            </td>
-                            <td>
-                                <strong>@item.FullName</strong><br />
-                                <small>@item.Email</small>
-                            </td>
-                            <td>@item.GroupName</td>
-                            <td>@item.PositionName</td>
-                            <td>@item.Qualification</td>
-                            <td>@item.SortOrder</td>
-                            <td>@(item.IsPublic ? "Có" : "Không")</td>
-                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
-                            <td>
-                                <button @onclick="() => Edit(item)">Sửa</button>
-                                <button @onclick="() => TogglePublicAsync(item)">@(item.IsPublic ? "Ẩn" : "Công khai")</button>
-                                <button @onclick="() => ToggleActiveAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
-                                <button @onclick="() => DeleteAsync(item)">Xóa</button>
-                            </td>
+                            <th style="width:56px;">Ảnh</th>
+                            <th>Họ tên</th>
+                            <th>Nhóm</th>
+                            <th>Vị trí</th>
+                            <th>Trình độ</th>
+                            <th>Thứ tự</th>
+                            <th>Công khai</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in items)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(item.AvatarUrl))
+                                    {
+                                        <img class="pf-avatar" src="@item.AvatarUrl" alt="@item.FullName" />
+                                    }
+                                    else
+                                    {
+                                        <div class="pf-avatar-placeholder">@item.FullName?.FirstOrDefault()</div>
+                                    }
+                                </td>
+                                <td>
+                                    <div class="pf-name">@item.FullName</div>
+                                    @if (!string.IsNullOrWhiteSpace(item.Email))
+                                    {
+                                        <div class="pf-email">@item.Email</div>
+                                    }
+                                </td>
+                                <td>@item.GroupName</td>
+                                <td>@item.PositionName</td>
+                                <td>@item.Qualification</td>
+                                <td>@item.SortOrder</td>
+                                <td>
+                                    <span class="pf-badge @(item.IsPublic ? "badge-public" : "badge-private")">
+                                        <span class="dot"></span>
+                                        @(item.IsPublic ? "Công khai" : "Ẩn")
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="pf-badge @(item.IsActive ? "badge-active" : "badge-inactive")">
+                                        <span class="dot"></span>
+                                        @(item.IsActive ? "Đang bật" : "Tắt")
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="pf-actions">
+                                        <button class="pf-btn-icon" title="Sửa" @onclick="() => Edit(item)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" /><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" /></svg>
+                                            Sửa
+                                        </button>
+                                        <button class="pf-btn-icon" title="@(item.IsPublic ? "Ẩn" : "Công khai")" @onclick="() => TogglePublicAsync(item)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                @if (item.IsPublic)
+                                                {
+                                                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                                                    <line x1="1" y1="1" x2="23" y2="23" />
+                                                }
+                                                else
+                                                {
+                                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                    <circle cx="12" cy="12" r="3" />
+                                                }
+                                            </svg>
+                                            @(item.IsPublic ? "Ẩn" : "Công khai")
+                                        </button>
+                                        <button class="pf-btn-icon" title="@(item.IsActive ? "Tắt" : "Bật")" @onclick="() => ToggleActiveAsync(item)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                @if (item.IsActive)
+                                                {
+                                                    <path d="M18.36 6.64a9 9 0 1 0 0 12.72" />
+                                                    <line x1="12" y1="2" x2="12" y2="6" />
+                                                }
+                                                else
+                                                {
+                                                    <circle cx="12" cy="12" r="10" />
+                                                    <polyline points="12 6 12 12 16 14" />
+                                                }
+                                            </svg>
+                                            @(item.IsActive ? "Tắt" : "Bật")
+                                        </button>
+                                        <button class="pf-btn-danger-ghost" title="Xóa" @onclick="() => DeleteAsync(item)">
+                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6" /><path d="M10 11v6M14 11v6" /><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2" /></svg>
+                                            Xóa
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         }
     </div>
 </div>

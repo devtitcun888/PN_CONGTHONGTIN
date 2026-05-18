@@ -2,58 +2,388 @@
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminMenuService AdminMenuService
 @inject NavigationManager Nav
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
-            <h1>Menu</h1>
-            <p>Thêm mới hoặc chỉnh sửa menu của website.</p>
-        </div>
 
-        @if (model == null)
-        {
-            <p>Đang tải...</p>
-        }
-        else
-        {
-            <div class="admin-form-grid">
-                <label>
-                    Tên menu
-                    <input class="admin-input" @bind="model.MenuName" />
-                </label>
-                <label>
-                    Menu cha
-                    <input class="admin-input" @bind="model.ParentId" />
-                </label>
-                <label>
-                    URL
-                    <input class="admin-input" @bind="model.Url" />
-                </label>
-                <label>
-                    Target
-                    <select class="admin-input" @bind="model.Target">
-                        <option value="_self">_self</option>
-                        <option value="_blank">_blank</option>
-                    </select>
-                </label>
-                <label>
-                    Thứ tự
-                    <input class="admin-input" type="number" @bind="model.SortOrder" />
-                </label>
-                <label>
-                    Trạng thái
-                    <select class="admin-input" @bind="IsActiveText">
-                        <option value="true">Đang bật</option>
-                        <option value="false">Tắt</option>
-                    </select>
-                </label>
-            </div>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
-            <div class="admin-form-actions">
-                <button class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                <button class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
-            </div>
+    :root {
+        --me-bg: #f4f6fb;
+        --me-surface: #ffffff;
+        --me-surface-2: #f8fafd;
+        --me-border: #e4e9f2;
+        --me-border-focus: #3b6ef6;
+        --me-primary: #3b6ef6;
+        --me-primary-hover: #2554e0;
+        --me-primary-soft: #eef2fe;
+        --me-text: #0f1b35;
+        --me-text-2: #5a6a8a;
+        --me-text-3: #a0aec0;
+        --me-radius: 14px;
+        --me-radius-sm: 9px;
+        --me-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --me-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .me-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .me-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--me-bg);
+        min-height: 100vh;
+        color: var(--me-text);
+    }
+
+    /* Breadcrumb */
+    .me-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        gap: 12px;
+    }
+
+    .me-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--me-text-2);
+    }
+
+        .me-breadcrumb a {
+            color: var(--me-primary);
+            text-decoration: none;
+            font-weight: 500;
         }
+
+            .me-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .me-breadcrumb-sep {
+        color: var(--me-text-3);
+    }
+
+    .me-breadcrumb-current {
+        color: var(--me-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .me-hero {
+        padding: 24px 32px 0;
+    }
+
+        .me-hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -.3px;
+            line-height: 1.2;
+        }
+
+        .me-hero p {
+            margin-top: 4px;
+            font-size: 13.5px;
+            color: var(--me-text-2);
+        }
+
+    /* Layout */
+    .me-layout {
+        max-width: 800px;
+        padding: 24px 32px 40px;
+    }
+
+    @@media (max-width: 768px) {
+        .me-topbar, .me-hero {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .me-layout {
+            padding: 20px;
+        }
+    }
+
+    /* Card */
+    .me-card {
+        background: var(--me-surface);
+        border: 1px solid var(--me-border);
+        border-radius: var(--me-radius);
+        box-shadow: var(--me-shadow);
+        overflow: hidden;
+        animation: me-fadeup .3s ease both;
+    }
+
+    .me-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 16px;
+        border-bottom: 1px solid var(--me-border);
+        background: var(--me-surface-2);
+    }
+
+    .me-card-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--me-primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--me-primary);
+        flex-shrink: 0;
+    }
+
+    .me-card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--me-text);
+    }
+
+    .me-card-body {
+        padding: 22px;
+    }
+
+    /* Form */
+    .me-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .me-field {
+        margin-bottom: 18px;
+    }
+
+        .me-field:last-child {
+            margin-bottom: 0;
+        }
+
+    .me-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--me-text-2);
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .me-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--me-border);
+        border-radius: var(--me-radius-sm);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--me-text);
+        background: var(--me-surface);
+        transition: border-color var(--me-transition), box-shadow var(--me-transition);
+        outline: none;
+    }
+
+        .me-input:focus {
+            border-color: var(--me-border-focus);
+            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+        }
+
+    textarea.me-input {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+
+    select.me-input {
+        cursor: pointer;
+    }
+
+    /* Buttons */
+    .me-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        border-radius: var(--me-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--me-transition);
+        white-space: nowrap;
+    }
+
+        .me-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+    .me-btn-primary {
+        background: var(--me-primary);
+        color: white;
+        border-color: var(--me-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+        .me-btn-primary:hover:not(:disabled) {
+            background: var(--me-primary-hover);
+            border-color: var(--me-primary-hover);
+            box-shadow: 0 4px 18px rgba(59,110,246,.35);
+            transform: translateY(-1px);
+        }
+
+    .me-btn-ghost {
+        background: transparent;
+        color: var(--me-text-2);
+        border-color: var(--me-border);
+    }
+
+        .me-btn-ghost:hover:not(:disabled) {
+            border-color: var(--me-text-2);
+            color: var(--me-text);
+            background: var(--me-surface-2);
+        }
+
+    .me-btn-sm {
+        padding: 7px 14px;
+        font-size: 12.5px;
+    }
+
+    .me-action-bar {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    /* Loading */
+    .me-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 50vh;
+        color: var(--me-text-2);
+        font-size: 14px;
+    }
+
+    .me-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--me-border);
+        border-top-color: var(--me-primary);
+        border-radius: 50%;
+        animation: me-spin .75s linear infinite;
+    }
+
+    @@keyframes me-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes me-fadeup {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="me-root">
+    <!-- Breadcrumb -->
+    <div class="me-topbar">
+        <nav class="me-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="me-breadcrumb-sep">›</span>
+            <a href="/admin/menus">Menu</a>
+            <span class="me-breadcrumb-sep">›</span>
+            <span class="me-breadcrumb-current">@(string.IsNullOrWhiteSpace(Id) ? "Tạo mới" : "Chỉnh sửa")</span>
+        </nav>
+        <button class="me-btn me-btn-ghost me-btn-sm" type="button" @onclick="GoBack">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+            Quay lại
+        </button>
     </div>
+
+    <!-- Hero -->
+    <div class="me-hero">
+        <h1>@(string.IsNullOrWhiteSpace(Id) ? "Thêm menu" : "Sửa menu")</h1>
+        <p>Thêm mới hoặc chỉnh sửa menu của website.</p>
+    </div>
+
+    @if (model == null)
+    {
+        <div class="me-loading">
+            <div class="me-spinner"></div>
+            <span>Đang tải dữ liệu...</span>
+        </div>
+    }
+    else
+    {
+        <div class="me-layout">
+            <div class="me-card">
+                <div class="me-card-header">
+                    <div class="me-card-header-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                    </div>
+                    <h2>Thông tin menu</h2>
+                </div>
+                <div class="me-card-body">
+                    <div class="me-form-grid">
+                        <div class="me-field">
+                            <label class="me-label">Tên menu</label>
+                            <input class="me-input" @bind="model.MenuName" placeholder="Nhập tên menu..." />
+                        </div>
+                        <div class="me-field">
+                            <label class="me-label">Menu cha</label>
+                            <input class="me-input" @bind="model.ParentId" placeholder="Nhập ID menu cha..." />
+                        </div>
+                        <div class="me-field">
+                            <label class="me-label">URL</label>
+                            <input class="me-input" @bind="model.Url" placeholder="Nhập đường dẫn..." />
+                        </div>
+                        <div class="me-field">
+                            <label class="me-label">Target</label>
+                            <select class="me-input" @bind="model.Target">
+                                <option value="_self">_self</option>
+                                <option value="_blank">_blank</option>
+                            </select>
+                        </div>
+                        <div class="me-field">
+                            <label class="me-label">Thứ tự</label>
+                            <input class="me-input" type="number" @bind="model.SortOrder" min="0" />
+                        </div>
+                        <div class="me-field">
+                            <label class="me-label">Trạng thái</label>
+                            <select class="me-input" @bind="IsActiveText">
+                                <option value="true">Đang bật</option>
+                                <option value="false">Tắt</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="me-action-bar">
+                        <button type="button" class="me-btn me-btn-primary" @onclick="SaveAsync">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                            Lưu
+                        </button>
+                        <button type="button" class="me-btn me-btn-ghost" @onclick="GoBack">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -91,8 +421,5 @@
         Nav.NavigateTo("/admin/menus");
     }
 
-    private void GoBack()
-    {
-        Nav.NavigateTo("/admin/menus");
-    }
+    private void GoBack() => Nav.NavigateTo("/admin/menus");
 }

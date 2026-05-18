@@ -10,7 +10,9 @@ public interface IAdminPostTagService
     Task<List<AdminPostTagItem>> GetTagsAsync(string maTruongBo);
     Task<List<AdminPostTagItem>> GetActiveTagsAsync(string maTruongBo);
     Task<AdminPostTagDetail?> GetTagByIdAsync(string id);
+    Task<AdminPostTagDetail?> GetTagBySlugAsync(string maTruongBo, string slug);
     Task<bool> CreateTagAsync(AdminPostTagDetail model);
+    Task<bool> EnsureTagAsync(AdminPostTagDetail model);
     Task<bool> UpdateTagAsync(AdminPostTagDetail model);
     Task<bool> DeleteTagAsync(string id);
     Task<bool> SetActiveAsync(string id, bool isActive);
@@ -71,14 +73,22 @@ public class AdminPostTagService : IAdminPostTagService
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
         if (dt.Rows.Count == 0) return null;
         var row = dt.Rows[0];
-        return new AdminPostTagDetail
-        {
-            Id = row["id"]?.ToString(),
-            MaTruongBo = row["ma_truong_bo"]?.ToString(),
-            TagName = row["tag_name"]?.ToString(),
-            Slug = row["slug"]?.ToString(),
-            IsActive = row["is_active"] != DBNull.Value && Convert.ToBoolean(row["is_active"])
-        };
+        return MapDetail(row);
+    }
+
+    public async Task<AdminPostTagDetail?> GetTagBySlugAsync(string maTruongBo, string slug)
+    {
+        var sql = $@"
+            SELECT id, ma_truong_bo, tag_name, slug, is_active
+            FROM post_tags
+            WHERE ma_truong_bo = '{Escape(maTruongBo)}'
+              AND slug = '{Escape(slug)}'
+              AND is_deleted = FALSE
+            LIMIT 1";
+
+        var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+        if (dt.Rows.Count == 0) return null;
+        return MapDetail(dt.Rows[0]);
     }
 
     public async Task<bool> CreateTagAsync(AdminPostTagDetail model)
@@ -90,6 +100,18 @@ public class AdminPostTagService : IAdminPostTagService
             ('{Escape(model.MaTruongBo)}', '{Escape(model.TagName)}', '{Escape(model.Slug)}', {(model.IsActive ? "TRUE" : "FALSE")}, NOW(), NOW(), FALSE)";
 
         return await RunAsync(sql, "CreateTagAsync");
+    }
+
+    public async Task<bool> EnsureTagAsync(AdminPostTagDetail model)
+    {
+        var existing = await GetTagBySlugAsync(model.MaTruongBo ?? string.Empty, model.Slug ?? string.Empty);
+        if (existing != null)
+        {
+            model.Id = existing.Id;
+            return true;
+        }
+
+        return await CreateTagAsync(model);
     }
 
     public async Task<bool> UpdateTagAsync(AdminPostTagDetail model)
@@ -144,6 +166,15 @@ public class AdminPostTagService : IAdminPostTagService
     private static AdminPostTagItem MapItem(DataRow row) => new()
     {
         Id = row["id"]?.ToString(),
+        TagName = row["tag_name"]?.ToString(),
+        Slug = row["slug"]?.ToString(),
+        IsActive = row["is_active"] != DBNull.Value && Convert.ToBoolean(row["is_active"])
+    };
+
+    private static AdminPostTagDetail MapDetail(DataRow row) => new()
+    {
+        Id = row["id"]?.ToString(),
+        MaTruongBo = row["ma_truong_bo"]?.ToString(),
         TagName = row["tag_name"]?.ToString(),
         Slug = row["slug"]?.ToString(),
         IsActive = row["is_active"] != DBNull.Value && Convert.ToBoolean(row["is_active"])

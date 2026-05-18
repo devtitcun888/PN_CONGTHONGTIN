@@ -8,6 +8,7 @@ build_property.ProjectTypeGuids =
 build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PN_HDSWeb_Admin
 build_property.RootNamespace = PN_HDSWeb_Admin
@@ -52,6 +53,14 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Media/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xNZWRpYVxJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Tags/Edit.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xUYWdzXEVkaXQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/Posts/Tags/Index.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQ29udGVudFxQb3N0c1xUYWdzXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Content/StaffProfiles/Edit.razor]

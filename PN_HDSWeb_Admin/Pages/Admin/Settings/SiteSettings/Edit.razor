@@ -3,73 +3,412 @@
 @inject IAdminSiteSettingService AdminSiteSettingService
 @inject NavigationManager Nav
 
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
-            <h1>@(IsEditMode ? "Sửa cấu hình site" : "Thêm cấu hình site")</h1>
-            <p>Quản lý từng key cấu hình cho website theo đúng trường.</p>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+    :root {
+        --ss-bg: #f4f6fb;
+        --ss-surface: #ffffff;
+        --ss-surface-2: #f8fafd;
+        --ss-border: #e4e9f2;
+        --ss-border-focus: #3b6ef6;
+        --ss-primary: #3b6ef6;
+        --ss-primary-hover: #2554e0;
+        --ss-primary-soft: #eef2fe;
+        --ss-text: #0f1b35;
+        --ss-text-2: #5a6a8a;
+        --ss-text-3: #a0aec0;
+        --ss-radius: 14px;
+        --ss-radius-sm: 9px;
+        --ss-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --ss-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
+        --ss-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .ss-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ss-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--ss-bg);
+        min-height: 100vh;
+        color: var(--ss-text);
+    }
+
+    /* Topbar / Breadcrumb */
+    .ss-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        gap: 12px;
+    }
+
+    .ss-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--ss-text-2);
+    }
+
+    .ss-breadcrumb a {
+        color: var(--ss-primary);
+        text-decoration: none;
+        font-weight: 500;
+    }
+
+    .ss-breadcrumb a:hover { text-decoration: underline; }
+
+    .ss-breadcrumb-sep { color: var(--ss-text-3); }
+
+    .ss-breadcrumb-current {
+        color: var(--ss-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .ss-hero {
+        padding: 24px 32px 0;
+    }
+
+    .ss-hero h1 {
+        font-family: 'Instrument Serif', serif;
+        font-size: 28px;
+        font-weight: 400;
+        letter-spacing: -.3px;
+        line-height: 1.2;
+    }
+
+    .ss-hero p {
+        margin-top: 4px;
+        font-size: 13.5px;
+        color: var(--ss-text-2);
+    }
+
+    /* Layout */
+    .ss-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        padding: 24px 32px 40px;
+        max-width: 1400px;
+    }
+
+    @@media (max-width: 1100px) {
+        .ss-layout { grid-template-columns: 1fr; }
+        .ss-topbar, .ss-hero { padding-left: 20px; padding-right: 20px; }
+        .ss-layout { padding: 20px; }
+    }
+
+    /* Card */
+    .ss-card {
+        background: var(--ss-surface);
+        border: 1px solid var(--ss-border);
+        border-radius: var(--ss-radius);
+        box-shadow: var(--ss-shadow);
+        overflow: hidden;
+        animation: ss-fadeup .3s ease both;
+    }
+
+    .ss-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 16px;
+        border-bottom: 1px solid var(--ss-border);
+        background: var(--ss-surface-2);
+    }
+
+    .ss-card-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--ss-primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ss-primary);
+        flex-shrink: 0;
+    }
+
+    .ss-card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ss-text);
+    }
+
+    .ss-card-body { padding: 22px; }
+
+    /* Form */
+    .ss-field { margin-bottom: 18px; }
+    .ss-field:last-child { margin-bottom: 0; }
+
+    .ss-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ss-text-2);
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .ss-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--ss-border);
+        border-radius: var(--ss-radius-sm);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--ss-text);
+        background: var(--ss-surface);
+        transition: border-color var(--ss-transition), box-shadow var(--ss-transition);
+        outline: none;
+    }
+
+    .ss-input:focus {
+        border-color: var(--ss-border-focus);
+        box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+    }
+
+    textarea.ss-input {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+
+    select.ss-input { cursor: pointer; }
+
+    .ss-hint {
+        font-size: 12px;
+        color: var(--ss-text-3);
+        margin-top: 4px;
+        display: block;
+    }
+
+    /* Buttons */
+    .ss-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        border-radius: var(--ss-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--ss-transition);
+        white-space: nowrap;
+    }
+
+    .ss-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    .ss-btn-primary {
+        background: var(--ss-primary);
+        color: white;
+        border-color: var(--ss-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+    .ss-btn-primary:hover:not(:disabled) {
+        background: var(--ss-primary-hover);
+        border-color: var(--ss-primary-hover);
+        box-shadow: 0 4px 18px rgba(59,110,246,.35);
+        transform: translateY(-1px);
+    }
+
+    .ss-btn-ghost {
+        background: transparent;
+        color: var(--ss-text-2);
+        border-color: var(--ss-border);
+    }
+
+    .ss-btn-ghost:hover:not(:disabled) {
+        border-color: var(--ss-text-2);
+        color: var(--ss-text);
+        background: var(--ss-surface-2);
+    }
+
+    .ss-btn-sm { padding: 7px 14px; font-size: 12.5px; }
+
+    /* Actions */
+    .ss-action-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    /* Preview box (sidebar) */
+    .ss-preview-box {
+        background: var(--ss-surface);
+        border: 1px solid var(--ss-border);
+        border-radius: var(--ss-radius);
+        padding: 22px;
+        box-shadow: var(--ss-shadow);
+        font-size: 13px;
+        color: var(--ss-text-2);
+    }
+
+    .ss-preview-box h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ss-text);
+        margin-bottom: 16px;
+    }
+
+    .ss-preview-box p {
+        margin-bottom: 10px;
+        display: flex;
+        gap: 6px;
+    }
+
+    .ss-preview-box strong { font-weight: 600; }
+
+    .ss-preview-box ul {
+        list-style: none;
+        padding: 0;
+        margin-top: 12px;
+    }
+
+    .ss-preview-box li {
+        padding: 5px 0;
+        border-bottom: 1px solid var(--ss-border);
+        font-size: 13px;
+    }
+
+    /* Loading */
+    .ss-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 50vh;
+        color: var(--ss-text-2);
+        font-size: 14px;
+    }
+
+    .ss-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--ss-border);
+        border-top-color: var(--ss-primary);
+        border-radius: 50%;
+        animation: ss-spin .75s linear infinite;
+    }
+
+    @@keyframes ss-spin { to { transform: rotate(360deg); } }
+    @@keyframes ss-fadeup {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ss-main-col > .ss-card { animation-delay: .06s; }
+    .ss-side-col > .ss-card { animation-delay: .1s; }
+</style>
+
+<div class="ss-root">
+    <!-- Breadcrumb -->
+    <div class="ss-topbar">
+        <nav class="ss-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="ss-breadcrumb-sep">›</span>
+            <a href="/admin/settings">Cấu hình site</a>
+            <span class="ss-breadcrumb-sep">›</span>
+            <span class="ss-breadcrumb-current">@(IsEditMode ? "Chỉnh sửa" : "Tạo mới")</span>
+        </nav>
+        <button class="ss-btn ss-btn-ghost ss-btn-sm" type="button" @onclick="GoBack">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+            Quay lại
+        </button>
+    </div>
+
+    <!-- Hero -->
+    <div class="ss-hero">
+        <h1>@(IsEditMode ? "Sửa cấu hình site" : "Thêm cấu hình site")</h1>
+        <p>Quản lý từng key cấu hình cho website theo đúng trường.</p>
+    </div>
+
+    @if (model == null)
+    {
+        <div class="ss-loading">
+            <div class="ss-spinner"></div>
+            <span>Đang tải dữ liệu...</span>
         </div>
-
-        @if (model == null)
-        {
-            <p>Đang tải...</p>
-        }
-        else
-        {
-            <div class="admin-settings-layout">
-                <div class="admin-settings-form">
-                    <div class="admin-form-grid">
-                        <label>
-                            Key
-                            <input class="admin-input" @bind="model.SettingKey" placeholder="Ví dụ: site_name" />
-                            <small class="field-hint">Key nên viết dạng snake_case, không dấu, không khoảng trắng.</small>
-                        </label>
-
-                        <label>
-                            Group
-                            <select class="admin-input" @bind="model.SettingGroup">
-                                @foreach (var group in SettingGroups)
-                                {
-                                    <option value="@group">@group</option>
-                                }
-                            </select>
-                            <small class="field-hint">Nhóm giúp phân loại cấu hình theo nghiệp vụ.</small>
-                        </label>
-
-                        <label class="span-2">
-                            Value
-                            <textarea class="admin-input admin-textarea" rows="6" @bind="model.SettingValue" placeholder="Nội dung cấu hình hoặc JSON"></textarea>
-                            <small class="field-hint">Nếu là JSON, hãy dán đúng định dạng để public đọc được.</small>
-                        </label>
-
-                        <label class="span-2">
-                            Mô tả
-                            <textarea class="admin-input admin-textarea" rows="3" @bind="model.Description" placeholder="Mô tả ngắn về ý nghĩa của key"></textarea>
-                        </label>
-
-                        <label>
-                            Trạng thái
-                            <select class="admin-input" @bind="IsActiveText">
-                                <option value="true">Đang bật</option>
-                                <option value="false">Tắt</option>
-                            </select>
-                        </label>
+    }
+    else
+    {
+        <div class="ss-layout">
+            <!-- Cột chính: Form -->
+            <div class="ss-main-col">
+                <div class="ss-card">
+                    <div class="ss-card-header">
+                        <div class="ss-card-header-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        </div>
+                        <h2>Thông tin cấu hình</h2>
                     </div>
+                    <div class="ss-card-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="ss-field">
+                                <label class="ss-label">Key</label>
+                                <input class="ss-input" @bind="model.SettingKey" placeholder="Ví dụ: site_name" />
+                                <span class="ss-hint">Key nên viết dạng snake_case, không dấu, không khoảng trắng.</span>
+                            </div>
+                            <div class="ss-field">
+                                <label class="ss-label">Group</label>
+                                <select class="ss-input" @bind="model.SettingGroup">
+                                    @foreach (var group in SettingGroups)
+                                    {
+                                        <option value="@group">@group</option>
+                                    }
+                                </select>
+                                <span class="ss-hint">Nhóm giúp phân loại cấu hình theo nghiệp vụ.</span>
+                            </div>
+                            <div class="ss-field" style="grid-column:1/-1;">
+                                <label class="ss-label">Value</label>
+                                <textarea class="ss-input" rows="6" @bind="model.SettingValue" placeholder="Nội dung cấu hình hoặc JSON"></textarea>
+                                <span class="ss-hint">Nếu là JSON, hãy dán đúng định dạng để public đọc được.</span>
+                            </div>
+                            <div class="ss-field" style="grid-column:1/-1;">
+                                <label class="ss-label">Mô tả</label>
+                                <textarea class="ss-input" rows="3" @bind="model.Description" placeholder="Mô tả ngắn về ý nghĩa của key"></textarea>
+                            </div>
+                            <div class="ss-field">
+                                <label class="ss-label">Trạng thái</label>
+                                <select class="ss-input" @bind="IsActiveText">
+                                    <option value="true">Đang bật</option>
+                                    <option value="false">Tắt</option>
+                                </select>
+                            </div>
+                        </div>
 
-                    <div class="admin-form-actions">
-                        <button type="button" class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                        <button type="button" class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
+                        <div class="ss-action-bar">
+                            <button type="button" class="ss-btn ss-btn-primary" @onclick="SaveAsync">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                                Lưu
+                            </button>
+                            <button type="button" class="ss-btn ss-btn-ghost" @onclick="GoBack">Hủy</button>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <aside class="admin-preview-box">
+            <!-- Cột phụ: Gợi ý nhanh -->
+            <div class="ss-side-col">
+                <div class="ss-preview-box">
                     <h3>Gợi ý nhanh</h3>
                     <p><strong>Nhóm:</strong> @model.SettingGroup</p>
                     <p><strong>Key:</strong> @model.SettingKey</p>
                     <p><strong>Trạng thái:</strong> @(IsActiveText == "true" ? "Đang bật" : "Tắt")</p>
                     <div>
                         <strong>Ví dụ key chuẩn</strong>
-                        <ul class="simple-list">
+                        <ul>
                             <li>site_name</li>
                             <li>school_logo</li>
                             <li>contact_hotline</li>
@@ -77,10 +416,10 @@
                             <li>homepage_featured_posts_limit</li>
                         </ul>
                     </div>
-                </aside>
+                </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code {
@@ -133,8 +472,5 @@
         Nav.NavigateTo("/admin/settings");
     }
 
-    private void GoBack()
-    {
-        Nav.NavigateTo("/admin/settings");
-    }
+    private void GoBack() => Nav.NavigateTo("/admin/settings");
 }

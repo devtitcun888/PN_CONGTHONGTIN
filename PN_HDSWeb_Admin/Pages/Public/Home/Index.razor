@@ -2,164 +2,1468 @@
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicHomepageService HomepageService
 @inject IPublicPostCategoryService PublicPostCategoryService
+@inject IPublicDocumentService PublicDocumentService
+@implements IAsyncDisposable
 
-<div class="public-home public-home-layout">
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:wght@700;800&display=swap');
+
+    :root {
+        --hp-primary: #1a56db;
+        --hp-primary-dark: #1e40af;
+        --hp-primary-soft: #eff6ff;
+        --hp-red: #dc2626;
+        --hp-red-soft: #fef2f2;
+        --hp-green: #16a34a;
+        --hp-surface: #ffffff;
+        --hp-bg: #f0f4f9;
+        --hp-border: #e2e8f0;
+        --hp-text: #0f172a;
+        --hp-muted: #64748b;
+        --hp-shadow: 0 2px 12px rgba(15,23,42,.06);
+        --hp-shadow-lg: 0 6px 28px rgba(15,23,42,.10);
+        --hp-radius: 14px;
+        --hp-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .hp * {
+        box-sizing: border-box;
+    }
+
+    .hp {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        color: var(--hp-text);
+        background: var(--hp-bg);
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        padding-bottom: 28px;
+    }
+
+    /* ═══════════════════════════════
+           TOP AREA — hero + spotlight
+        ═══════════════════════════════ */
+    .hp-top-area {
+        display: grid;
+        grid-template-columns: 1.3fr 1fr;
+        gap: 16px;
+        align-items: stretch;
+    }
+
+    /* Hero panel — more compact */
+    .hp-lead-panel {
+        background: linear-gradient(130deg, #0f172a 0%, #1d4ed8 60%, #3b82f6 100%);
+        color: white;
+        border-radius: var(--hp-radius);
+        padding: 20px 24px;
+        box-shadow: var(--hp-shadow-lg);
+        overflow: hidden;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 0;
+    }
+
+        .hp-lead-panel::before {
+            content: "";
+            position: absolute;
+            inset: -30% -10% auto auto;
+            width: 260px;
+            height: 260px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.06);
+            pointer-events: none;
+        }
+
+        .hp-lead-panel::after {
+            content: "";
+            position: absolute;
+            bottom: -40px;
+            right: -20px;
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.05);
+            pointer-events: none;
+        }
+
+    .hp-lead-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: rgba(255,255,255,.15);
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        margin-bottom: 10px;
+        width: fit-content;
+    }
+
+    .hp-lead-title {
+        margin: 0 0 8px;
+        font-size: clamp(17px, 2.2vw, 24px);
+        line-height: 1.28;
+        font-weight: 800;
+        max-width: 28ch;
+    }
+
+    .hp-lead-text {
+        margin: 0 0 14px;
+        font-size: 12.5px;
+        line-height: 1.65;
+        color: rgba(255,255,255,.78);
+        max-width: 52ch;
+    }
+
+    .hp-lead-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .hp-lead-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 14px;
+        border-radius: 8px;
+        text-decoration: none;
+        font-size: 12.5px;
+        font-weight: 700;
+        transition: transform var(--hp-transition), background var(--hp-transition);
+    }
+
+    .hp-lead-btn-primary {
+        background: white;
+        color: var(--hp-primary-dark);
+    }
+
+    .hp-lead-btn-secondary {
+        background: rgba(255,255,255,.13);
+        color: white;
+        border: 1px solid rgba(255,255,255,.2);
+    }
+
+    .hp-lead-btn:hover {
+        transform: translateY(-1px);
+        text-decoration: none;
+    }
+
+    /* Spotlight panel */
+    .hp-spotlight {
+        background: white;
+        border: 1px solid var(--hp-border);
+        border-radius: var(--hp-radius);
+        box-shadow: var(--hp-shadow);
+        padding: 14px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hp-spotlight-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .hp-spotlight-title {
+        margin: 0;
+        font-size: 13.5px;
+        font-weight: 800;
+    }
+
+    .hp-spotlight-desc {
+        margin: 2px 0 0;
+        color: var(--hp-muted);
+        font-size: 11.5px;
+        line-height: 1.5;
+    }
+
+    .hp-spotlight-list {
+        display: grid;
+        gap: 7px;
+    }
+
+    .hp-spotlight-item {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 8px 10px;
+        border-radius: 10px;
+        background: #f8fbff;
+        border: 1px solid #eaf1fb;
+        text-decoration: none;
+        color: var(--hp-text);
+        transition: transform var(--hp-transition), border-color var(--hp-transition), box-shadow var(--hp-transition);
+    }
+
+        .hp-spotlight-item:hover {
+            transform: translateY(-1px);
+            border-color: rgba(29,78,216,.2);
+            box-shadow: 0 6px 18px rgba(15,23,42,.07);
+            text-decoration: none;
+        }
+
+    .hp-spotlight-icon {
+        width: 30px;
+        height: 30px;
+        border-radius: 8px;
+        background: var(--hp-primary-soft);
+        color: var(--hp-primary-dark);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .hp-spotlight-item-title {
+        margin: 0;
+        font-size: 12.5px;
+        line-height: 1.4;
+        font-weight: 600;
+        display: -webkit-box;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .hp-spotlight-item-meta {
+        font-size: 10.5px;
+        color: var(--hp-muted);
+        margin-top: 2px;
+    }
+
+    /* ═══════════════════════════════
+           FEATURED SLIDER — shorter
+        ═══════════════════════════════ */
+    .hp-featured {
+        position: relative;
+        border-radius: var(--hp-radius);
+        overflow: hidden;
+        box-shadow: var(--hp-shadow-lg);
+        background: #0f172a;
+        height: 240px; /* Fixed compact height */
+    }
+
+    .hp-slide {
+        position: absolute;
+        inset: 0;
+        opacity: 0;
+        transition: opacity .6s ease;
+        pointer-events: none;
+    }
+
+        .hp-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+    .hp-slide-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .hp-slide-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(90deg, rgba(10,18,40,.9) 0%, rgba(10,18,40,.55) 50%, rgba(10,18,40,.1) 100%);
+    }
+
+    .hp-slide-content {
+        position: absolute;
+        top: 50%;
+        left: 0;
+        transform: translateY(-50%);
+        padding: 18px 36px;
+        max-width: 60%;
+    }
+
+    .hp-slide-kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--hp-primary);
+        color: white;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: .08em;
+        text-transform: uppercase;
+        padding: 3px 10px;
+        border-radius: 999px;
+        margin-bottom: 8px;
+    }
+
+        .hp-slide-kicker::before {
+            content: "";
+            width: 5px;
+            height: 5px;
+            background: #93c5fd;
+            border-radius: 50%;
+            animation: hp-pulse 1.5s ease infinite;
+        }
+
+    @@keyframes hp-pulse {
+        0%, 100% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: .4;
+        }
+    }
+
+    .hp-slide-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(16px, 2.2vw, 26px);
+        font-weight: 700;
+        color: white;
+        line-height: 1.28;
+        margin: 0 0 8px;
+        text-shadow: 0 2px 10px rgba(0,0,0,.35);
+    }
+
+    .hp-slide-summary {
+        font-size: 12.5px;
+        color: rgba(255,255,255,.8);
+        line-height: 1.6;
+        margin: 0 0 12px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .hp-slide-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: white;
+        color: var(--hp-primary-dark);
+        padding: 7px 14px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all var(--hp-transition);
+        box-shadow: 0 3px 12px rgba(0,0,0,.22);
+    }
+
+        .hp-slide-btn:hover {
+            background: var(--hp-primary-soft);
+            transform: translateY(-1px);
+            text-decoration: none;
+        }
+
+    .hp-dots {
+        position: absolute;
+        bottom: 10px;
+        left: 36px;
+        display: flex;
+        gap: 6px;
+        z-index: 10;
+    }
+
+    .hp-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 999px;
+        border: none;
+        background: rgba(255,255,255,.4);
+        cursor: pointer;
+        padding: 0;
+        transition: all var(--hp-transition);
+    }
+
+        .hp-dot.active {
+            background: white;
+            width: 20px;
+        }
+
+    .hp-arrow {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: rgba(255,255,255,.16);
+        backdrop-filter: blur(8px);
+        border: 1px solid rgba(255,255,255,.22);
+        color: white;
+        cursor: pointer;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background var(--hp-transition);
+    }
+
+        .hp-arrow:hover {
+            background: rgba(255,255,255,.28);
+        }
+
+    .hp-arrow-prev {
+        left: 12px;
+    }
+
+    .hp-arrow-next {
+        right: 12px;
+    }
+
+    .hp-progress {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: rgba(255,255,255,.12);
+        z-index: 10;
+    }
+
+    .hp-progress-bar {
+        height: 100%;
+        background: var(--hp-primary);
+        transition: width linear;
+    }
+
+    /* ═══════════════════════════════
+           SHARED CARD
+        ═══════════════════════════════ */
+    .hp-card {
+        background: var(--hp-surface);
+        border: 1px solid var(--hp-border);
+        border-radius: var(--hp-radius);
+        box-shadow: var(--hp-shadow);
+        overflow: hidden;
+    }
+
+    .hp-card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 11px 16px 10px;
+        border-bottom: 1px solid var(--hp-border);
+    }
+
+    .hp-card-title {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 11.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .08em;
+        color: var(--hp-text);
+    }
+
+    .hp-card-title-bar {
+        width: 3px;
+        height: 16px;
+        border-radius: 2px;
+    }
+
+    .bar-blue {
+        background: var(--hp-primary);
+    }
+
+    .bar-red {
+        background: var(--hp-red);
+    }
+
+    .bar-green {
+        background: var(--hp-green);
+    }
+
+    .bar-gray {
+        background: #94a3b8;
+    }
+
+    .hp-card-link {
+        font-size: 11.5px;
+        font-weight: 600;
+        color: var(--hp-primary);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 3px;
+    }
+
+        .hp-card-link:hover {
+            text-decoration: underline;
+        }
+
+    .hp-card-body {
+        padding: 12px 16px;
+    }
+
+    /* ═══════════════════════════════
+           FEATURED DOCUMENTS
+        ═══════════════════════════════ */
+    .hp-doc-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .hp-doc-card {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 14px;
+        border-radius: 12px;
+        border: 1px solid var(--hp-border);
+        background: linear-gradient(180deg, #fff 0%, #f8fbff 100%);
+        box-shadow: var(--hp-shadow);
+        text-decoration: none;
+        color: var(--hp-text);
+        transition: transform var(--hp-transition), box-shadow var(--hp-transition), border-color var(--hp-transition);
+    }
+
+        .hp-doc-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--hp-shadow-lg);
+            border-color: rgba(29,78,216,.22);
+            text-decoration: none;
+        }
+
+    .hp-doc-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        width: fit-content;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: var(--hp-red-soft);
+        color: var(--hp-red);
+        font-size: 10.5px;
+        font-weight: 700;
+    }
+
+    .hp-doc-fallback {
+        width: 100%;
+        height: 72px;
+        border-radius: 10px;
+        background: linear-gradient(135deg, #dbeafe, #eff6ff);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--hp-primary);
+    }
+
+    .hp-doc-title {
+        margin: 0;
+        font-size: 13px;
+        line-height: 1.5;
+        font-weight: 700;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .hp-doc-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 11.5px;
+        color: var(--hp-muted);
+    }
+
+    .hp-doc-info {
+        display: grid;
+        gap: 3px;
+        margin-top: auto;
+        padding-top: 8px;
+        border-top: 1px dashed var(--hp-border);
+        font-size: 11px;
+        color: var(--hp-muted);
+    }
+
+    /* ═══════════════════════════════
+           MAIN 3-COL GRID
+        ═══════════════════════════════ */
+    .hp-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 280px;
+        gap: 16px;
+        align-items: start;
+    }
+
+    /* ═══════════════════════════════
+           NEWS LIST (Tin nổi bật)
+        ═══════════════════════════════ */
+    .hp-news-list {
+        display: grid;
+        gap: 0;
+    }
+
+    .hp-news-item {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+        padding: 9px 0;
+        border-bottom: 1px solid var(--hp-border);
+    }
+
+        .hp-news-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .hp-news-item:first-child {
+            padding-top: 0;
+        }
+
+    .hp-news-thumb {
+        width: 64px;
+        height: 48px;
+        border-radius: 7px;
+        object-fit: cover;
+        flex-shrink: 0;
+        background: #e2e8f0;
+    }
+
+    .hp-news-thumb-placeholder {
+        width: 64px;
+        height: 48px;
+        border-radius: 7px;
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+    }
+
+    .hp-news-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .hp-news-title {
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--hp-text);
+        line-height: 1.42;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-decoration: none;
+        transition: color var(--hp-transition);
+    }
+
+        .hp-news-title:hover {
+            color: var(--hp-primary);
+            text-decoration: none;
+        }
+
+    .hp-news-meta {
+        margin-top: 4px;
+        font-size: 11px;
+        color: var(--hp-muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    /* ═══════════════════════════════
+           BULLET LIST (Tin mới nhất)
+        ═══════════════════════════════ */
+    .hp-bullet-list {
+        display: grid;
+        gap: 0;
+    }
+
+    .hp-bullet-item {
+        padding: 8px 0;
+        border-bottom: 1px solid var(--hp-border);
+    }
+
+        .hp-bullet-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .hp-bullet-item:first-child {
+            padding-top: 0;
+        }
+
+    .hp-bullet-link {
+        display: flex;
+        gap: 7px;
+        align-items: flex-start;
+        font-size: 12.5px;
+        font-weight: 500;
+        color: var(--hp-text);
+        line-height: 1.42;
+        text-decoration: none;
+        transition: color var(--hp-transition);
+    }
+
+        .hp-bullet-link:hover {
+            color: var(--hp-primary);
+            text-decoration: none;
+        }
+
+    .hp-bullet {
+        color: var(--hp-primary);
+        font-size: 18px;
+        line-height: 1;
+        margin-top: -1px;
+        flex-shrink: 0;
+    }
+
+    .hp-bullet-red {
+        color: var(--hp-red);
+    }
+
+    .hp-bullet-date {
+        font-size: 11px;
+        color: var(--hp-muted);
+        margin-top: 2px;
+        padding-left: 15px;
+    }
+
+    /* ═══════════════════════════════
+           SIDEBAR
+        ═══════════════════════════════ */
+    .hp-sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .hp-quick-links {
+        display: grid;
+        gap: 6px;
+    }
+
+    .hp-quick-link {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 12px;
+        border-radius: 9px;
+        background: var(--hp-primary-soft);
+        color: var(--hp-primary-dark);
+        font-size: 12.5px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid rgba(29,78,216,.1);
+        transition: all var(--hp-transition);
+    }
+
+        .hp-quick-link:hover {
+            background: #dbeafe;
+            transform: translateX(3px);
+            text-decoration: none;
+        }
+
+    .hp-quick-link-icon {
+        width: 26px;
+        height: 26px;
+        border-radius: 7px;
+        background: var(--hp-primary);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .hp-quick-link-arrow {
+        margin-left: auto;
+        opacity: .45;
+    }
+
+    /* Categories */
+    .hp-cat-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .hp-cat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 10px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: var(--hp-muted);
+        font-size: 11.5px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--hp-border);
+        transition: all var(--hp-transition);
+    }
+
+        .hp-cat-chip:hover {
+            background: var(--hp-primary-soft);
+            color: var(--hp-primary);
+            border-color: rgba(29,78,216,.22);
+            text-decoration: none;
+        }
+
+    /* ═══════════════════════════════
+           BOTTOM GRID
+        ═══════════════════════════════ */
+    .hp-bottom {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .hp-mini-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+    }
+
+    .hp-mini-card {
+        border-radius: 10px;
+        overflow: hidden;
+        border: 1px solid var(--hp-border);
+        background: white;
+        text-decoration: none;
+        color: var(--hp-text);
+        transition: box-shadow var(--hp-transition), transform var(--hp-transition);
+        display: flex;
+        flex-direction: column;
+    }
+
+        .hp-mini-card:hover {
+            box-shadow: var(--hp-shadow-lg);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+
+    .hp-mini-card-img {
+        width: 100%;
+        height: 96px;
+        object-fit: cover;
+        background: #e2e8f0;
+        display: block;
+    }
+
+    .hp-mini-card-img-placeholder {
+        width: 100%;
+        height: 96px;
+        background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+    }
+
+    .hp-mini-card-body {
+        padding: 8px 10px 10px;
+        flex: 1;
+    }
+
+    .hp-mini-card-title {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: 1.4;
+        color: var(--hp-text);
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .hp-mini-card-date {
+        font-size: 10.5px;
+        color: var(--hp-muted);
+        margin-top: 5px;
+    }
+
+    .hp-doc-section {
+        display: flex;
+        flex-direction: column;
+    }
+
+    /* ═══════════════════════════════
+           LOADING
+        ═══════════════════════════════ */
+    .hp-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        min-height: 56vh;
+        color: var(--hp-muted);
+        font-size: 13.5px;
+    }
+
+    .hp-spinner {
+        width: 24px;
+        height: 24px;
+        border: 2.5px solid #dbeafe;
+        border-top-color: var(--hp-primary);
+        border-radius: 50%;
+        animation: hp-spin .7s linear infinite;
+    }
+
+    @@keyframes hp-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* ═══════════════════════════════
+           RESPONSIVE
+        ═══════════════════════════════ */
+    @@media (max-width: 1100px) {
+        .hp-top-area,
+        .hp-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hp-sidebar {
+            display: contents;
+        }
+
+            .hp-sidebar > * {
+                grid-column: span 1;
+            }
+
+        .hp-doc-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+    }
+
+    @@media (max-width: 720px) {
+        .hp-featured {
+            height: 190px;
+        }
+
+        .hp-top-area {
+            gap: 12px;
+        }
+
+        .hp-lead-panel {
+            padding: 14px 16px;
+        }
+
+        .hp-lead-title {
+            font-size: 17px;
+        }
+
+        .hp-lead-actions {
+            flex-direction: column;
+        }
+
+        .hp-lead-btn {
+            justify-content: center;
+        }
+
+        .hp-spotlight-head {
+            flex-direction: column;
+        }
+
+        .hp-slide-content {
+            max-width: 88%;
+            padding: 12px 16px;
+        }
+
+        .hp-slide-title {
+            font-size: 16px;
+        }
+
+        .hp-slide-summary {
+            display: none;
+        }
+
+        .hp-bottom {
+            grid-template-columns: 1fr;
+        }
+
+        .hp-mini-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .hp-doc-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="hp">
+
     @if (model == null)
     {
-        <div class="public-home-loading">Đang tải...</div>
+        <div class="hp-loading">
+            <div class="hp-spinner"></div>
+            <span>Đang tải nội dung...</span>
+        </div>
     }
     else
     {
-        <section class="home-hero-banner content-card">
-            <div class="home-hero-copy">
-                <span class="hero-kicker">Cổng thông tin điện tử</span>
-                <h1>@(model.SiteTitle ?? model.SiteName ?? "Cổng thông tin của trường")</h1>
-                <p>@(model.SiteSlogan ?? "Cập nhật nhanh các bài viết, thông báo và hoạt động của nhà trường.")</p>
-            </div>
-            @if (model.Banners?.Any() == true)
-            {
-                <div class="home-hero-banner-image">
-                    <img src="@model.Banners.First().ImageUrl" alt="Banner" />
+        /* ── TOP AREA ── */
+        <div class="hp-top-area">
+            <section class="hp-lead-panel">
+                <div class="hp-lead-kicker">Cổng thông tin điện tử</div>
+                <h1 class="hp-lead-title">Tin tức, văn bản công khai và bài viết nổi bật</h1>
+                <p class="hp-lead-text">
+                    Cập nhật nhanh các nội dung quan trọng của nhà trường: thông báo, bài viết chuyên mục, văn bản công khai và các liên kết hữu ích ngay từ trang chủ.
+                </p>
+                <div class="hp-lead-actions">
+                    <a class="hp-lead-btn hp-lead-btn-primary" href="/documents">Xem văn bản công khai</a>
+                    <a class="hp-lead-btn hp-lead-btn-secondary" href="/posts">Xem bài viết mới</a>
                 </div>
-            }
-        </section>
+            </section>
 
-        <section class="home-top-grid">
-            <article class="home-featured-story content-card">
-                @if (model.FeaturedPosts?.Any() == true)
-                {
-                    var featured = model.FeaturedPosts.First();
-                    <a href="/posts/@featured.Slug" class="featured-link">
-                        @if (!string.IsNullOrWhiteSpace(featured.CoverImageUrl))
-                        {
-                            <img src="@featured.CoverImageUrl" alt="@featured.Title" />
-                        }
-                        <div class="featured-overlay">
-                            <span class="chip active">Tin nổi bật</span>
-                            <h2>@featured.Title</h2>
-                            <p>@featured.Summary</p>
-                        </div>
-                    </a>
-                }
-            </article>
-
-            <div class="home-news-columns">
-                <section class="content-card home-news-box">
-                    <div class="section-head blue-head">
-                        <h2>TIN NỔI BẬT</h2>
-                        <a href="/posts">Xem thêm</a>
+            <aside class="hp-spotlight">
+                <div class="hp-spotlight-head">
+                    <div>
+                        <h2 class="hp-spotlight-title">Nội dung nổi bật</h2>
+                        <p class="hp-spotlight-desc">Các mục quan trọng bên dưới menu.</p>
                     </div>
-                    <div class="home-news-list">
-                        @foreach (var item in model.FeaturedPosts.Take(5))
-                        {
-                            <article class="home-news-item">
-                                <a href="/posts/@item.Slug">
-                                    <span class="news-bullet">•</span>
-                                    <span>@item.Title</span>
-                                </a>
-                            </article>
-                        }
-                    </div>
-                </section>
-
-                <section class="content-card home-news-box">
-                    <div class="section-head red-head">
-                        <h2>TIN MỚI NHẤT</h2>
-                        <a href="/posts">Xem thêm</a>
-                    </div>
-                    <div class="home-news-list">
-                        @foreach (var item in model.LatestPosts.Take(5))
-                        {
-                            <article class="home-news-item">
-                                <a href="/posts/@item.Slug">
-                                    <span class="news-bullet">•</span>
-                                    <span>@item.Title</span>
-                                </a>
-                            </article>
-                        }
-                    </div>
-                </section>
-            </div>
-
-            <aside class="home-sidebar">
-                <section class="content-card sidebar-card">
-                    <div class="section-head blue-head">
-                        <h2>LIÊN KẾT WEBSITE</h2>
-                    </div>
-                    <div class="sidebar-links">
-                            <a href="/posts">Bài viết</a>
-                        <a href="/search">Tìm kiếm</a>
-                        <a href="/documents">Văn bản công khai</a>
-                        <a href="/organization">Cơ cấu tổ chức</a>
-                    </div>
-                </section>
-
-                <section class="content-card sidebar-card">
-                    <div class="section-head blue-head">
-                        <h2>CHUYÊN MỤC</h2>
-                    </div>
-                    <div class="sidebar-tags">
-                        @if (categories != null)
-                        {
-                            @foreach (var cat in categories.Take(6))
-                            {
-                                <a class="chip" href="/posts/category/@cat.Slug">@cat.CategoryName</a>
-                            }
-                        }
-                    </div>
-                </section>
-            </aside>
-        </section>
-
-        <section class="content-grid home-bottom-grid">
-            <section class="content-card">
-                <div class="section-head blue-head">
-                    <h2>TIN NHÀ TRƯỜNG</h2>
-                    <a href="/posts">Xem tất cả</a>
+                    <a class="hp-card-link" href="/documents">Mở rộng</a>
                 </div>
-                <div class="home-card-grid">
-                    @foreach (var item in model.LatestPosts.Take(4))
+                <div class="hp-spotlight-list">
+                    @foreach (var item in (model.FeaturedPosts ?? new()).Take(3))
                     {
-                        <article class="home-mini-card">
-                            @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
-                            {
-                                <img src="@item.CoverImageUrl" alt="@item.Title" />
-                            }
-                            <div>
-                                <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
-                                <p>@item.Summary</p>
+                        <a class="hp-spotlight-item" href="/posts/@item.Slug">
+                            <div class="hp-spotlight-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                                    <polyline points="14 2 14 8 20 8" />
+                                </svg>
                             </div>
-                        </article>
+                            <div style="min-width:0;">
+                                <p class="hp-spotlight-item-title">@item.Title</p>
+                                <div class="hp-spotlight-item-meta">Bài viết mới • Xem chi tiết</div>
+                            </div>
+                        </a>
                     }
-                </div>
-            </section>
 
-            <section class="content-card">
-                <div class="section-head blue-head">
-                    <h2>CHUYÊN MỤC BÀI VIẾT</h2>
-                    <a href="/posts">Xem thêm</a>
-                </div>
-                <div class="sidebar-tags">
-                    @if (categories != null)
+                    @foreach (var doc in (featuredDocuments ?? new()).Take(2))
                     {
-                        @foreach (var cat in categories.Take(8))
-                        {
-                            <a class="chip" href="/posts/category/@cat.Slug">@cat.CategoryName</a>
-                        }
+                        <a class="hp-spotlight-item" href="@GetDocumentHref(doc)">
+                            <div class="hp-spotlight-icon">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" />
+                                    <polyline points="13 2 13 9 20 9" />
+                                </svg>
+                            </div>
+                            <div style="min-width:0;">
+                                <p class="hp-spotlight-item-title">@doc.DocTitle</p>
+                                <div class="hp-spotlight-item-meta">Văn bản công khai</div>
+                            </div>
+                        </a>
                     }
                 </div>
-            </section>
-        </section>
+            </aside>
+        </div>
+
+        /* ── FEATURED SLIDER ── */
+        @if (model.FeaturedPosts?.Any() == true)
+        {
+            var slides = model.FeaturedPosts.Take(6).ToList();
+            <div class="hp-featured">
+                @for (int i = 0; i < slides.Count; i++)
+                {
+                    var post = slides[i];
+                    var idx = i;
+                    <div class="hp-slide @(i == activeSlide ? "active" : "")">
+                        @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+                        {
+                            <img class="hp-slide-img" src="@post.CoverImageUrl" alt="@post.Title" />
+                        }
+                        else
+                        {
+                            <div class="hp-slide-img" style="background:linear-gradient(135deg,#0f172a,#1d4ed8);"></div>
+                        }
+                        <div class="hp-slide-overlay"></div>
+                        <div class="hp-slide-content">
+                            <div class="hp-slide-kicker">Tin nổi bật</div>
+                            <h2 class="hp-slide-title">@post.Title</h2>
+                            @if (!string.IsNullOrWhiteSpace(post.Summary))
+                            {
+                                <p class="hp-slide-summary">@post.Summary</p>
+                            }
+                            <a href="/posts/@post.Slug" class="hp-slide-btn">
+                                Đọc bài viết
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                            </a>
+                        </div>
+                    </div>
+                }
+
+                <div class="hp-dots">
+                    @for (int i = 0; i < model.FeaturedPosts.Take(6).Count(); i++)
+                    {
+                        var idx = i;
+                        <button class="hp-dot @(i == activeSlide ? "active" : "")"
+                                type="button" @onclick="() => GoToSlide(idx)"></button>
+                    }
+                </div>
+
+                <button class="hp-arrow hp-arrow-prev" type="button" @onclick="PrevSlide">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+                </button>
+                <button class="hp-arrow hp-arrow-next" type="button" @onclick="NextSlide">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                </button>
+
+                <div class="hp-progress">
+                    <div class="hp-progress-bar"
+                         style="width:@(progressPct)%; transition-duration:@(progressMs)ms;"></div>
+                </div>
+            </div>
+        }
+
+        /* ── VĂN BẢN CÔNG KHAI NỔI BẬT ── */
+        <div class="hp-card">
+            <div class="hp-card-header">
+                <div class="hp-card-title">
+                    <span class="hp-card-title-bar bar-red"></span>
+                    Văn bản công khai nổi bật
+                </div>
+                <a class="hp-card-link" href="/documents">
+                    Xem tất cả
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                </a>
+            </div>
+            <div class="hp-card-body">
+                @if (featuredDocuments?.Any() == true)
+                {
+                    <div class="hp-doc-grid">
+                        @foreach (var doc in featuredDocuments)
+                        {
+                            <a class="hp-doc-card" href="@GetDocumentHref(doc)">
+                                <div class="hp-doc-badge">
+                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
+                                    Văn bản
+                                </div>
+                                <div class="hp-doc-fallback">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
+                                </div>
+                                <h3 class="hp-doc-title">@doc.DocTitle</h3>
+                                <div class="hp-doc-meta">
+                                    @if (!string.IsNullOrWhiteSpace(doc.DocNumber))
+                                    {
+                                        <span>Số: @doc.DocNumber</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(doc.TypeName))
+                                    {
+                                        <span>•</span>
+                                        <span>@doc.TypeName</span>
+                                    }
+                                </div>
+                                <div class="hp-doc-info">
+                                    <span>Ngày ban hành: @FormatDate(doc.IssuedDate)</span>
+                                    <span>Xem chi tiết →</span>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="hp-loading" style="min-height:140px;">Chưa có văn bản công khai nổi bật.</div>
+                }
+            </div>
+        </div>
+
+        /* ── MAIN 3-COL GRID ── */
+        <div class="hp-grid">
+            <div class="hp-card">
+                <div class="hp-card-header">
+                    <div class="hp-card-title">
+                        <span class="hp-card-title-bar bar-blue"></span>
+                        Tin nổi bật
+                    </div>
+                    <a class="hp-card-link" href="/posts">
+                        Xem thêm
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    </a>
+                </div>
+                <div class="hp-card-body">
+                    <div class="hp-news-list">
+                        @foreach (var item in (model.FeaturedPosts ?? new()).Take(6))
+                        {
+                            <div class="hp-news-item">
+                                @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                                {
+                                    <img class="hp-news-thumb" src="@item.CoverImageUrl" alt="@item.Title" />
+                                }
+                                else
+                                {
+                                    <div class="hp-news-thumb-placeholder">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+                                    </div>
+                                }
+                                <div class="hp-news-info">
+                                    <a class="hp-news-title" href="/posts/@item.Slug">@item.Title</a>
+                                    <div class="hp-news-meta">
+                                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
+                                        @* @FormatDate(item.CreatedAt) *@
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            <div class="hp-card">
+                <div class="hp-card-header">
+                    <div class="hp-card-title">
+                        <span class="hp-card-title-bar bar-red"></span>
+                        Tin mới nhất
+                    </div>
+                    <a class="hp-card-link" href="/posts">
+                        Xem thêm
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    </a>
+                </div>
+                <div class="hp-card-body">
+                    <div class="hp-bullet-list">
+                        @foreach (var item in (model.LatestPosts ?? new()).Take(8))
+                        {
+                            <div class="hp-bullet-item">
+                                <a class="hp-bullet-link" href="/posts/@item.Slug">
+                                    <span class="hp-bullet hp-bullet-red">›</span>
+                                    <span>@item.Title</span>
+                                </a>
+                                <div class="hp-bullet-date">
+                                    @* @FormatDate(item.CreatedAt) *@
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="hp-sidebar">
+                <div class="hp-card">
+                    <div class="hp-card-header">
+                        <div class="hp-card-title">
+                            <span class="hp-card-title-bar bar-green"></span>
+                            Liên kết nhanh
+                        </div>
+                    </div>
+                    <div class="hp-card-body">
+                        <div class="hp-quick-links">
+                            @foreach (var link in quickLinks)
+                            {
+                                <a class="hp-quick-link" href="@link.Href">
+                                    <div class="hp-quick-link-icon">
+                                        @((MarkupString)link.IconSvg)
+                                    </div>
+                                    @link.Label
+                                    <svg class="hp-quick-link-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                @if (categories?.Any() == true)
+                {
+                    <div class="hp-card">
+                        <div class="hp-card-header">
+                            <div class="hp-card-title">
+                                <span class="hp-card-title-bar bar-gray"></span>
+                                Chuyên mục
+                            </div>
+                        </div>
+                        <div class="hp-card-body">
+                            <div class="hp-cat-list">
+                                @foreach (var cat in categories.Take(10))
+                                {
+                                    <a class="hp-cat-chip" href="/posts/category/@cat.Slug">@cat.CategoryName</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+
+        /* ── BOTTOM: Tin nhà trường ── */
+        @if (model.LatestPosts?.Any() == true)
+        {
+            <div class="hp-bottom">
+                <div class="hp-card">
+                    <div class="hp-card-header">
+                        <div class="hp-card-title">
+                            <span class="hp-card-title-bar bar-blue"></span>
+                            Tin nhà trường
+                        </div>
+                        <a class="hp-card-link" href="/posts">Xem tất cả</a>
+                    </div>
+                    <div class="hp-card-body">
+                        <div class="hp-mini-grid">
+                            @foreach (var item in model.LatestPosts.Take(4))
+                            {
+                                <a class="hp-mini-card" href="/posts/@item.Slug">
+                                    @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                                    {
+                                        <img class="hp-mini-card-img" src="@item.CoverImageUrl" alt="@item.Title" />
+                                    }
+                                    else
+                                    {
+                                        <div class="hp-mini-card-img-placeholder">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
+                                        </div>
+                                    }
+                                    <div class="hp-mini-card-body">
+                                        <div class="hp-mini-card-title">@item.Title</div>
+                                        @* <div class="hp-mini-card-date">@FormatDate(item.CreatedAt)</div> *@
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hp-card hp-doc-section">
+                    <div class="hp-card-header">
+                        <div class="hp-card-title">
+                            <span class="hp-card-title-bar bar-red"></span>
+                            Bài viết mới
+                        </div>
+                        <a class="hp-card-link" href="/posts">Xem thêm</a>
+                    </div>
+                    <div class="hp-card-body">
+                        <div class="hp-bullet-list">
+                            @foreach (var item in (model.LatestPosts ?? new()).Skip(4).Take(7))
+                            {
+                                <div class="hp-bullet-item">
+                                    <a class="hp-bullet-link" href="/posts/@item.Slug">
+                                        <span class="hp-bullet">›</span>
+                                        <span>@item.Title</span>
+                                    </a>
+                                    <div class="hp-bullet-date">
+                                        @* @FormatDate(item.CreatedAt) *@
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
     }
 </div>
 
 @code {
     private PublicHomepageViewModel? model;
     private List<PublicPostCategoryItem>? categories;
+    private List<PublicDocumentListItem>? featuredDocuments;
+
+    // ── Slider state ──
+    private int activeSlide = 0;
+    private int totalSlides = 0;
+    private double progressPct = 0;
+    private int progressMs = 4000;
+    private System.Threading.Timer? _timer;
+    private bool _disposed;
+    private const int SlideIntervalMs = 4500;
+
+    // ── Quick links ──
+    private readonly record struct QuickLink(string Label, string Href, string IconSvg);
+    private readonly List<QuickLink> quickLinks = new()
+    {
+        new("Bài viết", "/posts",
+            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>"""),
+        new("Tìm kiếm", "/search",
+            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>"""),
+        new("Văn bản công khai", "/documents",
+            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>"""),
+        new("Cơ cấu tổ chức", "/organization",
+            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>"""),
+    };
 
     protected override async Task OnInitializedAsync()
     {
         model = await HomepageService.GetHomepageAsync(PN_PublicVariables.MaTruong);
         categories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        featuredDocuments = await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, pageSize: 3);
+        totalSlides = model?.FeaturedPosts?.Take(6).Count() ?? 0;
+    }
+
+    private void StartTimer()
+    {
+        progressPct = 0;
+        progressMs = SlideIntervalMs;
+        InvokeAsync(StateHasChanged);
+
+        Task.Delay(50).ContinueWith(_ =>
+        {
+            progressPct = 100;
+            InvokeAsync(StateHasChanged);
+        });
+
+        _timer = new System.Threading.Timer(_ =>
+        {
+            if (_disposed) return;
+            InvokeAsync(() =>
+            {
+                activeSlide = (activeSlide + 1) % totalSlides;
+                ResetProgress();
+                StateHasChanged();
+            });
+        }, null, SlideIntervalMs, SlideIntervalMs);
+    }
+
+    private void ResetProgress()
+    {
+        progressPct = 0;
+        progressMs = 0;
+        StateHasChanged();
+        Task.Delay(50).ContinueWith(_ =>
+        {
+            progressPct = 100;
+            progressMs = SlideIntervalMs;
+            InvokeAsync(StateHasChanged);
+        });
+    }
+
+    private void GoToSlide(int idx)
+    {
+        _timer?.Dispose();
+        _timer = null;
+        activeSlide = idx;
+        if (totalSlides > 1) StartTimer();
+    }
+
+    private void PrevSlide() => GoToSlide((activeSlide - 1 + totalSlides) % totalSlides);
+    private void NextSlide() => GoToSlide((activeSlide + 1) % totalSlides);
+
+    private static string FormatDate(DateTime? dt)
+        => dt.HasValue ? dt.Value.ToString("dd/MM/yyyy") : string.Empty;
+
+    private static string GetDocumentHref(PublicDocumentListItem doc)
+        => !string.IsNullOrWhiteSpace(doc.TypeSlug) && !string.IsNullOrWhiteSpace(doc.Id)
+            ? $"/documents/{doc.TypeSlug}/{doc.Id}"
+            : "/documents";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && totalSlides > 1)
+        {
+            StartTimer();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        _disposed = true;
+        _timer?.Dispose();
+        return ValueTask.CompletedTask;
     }
 }

@@ -1,0 +1,86 @@
+@page "/admin/post-tags"
+@attribute [Authorize(Roles = "Administrator")]
+@using PN_HDSWeb_Admin.Services.Content
+@inject IAdminPostTagService AdminPostTagService
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+
+<div class="admin-form-shell">
+    <div class="admin-form-card">
+        <div class="admin-form-header">
+            <h1>Tag bài viết</h1>
+            <p>Quản lý tag dùng chung cho module bài viết.</p>
+        </div>
+
+        <div class="admin-form-actions">
+            <button class="btn btn-primary" @onclick="GoCreate">Thêm mới</button>
+        </div>
+
+        @if (items == null)
+        {
+            <p>Đang tải...</p>
+        }
+        else if (!items.Any())
+        {
+            <p>Chưa có tag nào.</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tên tag</th>
+                        <th>Slug</th>
+                        <th>Trạng thái</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in items)
+                    {
+                        <tr>
+                            <td>@item.TagName</td>
+                            <td>@item.Slug</td>
+                            <td>@(item.IsActive ? "Đang bật" : "Tắt")</td>
+                            <td>
+                                <button @onclick="() => Edit(item)">Sửa</button>
+                                <button @onclick="() => ToggleAsync(item)">@(item.IsActive ? "Tắt" : "Bật")</button>
+                                <button @onclick="() => DeleteAsync(item)">Xóa</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private List<AdminPostTagItem>? items;
+
+    protected override async Task OnInitializedAsync()
+    {
+        items = await AdminPostTagService.GetTagsAsync(PN_PublicVariables.MaTruong);
+    }
+
+    private void GoCreate() => Nav.NavigateTo("/admin/post-tags/edit");
+    private void Edit(AdminPostTagItem item) => Nav.NavigateTo($"/admin/post-tags/edit/{item.Id}");
+
+    private async Task ToggleAsync(AdminPostTagItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Đổi trạng thái tag '{item.TagName}'?"))
+        {
+            await AdminPostTagService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
+            items = await AdminPostTagService.GetTagsAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+
+    private async Task DeleteAsync(AdminPostTagItem item)
+    {
+        if (await JS.InvokeAsync<bool>("confirm", $"Xóa tag '{item.TagName}'?"))
+        {
+            await AdminPostTagService.DeleteTagAsync(item.Id ?? string.Empty);
+            items = await AdminPostTagService.GetTagsAsync(PN_PublicVariables.MaTruong);
+        }
+    }
+}

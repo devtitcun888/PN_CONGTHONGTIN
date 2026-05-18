@@ -16,6 +16,7 @@ public interface IAdminAccountService
     Task<AdminAccountDetailDto?> GetAccountByUsernameAsync(string maTruongBo, string username);
     Task<bool> CreateAccountAsync(AdminAccountUpsertDto model);
     Task<bool> UpdateAccountAsync(AdminAccountUpsertDto model);
+    Task<bool> UsernameExistsAsync(string maTruongBo, string username, string? excludeId = null);
     Task<bool> SetActiveAsync(string id, bool isActive);
     Task<bool> SetLockedAsync(string id, bool isLocked, string? reason = null);
     Task<bool> UpdateLastLoginAsync(string id, string? ipAddress = null);
@@ -105,9 +106,27 @@ public class AdminAccountService : IAdminAccountService
         return dt.Rows.Count == 0 ? null : MapDetail(dt.Rows[0]);
     }
 
+    public async Task<bool> UsernameExistsAsync(string maTruongBo, string username, string? excludeId = null)
+    {
+        var sql = $@"
+            SELECT id
+            FROM l_user_account
+            WHERE is_deleted = FALSE
+              AND ma_truong_bo = '{Escape(maTruongBo)}'
+              AND username = '{Escape(username)}'
+              {(string.IsNullOrWhiteSpace(excludeId) ? string.Empty : $"AND id <> '{Escape(excludeId)}'")}
+            LIMIT 1";
+
+        var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+        return dt.Rows.Count > 0;
+    }
+
     public async Task<bool> CreateAccountAsync(AdminAccountUpsertDto model)
     {
-        var passwordHash = HashPassword(model.Password ?? string.Empty);
+        if (string.IsNullOrWhiteSpace(model.Password))
+            throw new InvalidOperationException("Password is required when creating an account.");
+
+        var passwordHash = HashPassword(model.Password);
         var sql = $@"
             INSERT INTO l_user_account
             (ma_truong_bo, username, password_hash, full_name, display_name, email, phone,

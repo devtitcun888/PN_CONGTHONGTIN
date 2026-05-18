@@ -1,5 +1,7 @@
 using hDataLibraryN8;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.Extensions.Logging;
+using PN_HDSWeb_Admin.Services.Admin;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -10,7 +12,9 @@ public interface IAdminPostMediaService
     Task<List<AdminPostMediaItem>> GetMediaAsync(string maTruongBo, string postId);
     Task<AdminPostMediaItem?> GetMediaByIdAsync(string id);
     Task<bool> CreateMediaAsync(AdminPostMediaDetail model);
+    Task<bool> CreateMediaFromFileAsync(AdminPostMediaDetail model, IBrowserFile file, string subFolder = "posts/media");
     Task<bool> UpdateMediaAsync(AdminPostMediaDetail model);
+    Task<bool> ReplaceMediaFileAsync(AdminPostMediaDetail model, IBrowserFile file, string subFolder = "posts/media");
     Task<bool> DeleteMediaAsync(string id);
     Task<bool> MoveMediaAsync(string id, int sortOrder);
 }
@@ -19,10 +23,12 @@ public class AdminPostMediaService : IAdminPostMediaService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<AdminPostMediaService> _logger;
+    private readonly IAdminFileStorageService _fileStorage;
 
-    public AdminPostMediaService(ILogger<AdminPostMediaService> logger)
+    public AdminPostMediaService(ILogger<AdminPostMediaService> logger, IAdminFileStorageService fileStorage)
     {
         _logger = logger;
+        _fileStorage = fileStorage;
     }
 
     public async Task<List<AdminPostMediaItem>> GetMediaAsync(string maTruongBo, string postId)
@@ -70,6 +76,19 @@ public class AdminPostMediaService : IAdminPostMediaService
         return await RunAsync(sql, "CreateMediaAsync");
     }
 
+    public async Task<bool> CreateMediaFromFileAsync(AdminPostMediaDetail model, IBrowserFile file, string subFolder = "posts")
+    {
+        var saved = await _fileStorage.SaveFileAsync(file, subFolder);
+        if (string.IsNullOrWhiteSpace(saved))
+            return false;
+
+        model.FileUrl = saved;
+        model.FileName ??= file.Name;
+        model.FileSize ??= file.Size;
+        model.MimeType ??= file.ContentType;
+        return await CreateMediaAsync(model);
+    }
+
     public async Task<bool> UpdateMediaAsync(AdminPostMediaDetail model)
     {
         var sql = $@"
@@ -87,14 +106,57 @@ public class AdminPostMediaService : IAdminPostMediaService
         return await RunAsync(sql, "UpdateMediaAsync");
     }
 
+    public async Task<bool> ReplaceMediaFileAsync(AdminPostMediaDetail model, IBrowserFile file, string subFolder = "posts/media")
+    {
+        if (string.IsNullOrWhiteSpace(model.Id)) return false;
+
+        var existing = await GetMediaByIdAsync(model.Id);
+        if (existing?.FileUrl is not null)
+            await _fileStorage.DeleteFileAsync(existing.FileUrl);
+
+        var saved = await _fileStorage.SaveFileAsync(file, subFolder);
+        if (string.IsNullOrWhiteSpace(saved))
+            return false;
+
+        model.FileUrl = saved;
+        model.FileName = file.Name;
+        model.FileSize = file.Size;
+        model.MimeType = file.ContentType;
+        return await UpdateMediaAsync(model);
+    }
+
+    //public async Task<bool> ReplaceMediaFileAsync(AdminPostMediaDetail model, IBrowserFile file, string subFolder = "posts/media")
+    //{
+    //    var oldFileUrl = model.FileUrl;
+    //    var saved = await _fileStorage.SaveFileAsync(file, subFolder);
+    //    if (string.IsNullOrWhiteSpace(saved))
+    //        return false;
+
+    //    model.FileUrl = saved;
+    //    model.FileName = file.Name;
+    //    model.FileSize = file.Size;
+    //    model.MimeType = file.ContentType;
+
+    //    var updated = await UpdateMediaAsync(model);
+    //    if (updated && !string.IsNullOrWhiteSpace(oldFileUrl) && !string.Equals(oldFileUrl, saved, StringComparison.OrdinalIgnoreCase))
+    //        await _fileStorage.DeleteFileAsync(oldFileUrl);
+
+    //    return updated;
+    //}
+
     public async Task<bool> DeleteMediaAsync(string id)
     {
+        var media = await GetMediaByIdAsync(id);
         var sql = $@"
             UPDATE post_media
                SET is_deleted = TRUE
              WHERE id = '{Escape(id)}'";
 
-        return await RunAsync(sql, "DeleteMediaAsync");
+        var deleted = await RunAsync(sql, "DeleteMediaAsync");
+        if (deleted && media?.FileUrl is not null)
+            await _fileStorage.DeleteFileAsync(media.FileUrl);
+
+        return deleted;
     }
 
     public async Task<bool> MoveMediaAsync(string id, int sortOrder)

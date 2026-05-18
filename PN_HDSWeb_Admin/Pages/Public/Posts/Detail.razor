@@ -3,98 +3,999 @@
 @inject IPublicPostService PublicPostService
 @inject IPublicPostMediaService PublicPostMediaService
 @inject IPublicPostTagService PublicPostTagService
+@inject IJSRuntime JS
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
+
+    :root {
+        --pd-primary: #1a56db;
+        --pd-primary-dark: #1e40af;
+        --pd-primary-soft: #eff6ff;
+        --pd-red: #dc2626;
+        --pd-surface: #ffffff;
+        --pd-bg: #f3f7fb;
+        --pd-border: #e2e8f0;
+        --pd-text: #0f172a;
+        --pd-muted: #64748b;
+        --pd-shadow: 0 4px 24px rgba(15,23,42,.08);
+        --pd-shadow-lg: 0 8px 40px rgba(15,23,42,.13);
+        --pd-radius: 16px;
+        --pd-tr: .22s cubic-bezier(.4,0,.2,1);
+    }
+
+    /* ════════ WRAPPER ════════ */
+    .pd-wrap {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        color: var(--pd-text);
+        background: var(--pd-bg);
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 0 60px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    /* ════════ BREADCRUMB ════════ */
+    .pd-breadcrumb {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 12.5px;
+        color: var(--pd-muted);
+        padding: 18px 0 0;
+    }
+
+        .pd-breadcrumb a {
+            color: var(--pd-primary);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color var(--pd-tr);
+        }
+
+            .pd-breadcrumb a:hover {
+                color: var(--pd-primary-dark);
+                text-decoration: underline;
+            }
+
+    .pd-breadcrumb-sep {
+        color: #cbd5e1;
+        font-size: 14px;
+    }
+
+    .pd-breadcrumb-current {
+        color: var(--pd-muted);
+        font-weight: 500;
+    }
+
+    /* ════════ ARTICLE CARD ════════ */
+    .pd-article {
+        background: var(--pd-surface);
+        border-radius: var(--pd-radius);
+        box-shadow: var(--pd-shadow);
+        border: 1px solid var(--pd-border);
+        overflow: hidden;
+    }
+
+    /* ── Cover Image ── */
+    .pd-cover {
+        width: 100%;
+        max-height: 420px;
+        object-fit: cover;
+        display: block;
+    }
+
+    /* ── Article Head ── */
+    .pd-head {
+        padding: 32px 40px 24px;
+        border-bottom: 1px solid var(--pd-border);
+    }
+
+    .pd-category-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        background: var(--pd-primary-soft);
+        color: var(--pd-primary);
+        border: 1px solid rgba(26,86,219,.18);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: 4px 12px;
+        border-radius: 999px;
+        text-decoration: none;
+        margin-bottom: 14px;
+        transition: all var(--pd-tr);
+    }
+
+        .pd-category-chip:hover {
+            background: #dbeafe;
+            text-decoration: none;
+        }
+
+    .pd-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(22px, 3.5vw, 38px);
+        font-weight: 800;
+        line-height: 1.25;
+        color: var(--pd-text);
+        margin: 0 0 14px;
+    }
+
+    .pd-summary {
+        font-size: 15.5px;
+        color: var(--pd-muted);
+        line-height: 1.7;
+        margin: 0 0 18px;
+        font-weight: 400;
+        font-style: italic;
+        border-left: 3px solid var(--pd-primary);
+        padding-left: 16px;
+    }
+
+    .pd-meta {
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .pd-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12.5px;
+        color: var(--pd-muted);
+        font-weight: 500;
+    }
+
+        .pd-meta-item svg {
+            flex-shrink: 0;
+        }
+
+    /* ── Tags ── */
+    .pd-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 7px;
+        padding: 16px 40px;
+        border-bottom: 1px solid var(--pd-border);
+        background: #fafbfd;
+    }
+
+    .pd-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 4px 11px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: var(--pd-muted);
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid var(--pd-border);
+        transition: all var(--pd-tr);
+    }
+
+        .pd-tag::before {
+            content: "#";
+            opacity: .5;
+        }
+
+        .pd-tag:hover {
+            background: var(--pd-primary-soft);
+            color: var(--pd-primary);
+            border-color: rgba(26,86,219,.22);
+            text-decoration: none;
+        }
+
+    /* ── Article Body ── */
+    .pd-body {
+        padding: 32px 40px 36px;
+        font-size: 15.5px;
+        line-height: 1.85;
+        color: #1e293b;
+    }
+        /* Nội dung HTML từ editor */
+        .pd-body h1, .pd-body h2, .pd-body h3, .pd-body h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--pd-text);
+            margin: 1.6em 0 .6em;
+            line-height: 1.3;
+        }
+
+        .pd-body h2 {
+            font-size: 1.5em;
+            border-bottom: 2px solid var(--pd-border);
+            padding-bottom: .35em;
+        }
+
+        .pd-body h3 {
+            font-size: 1.2em;
+        }
+
+        .pd-body p {
+            margin: 0 0 1.1em;
+        }
+
+        .pd-body a {
+            color: var(--pd-primary);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
+        .pd-body img {
+            max-width: 100%;
+            border-radius: 10px;
+            margin: .5em 0;
+            box-shadow: var(--pd-shadow);
+        }
+
+        .pd-body blockquote {
+            margin: 1.4em 0;
+            padding: 14px 20px;
+            border-left: 4px solid var(--pd-primary);
+            background: var(--pd-primary-soft);
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+            color: #1e40af;
+        }
+
+        .pd-body ul, .pd-body ol {
+            padding-left: 1.5em;
+            margin: .8em 0 1em;
+        }
+
+        .pd-body li {
+            margin-bottom: .35em;
+        }
+
+        .pd-body table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+            font-size: 14px;
+        }
+
+        .pd-body th, .pd-body td {
+            border: 1px solid var(--pd-border);
+            padding: 9px 13px;
+            text-align: left;
+        }
+
+        .pd-body th {
+            background: var(--pd-primary-soft);
+            font-weight: 700;
+            color: var(--pd-primary-dark);
+        }
+
+        .pd-body tr:nth-child(even) td {
+            background: #f8fafc;
+        }
+
+        .pd-body code {
+            background: #f1f5f9;
+            color: #be185d;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: .88em;
+            font-family: 'Fira Code', monospace;
+        }
+
+        .pd-body pre {
+            background: #0f172a;
+            color: #e2e8f0;
+            padding: 18px 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 13.5px;
+            margin: 1em 0;
+        }
+
+            .pd-body pre code {
+                background: none;
+                color: inherit;
+                padding: 0;
+            }
+
+    /* ════════ MEDIA SECTION ════════ */
+    .pd-media-section {
+        background: var(--pd-surface);
+        border-radius: var(--pd-radius);
+        box-shadow: var(--pd-shadow);
+        border: 1px solid var(--pd-border);
+        overflow: hidden;
+    }
+
+    .pd-section-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 16px 24px;
+        border-bottom: 1px solid var(--pd-border);
+        background: #fafbfd;
+    }
+
+    .pd-section-header-bar {
+        width: 4px;
+        height: 20px;
+        border-radius: 2px;
+        background: var(--pd-primary);
+    }
+
+    .pd-section-title {
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: .07em;
+        color: var(--pd-text);
+    }
+
+    .pd-section-count {
+        margin-left: auto;
+        background: var(--pd-primary-soft);
+        color: var(--pd-primary);
+        font-size: 11px;
+        font-weight: 700;
+        padding: 2px 9px;
+        border-radius: 999px;
+    }
+
+    /* Media list */
+    .pd-media-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        padding: 12px 0;
+    }
+
+    .pd-media-item {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid var(--pd-border);
+        padding: 0;
+    }
+
+        .pd-media-item:last-child {
+            border-bottom: none;
+        }
+
+    /* ── File row (header của mỗi media) ── */
+    .pd-media-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 20px;
+        cursor: pointer;
+        transition: background var(--pd-tr);
+        user-select: none;
+    }
+
+        .pd-media-row:hover {
+            background: #f8fafc;
+        }
+
+    .pd-media-icon {
+        width: 38px;
+        height: 38px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 18px;
+    }
+
+    .pd-media-icon-pdf {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .pd-media-icon-img {
+        background: #f0fdf4;
+        color: #16a34a;
+    }
+
+    .pd-media-icon-video {
+        background: #faf5ff;
+        color: #9333ea;
+    }
+
+    .pd-media-icon-audio {
+        background: #fff7ed;
+        color: #ea580c;
+    }
+
+    .pd-media-icon-word {
+        background: #eff6ff;
+        color: #1a56db;
+    }
+
+    .pd-media-icon-excel {
+        background: #f0fdf4;
+        color: #15803d;
+    }
+
+    .pd-media-icon-file {
+        background: #f8fafc;
+        color: #64748b;
+    }
+
+    .pd-media-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .pd-media-name {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--pd-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .pd-media-caption {
+        font-size: 12px;
+        color: var(--pd-muted);
+        margin-top: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .pd-media-actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-shrink: 0;
+    }
+
+    .pd-media-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 12px;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        transition: all var(--pd-tr);
+    }
+
+    .pd-media-btn-view {
+        background: var(--pd-primary-soft);
+        color: var(--pd-primary);
+        border: 1px solid rgba(26,86,219,.18);
+    }
+
+        .pd-media-btn-view:hover {
+            background: #dbeafe;
+            text-decoration: none;
+        }
+
+    .pd-media-btn-dl {
+        background: #f1f5f9;
+        color: var(--pd-muted);
+        border: 1px solid var(--pd-border);
+    }
+
+        .pd-media-btn-dl:hover {
+            background: #e2e8f0;
+            color: var(--pd-text);
+            text-decoration: none;
+        }
+
+    .pd-media-toggle {
+        width: 26px;
+        height: 26px;
+        border-radius: 6px;
+        border: 1px solid var(--pd-border);
+        background: white;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--pd-muted);
+        transition: all var(--pd-tr);
+        flex-shrink: 0;
+    }
+
+        .pd-media-toggle:hover {
+            background: var(--pd-primary-soft);
+            color: var(--pd-primary);
+            border-color: rgba(26,86,219,.22);
+        }
+
+        .pd-media-toggle svg {
+            transition: transform var(--pd-tr);
+        }
+
+        .pd-media-toggle.open svg {
+            transform: rotate(180deg);
+        }
+
+    /* ── Viewer panel ── */
+    .pd-viewer {
+        overflow: hidden;
+        max-height: 0;
+        transition: max-height .4s cubic-bezier(.4,0,.2,1);
+        background: #f8fafc;
+        border-top: 1px solid var(--pd-border);
+    }
+
+        .pd-viewer.open {
+            max-height: 700px;
+        }
+
+    /* PDF viewer */
+    .pd-pdf-viewer {
+        width: 100%;
+        height: 620px;
+        border: none;
+        display: block;
+        background: white;
+    }
+
+    /* Image viewer */
+    .pd-img-viewer {
+        padding: 16px 20px;
+        display: flex;
+        justify-content: center;
+    }
+
+        .pd-img-viewer img {
+            max-width: 100%;
+            max-height: 560px;
+            border-radius: 10px;
+            box-shadow: var(--pd-shadow-lg);
+            object-fit: contain;
+        }
+
+    /* Video viewer */
+    .pd-video-viewer {
+        padding: 16px 20px;
+    }
+
+        .pd-video-viewer video {
+            width: 100%;
+            border-radius: 10px;
+            max-height: 480px;
+            box-shadow: var(--pd-shadow);
+        }
+
+    /* Audio viewer */
+    .pd-audio-viewer {
+        padding: 20px 24px;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        background: linear-gradient(135deg, #fff7ed, #fffbeb);
+    }
+
+        .pd-audio-viewer audio {
+            flex: 1;
+        }
+
+    /* ── PDF nav bar ── */
+    .pd-pdf-nav {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        padding: 10px 20px;
+        border-top: 1px solid var(--pd-border);
+        background: white;
+        font-size: 13px;
+        color: var(--pd-muted);
+        font-weight: 500;
+    }
+
+    .pd-pdf-nav-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 5px 14px;
+        border-radius: 7px;
+        background: var(--pd-primary-soft);
+        color: var(--pd-primary);
+        border: 1px solid rgba(26,86,219,.18);
+        font-size: 12.5px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background var(--pd-tr);
+    }
+
+        .pd-pdf-nav-btn:hover {
+            background: #dbeafe;
+            text-decoration: none;
+        }
+
+    /* ════════ RELATED POSTS ════════ */
+    .pd-related {
+        background: var(--pd-surface);
+        border-radius: var(--pd-radius);
+        box-shadow: var(--pd-shadow);
+        border: 1px solid var(--pd-border);
+        overflow: hidden;
+    }
+
+    .pd-related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        gap: 1px;
+        background: var(--pd-border);
+    }
+
+    .pd-related-card {
+        background: white;
+        padding: 18px 20px;
+        text-decoration: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        transition: background var(--pd-tr);
+    }
+
+        .pd-related-card:hover {
+            background: var(--pd-primary-soft);
+            text-decoration: none;
+        }
+
+    .pd-related-card-title {
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--pd-text);
+        line-height: 1.4;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        transition: color var(--pd-tr);
+    }
+
+    .pd-related-card:hover .pd-related-card-title {
+        color: var(--pd-primary);
+    }
+
+    .pd-related-card-summary {
+        font-size: 12px;
+        color: var(--pd-muted);
+        line-height: 1.5;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .pd-related-arrow {
+        margin-top: auto;
+        font-size: 18px;
+        color: var(--pd-primary);
+        opacity: 0;
+        transition: opacity var(--pd-tr);
+    }
+
+    .pd-related-card:hover .pd-related-arrow {
+        opacity: 1;
+    }
+
+    /* ════════ LOADING / NOT FOUND ════════ */
+    .pd-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 40vh;
+        color: var(--pd-muted);
+        font-size: 14px;
+        font-family: 'Be Vietnam Pro', sans-serif;
+    }
+
+    .pd-spinner {
+        width: 26px;
+        height: 26px;
+        border: 3px solid #dbeafe;
+        border-top-color: var(--pd-primary);
+        border-radius: 50%;
+        animation: pd-spin .7s linear infinite;
+    }
+
+    @@keyframes pd-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* ════════ RESPONSIVE ════════ */
+    @@media (max-width: 720px) {
+        .pd-head, .pd-body {
+            padding: 20px 18px;
+        }
+
+        .pd-tags {
+            padding: 12px 18px;
+        }
+
+        .pd-title {
+            font-size: 22px;
+        }
+
+        .pd-summary {
+            font-size: 14px;
+        }
+
+        .pd-body {
+            font-size: 14.5px;
+        }
+
+        .pd-related-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .pd-media-actions {
+            flex-direction: column;
+            align-items: flex-end;
+        }
+
+        .pd-pdf-viewer {
+            height: 420px;
+        }
+    }
+</style>
 
 @if (post == null)
 {
-    <p>Đang tải hoặc không tìm thấy bài viết.</p>
+    <div class="pd-loading">
+        <div class="pd-spinner"></div>
+        <span>Đang tải bài viết...</span>
+    </div>
 }
 else
 {
-    <div class="public-article">
-        <nav class="breadcrumb">
+    <div class="pd-wrap">
+
+        <!-- ── BREADCRUMB ── -->
+        <nav class="pd-breadcrumb">
             <a href="/">Trang chủ</a>
-            <span>/</span>
+            <span class="pd-breadcrumb-sep">›</span>
             <a href="/posts">Bài viết</a>
-            <span>/</span>
-            <span>@post.Title</span>
+            @if (!string.IsNullOrWhiteSpace(post.CategoryName))
+            {
+                <span class="pd-breadcrumb-sep">›</span>
+                <a href="/posts/category/@post.CategorySlug">@post.CategoryName</a>
+            }
+            <span class="pd-breadcrumb-sep">›</span>
+            <span class="pd-breadcrumb-current">@post.Title</span>
         </nav>
 
-        <article class="article-card post-detail-card">
-            <div class="post-detail-hero">
-                @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+        <!-- ── ARTICLE ── -->
+        <article class="pd-article">
+
+            <!-- Cover image -->
+            @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+            {
+                <img class="pd-cover" src="@post.CoverImageUrl" alt="@post.Title" />
+            }
+
+            <!-- Head -->
+            <div class="pd-head">
+                @if (!string.IsNullOrWhiteSpace(post.CategoryName))
                 {
-                    <img class="post-detail-cover" src="@post.CoverImageUrl" alt="@post.Title" />
+                    <a class="pd-category-chip" href="/posts/category/@post.CategorySlug">
+                        @post.CategoryName
+                    </a>
                 }
-                <div class="post-detail-head">
-                    <div class="section-head" style="margin-bottom:10px;">
-                        <h1>@post.Title</h1>
-                        @if (!string.IsNullOrWhiteSpace(post.CategoryName))
-                        {
-                            <a class="chip active" href="/posts/category/@post.CategorySlug">@post.CategoryName</a>
-                        }
-                    </div>
-                    <p class="post-detail-summary">@post.Summary</p>
-                    <div class="post-card-meta">
-                        <span class="post-date">@(post.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
+                <h1 class="pd-title">@post.Title</h1>
+                @if (!string.IsNullOrWhiteSpace(post.Summary))
+                {
+                    <p class="pd-summary">@post.Summary</p>
+                }
+                <div class="pd-meta">
+                    <div class="pd-meta-item">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" />
+                            <line x1="16" y1="2" x2="16" y2="6" />
+                            <line x1="8" y1="2" x2="8" y2="6" />
+                            <line x1="3" y1="10" x2="21" y2="10" />
+                        </svg>
+                        @(post.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)
                     </div>
                 </div>
             </div>
 
+            <!-- Tags -->
             @if (postTags?.Any() == true)
             {
-                <div class="tag-row" style="margin: 14px 0;">
+                <div class="pd-tags">
                     @foreach (var tag in postTags)
                     {
-                        <a class="chip" href="/posts/tag/@tag.Slug">@tag.TagName</a>
+                        <a class="pd-tag" href="/posts/tag/@tag.Slug">@tag.TagName</a>
                     }
                 </div>
             }
 
-            <div class="article-content">@((MarkupString)(post.Content ?? string.Empty))</div>
+            <!-- Article body -->
+            <div class="pd-body">
+                @((MarkupString)(post.Content ?? string.Empty))
+            </div>
         </article>
 
+        <!-- ── MEDIA ── -->
         @if (media?.Any() == true)
         {
-            <section class="content-card">
-                <h2>Media</h2>
-                <div class="search-result-list">
-                    @foreach (var item in media)
+            <section class="pd-media-section">
+                <div class="pd-section-header">
+                    <div class="pd-section-header-bar"></div>
+                    <span class="pd-section-title">Tài liệu đính kèm</span>
+                    <span class="pd-section-count">@media.Count tệp</span>
+                </div>
+
+                <div class="pd-media-list">
+                    @for (int mi = 0; mi < media.Count; mi++)
                     {
-                        <article class="search-result-item">
-                            <a href="@item.FileUrl" target="_blank">@item.FileName</a>
-                            <p>@item.Caption</p>
-                        </article>
+                        var item = media[mi];
+                        var idx = mi;
+                        var fileExt = GetExtension(item.FileUrl ?? item.FileName ?? "");
+                        var fileType = GetFileType(fileExt);
+                        var isOpen = openMediaIndex == idx;
+
+                        <div class="pd-media-item">
+                            <!-- Row -->
+                            <div class="pd-media-row" @onclick="() => ToggleMedia(idx)">
+                                <!-- Icon -->
+                                <div class="pd-media-icon @GetIconClass(fileType)">
+                                    @((MarkupString)GetFileIconSvg(fileType))
+                                </div>
+
+                                <!-- Info -->
+                                <div class="pd-media-info">
+                                    <div class="pd-media-name">@(item.FileName ?? $"Tệp {idx + 1}")</div>
+                                    @if (!string.IsNullOrWhiteSpace(item.Caption))
+                                    {
+                                        <div class="pd-media-caption">@item.Caption</div>
+                                    }
+                                </div>
+
+                                <!-- Actions -->
+                                <div class="pd-media-actions" @onclick:stopPropagation="true">
+                                    @if (CanPreview(fileType))
+                                    {
+                                        <button class="pd-media-btn pd-media-btn-view"
+                                                type="button" @onclick="() => ToggleMedia(idx)">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                                <circle cx="12" cy="12" r="3" />
+                                            </svg>
+                                            @(isOpen ? "Đóng" : "Xem")
+                                        </button>
+                                    }
+                                    <a class="pd-media-btn pd-media-btn-dl"
+                                       href="@item.FileUrl" target="_blank" download>
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                            <polyline points="7 10 12 15 17 10" />
+                                            <line x1="12" y1="15" x2="12" y2="3" />
+                                        </svg>
+                                        Tải về
+                                    </a>
+                                    @if (CanPreview(fileType))
+                                    {
+                                        <button class="pd-media-toggle @(isOpen ? "open" : "")"
+                                                type="button" @onclick="() => ToggleMedia(idx)">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                <polyline points="6 9 12 15 18 9" />
+                                            </svg>
+                                        </button>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Viewer panel -->
+                            @if (CanPreview(fileType))
+                            {
+                                <div class="pd-viewer @(isOpen ? "open" : "")">
+                                    @if (fileType == "pdf")
+                                    {
+                                        <!-- PDF: embed + nav bar -->
+                                        <iframe class="pd-pdf-viewer"
+                                                src="@(isOpen ? (item.FileUrl + "#toolbar=1&navpanes=1&scrollbar=1&view=FitH") : "")"
+                                                title="@item.FileName"></iframe>
+                                        <div class="pd-pdf-nav">
+                                            <a class="pd-pdf-nav-btn" href="@item.FileUrl" target="_blank">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+                                                    <polyline points="15 3 21 3 21 9" />
+                                                    <line x1="10" y1="14" x2="21" y2="3" />
+                                                </svg>
+                                                Mở tab mới
+                                            </a>
+                                            <span>·</span>
+                                            <a class="pd-pdf-nav-btn" href="@item.FileUrl" download>
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                                    <polyline points="7 10 12 15 17 10" />
+                                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                                </svg>
+                                                Tải về
+                                            </a>
+                                        </div>
+                                    }
+                                    else if (fileType == "image")
+                                    {
+                                        <div class="pd-img-viewer">
+                                            <img src="@item.FileUrl" alt="@item.FileName" />
+                                        </div>
+                                    }
+                                    else if (fileType == "video")
+                                    {
+                                        <div class="pd-video-viewer">
+                                            <video controls preload="metadata">
+                                                <source src="@item.FileUrl" />
+                                                Trình duyệt không hỗ trợ video.
+                                            </video>
+                                        </div>
+                                    }
+                                    else if (fileType == "audio")
+                                    {
+                                        <div class="pd-audio-viewer">
+                                            <audio controls style="width:100%">
+                                                <source src="@item.FileUrl" />
+                                                Trình duyệt không hỗ trợ audio.
+                                            </audio>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        </div>
                     }
                 </div>
             </section>
         }
 
+        <!-- ── RELATED POSTS ── -->
         @if (relatedPosts?.Any() == true)
         {
-            <section class="related-section">
-                <h2>Bài viết liên quan</h2>
-                <div class="related-grid">
+            <section class="pd-related">
+                <div class="pd-section-header">
+                    <div class="pd-section-header-bar" style="background:#dc2626;"></div>
+                    <span class="pd-section-title">Bài viết liên quan</span>
+                </div>
+                <div class="pd-related-grid">
                     @foreach (var item in relatedPosts)
                     {
-                        <article class="related-card">
-                            <a href="/posts/@item.Slug">
-                                <h3>@item.Title</h3>
-                                <p>@item.Summary</p>
-                            </a>
-                        </article>
+                        <a class="pd-related-card" href="/posts/@item.Slug">
+                            <div class="pd-related-card-title">@item.Title</div>
+                            @if (!string.IsNullOrWhiteSpace(item.Summary))
+                            {
+                                <div class="pd-related-card-summary">@item.Summary</div>
+                            }
+                            <div class="pd-related-arrow">›</div>
+                        </a>
                     }
                 </div>
             </section>
         }
+
     </div>
 }
 
 @code {
     [Parameter] public string? Slug { get; set; }
+
     private PublicPostDetail? post;
     private List<PublicPostMediaItem>? media;
     private List<PublicPostTagItem>? postTags;
     private List<PublicPostListItem>? relatedPosts;
+
+    private int openMediaIndex = -1;
 
     protected override async Task OnInitializedAsync()
     {
@@ -106,4 +1007,63 @@ else
             relatedPosts = await PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty);
         }
     }
+
+    // ── Media viewer toggle ──
+    private void ToggleMedia(int idx)
+    {
+        openMediaIndex = (openMediaIndex == idx) ? -1 : idx;
+    }
+
+    // ── File type helpers ──
+    private static string GetExtension(string url)
+    {
+        try
+        {
+            var path = new Uri(url, UriKind.RelativeOrAbsolute).IsAbsoluteUri
+                ? new Uri(url).AbsolutePath
+                : url;
+            return System.IO.Path.GetExtension(path).ToLowerInvariant().TrimStart('.');
+        }
+        catch { return string.Empty; }
+    }
+
+    private static string GetFileType(string ext) => ext switch
+    {
+        "pdf" => "pdf",
+        "jpg" or "jpeg" or "png"
+            or "gif" or "webp"
+            or "svg" or "bmp" => "image",
+        "mp4" or "webm" or "ogg"
+            or "mov" or "avi" => "video",
+        "mp3" or "wav" or "ogg"
+            or "aac" or "flac" => "audio",
+        "doc" or "docx" => "word",
+        "xls" or "xlsx" => "excel",
+        _ => "file"
+    };
+
+    private static bool CanPreview(string fileType) =>
+        fileType is "pdf" or "image" or "video" or "audio";
+
+    private static string GetIconClass(string fileType) => fileType switch
+    {
+        "pdf" => "pd-media-icon-pdf",
+        "image" => "pd-media-icon-img",
+        "video" => "pd-media-icon-video",
+        "audio" => "pd-media-icon-audio",
+        "word" => "pd-media-icon-word",
+        "excel" => "pd-media-icon-excel",
+        _ => "pd-media-icon-file"
+    };
+
+    private static string GetFileIconSvg(string fileType) => fileType switch
+    {
+        "pdf" => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="9" y1="13" x2="15" y2="13"/><line x1="9" y1="17" x2="15" y2="17"/><line x1="9" y1="9" x2="11" y2="9"/></svg>""",
+        "image" => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>""",
+        "video" => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>""",
+        "audio" => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>""",
+        "word" => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>""",
+        "excel" => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/><line x1="12" y1="9" x2="12" y2="17"/></svg>""",
+        _ => """<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>"""
+    };
 }

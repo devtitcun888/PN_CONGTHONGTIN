@@ -14,7 +14,7 @@
         <div class="dashboard-hero-card">
             <div>
                 <small>Đơn vị quản lý</small>
-                <strong>@PN_PublicVariables.MaTruong</strong>
+                <strong>Trường TH-THPT-THPT TITKUL</strong>
             </div>
             <div>
                 <small>Trạng thái</small>
@@ -88,15 +88,45 @@
                     <li>Cập nhật footer trong cột JSON <code>thongtin</code> của bảng <code>l_truong</code>.</li>
                 </ul>
             </div>
+
+
         </section>
+        <div class="dashboard-panel" style="grid-column:1/-1;">
+            <div class="section-head">
+                <h2>Top trang được xem</h2>
+            </div>
+            @if (trafficPages == null)
+            {
+                <p>Đang tải...</p>
+            }
+            else if (!trafficPages.Any())
+            {
+                <p>Chưa có dữ liệu truy cập.</p>
+            }
+            else
+            {
+                <div class="quick-actions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+                    @foreach (var trang in trafficPages)
+                    {
+                        <div class="dashboard-card" style="padding:16px;">
+                            <span style="font-size:12px;color:#5a6a8a;">@trang.PagePath</span>
+                            <strong style="display:block;font-size:24px;margin:8px 0 4px;">@trang.Views</strong>
+                            <small>@trang.UniqueVisitors IP duy nhất</small>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+
     }
 </div>
 
 @code {
     private AdminDashboardSummary? summary;
-
+    private List<AdminTrafficPageItem>? trafficPages;
     protected override async Task OnInitializedAsync()
     {
         summary = await DashboardService.GetSummaryAsync(PN_PublicVariables.MaTruong);
+        trafficPages = await DashboardService.GetTopTrafficPagesAsync(PN_PublicVariables.MaTruong, 6);
     }
 }

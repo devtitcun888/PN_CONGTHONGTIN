@@ -4,75 +4,459 @@
 @inject IAdminDocumentTypeService AdminDocumentTypeService
 @inject NavigationManager Nav
 
-<div class="admin-form-shell">
-    <div class="admin-form-card">
-        <div class="admin-form-header">
-            <h1>@(IsEditMode ? "Sửa loại văn bản" : "Thêm loại văn bản")</h1>
-            <p>Thiết lập loại văn bản chuẩn để dùng ở màn hình tạo văn bản.</p>
-        </div>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
-        @if (model == null)
-        {
-            <p>Đang tải...</p>
+    :root {
+        --dt-bg: #f4f6fb;
+        --dt-surface: #ffffff;
+        --dt-surface-2: #f8fafd;
+        --dt-border: #e4e9f2;
+        --dt-border-focus: #3b6ef6;
+        --dt-primary: #3b6ef6;
+        --dt-primary-hover: #2554e0;
+        --dt-primary-soft: #eef2fe;
+        --dt-text: #0f1b35;
+        --dt-text-2: #5a6a8a;
+        --dt-text-3: #a0aec0;
+        --dt-danger: #e53e3e;
+        --dt-radius: 14px;
+        --dt-radius-sm: 9px;
+        --dt-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --dt-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
+        --dt-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .dt-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .dt-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--dt-bg);
+        min-height: 100vh;
+        color: var(--dt-text);
+    }
+
+    /* Topbar / Breadcrumb */
+    .dt-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        gap: 12px;
+    }
+
+    .dt-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--dt-text-2);
+    }
+
+        .dt-breadcrumb a {
+            color: var(--dt-primary);
+            text-decoration: none;
+            font-weight: 500;
         }
-        else
-        {
-            <div class="admin-settings-layout">
-                <div class="admin-settings-form">
-                    <div class="admin-form-grid">
-                        <label>
-                            Mã loại
-                            <input class="admin-input" @bind="model.TypeCode" placeholder="Ví dụ: QD" />
-                        </label>
-                        <label>
-                            Tên loại
-                            <input class="admin-input" @bind="model.TypeName" placeholder="Ví dụ: Quyết định" />
-                        </label>
-                        <label>
-                            Slug
-                            <input class="admin-input" @bind="model.Slug" placeholder="quyet-dinh" />
-                        </label>
-                        <label>
-                            Thứ tự
-                            <input class="admin-input" type="number" @bind="model.SortOrder" />
-                        </label>
-                        <label class="span-2">
-                            Mô tả
-                            <textarea class="admin-input admin-textarea" rows="3" @bind="model.Description"></textarea>
-                        </label>
-                        <label>
-                            Trạng thái
-                            <select class="admin-input" @bind="IsActiveText">
-                                <option value="true">Đang bật</option>
-                                <option value="false">Tắt</option>
-                            </select>
-                        </label>
-                    </div>
 
-                    <div class="admin-form-actions">
-                        <button type="button" class="btn btn-primary" @onclick="SaveAsync">Lưu</button>
-                        <button type="button" class="btn btn-secondary" @onclick="GoBack">Quay lại</button>
+            .dt-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .dt-breadcrumb-sep {
+        color: var(--dt-text-3);
+    }
+
+    .dt-breadcrumb-current {
+        color: var(--dt-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .dt-hero {
+        padding: 24px 32px 0;
+    }
+
+        .dt-hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -.3px;
+            line-height: 1.2;
+        }
+
+        .dt-hero p {
+            margin-top: 4px;
+            font-size: 13.5px;
+            color: var(--dt-text-2);
+        }
+
+    /* Layout */
+    .dt-layout {
+        display: grid;
+        grid-template-columns: 1fr 320px;
+        gap: 24px;
+        padding: 24px 32px 40px;
+        max-width: 1400px;
+    }
+
+    @@media (max-width: 1100px) {
+        .dt-layout {
+            grid-template-columns: 1fr;
+        }
+
+        .dt-topbar, .dt-hero {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .dt-layout {
+            padding: 20px;
+        }
+    }
+
+    /* Card */
+    .dt-card {
+        background: var(--dt-surface);
+        border: 1px solid var(--dt-border);
+        border-radius: var(--dt-radius);
+        box-shadow: var(--dt-shadow);
+        overflow: hidden;
+        animation: dt-fadeup .3s ease both;
+    }
+
+    .dt-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 16px;
+        border-bottom: 1px solid var(--dt-border);
+        background: var(--dt-surface-2);
+    }
+
+    .dt-card-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--dt-primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--dt-primary);
+        flex-shrink: 0;
+    }
+
+    .dt-card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--dt-text);
+    }
+
+    .dt-card-body {
+        padding: 22px;
+    }
+
+    /* Form */
+    .dt-field {
+        margin-bottom: 18px;
+    }
+
+        .dt-field:last-child {
+            margin-bottom: 0;
+        }
+
+    .dt-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--dt-text-2);
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .dt-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--dt-border);
+        border-radius: var(--dt-radius-sm);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--dt-text);
+        background: var(--dt-surface);
+        transition: border-color var(--dt-transition), box-shadow var(--dt-transition);
+        outline: none;
+    }
+
+        .dt-input:focus {
+            border-color: var(--dt-border-focus);
+            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+        }
+
+    textarea.dt-input {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+
+    select.dt-input {
+        cursor: pointer;
+    }
+
+    /* Buttons */
+    .dt-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        border-radius: var(--dt-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--dt-transition);
+        white-space: nowrap;
+    }
+
+        .dt-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+    .dt-btn-primary {
+        background: var(--dt-primary);
+        color: white;
+        border-color: var(--dt-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+        .dt-btn-primary:hover:not(:disabled) {
+            background: var(--dt-primary-hover);
+            border-color: var(--dt-primary-hover);
+            box-shadow: 0 4px 18px rgba(59,110,246,.35);
+            transform: translateY(-1px);
+        }
+
+    .dt-btn-ghost {
+        background: transparent;
+        color: var(--dt-text-2);
+        border-color: var(--dt-border);
+    }
+
+        .dt-btn-ghost:hover:not(:disabled) {
+            border-color: var(--dt-text-2);
+            color: var(--dt-text);
+            background: var(--dt-surface-2);
+        }
+
+    .dt-btn-sm {
+        padding: 7px 14px;
+        font-size: 12.5px;
+    }
+
+    /* Actions bar */
+    .dt-action-bar {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+
+    /* Preview box */
+    .dt-preview-box {
+        background: var(--dt-surface);
+        border: 1px solid var(--dt-border);
+        border-radius: var(--dt-radius);
+        padding: 22px;
+        box-shadow: var(--dt-shadow);
+        font-size: 13px;
+        color: var(--dt-text-2);
+    }
+
+        .dt-preview-box h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--dt-text);
+            margin-bottom: 16px;
+        }
+
+        .dt-preview-box p {
+            margin-bottom: 10px;
+            display: flex;
+            gap: 6px;
+        }
+
+        .dt-preview-box strong {
+            font-weight: 600;
+        }
+
+        .dt-preview-box ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0 0;
+        }
+
+        .dt-preview-box li {
+            padding: 6px 0;
+            border-bottom: 1px solid var(--dt-border);
+            font-size: 13px;
+        }
+
+    /* Loading */
+    .dt-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 50vh;
+        color: var(--dt-text-2);
+        font-size: 14px;
+    }
+
+    .dt-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--dt-border);
+        border-top-color: var(--dt-primary);
+        border-radius: 50%;
+        animation: dt-spin .75s linear infinite;
+    }
+
+    @@keyframes dt-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes dt-fadeup {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .dt-main-col > .dt-card {
+        animation-delay: .06s;
+    }
+
+    .dt-side-col > .dt-card {
+        animation-delay: .1s;
+    }
+</style>
+
+<div class="dt-root">
+    <!-- Breadcrumb -->
+    <div class="dt-topbar">
+        <nav class="dt-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="dt-breadcrumb-sep">›</span>
+            <a href="/admin/document-types">Loại văn bản</a>
+            <span class="dt-breadcrumb-sep">›</span>
+            <span class="dt-breadcrumb-current">@(IsEditMode ? "Chỉnh sửa" : "Tạo mới")</span>
+        </nav>
+        <button class="dt-btn dt-btn-ghost dt-btn-sm" type="button" @onclick="GoBack">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+            Quay lại
+        </button>
+    </div>
+
+    <!-- Hero -->
+    <div class="dt-hero">
+        <h1>@(IsEditMode ? "Sửa loại văn bản" : "Thêm loại văn bản")</h1>
+        <p>Thiết lập loại văn bản chuẩn để dùng ở màn hình tạo văn bản.</p>
+    </div>
+
+    @if (model == null)
+    {
+        <div class="dt-loading">
+            <div class="dt-spinner"></div>
+            <span>Đang tải dữ liệu...</span>
+        </div>
+    }
+    else
+    {
+        <div class="dt-layout">
+            <!-- Cột chính: Form -->
+            <div class="dt-main-col">
+                <div class="dt-card">
+                    <div class="dt-card-header">
+                        <div class="dt-card-header-icon">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
+                        </div>
+                        <h2>Thông tin loại văn bản</h2>
+                    </div>
+                    <div class="dt-card-body">
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                            <div class="dt-field">
+                                <label class="dt-label">Mã loại</label>
+                                <input class="dt-input" @bind="model.TypeCode" placeholder="Ví dụ: QD" />
+                            </div>
+                            <div class="dt-field">
+                                <label class="dt-label">Tên loại</label>
+                                <input class="dt-input" @bind="model.TypeName" placeholder="Ví dụ: Quyết định" />
+                            </div>
+                            <div class="dt-field">
+                                <label class="dt-label">Slug</label>
+                                <input class="dt-input" @bind="model.Slug" placeholder="quyet-dinh" />
+                            </div>
+                            <div class="dt-field">
+                                <label class="dt-label">Thứ tự</label>
+                                <input class="dt-input" type="number" @bind="model.SortOrder" min="0" />
+                            </div>
+                            <div class="dt-field" style="grid-column:1/-1;">
+                                <label class="dt-label">Mô tả</label>
+                                <textarea class="dt-input" rows="3" @bind="model.Description" placeholder="Mô tả ngắn về loại văn bản..."></textarea>
+                            </div>
+                            <div class="dt-field">
+                                <label class="dt-label">Trạng thái</label>
+                                <select class="dt-input" @bind="IsActiveText">
+                                    <option value="true">Đang bật</option>
+                                    <option value="false">Tắt</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="dt-action-bar">
+                            <button type="button" class="dt-btn dt-btn-primary" @onclick="SaveAsync">
+                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                                Lưu
+                            </button>
+                            <button type="button" class="dt-btn dt-btn-ghost" @onclick="GoBack">Hủy</button>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <aside class="admin-preview-box">
-                    <h3>Gợi ý dùng nhanh</h3>
+            <!-- Cột phụ: Preview -->
+            <div class="dt-side-col">
+                <div class="dt-preview-box">
+                    <h3>Xem trước</h3>
                     <p><strong>Mã:</strong> @model.TypeCode</p>
                     <p><strong>Tên:</strong> @model.TypeName</p>
                     <p><strong>Slug:</strong> @model.Slug</p>
-                    <div>
-                        <strong>Ví dụ chuẩn</strong>
-                        <ul class="simple-list">
+                    <div style="margin-top:16px;">
+                        <strong style="display:block;margin-bottom:6px;">Ví dụ thường dùng</strong>
+                        <ul>
                             <li>QD — Quyết định</li>
                             <li>TB — Thông báo</li>
                             <li>KH — Kế hoạch</li>
                             <li>CV — Công văn</li>
                         </ul>
                     </div>
-                </aside>
+                </div>
             </div>
-        }
-    </div>
+        </div>
+    }
 </div>
 
 @code {

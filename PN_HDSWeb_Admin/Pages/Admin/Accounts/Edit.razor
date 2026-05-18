@@ -5,36 +5,434 @@
 @inject IAdminAccountService AdminAccountService
 @inject NavigationManager Nav
 
-<h1>Chi tiết tài khoản</h1>
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
 
-@if (model == null)
-{
-    <p>Đang tải...</p>
-}
-else
-{
-    <div>
-        <div>Tên đăng nhập: <input @bind="model.UserName" /></div>
-        <div>Họ tên: <input @bind="model.FullName" /></div>
-        <div>Tên hiển thị: <input @bind="model.DisplayName" /></div>
-        <div>Email: <input @bind="model.Email" /></div>
-        <div>Số điện thoại: <input @bind="model.Phone" /></div>
-        <div>Vai trò: <input @bind="model.Roles" /></div>
-        <div>Loại auth: <input @bind="model.AuthType" /></div>
-        <button @onclick="SaveAsync">Lưu</button>
+    :root {
+        --ac-bg: #f4f6fb;
+        --ac-surface: #ffffff;
+        --ac-surface-2: #f8fafd;
+        --ac-border: #e4e9f2;
+        --ac-border-focus: #3b6ef6;
+        --ac-primary: #3b6ef6;
+        --ac-primary-hover: #2554e0;
+        --ac-primary-soft: #eef2fe;
+        --ac-text: #0f1b35;
+        --ac-text-2: #5a6a8a;
+        --ac-text-3: #a0aec0;
+        --ac-radius: 14px;
+        --ac-radius-sm: 9px;
+        --ac-shadow: 0 4px 24px rgba(15,27,53,.07);
+        --ac-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
+        --ac-transition: .2s cubic-bezier(.4,0,.2,1);
+    }
+
+    .ac-root * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    .ac-root {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        background: var(--ac-bg);
+        min-height: 100vh;
+        color: var(--ac-text);
+    }
+
+    /* Breadcrumb */
+    .ac-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px 32px 0;
+        gap: 12px;
+    }
+
+    .ac-breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        font-size: 13px;
+        color: var(--ac-text-2);
+    }
+
+        .ac-breadcrumb a {
+            color: var(--ac-primary);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+            .ac-breadcrumb a:hover {
+                text-decoration: underline;
+            }
+
+    .ac-breadcrumb-sep {
+        color: var(--ac-text-3);
+    }
+
+    .ac-breadcrumb-current {
+        color: var(--ac-text);
+        font-weight: 600;
+    }
+
+    /* Hero */
+    .ac-hero {
+        padding: 24px 32px 0;
+    }
+
+        .ac-hero h1 {
+            font-family: 'Instrument Serif', serif;
+            font-size: 28px;
+            font-weight: 400;
+            letter-spacing: -.3px;
+            line-height: 1.2;
+        }
+
+        .ac-hero p {
+            margin-top: 4px;
+            font-size: 13.5px;
+            color: var(--ac-text-2);
+        }
+
+    /* Layout */
+    .ac-layout {
+        max-width: 800px;
+        padding: 24px 32px 40px;
+    }
+
+    @@media (max-width: 768px) {
+        .ac-topbar, .ac-hero {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .ac-layout {
+            padding: 20px;
+        }
+    }
+
+    /* Card */
+    .ac-card {
+        background: var(--ac-surface);
+        border: 1px solid var(--ac-border);
+        border-radius: var(--ac-radius);
+        box-shadow: var(--ac-shadow);
+        overflow: hidden;
+        animation: ac-fadeup .3s ease both;
+    }
+
+    .ac-card-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 18px 22px 16px;
+        border-bottom: 1px solid var(--ac-border);
+        background: var(--ac-surface-2);
+    }
+
+    .ac-card-header-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 8px;
+        background: var(--ac-primary-soft);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--ac-primary);
+        flex-shrink: 0;
+    }
+
+    .ac-card-header h2 {
+        font-size: 14px;
+        font-weight: 600;
+        color: var(--ac-text);
+    }
+
+    .ac-card-body {
+        padding: 22px;
+    }
+
+    /* Form grid */
+    .ac-form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+
+    .ac-field {
+        margin-bottom: 18px;
+    }
+
+        .ac-field:last-child {
+            margin-bottom: 0;
+        }
+
+    .ac-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--ac-text-2);
+        text-transform: uppercase;
+        letter-spacing: .4px;
+        margin-bottom: 7px;
+    }
+
+    .ac-input {
+        width: 100%;
+        padding: 10px 14px;
+        border: 1.5px solid var(--ac-border);
+        border-radius: var(--ac-radius-sm);
+        font-family: inherit;
+        font-size: 14px;
+        color: var(--ac-text);
+        background: var(--ac-surface);
+        transition: border-color var(--ac-transition), box-shadow var(--ac-transition);
+        outline: none;
+    }
+
+        .ac-input:focus {
+            border-color: var(--ac-border-focus);
+            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
+        }
+
+        .ac-input:disabled {
+            background: var(--ac-surface-2);
+            color: var(--ac-text-3);
+            cursor: not-allowed;
+        }
+
+    textarea.ac-input {
+        resize: vertical;
+        min-height: 80px;
+        line-height: 1.6;
+    }
+
+    select.ac-input {
+        cursor: pointer;
+    }
+
+    /* Buttons */
+    .ac-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        padding: 10px 20px;
+        border-radius: var(--ac-radius-sm);
+        font-family: inherit;
+        font-size: 13.5px;
+        font-weight: 600;
+        cursor: pointer;
+        border: 1.5px solid transparent;
+        transition: all var(--ac-transition);
+        white-space: nowrap;
+    }
+
+        .ac-btn:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+    .ac-btn-primary {
+        background: var(--ac-primary);
+        color: white;
+        border-color: var(--ac-primary);
+        box-shadow: 0 2px 12px rgba(59,110,246,.25);
+    }
+
+        .ac-btn-primary:hover:not(:disabled) {
+            background: var(--ac-primary-hover);
+            border-color: var(--ac-primary-hover);
+            box-shadow: 0 4px 18px rgba(59,110,246,.35);
+            transform: translateY(-1px);
+        }
+
+    .ac-btn-ghost {
+        background: transparent;
+        color: var(--ac-text-2);
+        border-color: var(--ac-border);
+    }
+
+        .ac-btn-ghost:hover:not(:disabled) {
+            border-color: var(--ac-text-2);
+            color: var(--ac-text);
+            background: var(--ac-surface-2);
+        }
+
+    .ac-btn-sm {
+        padding: 7px 14px;
+        font-size: 12.5px;
+    }
+
+    .ac-action-bar {
+        display: flex;
+        gap: 10px;
+        margin-top: 24px;
+    }
+
+    /* Loading */
+    .ac-loading {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 14px;
+        min-height: 50vh;
+        color: var(--ac-text-2);
+        font-size: 14px;
+    }
+
+    .ac-spinner {
+        width: 28px;
+        height: 28px;
+        border: 3px solid var(--ac-border);
+        border-top-color: var(--ac-primary);
+        border-radius: 50%;
+        animation: ac-spin .75s linear infinite;
+    }
+
+    @@keyframes ac-spin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    @@keyframes ac-fadeup {
+        from {
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+</style>
+
+<div class="ac-root">
+    <!-- Breadcrumb -->
+    <div class="ac-topbar">
+        <nav class="ac-breadcrumb">
+            <a href="/admin">Trang quản trị</a>
+            <span class="ac-breadcrumb-sep">›</span>
+            <a href="/admin/accounts">Tài khoản</a>
+            <span class="ac-breadcrumb-sep">›</span>
+            <span class="ac-breadcrumb-current">@(IsEditMode ? "Chỉnh sửa" : "Tạo mới")</span>
+        </nav>
+        <button class="ac-btn ac-btn-ghost ac-btn-sm" type="button" @onclick="GoBack">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 12H5M12 5l-7 7 7 7" /></svg>
+            Quay lại
+        </button>
     </div>
-}
+
+    <!-- Hero -->
+    <div class="ac-hero">
+        <h1>@(IsEditMode ? "Sửa tài khoản" : "Thêm tài khoản")</h1>
+        <p>Quản lý tài khoản đăng nhập, vai trò và trạng thái hoạt động.</p>
+    </div>
+
+    @if (model == null)
+    {
+        <div class="ac-loading">
+            <div class="ac-spinner"></div>
+            <span>Đang tải dữ liệu...</span>
+        </div>
+    }
+    else
+    {
+        <div class="ac-layout">
+            <div class="ac-card">
+                <div class="ac-card-header">
+                    <div class="ac-card-header-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></svg>
+                    </div>
+                    <h2>Thông tin tài khoản</h2>
+                </div>
+                <div class="ac-card-body">
+                    <div class="ac-form-grid">
+                        <div class="ac-field">
+                            <label class="ac-label">Tên đăng nhập</label>
+                            <input class="ac-input" @bind="model.UserName" disabled="@IsEditMode" placeholder="Tên đăng nhập" />
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Họ tên</label>
+                            <input class="ac-input" @bind="model.FullName" placeholder="Nhập họ tên" />
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Tên hiển thị</label>
+                            <input class="ac-input" @bind="model.DisplayName" placeholder="Tên hiển thị" />
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Email</label>
+                            <input class="ac-input" @bind="model.Email" placeholder="email@truong.edu.vn" />
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Số điện thoại</label>
+                            <input class="ac-input" @bind="model.Phone" placeholder="Số điện thoại" />
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Vai trò</label>
+                            <select class="ac-input" @bind="model.Roles">
+                                <option value="Administrator">Administrator</option>
+                                <option value="Editor">Editor</option>
+                                <option value="Author">Author</option>
+                                <option value="Viewer">Viewer</option>
+                            </select>
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Loại auth</label>
+                            <select class="ac-input" @bind="model.AuthType">
+                                <option value="Local">Local</option>
+                                <option value="SSO">SSO</option>
+                            </select>
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Trạng thái</label>
+                            <select class="ac-input" @bind="model.IsActive">
+                                <option value="true">Đang bật</option>
+                                <option value="false">Tắt</option>
+                            </select>
+                        </div>
+                        <div class="ac-field">
+                            <label class="ac-label">Khóa tài khoản</label>
+                            <select class="ac-input" @bind="model.IsLocked">
+                                <option value="false">Không khóa</option>
+                                <option value="true">Đang khóa</option>
+                            </select>
+                        </div>
+                        <div class="ac-field" style="grid-column:1/-1;">
+                            <label class="ac-label">Mật khẩu @(IsEditMode ? "(chỉ nhập khi muốn đổi)" : "")</label>
+                            <input class="ac-input" type="password" @bind="model.Password" placeholder="@(IsEditMode ? "Để trống nếu không đổi" : "Nhập mật khẩu")" />
+                        </div>
+                        <div class="ac-field" style="grid-column:1/-1;">
+                            <label class="ac-label">Ghi chú khóa</label>
+                            <textarea class="ac-input" rows="3" @bind="model.LockReason" placeholder="Lý do khóa tài khoản..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="ac-action-bar">
+                        <button type="button" class="ac-btn ac-btn-primary" @onclick="SaveAsync">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                            Lưu
+                        </button>
+                        <button type="button" class="ac-btn ac-btn-ghost" @onclick="GoBack">Hủy</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
 
 @code {
     [Parameter] public string? Id { get; set; }
-
     private AdminAccountUpsertDto? model;
+    private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
 
     protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrWhiteSpace(Id))
+        if (IsEditMode)
         {
-            var detail = await AdminAccountService.GetAccountByIdAsync(Id);
+            var detail = await AdminAccountService.GetAccountByIdAsync(Id!);
             if (detail != null)
             {
                 model = new AdminAccountUpsertDto
@@ -62,17 +460,46 @@ else
         {
             MaTruongBo = PN_PublicVariables.MaTruong,
             Roles = "Administrator",
-            AuthType = "Local"
+            AuthType = "Local",
+            IsActive = true
         };
     }
 
     private async Task SaveAsync()
     {
-        if (string.IsNullOrWhiteSpace(model!.Id))
+        if (model == null) return;
+
+        if (!IsEditMode)
+        {
+            if (string.IsNullOrWhiteSpace(model.Password))
+            {
+                // keep UI simple: password required when creating
+                return;
+            }
+
+            if (await AdminAccountService.UsernameExistsAsync(model.MaTruongBo, model.UserName))
+            {
+                return;
+            }
+
             await AdminAccountService.CreateAccountAsync(model);
+        }
         else
+        {
+            if (await AdminAccountService.UsernameExistsAsync(model.MaTruongBo, model.UserName, model.Id))
+            {
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.Password))
+                await AdminAccountService.ResetPasswordAsync(model.Id!, model.Password);
+
+            model.Password = null;
             await AdminAccountService.UpdateAccountAsync(model);
+        }
 
         Nav.NavigateTo("/admin/accounts");
     }
+
+    private void GoBack() => Nav.NavigateTo("/admin/accounts");
 }

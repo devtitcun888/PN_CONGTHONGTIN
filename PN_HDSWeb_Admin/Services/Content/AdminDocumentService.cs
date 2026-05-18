@@ -83,7 +83,7 @@ public class AdminDocumentService : IAdminDocumentService
     public async Task<AdminDocumentDetail?> GetDocumentByIdAsync(string id)
     {
         var sql = $@"
-            SELECT id, ma_truong_bo, document_type_id, doc_number, doc_title, doc_type, doc_code, issuer, summary, content, file_url,
+            SELECT id, ma_truong_bo, document_type_id, doc_number, doc_title, doc_type, doc_code, issuer, summary, content, file_url, file_name, mime_type,
                    status, version_no, issued_date, effective_date, expiry_date, is_deleted
             FROM documents
             WHERE id = '{Escape(id)}' AND is_deleted = FALSE
@@ -105,6 +105,8 @@ public class AdminDocumentService : IAdminDocumentService
             Summary = row["summary"]?.ToString(),
             Content = row["content"]?.ToString(),
             FileUrl = row["file_url"]?.ToString(),
+            FileName = row["file_name"]?.ToString(),
+            MimeType = row["mime_type"]?.ToString(),
             Status = row["status"]?.ToString(),
             VersionNo = row["version_no"] == DBNull.Value ? 1 : Convert.ToInt32(row["version_no"]),
             IssuedDate = row["issued_date"] == DBNull.Value ? null : Convert.ToDateTime(row["issued_date"]),
@@ -117,11 +119,11 @@ public class AdminDocumentService : IAdminDocumentService
     {
         var sql = $@"
             INSERT INTO documents
-            (ma_truong_bo, document_type_id, doc_type, doc_number, doc_title, doc_code, issuer, summary, content, file_url,
+            (ma_truong_bo, document_type_id, doc_type, doc_number, doc_title, doc_code, issuer, summary, content, file_url, file_name, mime_type,
              status, version_no, issued_date, effective_date, expiry_date, created_at, updated_at, is_deleted)
             VALUES
             ('{Escape(model.MaTruongBo)}', {ToNullableBigIntSql(model.DocumentTypeId)}, '{Escape(model.DocType)}', '{Escape(model.DocNumber)}', '{Escape(model.DocTitle)}', '{Escape(model.DocCode)}',
-             '{Escape(model.Issuer)}', '{Escape(model.Summary)}', '{Escape(model.Content)}', '{Escape(model.FileUrl)}',
+             '{Escape(model.Issuer)}', '{Escape(model.Summary)}', '{Escape(model.Content)}', '{Escape(model.FileUrl)}', '{Escape(model.FileName)}', '{Escape(model.MimeType)}',
              '{Escape(model.Status)}', {model.VersionNo},
              {(model.IssuedDate.HasValue ? $"'{model.IssuedDate:yyyy-MM-dd}'" : "NULL")},
              {(model.EffectiveDate.HasValue ? $"'{model.EffectiveDate:yyyy-MM-dd}'" : "NULL")},
@@ -143,6 +145,8 @@ public class AdminDocumentService : IAdminDocumentService
                    summary = '{Escape(model.Summary)}',
                    content = '{Escape(model.Content)}',
                    file_url = '{Escape(model.FileUrl)}',
+                   file_name = '{Escape(model.FileName)}',
+                   mime_type = '{Escape(model.MimeType)}',
                    status = '{Escape(model.Status)}',
                    version_no = {model.VersionNo},
                    issued_date = {(model.IssuedDate.HasValue ? $"'{model.IssuedDate:yyyy-MM-dd}'" : "NULL")},
@@ -235,6 +239,8 @@ public class AdminDocumentDetail
     public string? Summary { get; set; }
     public string? Content { get; set; }
     public string? FileUrl { get; set; }
+    public string? FileName { get; set; }
+    public string? MimeType { get; set; }
     public string? Status { get; set; }
     public int VersionNo { get; set; } = 1;
     public DateTime? IssuedDate { get; set; }
