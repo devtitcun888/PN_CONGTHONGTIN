@@ -18,7 +18,13 @@ a:hover { text-decoration: underline; }
 .public-searchbar { display: flex; gap: 10px; padding: 0 0 12px; }
 .public-search-input { flex: 1; border: 1px solid var(--public-border); border-radius: 999px; padding: 11px 16px; font: inherit; background: white; }
 .public-search-btn { border: 0; border-radius: 999px; padding: 11px 18px; background: var(--public-primary); color: white; font-weight: 700; cursor: pointer; }
-.public-nav { padding: 0; background: #008a13; border-top: 1px solid #19b233; border-bottom: 1px solid #006f0f; box-shadow: none; }
+.public-nav {
+    padding: 0;
+    background: #1465ff;
+    border-top: 1px solid #19b233;
+    border-bottom: 1px solid #006f0f;
+    box-shadow: none;
+}
 .public-nav.sticky { box-shadow: 0 4px 14px rgba(15,23,42,.14); }
 .public-nav ul { list-style: none; padding: 0; margin: 0 auto; width: min(1200px, 100%); display: flex; flex-wrap: nowrap; justify-content: center; gap: 0; }
 .public-nav > ul > li { position: relative; }

@@ -1,52 +1,447 @@
 @page "/documents/{Id}"
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicDocumentService PublicDocumentService
+@inject NavigationManager Navigation
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital,wght@0,700;0,800;1,700&display=swap');
+
+    :root {
+        --doc-primary: #1a56db;
+        --doc-primary-dark: #1e40af;
+        --doc-primary-soft: #eff6ff;
+        --doc-surface: #ffffff;
+        --doc-bg: #f3f7fb;
+        --doc-border: #e2e8f0;
+        --doc-text: #0f172a;
+        --doc-muted: #64748b;
+        --doc-shadow: 0 4px 24px rgba(15,23,42,.08);
+        --doc-shadow-lg: 0 8px 40px rgba(15,23,42,.13);
+        --doc-radius: 18px;
+        --doc-tr: .22s cubic-bezier(.4,0,.2,1);
+    }
+
+    .doc-wrap {
+        font-family: 'Be Vietnam Pro', sans-serif;
+        color: var(--doc-text);
+        background: var(--doc-bg);
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 0 0 64px;
+        display: flex;
+        flex-direction: column;
+        gap: 28px;
+    }
+
+    .doc-breadcrumb {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 12.5px;
+        color: var(--doc-muted);
+        padding-top: 18px;
+    }
+
+    .doc-breadcrumb a {
+        color: var(--doc-primary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color var(--doc-tr);
+    }
+
+    .doc-breadcrumb a:hover {
+        color: var(--doc-primary-dark);
+        text-decoration: underline;
+    }
+
+    .doc-breadcrumb-sep {
+        color: #cbd5e1;
+    }
+
+    .doc-card,
+    .doc-related,
+    .doc-preview-shell {
+        background: var(--doc-surface);
+        border: 1px solid var(--doc-border);
+        border-radius: var(--doc-radius);
+        box-shadow: var(--doc-shadow);
+        overflow: hidden;
+    }
+
+    .doc-cover {
+        width: 100%;
+        max-height: 380px;
+        object-fit: cover;
+        display: block;
+        background: #dbeafe;
+    }
+
+    .doc-head {
+        padding: 32px 40px 24px;
+        border-bottom: 1px solid var(--doc-border);
+    }
+
+    .doc-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        background: var(--doc-primary-soft);
+        color: var(--doc-primary);
+        border: 1px solid rgba(26,86,219,.18);
+        font-size: 11.5px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        padding: 5px 12px;
+        border-radius: 999px;
+        margin-bottom: 14px;
+    }
+
+    .doc-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(22px, 3.5vw, 38px);
+        font-weight: 800;
+        line-height: 1.25;
+        color: var(--doc-text);
+        margin: 0 0 14px;
+    }
+
+    .doc-summary {
+        font-size: 15.5px;
+        color: var(--doc-muted);
+        line-height: 1.75;
+        margin: 0 0 18px;
+        font-style: italic;
+        border-left: 3px solid var(--doc-primary);
+        padding-left: 16px;
+    }
+
+    .doc-meta {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        color: var(--doc-muted);
+        font-size: 12.5px;
+        font-weight: 500;
+    }
+
+    .doc-meta-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .doc-content {
+        padding: 32px 40px 36px;
+        font-size: 15.5px;
+        line-height: 1.85;
+        color: #1e293b;
+    }
+
+    .doc-content h1,
+    .doc-content h2,
+    .doc-content h3,
+    .doc-content h4 {
+        font-family: 'Playfair Display', serif;
+        color: var(--doc-text);
+        margin: 1.5em 0 .6em;
+        line-height: 1.3;
+    }
+
+    .doc-content h2 {
+        font-size: 1.45em;
+        border-bottom: 2px solid var(--doc-border);
+        padding-bottom: .35em;
+    }
+
+    .doc-content h3 { font-size: 1.18em; }
+    .doc-content p { margin: 0 0 1.05em; }
+    .doc-content a { color: var(--doc-primary); text-decoration: underline; text-underline-offset: 3px; }
+    .doc-content img { max-width: 100%; border-radius: 12px; box-shadow: var(--doc-shadow); margin: .5em 0; }
+    .doc-content blockquote {
+        margin: 1.4em 0;
+        padding: 14px 20px;
+        border-left: 4px solid var(--doc-primary);
+        background: var(--doc-primary-soft);
+        border-radius: 0 12px 12px 0;
+        font-style: italic;
+        color: #1e40af;
+    }
+    .doc-content ul,
+    .doc-content ol { padding-left: 1.5em; margin: .8em 0 1em; }
+    .doc-content li { margin-bottom: .35em; }
+    .doc-content table { width: 100%; border-collapse: collapse; margin: 1em 0; overflow: hidden; border-radius: 12px; }
+    .doc-content th,
+    .doc-content td { border: 1px solid var(--doc-border); padding: 10px 12px; text-align: left; }
+    .doc-content th { background: #f8fafc; font-weight: 700; }
+
+    .doc-attachment {
+        margin: 0 40px 36px;
+        border: 1px solid var(--doc-border);
+        border-radius: 16px;
+        overflow: hidden;
+        background: #fafbfd;
+    }
+
+    .doc-attachment-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--doc-border);
+        background: linear-gradient(180deg, #fff, #f8fbff);
+    }
+
+    .doc-attachment-title {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .doc-attachment-title strong {
+        font-size: 14px;
+    }
+
+    .doc-attachment-title span {
+        font-size: 12px;
+        color: var(--doc-muted);
+    }
+
+    .doc-attachment-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .doc-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        border-radius: 999px;
+        padding: 9px 14px;
+        font-size: 12.5px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: all var(--doc-tr);
+        border: 1px solid transparent;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .doc-btn-primary {
+        background: var(--doc-primary);
+        color: #fff;
+        box-shadow: 0 10px 24px rgba(26,86,219,.18);
+    }
+
+    .doc-btn-primary:hover { background: var(--doc-primary-dark); }
+    .doc-btn-ghost {
+        background: #fff;
+        color: var(--doc-text);
+        border-color: var(--doc-border);
+    }
+    .doc-btn-ghost:hover {
+        border-color: rgba(26,86,219,.22);
+        background: var(--doc-primary-soft);
+        color: var(--doc-primary);
+    }
+
+    .doc-preview-shell {
+        margin: 0 40px 36px;
+    }
+
+    .doc-preview {
+        background: #0b1220;
+        min-height: 520px;
+    }
+
+    .doc-preview iframe,
+    .doc-preview img,
+    .doc-preview video,
+    .doc-preview audio {
+        width: 100%;
+        display: block;
+    }
+
+    .doc-preview iframe { min-height: 760px; border: 0; background: #fff; }
+    .doc-preview img { object-fit: contain; max-height: 760px; background: #0b1220; }
+    .doc-preview video { max-height: 760px; background: #000; }
+    .doc-preview audio { background: #0b1220; }
+
+    .doc-related {
+        padding: 24px 28px 28px;
+    }
+
+    .doc-related h2 {
+        margin: 0 0 18px;
+        font-family: 'Playfair Display', serif;
+        font-size: 24px;
+    }
+
+    .doc-related-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 14px;
+    }
+
+    .doc-related-card {
+        border: 1px solid var(--doc-border);
+        border-radius: 16px;
+        padding: 16px 18px;
+        background: #fff;
+        transition: transform var(--doc-tr), box-shadow var(--doc-tr), border-color var(--doc-tr);
+    }
+
+    .doc-related-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--doc-shadow-lg);
+        border-color: rgba(26,86,219,.2);
+    }
+
+    .doc-related-card a {
+        text-decoration: none;
+        color: inherit;
+        display: block;
+    }
+
+    .doc-related-card h3 {
+        margin: 0 0 8px;
+        font-size: 15px;
+        line-height: 1.45;
+    }
+
+    .doc-related-card p {
+        margin: 0;
+        color: var(--doc-muted);
+        font-size: 12.5px;
+    }
+
+    .doc-empty {
+        padding: 48px 24px;
+        text-align: center;
+        color: var(--doc-muted);
+    }
+
+    @@media (max-width: 768px) {
+        .doc-head,
+        .doc-content {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .doc-attachment,
+        .doc-preview-shell {
+            margin-left: 20px;
+            margin-right: 20px;
+        }
+
+        .doc-related {
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .doc-preview iframe { min-height: 560px; }
+    }
+</style>
 
 @if (document == null)
 {
-    <p>Đang tải hoặc không tìm thấy văn bản.</p>
+    <div class="doc-wrap">
+        <div class="doc-empty">Đang tải hoặc không tìm thấy văn bản.</div>
+    </div>
 }
 else
 {
-    <div class="public-article">
-        <nav class="breadcrumb">
+    <div class="doc-wrap">
+        <nav class="doc-breadcrumb" aria-label="breadcrumb">
             <a href="/">Trang chủ</a>
-            <span>/</span>
+            <span class="doc-breadcrumb-sep">/</span>
             <a href="/documents">Văn bản công khai</a>
-            <span>/</span>
+            <span class="doc-breadcrumb-sep">/</span>
             <span>@document.DocTitle</span>
         </nav>
 
-        <article class="article-card">
-            <div class="section-head" style="margin-bottom: 10px;">
-                <h1>@document.DocTitle</h1>
+        <article class="doc-card">
+@*             @if (!string.IsNullOrWhiteSpace(document.CoverImageUrl))
+            {
+                <img class="doc-cover" src="@document.CoverImageUrl" alt="@document.DocTitle" />
+            } *@
+
+            <div class="doc-head">
                 @if (!string.IsNullOrWhiteSpace(document.TypeName))
                 {
-                    <span class="chip active">@document.TypeName</span>
+                    <div class="doc-chip">@document.TypeName</div>
                 }
+                <h1 class="doc-title">@document.DocTitle</h1>
+                @if (!string.IsNullOrWhiteSpace(document.Summary))
+                {
+                    <p class="doc-summary">@document.Summary</p>
+                }
+                <div class="doc-meta">
+                    <span class="doc-meta-item"><strong>Số hiệu:</strong> @document.DocNumber</span>
+                    <span class="doc-meta-item"><strong>Ngày ban hành:</strong> @document.IssuedDate</span>
+                </div>
             </div>
-            <p><strong>Số hiệu:</strong> @document.DocNumber</p>
-            <p><strong>Loại văn bản:</strong> @(document.TypeName ?? "Chưa phân loại")</p>
-            <p><strong>Ngày ban hành:</strong> @document.IssuedDate</p>
-            @if (!string.IsNullOrWhiteSpace(document.Summary))
-            {
-                <p><strong>Tóm tắt:</strong> @document.Summary</p>
-            }
-            <div class="article-content">@((MarkupString)(document.Content ?? string.Empty))</div>
+
+            <div class="doc-content">@((MarkupString)(document.Content ?? string.Empty))</div>
+
             @if (!string.IsNullOrWhiteSpace(document.FileUrl))
             {
-                <p><a href="@document.FileUrl" target="_blank">Tải file đính kèm</a></p>
+                <div class="doc-attachment">
+                    <div class="doc-attachment-head">
+                        <div class="doc-attachment-title">
+                            <strong>File đính kèm</strong>
+                            <span>@GetAttachmentLabel(document.FileUrl)</span>
+                        </div>
+                        <div class="doc-attachment-actions">
+                            <a class="doc-btn doc-btn-ghost" href="@document.FileUrl" target="_blank" rel="noopener noreferrer">Mở tab mới</a>
+                            <a class="doc-btn doc-btn-primary" href="@document.FileUrl" download>Tải xuống</a>
+                        </div>
+                    </div>
+                </div>
+
+                @if (CanPreview(document.FileUrl))
+                {
+                    <div class="doc-preview-shell">
+                        <div class="doc-preview">
+                            @if (GetFileType(document.FileUrl) == "pdf")
+                            {
+                                <iframe src="@GetPdfPreviewUrl(document.FileUrl)" title="@document.DocTitle"></iframe>
+                            }
+                            else if (GetFileType(document.FileUrl) == "image")
+                            {
+                                <img src="@document.FileUrl" alt="@document.DocTitle" />
+                            }
+                            else if (GetFileType(document.FileUrl) == "video")
+                            {
+                                <video controls preload="metadata">
+                                    <source src="@document.FileUrl" />
+                                </video>
+                            }
+                            else if (GetFileType(document.FileUrl) == "audio")
+                            {
+                                <audio controls preload="metadata">
+                                    <source src="@document.FileUrl" />
+                                </audio>
+                            }
+                        </div>
+                    </div>
+                }
             }
         </article>
 
         @if (relatedDocuments?.Any() == true)
         {
-            <section class="related-section">
+            <section class="doc-related">
                 <h2>Văn bản liên quan</h2>
-                <div class="related-grid">
+                <div class="doc-related-grid">
                     @foreach (var item in relatedDocuments)
                     {
-                        <article class="related-card">
+                        <article class="doc-related-card">
                             <a href="/documents/@item.Id">
                                 <h3>@item.DocTitle</h3>
                                 <p>@item.DocNumber</p>
@@ -70,6 +465,73 @@ else
         if (document != null)
         {
             relatedDocuments = await PublicDocumentService.GetRelatedDocumentsAsync(PN_PublicVariables.MaTruong, document.DocumentTypeId, document.Id ?? string.Empty);
+        }
+    }
+
+    private static string GetAttachmentLabel(string? fileUrl)
+    {
+        var fileType = GetFileType(fileUrl);
+        return fileType switch
+        {
+            "pdf" => "Xem trực tiếp PDF trong trang",
+            "image" => "Ảnh xem trước tự động",
+            "video" => "Video xem trước tự động",
+            "audio" => "Âm thanh xem trước tự động",
+            _ => "Định dạng chỉ hỗ trợ tải xuống"
+        };
+    }
+
+    private static bool CanPreview(string? fileUrl)
+    {
+        var fileType = GetFileType(fileUrl);
+        return fileType is "pdf" or "image" or "video" or "audio";
+    }
+
+    private static string GetPdfPreviewUrl(string? fileUrl)
+    {
+        if (string.IsNullOrWhiteSpace(fileUrl))
+        {
+            return string.Empty;
+        }
+
+        return fileUrl.Contains("#")
+            ? fileUrl
+            : $"{fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH";
+    }
+
+    private static string GetFileType(string? fileUrl)
+    {
+        var ext = GetExtension(fileUrl);
+        return ext switch
+        {
+            "pdf" => "pdf",
+            "jpg" or "jpeg" or "png" or "gif" or "webp" or "bmp" or "svg" => "image",
+            "mp4" or "webm" or "ogg" or "mov" or "m4v" => "video",
+            "mp3" or "wav" or "m4a" or "aac" or "flac" or "opus" => "audio",
+            _ => "file"
+        };
+    }
+
+    private static string GetExtension(string? fileUrl)
+    {
+        if (string.IsNullOrWhiteSpace(fileUrl))
+        {
+            return string.Empty;
+        }
+
+        try
+        {
+            var path = new Uri(fileUrl, UriKind.RelativeOrAbsolute).IsAbsoluteUri
+                ? new Uri(fileUrl).AbsolutePath
+                : fileUrl;
+
+            var ext = Path.GetExtension(path);
+            return string.IsNullOrWhiteSpace(ext) ? string.Empty : ext.TrimStart('.').ToLowerInvariant();
+        }
+        catch
+        {
+            var ext = Path.GetExtension(fileUrl);
+            return string.IsNullOrWhiteSpace(ext) ? string.Empty : ext.TrimStart('.').ToLowerInvariant();
         }
     }
 }

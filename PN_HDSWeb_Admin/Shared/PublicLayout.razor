@@ -126,7 +126,7 @@
             <button class="public-mobile-toggle" @onclick="ToggleMobileMenu">☰ Menu</button>
             <ul>
                 <li class="nav-item @(IsActiveMenu("/") ? "active" : string.Empty)"><a href="/" title="Trang chủ">⌂</a></li>
-                <li class="nav-item public-nav-label"><span>Danh mục chính</span></li>
+                <li class="nav-item public-nav-label"><span>Trang chủ</span></li>
                 @if (menus != null)
                 {
                     @foreach (var item in menus.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder))
