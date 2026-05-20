@@ -1,202 +1,30 @@
-@page "/login-admin"
+﻿@page "/login-admin"
 @namespace LoginComponent
 @using Microsoft.AspNetCore.WebUtilities
 @using PN_HDSWeb_Admin.Services.Auth
+@using PN_HDSWeb_Admin.Services.Public
 @using PN_HDSWeb_Admin.Data
 @inject IAdminLoginService AdminLoginService
 @inject HttpContentService HttpContentService
+@inject IPublicNavigationService PublicNavigationService
 @inject NavigationManager navManager
 
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
-
-    :root {
-        --lg-bg: #f4f6fb;
-        --lg-surface: #ffffff;
-        --lg-border: #e4e9f2;
-        --lg-border-focus: #3b6ef6;
-        --lg-primary: #3b6ef6;
-        --lg-primary-hover: #2554e0;
-        --lg-primary-soft: #eef2fe;
-        --lg-text: #0f1b35;
-        --lg-text-2: #5a6a8a;
-        --lg-text-3: #a0aec0;
-        --lg-danger: #e53e3e;
-        --lg-danger-soft: #fff5f5;
-        --lg-radius: 14px;
-        --lg-radius-sm: 9px;
-        --lg-shadow: 0 8px 32px rgba(15,27,53,.12);
-        --lg-transition: .2s cubic-bezier(.4,0,.2,1);
-    }
-
-    .lg-root {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        min-height: 100vh;
-        background: var(--lg-bg);
-        font-family: 'Be Vietnam Pro', sans-serif;
-        color: var(--lg-text);
-        padding: 20px;
-        box-sizing: border-box;
-    }
-
-    .lg-card {
-        width: 100%;
-        max-width: 420px;
-        background: var(--lg-surface);
-        border-radius: var(--lg-radius);
-        box-shadow: var(--lg-shadow);
-        padding: 36px 32px 32px;
-        animation: lg-fadeup .4s ease;
-    }
-
-        .lg-card h1 {
-            font-family: 'Instrument Serif', serif;
-            font-size: 26px;
-            font-weight: 400;
-            text-align: center;
-            margin: 0 0 8px;
-            color: var(--lg-text);
-        }
-
-        .lg-card .lg-sub {
-            text-align: center;
-            font-size: 13.5px;
-            color: var(--lg-text-2);
-            margin-bottom: 28px;
-        }
-
-    .lg-divider {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin: 20px 0;
-        color: var(--lg-text-3);
-        font-size: 12px;
-        font-weight: 500;
-        text-transform: uppercase;
-    }
-
-        .lg-divider::before,
-        .lg-divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--lg-border);
-        }
-
-    .lg-field {
-        margin-bottom: 16px;
-    }
-
-    .lg-label {
-        display: block;
-        font-size: 12.5px;
-        font-weight: 600;
-        color: var(--lg-text-2);
-        text-transform: uppercase;
-        letter-spacing: .4px;
-        margin-bottom: 6px;
-    }
-
-    .lg-input {
-        width: 100%;
-        padding: 10px 14px;
-        border: 1.5px solid var(--lg-border);
-        border-radius: var(--lg-radius-sm);
-        font-family: inherit;
-        font-size: 14px;
-        color: var(--lg-text);
-        background: var(--lg-surface);
-        transition: border-color var(--lg-transition), box-shadow var(--lg-transition);
-        outline: none;
-    }
-
-        .lg-input:focus {
-            border-color: var(--lg-border-focus);
-            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
-        }
-
-    .lg-error {
-        margin-top: 12px;
-        padding: 10px 14px;
-        background: var(--lg-danger-soft);
-        border: 1px solid #fed7d7;
-        border-radius: var(--lg-radius-sm);
-        font-size: 13px;
-        color: var(--lg-danger);
-        text-align: center;
-    }
-
-    .lg-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        width: 100%;
-        padding: 11px 18px;
-        border-radius: var(--lg-radius-sm);
-        font-family: inherit;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 1.5px solid transparent;
-        transition: all var(--lg-transition);
-        white-space: nowrap;
-        text-decoration: none;
-        background: none;
-    }
-
-    .lg-btn-primary {
-        background: var(--lg-primary);
-        color: white;
-        border-color: var(--lg-primary);
-        box-shadow: 0 2px 12px rgba(59,110,246,.25);
-    }
-
-        .lg-btn-primary:hover {
-            background: var(--lg-primary-hover);
-            border-color: var(--lg-primary-hover);
-            box-shadow: 0 4px 18px rgba(59,110,246,.35);
-            transform: translateY(-1px);
-        }
-
-    .lg-btn-ghost {
-        background: transparent;
-        color: var(--lg-text-2);
-        border-color: var(--lg-border);
-    }
-
-        .lg-btn-ghost:hover {
-            border-color: var(--lg-text-2);
-            color: var(--lg-text);
-            background: #f8fafd;
-        }
-
-    @@keyframes lg-fadeup {
-        from {
-            opacity: 0;
-            transform: translateY(16px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    @@media (max-width: 480px) {
-        .lg-card {
-            padding: 28px 20px 24px;
-        }
-    }
-</style>
 
 <div class="lg-root">
     <div class="lg-card">
+        <div class="lg-brand">
+            @if (!string.IsNullOrWhiteSpace(siteInfo?.LogoUrl))
+            {
+                <img src="@siteInfo.LogoUrl" alt="@LoginBrandName" />
+            }
+            else
+            {
+                <span>PN</span>
+            }
+            <strong>@LoginBrandName</strong>
+        </div>
         <h1>Đăng nhập quản trị</h1>
-        <p class="lg-sub">Truy cập hệ thống quản lý trường học</p>
+        <p class="lg-sub">@LoginSubtitle</p>
 
         <!-- SSO -->
         <button class="lg-btn lg-btn-ghost" @onclick="LoginSSO">
@@ -233,9 +61,16 @@
     private string password = string.Empty;
     private string message = string.Empty;
     private bool _handledToken;
+    private PublicFooterInfo? siteInfo;
+
+    private string LoginBrandName => string.IsNullOrWhiteSpace(siteInfo?.SchoolName) ? "Cổng thông tin" : siteInfo!.SchoolName!;
+    private string LoginSubtitle => string.IsNullOrWhiteSpace(siteInfo?.SiteSlogan)
+        ? "Truy cập hệ thống quản lý cổng thông tin"
+        : $"Quản trị {siteInfo!.SiteSlogan}";
 
     protected override async Task OnInitializedAsync()
     {
+        siteInfo = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
         await TryLoginByTokenFromQueryAsync();
     }
 

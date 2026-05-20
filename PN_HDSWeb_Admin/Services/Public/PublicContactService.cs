@@ -15,17 +15,18 @@ public class PublicContactService : IPublicContactService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicContactService> _logger;
+    private readonly IPublicSiteSettingService _siteSettingService;
 
-    public PublicContactService(ILogger<PublicContactService> logger)
+    public PublicContactService(ILogger<PublicContactService> logger, IPublicSiteSettingService siteSettingService)
     {
         _logger = logger;
+        _siteSettingService = siteSettingService;
     }
 
     public async Task<PublicContactInfo> GetContactAsync(string maTruongBo)
     {
         var sql = $@"
-            SELECT tentruong, diachi_truong, logo_truong, hieutruong->>'ho_ten' AS leader_name, hieutruong->>'so_dien_thoai' AS leader_phone,
-                   email, hotline, website_url, facebook_url, youtube_url, zalo_url
+            SELECT tentruong, phuongxa, thongtin
             FROM l_truong
             WHERE ma_truong_bo = '{Escape(maTruongBo)}'
             LIMIT 1";
@@ -35,31 +36,36 @@ public class PublicContactService : IPublicContactService
             var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
             if (dt.Rows.Count == 0)
             {
-                return new PublicContactInfo { MaTruongBo = maTruongBo };
+                var fallbackContact = new PublicContactInfo { MaTruongBo = maTruongBo };
+                var fallbackSettings = await _siteSettingService.GetSettingsAsync(maTruongBo);
+                ApplySettings(fallbackContact, fallbackSettings);
+                return fallbackContact;
             }
 
             var row = dt.Rows[0];
-            return new PublicContactInfo
+            var contact = new PublicContactInfo
             {
                 MaTruongBo = maTruongBo,
                 SchoolName = row["tentruong"]?.ToString(),
-                Address = row["diachi_truong"]?.ToString(),
-                LogoUrl = row["logo_truong"]?.ToString(),
-                LeaderName = row["leader_name"]?.ToString(),
-                LeaderPhone = row["leader_phone"]?.ToString(),
-                Phone = row["hotline"]?.ToString() ?? row["leader_phone"]?.ToString(),
-                Email = row["email"]?.ToString(),
-                WebsiteUrl = row["website_url"]?.ToString(),
-                FacebookUrl = row["facebook_url"]?.ToString(),
-                YoutubeUrl = row["youtube_url"]?.ToString(),
-                ZaloUrl = row["zalo_url"]?.ToString(),
+                Address = row["phuongxa"]?.ToString(),
                 MapEmbedUrl = string.Empty
             };
+
+            ApplyContactJson(contact, row["thongtin"]?.ToString());
+
+            var settings = await _siteSettingService.GetSettingsAsync(maTruongBo);
+            ApplySettings(contact, settings);
+
+            return contact;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "GetContactAsync failed");
-            throw;
+            _logger.LogWarning(ex, "GetContactAsync failed. Contact page will use site settings fallback.");
+
+            var fallbackContact = new PublicContactInfo { MaTruongBo = maTruongBo };
+            var fallbackSettings = await _siteSettingService.GetSettingsAsync(maTruongBo);
+            ApplySettings(fallbackContact, fallbackSettings);
+            return fallbackContact;
         }
     }
 
@@ -80,6 +86,66 @@ public class PublicContactService : IPublicContactService
             _logger.LogError(ex, "SendContactMessageAsync failed");
             throw;
         }
+    }
+
+    private static void ApplySettings(PublicContactInfo contact, IReadOnlyDictionary<string, string> settings)
+    {
+        if (settings.Count == 0)
+            return;
+
+        contact.SchoolName = FirstNonBlank(PublicSiteSettingReader.First(settings, "school_name", "site_name"), contact.SchoolName);
+        contact.Address = FirstNonBlank(PublicSiteSettingReader.First(settings, "school_address"), contact.Address);
+        contact.LogoUrl = FirstNonBlank(PublicSiteSettingReader.First(settings, "school_logo"), contact.LogoUrl);
+        contact.Phone = FirstNonBlank(PublicSiteSettingReader.First(settings, "school_phone", "contact_phone", "contact_hotline"), contact.Phone);
+        contact.Email = FirstNonBlank(PublicSiteSettingReader.First(settings, "school_email", "contact_email"), contact.Email);
+        contact.WebsiteUrl = FirstNonBlank(PublicSiteSettingReader.First(settings, "school_website"), contact.WebsiteUrl);
+        contact.FacebookUrl = FirstNonBlank(PublicSiteSettingReader.First(settings, "contact_facebook"), contact.FacebookUrl);
+        contact.YoutubeUrl = FirstNonBlank(PublicSiteSettingReader.First(settings, "contact_youtube"), contact.YoutubeUrl);
+        contact.ZaloUrl = FirstNonBlank(PublicSiteSettingReader.First(settings, "contact_zalo"), contact.ZaloUrl);
+        contact.MapEmbedUrl = FirstNonBlank(PublicSiteSettingReader.First(settings, "contact_map_url"), contact.MapEmbedUrl);
+    }
+
+    private static void ApplyContactJson(PublicContactInfo contact, string? json)
+    {
+        if (string.IsNullOrWhiteSpace(json))
+            return;
+
+        try
+        {
+            using var doc = System.Text.Json.JsonDocument.Parse(json);
+            var root = doc.RootElement;
+
+            contact.SchoolName = FirstNonBlank(GetString(root, "school_name"), GetString(root, "ten_truong"), contact.SchoolName);
+            contact.Address = FirstNonBlank(GetString(root, "school_address"), GetString(root, "diachi_truong"), GetString(root, "address"), contact.Address);
+            contact.LogoUrl = FirstNonBlank(GetString(root, "school_logo"), GetString(root, "logo_truong"), GetString(root, "logo_url"), contact.LogoUrl);
+            contact.LeaderName = FirstNonBlank(GetString(root, "leader_name"), GetString(root, "ho_ten"), contact.LeaderName);
+            contact.LeaderPhone = FirstNonBlank(GetString(root, "leader_phone"), GetString(root, "so_dien_thoai_hieu_truong"), contact.LeaderPhone);
+            contact.Phone = FirstNonBlank(GetString(root, "school_phone"), GetString(root, "contact_phone"), GetString(root, "contact_hotline"), GetString(root, "so_dien_thoai"), contact.Phone, contact.LeaderPhone);
+            contact.Email = FirstNonBlank(GetString(root, "school_email"), GetString(root, "contact_email"), GetString(root, "email"), contact.Email);
+            contact.WebsiteUrl = FirstNonBlank(GetString(root, "school_website"), GetString(root, "website_url"), contact.WebsiteUrl);
+            contact.FacebookUrl = FirstNonBlank(GetString(root, "contact_facebook"), GetString(root, "facebook_url"), contact.FacebookUrl);
+            contact.YoutubeUrl = FirstNonBlank(GetString(root, "contact_youtube"), GetString(root, "youtube_url"), contact.YoutubeUrl);
+            contact.ZaloUrl = FirstNonBlank(GetString(root, "contact_zalo"), GetString(root, "zalo_url"), contact.ZaloUrl);
+            contact.MapEmbedUrl = FirstNonBlank(GetString(root, "contact_map_url"), GetString(root, "map_embed_url"), contact.MapEmbedUrl);
+        }
+        catch
+        {
+            // Invalid school JSON should not block the public contact page.
+        }
+    }
+
+    private static string? GetString(System.Text.Json.JsonElement root, string key)
+        => root.TryGetProperty(key, out var value) ? value.ToString() : null;
+
+    private static string? FirstNonBlank(params string?[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrWhiteSpace(value))
+                return value.Trim();
+        }
+
+        return null;
     }
 
     private static string Escape(string? value) => string.IsNullOrWhiteSpace(value) ? string.Empty : value.Replace("'", "''");

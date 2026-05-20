@@ -6,405 +6,6 @@
 @inject IAdminDocumentTypeService AdminDocumentTypeService
 @inject PN_HDSWeb_Admin.Services.Admin.IAdminFileStorageService FileStorage
 @inject NavigationManager Nav
-
-<style>
-    /* ── Design Tokens ── */
-    .de-root {
-        --de-bg: #f4f6fb;
-        --de-surface: #ffffff;
-        --de-surface-2: #f8fafd;
-        --de-border: #e4e9f2;
-        --de-border-focus: #3b6ef6;
-        --de-primary: #3b6ef6;
-        --de-primary-hover: #2554e0;
-        --de-primary-soft: #eef2fe;
-        --de-text: #0f1b35;
-        --de-text-2: #5a6a8a;
-        --de-text-3: #a0aec0;
-        --de-danger: #e53e3e;
-        --de-danger-soft: #fff5f5;
-        --de-success: #22c55e;
-        --de-success-soft: #f0fdf4;
-        --de-warning: #f59e0b;
-        --de-warning-soft: #fffbeb;
-        --de-radius: 14px;
-        --de-radius-sm: 9px;
-        --de-shadow: 0 4px 24px rgba(15,27,53,.07);
-        --de-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
-        --de-transition: .2s cubic-bezier(.4,0,.2,1);
-        font-family: 'Be Vietnam Pro', sans-serif;
-        background: var(--de-bg);
-        min-height: 100vh;
-        color: var(--de-text);
-    }
-
-        .de-root * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-    /* ── Breadcrumb / Topbar ── */
-    .de-topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 32px 0;
-        gap: 12px;
-    }
-
-    .de-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: var(--de-text-2);
-    }
-
-        .de-breadcrumb a {
-            color: var(--de-primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-            .de-breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-    .de-breadcrumb-sep {
-        color: var(--de-text-3);
-    }
-
-    .de-breadcrumb-current {
-        color: var(--de-text);
-        font-weight: 600;
-    }
-
-    /* ── Hero ── */
-    .de-page-hero {
-        padding: 24px 32px 0;
-    }
-
-        .de-page-hero h1 {
-            font-family: 'Instrument Serif', serif;
-            font-size: 28px;
-            font-weight: 400;
-            letter-spacing: -.3px;
-            line-height: 1.2;
-        }
-
-        .de-page-hero p {
-            margin-top: 4px;
-            font-size: 13.5px;
-            color: var(--de-text-2);
-        }
-
-    /* ── Layout ── */
-    .de-layout {
-        display: grid;
-        grid-template-columns: 1fr 340px;
-        gap: 24px;
-        padding: 24px 32px 40px;
-        max-width: 1400px;
-    }
-
-    @@media (max-width: 1100px) {
-        .de-layout {
-            grid-template-columns: 1fr;
-        }
-
-        .de-topbar, .de-page-hero {
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
-        .de-layout {
-            padding: 20px;
-        }
-    }
-
-    /* ── Card ── */
-    .de-card {
-        background: var(--de-surface);
-        border: 1px solid var(--de-border);
-        border-radius: var(--de-radius);
-        box-shadow: var(--de-shadow);
-        overflow: hidden;
-        animation: de-fadeup .3s ease both;
-    }
-
-        .de-card:nth-child(2) {
-            animation-delay: .05s;
-        }
-
-        .de-card:nth-child(3) {
-            animation-delay: .1s;
-        }
-
-    .de-card-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 18px 22px 16px;
-        border-bottom: 1px solid var(--de-border);
-        background: var(--de-surface-2);
-    }
-
-    .de-card-header-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: var(--de-primary-soft);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--de-primary);
-        flex-shrink: 0;
-    }
-
-    .de-card-header h2 {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--de-text);
-        letter-spacing: -.1px;
-    }
-
-    .de-card-body {
-        padding: 22px;
-    }
-
-    /* ── Form Fields ── */
-    .de-field {
-        margin-bottom: 18px;
-    }
-
-        .de-field:last-child {
-            margin-bottom: 0;
-        }
-
-    .de-label {
-        display: block;
-        font-size: 12.5px;
-        font-weight: 600;
-        color: var(--de-text-2);
-        letter-spacing: .4px;
-        text-transform: uppercase;
-        margin-bottom: 7px;
-    }
-
-    .de-label-hint {
-        display: block;
-        font-size: 11.5px;
-        font-weight: 400;
-        color: var(--de-text-3);
-        text-transform: none;
-        letter-spacing: 0;
-        margin-top: 2px;
-    }
-
-    .de-input {
-        width: 100%;
-        padding: 10px 14px;
-        border: 1.5px solid var(--de-border);
-        border-radius: var(--de-radius-sm);
-        font-family: inherit;
-        font-size: 14px;
-        color: var(--de-text);
-        background: var(--de-surface);
-        transition: border-color var(--de-transition), box-shadow var(--de-transition);
-        outline: none;
-        appearance: none;
-    }
-
-        .de-input:focus {
-            border-color: var(--de-border-focus);
-            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
-        }
-
-        .de-input::placeholder {
-            color: var(--de-text-3);
-        }
-
-    textarea.de-input {
-        resize: vertical;
-        min-height: 80px;
-        line-height: 1.6;
-    }
-
-    select.de-input {
-        cursor: pointer;
-    }
-
-    /* ── File Upload Zone ── */
-    .de-file-zone {
-        border: 2px dashed var(--de-border);
-        border-radius: var(--de-radius-sm);
-        padding: 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: all var(--de-transition);
-        background: var(--de-surface-2);
-    }
-
-        .de-file-zone:hover {
-            border-color: var(--de-primary);
-            background: var(--de-primary-soft);
-        }
-
-        .de-file-zone input[type=file] {
-            display: none;
-        }
-
-    .de-file-zone-icon {
-        width: 44px;
-        height: 44px;
-        border-radius: 12px;
-        background: var(--de-primary-soft);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 10px;
-        color: var(--de-primary);
-    }
-
-    .de-file-zone p {
-        font-size: 13px;
-        color: var(--de-text-2);
-        line-height: 1.5;
-    }
-
-    .de-file-zone strong {
-        color: var(--de-primary);
-    }
-
-    .de-file-preview {
-        margin-top: 12px;
-        padding: 10px 14px;
-        background: var(--de-success-soft);
-        border: 1px solid #bbf7d0;
-        border-radius: var(--de-radius-sm);
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: 13px;
-        color: #166534;
-    }
-
-        .de-file-preview svg {
-            flex-shrink: 0;
-        }
-
-    /* ── Buttons ── */
-    .de-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 10px 20px;
-        border-radius: var(--de-radius-sm);
-        font-family: inherit;
-        font-size: 13.5px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 1.5px solid transparent;
-        transition: all var(--de-transition);
-        text-decoration: none;
-        white-space: nowrap;
-    }
-
-        .de-btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-
-    .de-btn-primary {
-        background: var(--de-primary);
-        color: white;
-        border-color: var(--de-primary);
-        box-shadow: 0 2px 12px rgba(59,110,246,.25);
-    }
-
-        .de-btn-primary:hover:not(:disabled) {
-            background: var(--de-primary-hover);
-            border-color: var(--de-primary-hover);
-            box-shadow: 0 4px 18px rgba(59,110,246,.35);
-            transform: translateY(-1px);
-        }
-
-    .de-btn-ghost {
-        background: transparent;
-        color: var(--de-text-2);
-        border-color: var(--de-border);
-    }
-
-        .de-btn-ghost:hover:not(:disabled) {
-            border-color: var(--de-text-2);
-            color: var(--de-text);
-            background: var(--de-surface-2);
-        }
-
-    .de-btn-sm {
-        padding: 7px 14px;
-        font-size: 12.5px;
-    }
-
-    /* ── Loading ── */
-    .de-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        min-height: 50vh;
-        color: var(--de-text-2);
-        font-size: 14px;
-    }
-
-    .de-spinner {
-        width: 28px;
-        height: 28px;
-        border: 3px solid var(--de-border);
-        border-top-color: var(--de-primary);
-        border-radius: 50%;
-        animation: de-spin .75s linear infinite;
-    }
-
-    @@keyframes de-spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    @@keyframes de-fadeup {
-        from {
-            opacity: 0;
-            transform: translateY(12px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* ── Responsive sidebar ── */
-    .de-side {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-        .de-side > .de-card:nth-child(1) {
-            animation-delay: .1s;
-        }
-
-        .de-side > .de-card:nth-child(2) {
-            animation-delay: .15s;
-        }
-
-        .de-side > .de-card:nth-child(3) {
-            animation-delay: .2s;
-        }
-</style>
-
 <div class="de-root">
     <!-- Breadcrumb -->
     <div class="de-topbar">
@@ -438,7 +39,7 @@
     {
         <div class="de-layout">
             <!-- Cột chính -->
-            <div style="display:flex;flex-direction:column;gap:20px;">
+            <div class="u-flex-column u-gap-20">
                 <!-- Thông tin văn bản -->
                 <div class="de-card">
                     <div class="de-card-header">
@@ -448,7 +49,7 @@
                         <h2>Thông tin văn bản</h2>
                     </div>
                     <div class="de-card-body">
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                        <div class="u-grid-2">
                             <div class="de-field">
                                 <label class="de-label">Số hiệu</label>
                                 <input class="de-input" @bind="model.DocNumber" placeholder="VD: 123/QĐ-UBND" />
@@ -485,11 +86,11 @@
                                     <option value="Rejected">Từ chối</option>
                                 </select>
                             </div>
-                            <div class="de-field" style="grid-column:1/-1;">
+                            <div class="de-field u-span-full">
                                 <label class="de-label">Tóm tắt</label>
                                 <textarea class="de-input" rows="3" @bind="model.Summary" placeholder="Mô tả ngắn cho văn bản..."></textarea>
                             </div>
-                            <div class="de-field" style="grid-column:1/-1;">
+                            <div class="de-field u-span-full">
                                 <label class="de-label">Nội dung</label>
                                 <textarea class="de-input" rows="8" @bind="model.Content" placeholder="Nhập nội dung văn bản..."></textarea>
                             </div>
@@ -514,7 +115,7 @@
                                 </div>
                                 <p>
                                     <strong>Nhấn để chọn file</strong> hoặc kéo thả vào đây<br />
-                                    <span style="font-size:12px;color:var(--de-text-3);">PDF, DOCX, XLSX, hình ảnh…</span>
+                                    <span class="de-file-hint">PDF, DOCX, XLSX, hình ảnh…</span>
                                 </p>
                                 <InputFile OnChange="OnFileSelected" />
                             </label>
@@ -528,14 +129,14 @@
                         </div>
                         @if (!string.IsNullOrWhiteSpace(model.FileUrl))
                         {
-                            <div style="margin-top:14px;padding:14px;border:1px solid var(--de-border);border-radius:var(--de-radius-sm);background:var(--de-surface-2);">
-                                <div style="font-size:12px;font-weight:600;color:var(--de-text-2);text-transform:uppercase;margin-bottom:6px;">File hiện tại</div>
-                                <a href="@model.FileUrl" target="_blank" rel="noopener noreferrer" style="font-size:13px;word-break:break-all;">@model.FileUrl</a>
+                            <div class="u-panel-note">
+                                <div class="de-current-file-label">File hiện tại</div>
+                                <a class="de-current-file-link" href="@model.FileUrl" target="_blank" rel="noopener noreferrer">@model.FileUrl</a>
                             </div>
                         }
                         else
                         {
-                            <div style="margin-top:14px;padding:14px;border:1px solid var(--de-border);border-radius:var(--de-radius-sm);background:var(--de-surface-2);text-align:center;color:var(--de-text-3);font-size:13px;">Chưa có file đính kèm.</div>
+                            <div class="u-panel-empty">Chưa có file đính kèm.</div>
                         }
                     </div>
                 </div>
@@ -552,12 +153,12 @@
                         <h2>Xuất bản</h2>
                     </div>
                     <div class="de-card-body">
-                        <div style="display:flex;flex-direction:column;gap:10px;">
-                            <button class="de-btn de-btn-primary" type="button" @onclick="SaveAsync" style="width:100%;justify-content:center;">
+                        <div class="u-flex-column u-gap-10">
+                            <button class="de-btn de-btn-primary u-w-full u-justify-center" type="button" @onclick="SaveAsync">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
                                 Lưu văn bản
                             </button>
-                            <button class="de-btn de-btn-ghost de-btn-sm" type="button" @onclick='@(() => Nav.NavigateTo("/admin/documents"))' style="width:100%;justify-content:center;">Hủy</button>
+                            <button class="de-btn de-btn-ghost de-btn-sm u-w-full u-justify-center" type="button" @onclick='@(() => Nav.NavigateTo("/admin/documents"))'>Hủy</button>
                         </div>
                     </div>
                 </div>
@@ -575,11 +176,11 @@
                             <label class="de-label">Ngày ban hành</label>
                             <input class="de-input" type="date" value="@IssuedDateText" @onchange="OnIssuedDateChanged" />
                         </div>
-                        <div class="de-field" style="margin-top:18px;">
+                        <div class="de-field u-mt-18">
                             <label class="de-label">Ngày hiệu lực</label>
                             <input class="de-input" type="date" value="@EffectiveDateText" @onchange="OnEffectiveDateChanged" />
                         </div>
-                        <div class="de-field" style="margin-top:18px;">
+                        <div class="de-field u-mt-18">
                             <label class="de-label">Hết hiệu lực</label>
                             <input class="de-input" type="date" value="@ExpireDateText" @onchange="OnExpireDateChanged" />
                         </div>

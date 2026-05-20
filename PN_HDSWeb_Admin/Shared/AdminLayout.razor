@@ -1,19 +1,28 @@
 @inherits LayoutComponentBase
+@using PN_HDSWeb_Admin.Services.Public
 @inject AuthenticationStateProvider AuthStateProvider
 @inject NavigationManager NavManager
+@inject IJSRuntime JS
+@inject IPublicNavigationService PublicNavigationService
 
 <AuthorizeView>
     <Authorized>
         <div class="admin-shell" id="adminShell">
-            _
             <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
 
             <aside class="admin-sidebar" id="adminSidebar">
                 <div class="admin-brand">
-                    <div class="admin-brand-badge">PN</div>
+                    @if (!string.IsNullOrWhiteSpace(adminSite?.LogoUrl))
+                    {
+                        <img class="admin-brand-logo" src="@adminSite.LogoUrl" alt="@AdminBrandName" />
+                    }
+                    else
+                    {
+                        <div class="admin-brand-badge">PN</div>
+                    }
                     <div class="admin-brand-text">
-                        <strong>Cổng thông tin</strong>
-                        <span>Admin Console</span>
+                        <strong>@AdminBrandName</strong>
+                        <span>@AdminBrandSubtitle</span>
                     </div>
                 </div>
 
@@ -64,55 +73,6 @@
             </div>
         </div>
 
-        <script>
-            (function () {
-                var STORAGE_KEY = 'admin_sidebar_collapsed';
-                var shell = document.getElementById('adminShell');
-                var collapseBtn = document.getElementById('sidebarCollapseBtn');
-                var mobileToggle = document.getElementById('mobileToggle');
-                var backdrop = document.getElementById('sidebarBackdrop');
-
-                // ── Restore persisted state ──
-                if (localStorage.getItem(STORAGE_KEY) === '1') {
-                    shell.classList.add('sidebar-collapsed');
-                }
-
-                // ── Desktop collapse toggle ──
-                collapseBtn.addEventListener('click', function () {
-                    var isCollapsed = shell.classList.toggle('sidebar-collapsed');
-                    localStorage.setItem(STORAGE_KEY, isCollapsed ? '1' : '0');
-                });
-
-                // ── Mobile open / close ──
-                function openMobile() {
-                    shell.classList.add('mobile-open');
-                    document.body.style.overflow = 'hidden';
-                }
-
-                function closeMobile() {
-                    shell.classList.remove('mobile-open');
-                    document.body.style.overflow = '';
-                }
-
-                mobileToggle.addEventListener('click', function () {
-                    if (shell.classList.contains('mobile-open')) {
-                        closeMobile();
-                    } else {
-                        openMobile();
-                    }
-                });
-
-                backdrop.addEventListener('click', closeMobile);
-
-                // Close mobile sidebar on navigation
-                document.addEventListener('click', function (e) {
-                    var link = e.target.closest('a[href]');
-                    if (link && shell.classList.contains('mobile-open')) {
-                        closeMobile();
-                    }
-                });
-            })();
-        </script>
     </Authorized>
     <NotAuthorized>
         <div class="admin-login-guard">
@@ -124,174 +84,23 @@
         </div>
     </NotAuthorized>
 </AuthorizeView>
-<style>
-    /* ─────────────────────────────────────────
-       LOGIN GUARD
-    ───────────────────────────────────────── */
 
-    .admin-login-guard {
-        min-height: 100vh;
-        background: radial-gradient(circle at top left, rgba(59,110,246,.10), transparent 28%), radial-gradient(circle at bottom right, rgba(99,102,241,.10), transparent 30%), #f4f6fb;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 32px;
-        position: relative;
-        overflow: hidden;
-        font-family: 'Be Vietnam Pro', sans-serif;
+@code {
+    private PublicFooterInfo? adminSite;
+
+    private string AdminBrandName => string.IsNullOrWhiteSpace(adminSite?.SchoolName) ? "Cổng thông tin" : adminSite!.SchoolName!;
+    private string AdminBrandSubtitle => string.IsNullOrWhiteSpace(adminSite?.SiteSlogan) ? "Admin Console" : adminSite!.SiteSlogan!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        adminSite = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
     }
 
-        /* Background blur decor */
-        .admin-login-guard::before,
-        .admin-login-guard::after {
-            content: "";
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(70px);
-            opacity: .25;
-            pointer-events: none;
-        }
-
-        .admin-login-guard::before {
-            width: 260px;
-            height: 260px;
-            background: #3b6ef6;
-            top: -80px;
-            left: -80px;
-        }
-
-        .admin-login-guard::after {
-            width: 240px;
-            height: 240px;
-            background: #8b5cf6;
-            right: -70px;
-            bottom: -70px;
-        }
-
-    /* ─────────────────────────────────────────
-       CARD
-    ───────────────────────────────────────── */
-
-    .admin-login-card {
-        width: 100%;
-        max-width: 460px;
-        background: rgba(255,255,255,.92);
-        backdrop-filter: blur(18px);
-        border: 1px solid rgba(255,255,255,.55);
-        border-radius: 24px;
-        padding: 42px 38px;
-        box-shadow: 0 10px 40px rgba(15,27,53,.08), 0 2px 12px rgba(15,27,53,.04);
-        text-align: center;
-        position: relative;
-        z-index: 1;
-        animation: adminLoginFade .45s ease;
-    }
-
-        /* Icon */
-        .admin-login-card::before {
-            content: "🔒";
-            width: 72px;
-            height: 72px;
-            border-radius: 20px;
-            background: linear-gradient(135deg,#3b6ef6,#5b7fff);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 22px;
-            font-size: 30px;
-            box-shadow: 0 8px 24px rgba(59,110,246,.28);
-        }
-
-        /* Title */
-        .admin-login-card h4 {
-            font-size: 26px;
-            line-height: 1.35;
-            font-weight: 700;
-            color: #0f1b35;
-            margin-bottom: 12px;
-            letter-spacing: -.3px;
-        }
-
-        /* Description */
-        .admin-login-card p {
-            font-size: 14px;
-            line-height: 1.7;
-            color: #5a6a8a;
-            margin-bottom: 28px;
-        }
-
-        /* ─────────────────────────────────────────
-       BUTTON
-    ───────────────────────────────────────── */
-
-        .admin-login-card .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            min-width: 180px;
-            padding: 12px 22px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all .22s ease;
-        }
-
-        .admin-login-card .btn-primary {
-            background: linear-gradient(135deg,#3b6ef6,#2554e0);
-            color: #fff;
-            border: 1px solid #3b6ef6;
-            box-shadow: 0 6px 18px rgba(59,110,246,.28);
-        }
-
-            .admin-login-card .btn-primary:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 10px 24px rgba(59,110,246,.34);
-                background: linear-gradient(135deg,#2554e0,#1e40af);
-            }
-
-    /* ─────────────────────────────────────────
-       ANIMATION
-    ───────────────────────────────────────── */
-
-    @@keyframes adminLoginFade {
-        from {
-            opacity: 0;
-            transform: translateY(14px) scale(.98);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("adminSidebar.init");
         }
     }
-
-    /* ─────────────────────────────────────────
-       RESPONSIVE
-    ───────────────────────────────────────── */
-
-    @@media (max-width: 640px) {
-
-        .admin-login-guard {
-            padding: 20px;
-        }
-
-        .admin-login-card {
-            padding: 34px 24px;
-            border-radius: 20px;
-        }
-
-            .admin-login-card h4 {
-                font-size: 22px;
-            }
-
-            .admin-login-card p {
-                font-size: 13.5px;
-            }
-
-            .admin-login-card .btn {
-                width: 100%;
-            }
-    }
-</style>
+}

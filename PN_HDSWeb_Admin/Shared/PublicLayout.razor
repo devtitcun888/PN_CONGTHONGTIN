@@ -1,208 +1,165 @@
 @inherits LayoutComponentBase
 @implements IDisposable
 @using Microsoft.AspNetCore.Components.Web
-@using Microsoft.JSInterop
+@using Microsoft.AspNetCore.Components.Routing
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicNavigationService PublicNavigationService
 @inject IPublicStaticPageService PublicStaticPageService
 @inject IPublicPostCategoryService PublicPostCategoryService
 @inject IPublicDocumentTypeService PublicDocumentTypeService
-@inject IJSRuntime JS
 @inject NavigationManager Nav
 
-<style>
-    .public-header {
-        position: sticky !important;
-        top: 0 !important;
-        z-index: 1000 !important;
-        background: #ffffff !important;
-        will-change: transform, box-shadow;
-        transition: box-shadow .22s ease, background-color .22s ease;
-    }
-
-    .public-layout {
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .public-main {
-        flex: 1;
-        padding: 20px 0 40px;
-        background: #f3f6fb;
-    }
-
-    .public-container {
-        width: min(1200px, calc(100% - 32px));
-        margin: 0 auto;
-    }
-
-    .public-footer {
-        margin-top: auto;
-        background: #0f172a;
-        color: #cbd5e1;
-        padding: 28px 0;
-    }
-
-    .public-footer-grid {
-        width: min(1200px, calc(100% - 32px));
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 20px;
-    }
-
-    .public-header.collapsed {
-        box-shadow: 0 10px 30px rgba(15, 23, 42, .16) !important;
-    }
-
-    .public-header-banner {
-        width: 100%;
-        overflow: hidden;
-        max-height: 220px;
-        opacity: 1;
-        transform: translateY(0) scaleY(1);
-        transform-origin: top center;
-        transition: max-height .38s cubic-bezier(.22, 1, .36, 1), opacity .28s ease, transform .38s cubic-bezier(.22, 1, .36, 1);
-        will-change: max-height, opacity, transform;
-    }
-
-    .public-header-banner.collapsed {
-        max-height: 0 !important;
-        opacity: 0 !important;
-        transform: translateY(-10px) scaleY(.96);
-    }
-
-    .public-banner-strip {
-        width: 100%;
-        max-height: 220px;
-        aspect-ratio: 1200 / 220;
-        overflow: hidden;
-        background: linear-gradient(112deg, #395e77, #3587f5);
-    }
-
-    .public-banner-strip img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        object-position: center center;
-        display: block;
-    }
-
-    .public-nav-label span {
-        display: inline-flex;
-        align-items: center;
-        padding: 5px 10px;
-        color: rgba(255,255,255,.82);
-        font-size: 11px;
-        font-weight: 700;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        white-space: nowrap;
-    }
-
-    @@media (max-width: 900px) {
-        .public-nav-label {
-            display: none;
-        }
-    }
-</style>
+<PageTitle>@BrandName</PageTitle>
 
 <div class="public-layout">
-    <header class="public-header @(isHeaderCollapsed ? "collapsed" : string.Empty)">
-        <div class="public-header-banner @(isHeaderCollapsed ? "collapsed" : string.Empty)">
-            @if (modelBanner?.Any() == true)
-            {
-                <div class="public-banner-strip">
-                    @foreach (var banner in modelBanner.Take(1))
+    <header class="public-site-header">
+        <div class="public-sticky-shell">
+            <div class="public-nav-shell">
+                <div class="public-container public-nav-inner">
+                    <a class="public-brand" href="/" @onclick="CloseMobileMenu" aria-label="Trang chủ">
+                        @if (!string.IsNullOrWhiteSpace(footer?.LogoUrl))
+                        {
+                            <img class="public-brand-logo" src="@footer.LogoUrl" alt="@BrandName" />
+                        }
+                        <span class="public-brand-text">
+                            <strong>@BrandName</strong>
+                            <span>@BrandTagline</span>
+                        </span>
+                    </a>
+
+                    <button type="button"
+                            class="public-mobile-toggle"
+                            aria-expanded="@isMobileMenuOpen"
+                            aria-label="Mở menu"
+                            @onclick="ToggleMobileMenu">
+                        <span class="material-symbols-outlined">menu</span>
+                    </button>
+
+                    <nav class="public-nav @(isMobileMenuOpen ? "open" : string.Empty)" aria-label="Điều hướng chính">
+                        <ul>
+                            <li class="nav-item @(IsActiveMenu("/") ? "active" : string.Empty)">
+                                <a href="/" @onclick="CloseMobileMenu">Trang chủ</a>
+                            </li>
+
+                            @if (menus != null)
+                            {
+                                @foreach (var item in menus.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder))
+                                {
+                                    var href = NormalizePublicHref(GetMenuHref(item));
+                                    var categoryChildren = GetPostCategoryChildrenForMenu(item);
+                                    var childMenus = menus.Where(x => x.ParentId == item.Id).OrderBy(x => x.SortOrder).ToList();
+                                    var hasDropdown = childMenus.Any() || categoryChildren.Any();
+                                    var active = IsActiveMenu(href)
+                                        || childMenus.Any(child => IsActiveMenu(NormalizePublicHref(GetMenuHref(child))))
+                                        || categoryChildren.Any(cat => IsActiveMenu(PostCategoryHref(cat)));
+
+                                    <li class="nav-item @(hasDropdown ? "has-dropdown" : string.Empty) @(active ? "active" : string.Empty)">
+                                        @if (IsNavigableHref(href))
+                                        {
+                                            <a href="@href"
+                                               target="@NormalizeTarget(item.Target)"
+                                               rel="@GetRel(item.Target)"
+                                               @onclick="CloseMobileMenu">@item.MenuName</a>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="public-nav-link">@item.MenuName</button>
+                                        }
+
+                                        @if (hasDropdown)
+                                        {
+                                            <ul class="public-dropdown">
+                                                @foreach (var child in childMenus)
+                                                {
+                                                    var childHref = NormalizePublicHref(GetMenuHref(child));
+                                                    <li class="@(IsActiveMenu(childHref) ? "active" : string.Empty)">
+                                                        @if (IsNavigableHref(childHref))
+                                                        {
+                                                            <a href="@childHref"
+                                                               target="@NormalizeTarget(child.Target)"
+                                                               rel="@GetRel(child.Target)"
+                                                               @onclick="CloseMobileMenu">@child.MenuName</a>
+                                                        }
+                                                        else
+                                                        {
+                                                            <button type="button" class="public-dropdown-button">@child.MenuName</button>
+                                                        }
+                                                    </li>
+                                                }
+
+                                                @foreach (var cat in categoryChildren)
+                                                {
+                                                    var catHref = PostCategoryHref(cat);
+                                                    <li class="@(IsActiveMenu(catHref) ? "active" : string.Empty)">
+                                                        <a href="@catHref" @onclick="CloseMobileMenu">@cat.CategoryName</a>
+                                                    </li>
+                                                }
+                                            </ul>
+                                        }
+                                    </li>
+                                }
+                            }
+
+                            <li class="nav-item @(IsActiveMenu("/documents") ? "active" : string.Empty) has-dropdown">
+                                <a href="/documents" @onclick="CloseMobileMenu">Văn bản</a>
+                                @if (documentTypes != null && documentTypes.Any())
+                                {
+                                    <ul class="public-dropdown">
+                                        <li class="@(NormalizePath(Nav.ToAbsoluteUri(Nav.Uri).AbsolutePath) == "/documents" ? "active" : string.Empty)">
+                                            <a href="/documents" @onclick="CloseMobileMenu">Tất cả văn bản</a>
+                                        </li>
+                                        @foreach (var type in documentTypes)
+                                        {
+                                            var typeHref = DocumentTypeHref(type);
+                                            <li class="@(IsActiveMenu(typeHref) ? "active" : string.Empty)">
+                                                <a href="@typeHref" @onclick="CloseMobileMenu">@type.TypeName</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                }
+                            </li>
+
+                            <li class="nav-item @(IsActiveMenu("/organization") ? "active" : string.Empty)">
+                                <a href="/organization" @onclick="CloseMobileMenu">Tổ chức</a>
+                            </li>
+
+                            @if (staticPages != null && staticPages.Any())
+                            {
+                                var staticActive = staticPages.Any(trang => IsActiveMenu(StaticPageHref(trang)));
+                                <li class="nav-item has-dropdown @(staticActive ? "active" : string.Empty)">
+                                    <a href="/about" @onclick="CloseMobileMenu">Giới thiệu</a>
+                                    <ul class="public-dropdown">
+                                        <li class="@(IsActiveMenu("/about") ? "active" : string.Empty)">
+                                            <a href="/about" @onclick="CloseMobileMenu">Tổng quan</a>
+                                        </li>
+                                        @foreach (var trang in staticPages)
+                                        {
+                                            var pageHref = StaticPageHref(trang);
+                                            <li class="@(IsActiveMenu(pageHref) ? "active" : string.Empty)">
+                                                <a href="@pageHref" @onclick="CloseMobileMenu">@trang.Title</a>
+                                            </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+
+                    @if (footer?.FeatureSearchEnabled != false)
                     {
-                        <img src="@banner.ImageUrl" alt="@banner.Title" />
+                        <div class="public-nav-actions">
+                            <div class="public-search-mini">
+                                <input @bind="SearchKeyword"
+                                       @bind:event="oninput"
+                                       @onkeydown="HandleSearchKeyDown"
+                                       placeholder="Tìm kiếm..." />
+                                <button type="button" @onclick="GoSearch" title="Tìm kiếm">
+                                    <span class="material-symbols-outlined">search</span>
+                                </button>
+                            </div>
+                        </div>
                     }
                 </div>
-            }
-        </div>
-
-        <nav class="public-nav @(isMobileMenuOpen ? "open" : string.Empty) @(isHeaderCollapsed ? "sticky" : string.Empty)">
-            <button class="public-mobile-toggle" @onclick="ToggleMobileMenu">☰ Menu</button>
-            <ul>
-                <li class="nav-item @(IsActiveMenu("/") ? "active" : string.Empty)"><a href="/" title="Trang chủ">⌂</a></li>
-                <li class="nav-item public-nav-label"><span>Trang chủ</span></li>
-                @if (menus != null)
-                {
-                    @foreach (var item in menus.Where(x => string.IsNullOrWhiteSpace(x.ParentId)).OrderBy(x => x.SortOrder))
-                    {
-                        var href = GetMenuHref(item);
-                        var active = IsActiveMenu(href);
-                        var categoryChildren = GetPostCategoryChildrenForMenu(item);
-                        var childMenus = menus.Where(x => x.ParentId == item.Id).OrderBy(x => x.SortOrder).ToList();
-                        var hasDropdown = childMenus.Any() || categoryChildren.Any();
-                        <li class="nav-item @(hasDropdown ? "has-dropdown" : string.Empty) @(active ? "active" : string.Empty)">
-                            <a href="@href" target="@item.Target">@item.MenuName</a>
-                            @if (hasDropdown)
-                            {
-                                <ul class="public-dropdown">
-                                    @foreach (var child in childMenus)
-                                    {
-                                        var childHref = GetMenuHref(child);
-                                        <li class="@(IsActiveMenu(childHref) ? "active" : string.Empty)"><a href="@childHref" target="@child.Target">@child.MenuName</a></li>
-                                    }
-                                    @foreach (var cat in categoryChildren)
-                                    {
-                                        <li><a href="/posts/category/@cat.Slug">@cat.CategoryName</a></li>
-                                    }
-                                </ul>
-                            }
-                        </li>
-                    }
-                }
-
-                <li class="nav-item @(IsActiveMenu("/documents") ? "active" : string.Empty) has-dropdown">
-                    <a href="/documents">Văn bản công khai</a>
-                    @if (documentTypes != null && documentTypes.Any())
-                    {
-                        <ul class="public-dropdown">
-                            <li><a href="/documents">Tất cả văn bản</a></li>
-                            @foreach (var type in documentTypes)
-                            {
-                                <li><a href="/documents/type/@type.Slug">@type.TypeName</a></li>
-                            }
-                        </ul>
-                    }
-                </li>
-
-                <li class="nav-item @(IsActiveMenu("/organization") ? "active" : string.Empty)">
-                    <a href="/organization">Cơ cấu tổ chức</a>
-                </li>
-
-                @if (staticPages != null && staticPages.Any())
-                {
-                    <li class="nav-item has-dropdown">
-                        <a href="#">Trang tĩnh</a>
-                        <ul class="public-dropdown">
-                            @foreach (var trang in staticPages)
-                            {
-                                <li><a href="/pages/@trang.Slug">@trang.Title</a></li>
-                            }
-                        </ul>
-                    </li>
-                }
-
-                <li class="nav-item public-grid-trigger">
-                    <a href="#" title="Danh mục">▦</a>
-                </li>
-            </ul>
-        </nav>
-
-        <div class="public-info-searchbar">
-            <div class="public-info-date">Thứ @CurrentDateTimeText</div>
-            <div class="public-info-spacer"></div>
-            <div class="public-language-links">
-                <a href="#">VN</a>
-                <a href="#">EN</a>
-            </div>
-            <div class="public-search-mini">
-                <input @bind="SearchKeyword" @bind:event="oninput" @onkeydown="HandleSearchKeyDown" placeholder="Từ khóa tìm kiếm..." />
-                <button type="button" @onclick="GoSearch" title="Tìm kiếm">🔍</button>
             </div>
         </div>
     </header>
@@ -226,39 +183,95 @@
     <footer class="public-footer">
         @if (footer != null)
         {
-            <div class="public-footer-grid">
+            <div class="public-container public-footer-grid">
                 <div class="footer-brand-block">
-                    @if (!string.IsNullOrWhiteSpace(footer.LogoUrl))
+                    <div class="footer-brand-heading">
+                        @if (footer.ShowLogo && !string.IsNullOrWhiteSpace(footer.LogoUrl))
+                        {
+                            <img class="footer-logo" src="@footer.LogoUrl" alt="@BrandName" />
+                        }
+                        <strong>@BrandName</strong>
+                    </div>
+
+                    <p>@FooterText</p>
+
+                    @if (footer.ShowSocial && HasSocialLinks)
                     {
-                        <img class="footer-logo" src="@footer.LogoUrl" alt="@footer.SchoolName" />
+                        <div class="footer-socials">
+                            @if (!string.IsNullOrWhiteSpace(footer.WebsiteUrl))
+                            {
+                                <a href="@footer.WebsiteUrl" target="_blank" rel="noopener noreferrer" aria-label="Website">
+                                    <span class="material-symbols-outlined">language</span>
+                                </a>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(footer.FacebookUrl))
+                            {
+                                <a href="@footer.FacebookUrl" target="_blank" rel="noopener noreferrer" aria-label="Facebook">f</a>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(footer.YoutubeUrl))
+                            {
+                                <a href="@footer.YoutubeUrl" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                                    <span class="material-symbols-outlined">play_circle</span>
+                                </a>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(footer.ZaloUrl))
+                            {
+                                <a href="@footer.ZaloUrl" target="_blank" rel="noopener noreferrer" aria-label="Zalo">Z</a>
+                            }
+                        </div>
                     }
-                    <div>
-                        <strong>@footer.SchoolName</strong>
-                        <p>@footer.Address</p>
-                        <p>@footer.Phone</p>
-                    </div>
                 </div>
-                <div>
-                    <p>Liên hệ người phụ trách: @footer.LeaderName</p>
+
+                @if (footer.ShowContact && HasContactInfo)
+                {
+                    <div class="footer-contact-block">
+                        <h2>Liên hệ</h2>
+                        @if (!string.IsNullOrWhiteSpace(footer.Address))
+                        {
+                            <p>
+                                <span class="material-symbols-outlined">location_on</span>
+                                @footer.Address
+                            </p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(footer.Phone))
+                        {
+                            <p>
+                                <span class="material-symbols-outlined">call</span>
+                                @footer.Phone
+                            </p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(footer.Email))
+                        {
+                            <p>
+                                <span class="material-symbols-outlined">mail</span>
+                                @footer.Email
+                            </p>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(footer.LeaderName))
+                        {
+                            <p>
+                                <span class="material-symbols-outlined">person</span>
+                                @footer.LeaderName
+                            </p>
+                        }
+                    </div>
+                }
+
+                <div class="footer-links-block">
+                    <h2>Truy cập nhanh</h2>
                     <div class="footer-links">
-                        @if (!string.IsNullOrWhiteSpace(footer.WebsiteUrl))
-                        {
-                            <a href="@footer.WebsiteUrl" target="_blank">Website</a>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(footer.FacebookUrl))
-                        {
-                            <a href="@footer.FacebookUrl" target="_blank">Facebook</a>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(footer.YoutubeUrl))
-                        {
-                            <a href="@footer.YoutubeUrl" target="_blank">YouTube</a>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(footer.ZaloUrl))
-                        {
-                            <a href="@footer.ZaloUrl" target="_blank">Zalo</a>
-                        }
+                        <a href="/posts">Bài viết</a>
+                        <a href="/documents">Văn bản</a>
+                        <a href="/organization">Tổ chức</a>
+                        <a href="/about">Giới thiệu</a>
+                        <a href="/contact">Liên hệ</a>
                     </div>
                 </div>
+            </div>
+
+            <div class="public-container public-footer-bottom">
+                <span>© @DateTime.Now.Year @BrandName. Tất cả quyền được bảo lưu.</span>
+                <span>Cập nhật và vận hành bởi TITKUL.</span>
             </div>
         }
     </footer>
@@ -269,61 +282,58 @@
     private List<PublicStaticPageMenuItem>? staticPages;
     private List<PublicPostCategoryItem>? postCategories;
     private List<PublicDocumentTypeItem>? documentTypes;
-    private List<PublicBannerItem>? modelBanner;
     private PublicFooterInfo? footer;
     private string SearchKeyword = string.Empty;
     private bool isMobileMenuOpen;
     private bool isLoading = true;
-    private bool isHeaderCollapsed;
-    private DateTime currentDateTime = DateTime.Now;
-    private System.Threading.Timer? clockTimer;
-    private DotNetObjectReference<PublicLayout>? dotNetRef;
-    private string CurrentDateTimeText => currentDateTime.ToString("dddd, dd/MM/yyyy HH:mm:ss", new System.Globalization.CultureInfo("vi-VN"));
+
+    private string BrandName => string.IsNullOrWhiteSpace(footer?.SchoolName) ? "Cổng thông tin" : footer!.SchoolName!;
+    private string BrandTagline => string.IsNullOrWhiteSpace(footer?.SiteSlogan) ? "Cổng thông tin điện tử" : footer!.SiteSlogan!;
+    private string FooterText => string.IsNullOrWhiteSpace(footer?.FooterText)
+        ? "Cổng thông tin điện tử phục vụ công tác thông tin, truyền thông và công khai hoạt động của nhà trường."
+        : footer!.FooterText!;
+    private bool HasSocialLinks => footer != null
+        && (!string.IsNullOrWhiteSpace(footer.WebsiteUrl)
+            || !string.IsNullOrWhiteSpace(footer.FacebookUrl)
+            || !string.IsNullOrWhiteSpace(footer.YoutubeUrl)
+            || !string.IsNullOrWhiteSpace(footer.ZaloUrl));
+    private bool HasContactInfo => footer != null
+        && (!string.IsNullOrWhiteSpace(footer.Address)
+            || !string.IsNullOrWhiteSpace(footer.Phone)
+            || !string.IsNullOrWhiteSpace(footer.Email)
+            || !string.IsNullOrWhiteSpace(footer.LeaderName));
 
     protected override async Task OnInitializedAsync()
     {
+        Nav.LocationChanged += HandleLocationChanged;
+
         menus = await PublicNavigationService.GetMenusAsync(PN_PublicVariables.MaTruong);
         staticPages = await PublicStaticPageService.GetPagesByMenuAsync(PN_PublicVariables.MaTruong);
         postCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
         documentTypes = await PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
-        modelBanner = await PublicNavigationService.GetBannersAsync(PN_PublicVariables.MaTruong);
         footer = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
-        clockTimer = new System.Threading.Timer(_ => InvokeAsync(() =>
-        {
-            currentDateTime = DateTime.Now;
-            StateHasChanged();
-        }), null, TimeSpan.Zero, TimeSpan.FromSeconds(1));
+
         isLoading = false;
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-        {
-            dotNetRef = DotNetObjectReference.Create(this);
-            await JS.InvokeVoidAsync("publicHeader.init", dotNetRef);
-        }
-    }
-
-    [JSInvokable]
-    public void SetHeaderCollapsed(bool collapsed)
-    {
-        if (isHeaderCollapsed == collapsed)
-            return;
-
-        isHeaderCollapsed = collapsed;
-        InvokeAsync(StateHasChanged);
     }
 
     public void Dispose()
     {
-        clockTimer?.Dispose();
-        dotNetRef?.Dispose();
+        Nav.LocationChanged -= HandleLocationChanged;
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        isMobileMenuOpen = false;
+        _ = InvokeAsync(StateHasChanged);
     }
 
     private void GoSearch()
     {
-        var url = string.IsNullOrWhiteSpace(SearchKeyword) ? "/search" : $"/search?q={Uri.EscapeDataString(SearchKeyword)}";
+        CloseMobileMenu();
+        var url = string.IsNullOrWhiteSpace(SearchKeyword)
+            ? "/search"
+            : $"/search?q={Uri.EscapeDataString(SearchKeyword.Trim())}";
+
         Nav.NavigateTo(url);
     }
 
@@ -335,18 +345,24 @@
 
     private void ToggleMobileMenu() => isMobileMenuOpen = !isMobileMenuOpen;
 
+    private void CloseMobileMenu()
+    {
+        if (isMobileMenuOpen)
+            isMobileMenuOpen = false;
+    }
+
     private List<PublicPostCategoryItem> GetPostCategoryChildrenForMenu(PublicNavItem menu)
     {
-        if (postCategories == null || postCategories.Count == 0 || menu == null)
-            return new List<PublicPostCategoryItem>();
+        if (postCategories == null || postCategories.Count == 0)
+            return [];
 
         var categoryRootSlug = ResolveCategoryRootSlug(menu);
         if (string.IsNullOrWhiteSpace(categoryRootSlug))
-            return new List<PublicPostCategoryItem>();
+            return [];
 
         var root = postCategories.FirstOrDefault(x => string.Equals(x.Slug, categoryRootSlug, StringComparison.OrdinalIgnoreCase));
         if (root?.Id == null)
-            return new List<PublicPostCategoryItem>();
+            return [];
 
         return postCategories.Where(x => x.ParentId == root.Id).OrderBy(x => x.SortOrder).ToList();
     }
@@ -358,9 +374,9 @@
         if (!string.IsNullOrWhiteSpace(menu.PageSlug))
             return menu.PageSlug;
 
-        var href = PublicNavigationService.ResolveMenuUrl(menu);
+        var href = NormalizePublicHref(PublicNavigationService.ResolveMenuUrl(menu));
         if (href.Contains("/posts/category/", StringComparison.OrdinalIgnoreCase))
-            return href.Split('/').LastOrDefault();
+            return href.Split('/', StringSplitOptions.RemoveEmptyEntries).LastOrDefault();
 
         var name = menu.MenuName?.Trim().ToLowerInvariant();
         return name switch
@@ -374,11 +390,76 @@
         };
     }
 
-    private bool IsActiveMenu(string href)
+    private static string NormalizePublicHref(string? href)
     {
-        var current = Nav.Uri;
-        if (string.IsNullOrWhiteSpace(href)) return false;
-        var absolute = Nav.ToAbsoluteUri(current);
-        return absolute.AbsolutePath.TrimEnd('/').Equals(Nav.ToAbsoluteUri(href).AbsolutePath.TrimEnd('/'), StringComparison.OrdinalIgnoreCase);
+        if (string.IsNullOrWhiteSpace(href))
+            return "/";
+
+        var value = href.Trim();
+        return value.Replace("/documents/type/", "/documents/by-type/", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string PostCategoryHref(PublicPostCategoryItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/category/{item.Slug}";
+
+    private static string DocumentTypeHref(PublicDocumentTypeItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/documents/types" : $"/documents/by-type/{item.Slug}";
+
+    private static string StaticPageHref(PublicStaticPageMenuItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/about" : $"/pages/{item.Slug}";
+
+    private static string? NormalizeTarget(string? target)
+        => string.IsNullOrWhiteSpace(target) ? null : target;
+
+    private static string? GetRel(string? target)
+        => string.Equals(target, "_blank", StringComparison.OrdinalIgnoreCase) ? "noopener noreferrer" : null;
+
+    private bool IsNavigableHref(string? href)
+    {
+        if (string.IsNullOrWhiteSpace(href))
+            return false;
+
+        var value = href.Trim();
+        return value != "#" && !value.StartsWith("javascript:", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private bool IsActiveMenu(string? href)
+    {
+        if (!IsNavigableHref(href))
+            return false;
+
+        try
+        {
+            var currentUri = Nav.ToAbsoluteUri(Nav.Uri);
+            var targetUri = Nav.ToAbsoluteUri(NormalizePublicHref(href));
+
+            if (!string.Equals(currentUri.Host, targetUri.Host, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            var currentPath = NormalizePath(currentUri.AbsolutePath);
+            var targetPath = NormalizePath(targetUri.AbsolutePath);
+
+            if (targetPath == "/")
+                return currentPath == "/";
+
+            return currentPath.Equals(targetPath, StringComparison.OrdinalIgnoreCase)
+                || currentPath.StartsWith(targetPath + "/", StringComparison.OrdinalIgnoreCase);
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    private static string NormalizePath(string? path)
+    {
+        if (string.IsNullOrWhiteSpace(path))
+            return "/";
+
+        var normalized = path.Trim();
+        if (!normalized.StartsWith('/'))
+            normalized = "/" + normalized;
+
+        return normalized.Length > 1 ? normalized.TrimEnd('/') : normalized;
     }
 }

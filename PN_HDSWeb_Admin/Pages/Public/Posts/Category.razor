@@ -3,139 +3,160 @@
 @inject IPublicPostCategoryService PublicPostCategoryService
 @inject IPublicPostService PublicPostService
 
-<div class="public-article">
-    <nav class="breadcrumb">
+<div class="public-page public-category-page">
+    <nav class="public-breadcrumb" aria-label="breadcrumb">
         <a href="/">Trang chủ</a>
         <span>/</span>
         <a href="/posts">Bài viết</a>
         @foreach (var node in breadcrumbNodes)
         {
             <span>/</span>
-            <a href="/posts/category/@node.Slug">@node.CategoryName</a>
+            <a href="@CategoryHref(node)">@node.CategoryName</a>
         }
     </nav>
 
-    <section class="content-card category-hero-card">
+    <section class="public-page-head">
         @if (category == null)
         {
-            <p>Đang tải hoặc không tìm thấy chuyên mục.</p>
+            <div>
+                <div class="public-kicker">Chuyên mục</div>
+                <h1>Không tìm thấy chuyên mục</h1>
+                <p>Đường dẫn này không khớp với chuyên mục đang được công khai.</p>
+            </div>
+            <a class="public-button public-button-soft" href="/posts">Tất cả bài viết</a>
         }
         else
         {
-            <div class="section-head">
-                <div>
-                    <h1>@category.CategoryName</h1>
+            <div>
+                <div class="public-kicker">Chuyên mục</div>
+                <h1>@category.CategoryName</h1>
+                @if (!string.IsNullOrWhiteSpace(category.Description))
+                {
                     <p>@category.Description</p>
-                </div>
-                <a class="btn btn-secondary" href="/posts">Tất cả bài viết</a>
+                }
             </div>
+            <a class="public-button public-button-soft" href="/posts">Tất cả bài viết</a>
         }
     </section>
 
-    @if (childCategories?.Any() == true)
+    @if (childCategories.Any())
     {
-        <section class="content-card category-tree-card">
-            <div class="section-head">
+        <section class="public-card">
+            <div class="public-card-head">
                 <h2>Chuyên mục con</h2>
+                <span>@childCategories.Count</span>
             </div>
-            <div class="category-chip-grid">
+            <div class="public-chip-grid">
                 @foreach (var child in childCategories)
                 {
-                    <a class="category-chip" href="/posts/category/@child.Slug">
-                        <span class="category-chip-title">@child.CategoryName</span>
-                        <span class="category-chip-sub">@child.Description</span>
+                    <a class="public-chip-card" href="@CategoryHref(child)">
+                        <strong>@child.CategoryName</strong>
+                        @if (!string.IsNullOrWhiteSpace(child.Description))
+                        {
+                            <span>@child.Description</span>
+                        }
                     </a>
                 }
             </div>
         </section>
     }
 
-    @if (childCategoryGroups?.Any() == true)
+    @if (isLoading)
+    {
+        <div class="public-state-card">
+            <div class="spinner"></div>
+            <p>Đang tải bài viết...</p>
+        </div>
+    }
+    else if (childCategoryGroups.Any())
     {
         @foreach (var group in childCategoryGroups)
         {
-            <section class="content-card category-group-card">
-                <div class="section-head">
+            <section class="public-card public-category-group">
+                <div class="public-card-head">
                     <div>
                         <h2>@group.Category.CategoryName</h2>
-                        <p>@group.Category.Description</p>
+                        @if (!string.IsNullOrWhiteSpace(group.Category.Description))
+                        {
+                            <p>@group.Category.Description</p>
+                        }
                     </div>
-                    <a class="btn btn-secondary" href="/posts/category/@group.Category.Slug">Xem chuyên mục</a>
+                    <a class="public-button public-button-ghost" href="@CategoryHref(group.Category)">Xem chuyên mục</a>
                 </div>
 
-                <div class="category-group-layout">
-                    <a class="category-feature-card" href="/posts/category/@group.Category.Slug">
-                        @if (!string.IsNullOrWhiteSpace(GetGroupCover(group)))
+                @if (group.Posts.Any())
+                {
+                    <div class="public-article-grid public-article-grid-compact">
+                        @foreach (var item in group.Posts.Take(6))
                         {
-                            <img src="@GetGroupCover(group)" alt="@group.Category.CategoryName" />
-                        }
-                        <div class="category-feature-overlay">
-                            <span class="chip active">@group.Category.CategoryName</span>
-                            <h3>@group.Category.CategoryName</h3>
-                            <p>@(group.Category.Description ?? "Xem các bài viết trong chuyên mục này.")</p>
-                        </div>
-                    </a>
-
-                    @if (group.Posts.Any())
-                    {
-                        <div class="post-grid compact">
-                            @foreach (var item in group.Posts)
-                            {
-                                <article class="post-card">
+                            <article class="public-article-card">
+                                <a class="public-article-media" href="@PostHref(item)" aria-label="@item.Title">
                                     @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
                                     {
-                                        <a href="/posts/@item.Slug"><img class="post-card-image" src="@item.CoverImageUrl" alt="@item.Title" /></a>
+                                        <img src="@item.CoverImageUrl" alt="@item.Title" loading="lazy" />
                                     }
-                                    <div class="post-card-body">
-                                        <div class="post-card-meta">
-                                            <span class="post-date">@(item.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
-                                        </div>
-                                        <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
-                                        <p>@item.Summary</p>
+                                    else
+                                    {
+                                        <span class="material-symbols-outlined">image</span>
+                                    }
+                                </a>
+                                <div class="public-article-body">
+                                    <div class="public-article-meta">
+                                        <span>@(item.PublishAt?.ToString("dd/MM/yyyy") ?? "Chưa có ngày")</span>
                                     </div>
-                                </article>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="empty-state">Chưa có bài viết trong chuyên mục này.</div>
-                    }
-                </div>
+                                    <h2><a href="@PostHref(item)">@item.Title</a></h2>
+                                    @if (!string.IsNullOrWhiteSpace(item.Summary))
+                                    {
+                                        <p>@item.Summary</p>
+                                    }
+                                </div>
+                            </article>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <p class="public-empty-text">Chưa có bài viết trong chuyên mục này.</p>
+                }
             </section>
         }
     }
+    else if (posts == null || !posts.Any())
+    {
+        <div class="public-state-card">
+            <span class="material-symbols-outlined">article</span>
+            <h2>Chưa có bài viết</h2>
+            <p>Chuyên mục này chưa có bài viết được công khai.</p>
+            <a class="public-button public-button-primary" href="/posts">Quay về danh sách</a>
+        </div>
+    }
     else
     {
-        <section class="content-card category-group-card">
-            @if (posts == null)
+        <section class="public-article-grid">
+            @foreach (var item in posts)
             {
-                <p>Đang tải...</p>
-            }
-            else if (!posts.Any())
-            {
-                <div class="empty-state">Chưa có bài viết trong chuyên mục này.</div>
-            }
-            else
-            {
-                <div class="post-grid">
-                    @foreach (var item in posts)
-                    {
-                        <article class="post-card">
-                            @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
-                            {
-                                <a href="/posts/@item.Slug"><img class="post-card-image" src="@item.CoverImageUrl" alt="@item.Title" /></a>
-                            }
-                            <div class="post-card-body">
-                                <div class="post-card-meta">
-                                    <span class="post-date">@(item.PublishAt?.ToString("dd/MM/yyyy") ?? string.Empty)</span>
-                                </div>
-                                <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
-                                <p>@item.Summary</p>
-                            </div>
-                        </article>
-                    }
-                </div>
+                <article class="public-article-card">
+                    <a class="public-article-media" href="@PostHref(item)" aria-label="@item.Title">
+                        @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                        {
+                            <img src="@item.CoverImageUrl" alt="@item.Title" loading="lazy" />
+                        }
+                        else
+                        {
+                            <span class="material-symbols-outlined">image</span>
+                        }
+                    </a>
+                    <div class="public-article-body">
+                        <div class="public-article-meta">
+                            <span>@(item.PublishAt?.ToString("dd/MM/yyyy") ?? "Chưa có ngày")</span>
+                        </div>
+                        <h2><a href="@PostHref(item)">@item.Title</a></h2>
+                        @if (!string.IsNullOrWhiteSpace(item.Summary))
+                        {
+                            <p>@item.Summary</p>
+                        }
+                    </div>
+                </article>
             }
         </section>
     }
@@ -149,9 +170,21 @@
     private List<PublicPostCategoryItem> breadcrumbNodes = [];
     private List<PublicPostCategoryItem> childCategories = [];
     private List<(PublicPostCategoryItem Category, List<PublicPostListItem> Posts)> childCategoryGroups = [];
+    private bool isLoading = true;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
+        await LoadAsync();
+    }
+
+    private async Task LoadAsync()
+    {
+        isLoading = true;
+        posts = null;
+        breadcrumbNodes = [];
+        childCategories = [];
+        childCategoryGroups = [];
+
         allCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
         category = await PublicPostCategoryService.GetCategoryBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
 
@@ -164,7 +197,7 @@
             {
                 foreach (var child in childCategories)
                 {
-                    var childPosts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, child.Id, 1, 30);
+                    var childPosts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, child.Id, 1, 6);
                     childCategoryGroups.Add((child, childPosts));
                 }
             }
@@ -173,6 +206,8 @@
                 posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, category.Id, 1, 30);
             }
         }
+
+        isLoading = false;
     }
 
     private static List<PublicPostCategoryItem> BuildBreadcrumb(PublicPostCategoryDetail current, List<PublicPostCategoryItem> all)
@@ -187,6 +222,9 @@
         return result;
     }
 
-    private static string? GetGroupCover((PublicPostCategoryItem Category, List<PublicPostListItem> Posts) group)
-        => group.Posts.FirstOrDefault(x => !string.IsNullOrWhiteSpace(x.CoverImageUrl))?.CoverImageUrl;
+    private static string PostHref(PublicPostListItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/{item.Slug}";
+
+    private static string CategoryHref(PublicPostCategoryItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/category/{item.Slug}";
 }

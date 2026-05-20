@@ -38,7 +38,7 @@
                 @foreach (var item in posts)
                 {
                     <article class="search-result-item">
-                        <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
+                        <h3><a href="@PostHref(item)">@item.Title</a></h3>
                         <p>@item.Summary</p>
                     </article>
                 }
@@ -52,12 +52,21 @@
     private PublicPostTagItem? tag;
     private List<PublicPostListItem>? posts;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
+        tag = null;
+        posts = null;
         tag = (await PublicPostTagService.GetTagsByPostIdAsync(""))?.FirstOrDefault(x => x.Slug == Slug);
         if (tag != null)
         {
             posts = await PublicPostService.GetPostsByTagIdAsync(PN_PublicVariables.MaTruong, tag.Id ?? string.Empty, 1, 30);
         }
+        else
+        {
+            posts = new();
+        }
     }
+
+    private static string PostHref(PublicPostListItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/{item.Slug}";
 }

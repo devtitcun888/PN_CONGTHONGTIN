@@ -84,5 +84,86 @@
             const next = table.querySelector(`input[data-r="${r}"][data-c="${c}"]`);
             if (next) { next.focus(); next.select(); }
         });
+    },
+
+    copyToClipboard: async (text) => {
+        const value = text || window.location.href;
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(value);
+            } else {
+                const input = document.createElement('textarea');
+                input.value = value;
+                input.setAttribute('readonly', '');
+                input.style.position = 'fixed';
+                input.style.top = '-1000px';
+                document.body.appendChild(input);
+                input.select();
+                document.execCommand('copy');
+                document.body.removeChild(input);
+            }
+
+            return 'Đã sao chép';
+        } catch (err) {
+            console.error('Copy failed:', err);
+            return 'Không thể sao chép';
+        }
+    },
+
+    shareArticle: async (title, text, url) => {
+        const shareUrl = url || window.location.href;
+
+        try {
+            if (navigator.share) {
+                await navigator.share({
+                    title: title || document.title,
+                    text: text || '',
+                    url: shareUrl
+                });
+                return 'Đã chia sẻ';
+            }
+
+            return await window.AppUtils.copyToClipboard(shareUrl);
+        } catch (err) {
+            if (err && err.name === 'AbortError') return '';
+            console.error('Share failed:', err);
+            return await window.AppUtils.copyToClipboard(shareUrl);
+        }
+    },
+
+    shareFacebook: (url) => {
+        const shareUrl = encodeURIComponent(url || window.location.href);
+        window.AppUtils.openShareWindow(`https://www.facebook.com/sharer/sharer.php?u=${shareUrl}`);
+    },
+
+    shareZalo: (url) => {
+        const shareUrl = encodeURIComponent(url || window.location.href);
+        window.AppUtils.openShareWindow(`https://zalo.me/share?u=${shareUrl}`);
+    },
+
+    openShareWindow: (url) => {
+        const width = 640;
+        const height = 560;
+        const left = Math.max(0, (window.screen.width - width) / 2);
+        const top = Math.max(0, (window.screen.height - height) / 2);
+        const popup = window.open(
+            url,
+            'share-window',
+            `width=${width},height=${height},left=${left},top=${top},noopener,noreferrer`
+        );
+
+        if (popup) popup.focus();
     }
 };
+
+document.addEventListener("error", function (event) {
+    const target = event.target;
+    if (!(target instanceof HTMLImageElement)) return;
+
+    const fallbackSrc = target.dataset.fallbackSrc;
+    if (!fallbackSrc || target.dataset.fallbackApplied === "true") return;
+
+    target.dataset.fallbackApplied = "true";
+    target.src = fallbackSrc;
+}, true);

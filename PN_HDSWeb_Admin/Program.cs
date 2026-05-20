@@ -73,6 +73,7 @@ builder.Services.AddScoped<IAdminSiteSettingService, AdminSiteSettingService>();
 builder.Services.AddScoped<IAdminFileStorageService, AdminFileStorageService>();
 builder.Services.AddScoped<IAdminStaticPageService, AdminStaticPageService>();
 builder.Services.AddScoped<IAdminStaffProfileService, AdminStaffProfileService>();
+builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicSiteSettingService, PN_HDSWeb_Admin.Services.Public.PublicSiteSettingService>();
 builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicNavigationService, PN_HDSWeb_Admin.Services.Public.PublicNavigationService>();
 builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicHomepageService, PN_HDSWeb_Admin.Services.Public.PublicHomepageService>();
 builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicStaticPageService, PN_HDSWeb_Admin.Services.Public.PublicStaticPageService>();

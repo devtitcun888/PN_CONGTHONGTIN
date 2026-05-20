@@ -1,960 +1,157 @@
 @page "/posts"
+@using Microsoft.AspNetCore.Components.Web
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicPostService PublicPostService
 @inject IPublicPostCategoryService PublicPostCategoryService
 @inject IPublicPostTagService PublicPostTagService
 
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:wght@700;800&display=swap');
-
-    :root {
-        --p-primary: #1a56db;
-        --p-primary-dark: #1e40af;
-        --p-primary-soft: #eff6ff;
-        --p-primary-mid: #dbeafe;
-        --p-red: #dc2626;
-        --p-red-soft: #fef2f2;
-        --p-green: #16a34a;
-        --p-surface: #ffffff;
-        --p-bg: #f0f4f9;
-        --p-border: #e2e8f0;
-        --p-text: #0f172a;
-        --p-muted: #64748b;
-        --p-shadow: 0 2px 12px rgba(15,23,42,.06);
-        --p-shadow-lg: 0 6px 28px rgba(15,23,42,.10);
-        --p-radius: 14px;
-        --p-transition: .2s cubic-bezier(.4,0,.2,1);
-    }
-
-    .pa * {
-        box-sizing: border-box;
-    }
-
-    .pa {
-        font-family: 'Be Vietnam Pro', sans-serif;
-        color: var(--p-text);
-        background: var(--p-bg);
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding-bottom: 36px;
-    }
-
-    /* ── BREADCRUMB ── */
-    .pa-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 12px;
-        color: var(--p-muted);
-        padding: 4px 0;
-    }
-
-        .pa-breadcrumb a {
-            color: var(--p-primary);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color var(--p-transition);
-        }
-
-            .pa-breadcrumb a:hover {
-                color: var(--p-primary-dark);
-            }
-
-    .pa-breadcrumb-sep {
-        color: #cbd5e1;
-        font-size: 14px;
-    }
-
-    /* ── PAGE HEADER BANNER ── */
-    .pa-header {
-        background: linear-gradient(130deg, #0f172a 0%, #1d4ed8 60%, #3b82f6 100%);
-        border-radius: var(--p-radius);
-        padding: 24px 32px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        box-shadow: var(--p-shadow-lg);
-        position: relative;
-        overflow: hidden;
-    }
-
-        .pa-header::before {
-            content: "";
-            position: absolute;
-            top: -60px;
-            right: -40px;
-            width: 220px;
-            height: 220px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.06);
-            pointer-events: none;
-        }
-
-        .pa-header::after {
-            content: "";
-            position: absolute;
-            bottom: -50px;
-            right: 80px;
-            width: 160px;
-            height: 160px;
-            border-radius: 50%;
-            background: rgba(255,255,255,.04);
-            pointer-events: none;
-        }
-
-    .pa-header-left {
-        position: relative;
-        z-index: 1;
-    }
-
-    .pa-header-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: rgba(255,255,255,.15);
-        color: rgba(255,255,255,.9);
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        padding: 3px 10px;
-        border-radius: 999px;
-        margin-bottom: 8px;
-    }
-
-    .pa-header-title {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(20px, 2.4vw, 28px);
-        font-weight: 700;
-        color: white;
-        margin: 0 0 4px;
-        line-height: 1.25;
-    }
-
-    .pa-header-sub {
-        font-size: 12.5px;
-        color: rgba(255,255,255,.7);
-        margin: 0;
-    }
-
-    .pa-header-actions {
-        display: flex;
-        gap: 8px;
-        flex-shrink: 0;
-        position: relative;
-        z-index: 1;
-    }
-
-    .pa-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 16px;
-        border-radius: 8px;
-        font-size: 12.5px;
-        font-weight: 700;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        transition: all var(--p-transition);
-        font-family: inherit;
-    }
-
-    .pa-btn-white {
-        background: white;
-        color: var(--p-primary-dark);
-    }
-
-        .pa-btn-white:hover {
-            background: var(--p-primary-soft);
-            transform: translateY(-1px);
-            text-decoration: none;
-        }
-
-    .pa-btn-ghost {
-        background: rgba(255,255,255,.12);
-        color: white;
-        border: 1px solid rgba(255,255,255,.22);
-    }
-
-        .pa-btn-ghost:hover {
-            background: rgba(255,255,255,.2);
-            transform: translateY(-1px);
-        }
-
-    /* ── FILTER PANEL ── */
-    .pa-filter-card {
-        background: var(--p-surface);
-        border: 1px solid var(--p-border);
-        border-radius: var(--p-radius);
-        box-shadow: var(--p-shadow);
-        overflow: hidden;
-    }
-
-    .pa-filter-header {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 11px 18px 10px;
-        border-bottom: 1px solid var(--p-border);
-        font-size: 11.5px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        color: var(--p-text);
-    }
-
-    .pa-filter-bar {
-        width: 3px;
-        height: 16px;
-        border-radius: 2px;
-        background: var(--p-primary);
-        flex-shrink: 0;
-    }
-
-    .pa-filter-body {
-        padding: 14px 18px;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-    }
-
-    /* Search row */
-    .pa-search-row {
-        display: flex;
-        gap: 8px;
-    }
-
-    .pa-search-wrap {
-        position: relative;
-        flex: 1;
-    }
-
-    .pa-search-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--p-muted);
-        pointer-events: none;
-    }
-
-    .pa-search-input {
-        width: 100%;
-        padding: 9px 12px 9px 36px;
-        border: 1.5px solid var(--p-border);
-        border-radius: 9px;
-        font-size: 13px;
-        font-family: inherit;
-        color: var(--p-text);
-        background: #f8fafc;
-        outline: none;
-        transition: border-color var(--p-transition), box-shadow var(--p-transition), background var(--p-transition);
-    }
-
-        .pa-search-input:focus {
-            border-color: var(--p-primary);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(26,86,219,.1);
-        }
-
-        .pa-search-input::placeholder {
-            color: #94a3b8;
-        }
-
-    .pa-search-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 9px 18px;
-        background: var(--p-primary);
-        color: white;
-        border: none;
-        border-radius: 9px;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: inherit;
-        transition: all var(--p-transition);
-        white-space: nowrap;
-    }
-
-        .pa-search-btn:hover {
-            background: var(--p-primary-dark);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(26,86,219,.28);
-        }
-
-    .pa-clear-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 9px 14px;
-        background: #f1f5f9;
-        color: var(--p-muted);
-        border: 1.5px solid var(--p-border);
-        border-radius: 9px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        font-family: inherit;
-        transition: all var(--p-transition);
-        white-space: nowrap;
-        text-decoration: none;
-    }
-
-        .pa-clear-btn:hover {
-            background: var(--p-red-soft);
-            color: var(--p-red);
-            border-color: rgba(220,38,38,.2);
-            text-decoration: none;
-        }
-
-    /* Category chips */
-    .pa-cats-label {
-        font-size: 11px;
-        font-weight: 700;
-        color: var(--p-muted);
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        margin-bottom: 2px;
-    }
-
-    .pa-chip-row {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-    }
-
-    .pa-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 5px 12px;
-        border-radius: 999px;
-        background: #f1f5f9;
-        color: var(--p-muted);
-        font-size: 12px;
-        font-weight: 600;
-        border: 1.5px solid var(--p-border);
-        cursor: pointer;
-        font-family: inherit;
-        transition: all var(--p-transition);
-    }
-
-        .pa-chip:hover {
-            background: var(--p-primary-soft);
-            color: var(--p-primary);
-            border-color: rgba(26,86,219,.25);
-        }
-
-        .pa-chip.active {
-            background: var(--p-primary);
-            color: white;
-            border-color: var(--p-primary);
-        }
-
-            .pa-chip.active:hover {
-                background: var(--p-primary-dark);
-                border-color: var(--p-primary-dark);
-            }
-
-    /* ── RESULTS META BAR ── */
-    .pa-results-bar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 12px;
-        padding: 10px 18px;
-        background: var(--p-surface);
-        border: 1px solid var(--p-border);
-        border-radius: 10px;
-        box-shadow: var(--p-shadow);
-    }
-
-    .pa-results-count {
-        font-size: 12.5px;
-        color: var(--p-muted);
-        font-weight: 500;
-    }
-
-        .pa-results-count strong {
-            color: var(--p-text);
-            font-weight: 700;
-        }
-
-    .pa-results-page {
-        font-size: 12px;
-        color: var(--p-muted);
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-    /* ── POST GRID ── */
-    .pa-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 16px;
-    }
-
-    /* ── POST CARD ── */
-    .pa-post-card {
-        background: var(--p-surface);
-        border: 1px solid var(--p-border);
-        border-radius: var(--p-radius);
-        box-shadow: var(--p-shadow);
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        text-decoration: none;
-        color: var(--p-text);
-        transition: transform var(--p-transition), box-shadow var(--p-transition), border-color var(--p-transition);
-    }
-
-        .pa-post-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--p-shadow-lg);
-            border-color: rgba(26,86,219,.2);
-            text-decoration: none;
-        }
-
-    /* Thumbnail */
-    .pa-card-thumb {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        display: block;
-        background: #e2e8f0;
-        flex-shrink: 0;
-    }
-
-    .pa-card-thumb-placeholder {
-        width: 100%;
-        height: 180px;
-        background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #93c5fd;
-        flex-shrink: 0;
-    }
-
-    /* Body */
-    .pa-card-body {
-        padding: 14px 16px 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex: 1;
-    }
-
-    /* Meta row */
-    .pa-card-meta {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: wrap;
-    }
-
-    .pa-card-cat {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 9px;
-        border-radius: 999px;
-        background: var(--p-primary-soft);
-        color: var(--p-primary-dark);
-        font-size: 10.5px;
-        font-weight: 700;
-        text-decoration: none;
-        border: 1px solid rgba(26,86,219,.15);
-        transition: all var(--p-transition);
-    }
-
-        .pa-card-cat:hover {
-            background: var(--p-primary-mid);
-            text-decoration: none;
-        }
-
-    .pa-card-date {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 11px;
-        color: var(--p-muted);
-        font-weight: 500;
-    }
-
-    /* Title */
-    .pa-card-title {
-        margin: 0;
-        font-size: 14px;
-        font-weight: 700;
-        line-height: 1.45;
-        color: var(--p-text);
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-decoration: none;
-        transition: color var(--p-transition);
-    }
-
-        .pa-card-title:hover {
-            color: var(--p-primary);
-        }
-
-    /* Summary */
-    .pa-card-summary {
-        font-size: 12.5px;
-        color: var(--p-muted);
-        line-height: 1.6;
-        margin: 0;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        flex: 1;
-    }
-
-    /* Tags */
-    .pa-card-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 5px;
-        margin-top: auto;
-        padding-top: 8px;
-        border-top: 1px dashed var(--p-border);
-    }
-
-    .pa-tag {
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        padding: 2px 8px;
-        border-radius: 5px;
-        background: #f1f5f9;
-        color: var(--p-muted);
-        font-size: 10.5px;
-        font-weight: 600;
-        text-decoration: none;
-        border: 1px solid var(--p-border);
-        transition: all var(--p-transition);
-    }
-
-        .pa-tag::before {
-            content: "#";
-            opacity: .55;
-        }
-
-        .pa-tag:hover {
-            background: var(--p-primary-soft);
-            color: var(--p-primary);
-            border-color: rgba(26,86,219,.2);
-            text-decoration: none;
-        }
-
-    /* Read more footer */
-    .pa-card-footer {
-        padding: 10px 16px;
-        border-top: 1px solid var(--p-border);
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        background: #fafbfc;
-    }
-
-    .pa-read-more {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-size: 12px;
-        font-weight: 700;
-        color: var(--p-primary);
-        text-decoration: none;
-        transition: gap var(--p-transition), color var(--p-transition);
-    }
-
-        .pa-read-more:hover {
-            color: var(--p-primary-dark);
-            gap: 7px;
-            text-decoration: none;
-        }
-
-    /* ── EMPTY STATE ── */
-    .pa-empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 64px 24px;
-        background: var(--p-surface);
-        border: 1px solid var(--p-border);
-        border-radius: var(--p-radius);
-        box-shadow: var(--p-shadow);
-        text-align: center;
-        color: var(--p-muted);
-    }
-
-    .pa-empty-icon {
-        width: 56px;
-        height: 56px;
-        border-radius: 16px;
-        background: var(--p-primary-soft);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--p-primary);
-    }
-
-    .pa-empty-title {
-        font-size: 15px;
-        font-weight: 700;
-        color: var(--p-text);
-        margin: 0;
-    }
-
-    .pa-empty-sub {
-        font-size: 13px;
-        margin: 0;
-    }
-
-    /* ── LOADING ── */
-    .pa-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        padding: 72px 24px;
-        background: var(--p-surface);
-        border: 1px solid var(--p-border);
-        border-radius: var(--p-radius);
-        color: var(--p-muted);
-        font-size: 13.5px;
-    }
-
-    .pa-spinner {
-        width: 22px;
-        height: 22px;
-        border: 2.5px solid #dbeafe;
-        border-top-color: var(--p-primary);
-        border-radius: 50%;
-        animation: pa-spin .7s linear infinite;
-        flex-shrink: 0;
-    }
-
-    @@keyframes pa-spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* ── PAGINATION ── */
-    .pa-pager {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-        padding-top: 8px;
-    }
-
-    .pa-page-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 8px 16px;
-        border-radius: 9px;
-        background: var(--p-surface);
-        color: var(--p-primary);
-        border: 1.5px solid var(--p-border);
-        font-size: 12.5px;
-        font-weight: 700;
-        cursor: pointer;
-        font-family: inherit;
-        transition: all var(--p-transition);
-    }
-
-        .pa-page-btn:hover:not(:disabled) {
-            background: var(--p-primary);
-            color: white;
-            border-color: var(--p-primary);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 14px rgba(26,86,219,.22);
-        }
-
-        .pa-page-btn:disabled {
-            opacity: .38;
-            cursor: not-allowed;
-            background: #f1f5f9;
-            color: var(--p-muted);
-        }
-
-    .pa-page-info {
-        padding: 8px 16px;
-        border-radius: 9px;
-        background: var(--p-primary-soft);
-        color: var(--p-primary-dark);
-        font-size: 12.5px;
-        font-weight: 700;
-        border: 1.5px solid rgba(26,86,219,.15);
-        white-space: nowrap;
-    }
-
-    /* ── RESPONSIVE ── */
-    @@media (max-width: 900px) {
-        .pa-header {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 14px;
-        }
-
-        .pa-header-actions {
-            flex-wrap: wrap;
-        }
-
-        .pa-grid {
-            grid-template-columns: 1fr 1fr;
-        }
-    }
-
-    @@media (max-width: 600px) {
-        .pa-header {
-            padding: 18px 20px;
-        }
-
-        .pa-filter-body {
-            padding: 12px 14px;
-        }
-
-        .pa-search-row {
-            flex-direction: column;
-        }
-
-        .pa-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .pa-results-bar {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 4px;
-        }
-    }
-</style>
-
-<div class="pa">
-
-    <!-- Breadcrumb -->
-    <nav class="pa-breadcrumb" aria-label="breadcrumb">
-        <a href="/">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
-            Trang chủ
-        </a>
-        <span class="pa-breadcrumb-sep">/</span>
+<div class="public-page public-posts-page">
+    <nav class="public-breadcrumb" aria-label="breadcrumb">
+        <a href="/">Trang chủ</a>
+        <span>/</span>
         <span>Bài viết</span>
     </nav>
 
-    <!-- Page header -->
-    <div class="pa-header">
-        <div class="pa-header-left">
-            <div class="pa-header-kicker">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /></svg>
-                Cổng thông tin
-            </div>
-            <h1 class="pa-header-title">Danh sách bài viết</h1>
-            <p class="pa-header-sub">Tin tức, thông báo và bài viết chuyên mục của nhà trường</p>
+    <section class="public-page-head">
+        <div>
+            <div class="public-kicker">Tin tức và thông báo</div>
+            <h1>Bài viết mới nhất</h1>
+            <p>Theo dõi các hoạt động, thông báo và nội dung chuyên mục được công khai từ nhà trường.</p>
         </div>
-        <div class="pa-header-actions">
-            <a class="pa-btn pa-btn-white" href="/">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /></svg>
-                Trang chủ
-            </a>
-        </div>
-    </div>
+        <a class="public-button public-button-soft" href="/search">
+            <span class="material-symbols-outlined">search</span>
+            Tìm kiếm
+        </a>
+    </section>
 
-    <!-- Filter card -->
-    <div class="pa-filter-card">
-        <div class="pa-filter-header">
-            <span class="pa-filter-bar"></span>
-            Tìm kiếm & Lọc bài viết
+    <section class="public-toolbar">
+        <div class="public-search-field">
+            <span class="material-symbols-outlined">search</span>
+            <input class="public-input"
+                   @bind="keyword"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown"
+                   placeholder="Tìm theo tiêu đề hoặc mô tả..." />
         </div>
-        <div class="pa-filter-body">
-            <div class="pa-search-row">
-                <div class="pa-search-wrap">
-                    <span class="pa-search-icon">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                    </span>
-                    <input class="pa-search-input"
-                           @bind="keyword"
-                           @bind:event="oninput"
-                           @onkeydown="HandleKeyDown"
-                           placeholder="Nhập từ khóa tìm kiếm..." />
-                </div>
-                <button class="pa-search-btn" @onclick="SearchAsync">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /></svg>
-                    Tìm kiếm
-                </button>
-                @if (!string.IsNullOrWhiteSpace(keyword) || !string.IsNullOrWhiteSpace(selectedCategoryId))
-                {
-                    <button class="pa-clear-btn" @onclick="ClearAll">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></svg>
-                        Xóa lọc
-                    </button>
-                }
-            </div>
+        <button class="public-button public-button-primary" type="button" @onclick="SearchAsync">Lọc</button>
+        @if (!string.IsNullOrWhiteSpace(keyword) || !string.IsNullOrWhiteSpace(selectedCategoryId))
+        {
+            <button class="public-button public-button-ghost" type="button" @onclick="ClearAll">Đặt lại</button>
+        }
+    </section>
 
-            @if (categories?.Any() == true)
-            {
-                <div>
-                    <div class="pa-cats-label">Chuyên mục</div>
-                    <div class="pa-chip-row">
-                        <button type="button" class="pa-chip @(string.IsNullOrWhiteSpace(selectedCategoryId) ? "active" : "")"
-                                @onclick="ClearCategory">
-                            Tất cả
-                        </button>
-                        @foreach (var cat in categories)
-                        {
-                            <button type="button"
-                                    class="pa-chip @(selectedCategoryId == cat.Id ? "active" : "")"
-                                    @onclick="() => SelectCategory(cat.Id)">
-                                @cat.CategoryName
-                            </button>
-                        }
-                    </div>
-                </div>
-            }
-        </div>
-    </div>
-
-    <!-- Results meta bar -->
-    @if (posts != null)
+    @if (categories?.Any() == true)
     {
-        <div class="pa-results-bar">
-            <span class="pa-results-count">
-                Tìm thấy <strong>@totalCount</strong> bài viết
-                @if (!string.IsNullOrWhiteSpace(keyword))
-                {
-                    <span> cho "<strong>@keyword</strong>"</span>
-                }
-            </span>
-            <span class="pa-results-page">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" /><path d="M9 9h6M9 13h4" /></svg>
-                Trang @trang / @totalPages
-            </span>
-        </div>
+        <section class="public-chip-row" aria-label="Chuyên mục bài viết">
+            <button type="button"
+                    class="public-chip @(string.IsNullOrWhiteSpace(selectedCategoryId) ? "active" : string.Empty)"
+                    @onclick="ClearCategory">
+                Tất cả
+            </button>
+            @foreach (var cat in categories)
+            {
+                <button type="button"
+                        class="public-chip @(selectedCategoryId == cat.Id ? "active" : string.Empty)"
+                        @onclick="() => SelectCategory(cat.Id)">
+                    @cat.CategoryName
+                </button>
+            }
+        </section>
     }
 
-    <!-- Post list / states -->
     @if (posts == null)
     {
-        <div class="pa-loading">
-            <div class="pa-spinner"></div>
-            <span>Đang tải bài viết...</span>
+        <div class="public-state-card">
+            <div class="spinner"></div>
+            <p>Đang tải bài viết...</p>
         </div>
     }
     else if (!posts.Any())
     {
-        <div class="pa-empty">
-            <div class="pa-empty-icon">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" /><polyline points="14 2 14 8 20 8" /><line x1="16" y1="13" x2="8" y2="13" /><line x1="16" y1="17" x2="8" y2="17" /><polyline points="10 9 9 9 8 9" /></svg>
-            </div>
-            <h3 class="pa-empty-title">Không tìm thấy bài viết</h3>
-            <p class="pa-empty-sub">Thử thay đổi từ khóa hoặc chọn chuyên mục khác</p>
-            <button class="pa-search-btn" style="margin-top:4px;" @onclick="ClearAll">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 .49-3.85" /></svg>
-                Xem tất cả bài viết
-            </button>
+        <div class="public-state-card">
+            <span class="material-symbols-outlined">article</span>
+            <h2>Không tìm thấy bài viết</h2>
+            <p>Thử thay đổi từ khóa hoặc chọn chuyên mục khác.</p>
+            <button class="public-button public-button-primary" type="button" @onclick="ClearAll">Xem tất cả</button>
         </div>
     }
     else
     {
-        <div class="pa-grid">
+        <div class="public-results-summary">
+            <span>Hiển thị <strong>@posts.Count</strong> trong tổng số <strong>@totalCount</strong> bài viết</span>
+            <span>Trang @trang / @totalPages</span>
+        </div>
+
+        <section class="public-article-grid">
             @foreach (var item in posts)
             {
-                <article class="pa-post-card">
-                    <!-- Thumbnail -->
-                    @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
-                    {
-                        <a href="/posts/@item.Slug">
-                            <img class="pa-card-thumb" src="@item.CoverImageUrl" alt="@item.Title" loading="lazy" />
-                        </a>
-                    }
-                    else
-                    {
-                        <a href="/posts/@item.Slug" class="pa-card-thumb-placeholder">
-                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="3" width="18" height="18" rx="2" /><circle cx="8.5" cy="8.5" r="1.5" /><polyline points="21 15 16 10 5 21" /></svg>
-                        </a>
-                    }
+                <article class="public-article-card">
+                    <a class="public-article-media" href="@PostHref(item)" aria-label="@item.Title">
+                        @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                        {
+                            <img src="@item.CoverImageUrl" alt="@item.Title" loading="lazy" />
+                        }
+                        else
+                        {
+                            <span class="material-symbols-outlined">image</span>
+                        }
+                    </a>
 
-                    <!-- Body -->
-                    <div class="pa-card-body">
-                        <div class="pa-card-meta">
+                    <div class="public-article-body">
+                        <div class="public-article-meta">
                             @if (!string.IsNullOrWhiteSpace(item.CategoryName))
                             {
-                                <a class="pa-card-cat" href="/posts/category/@item.CategorySlug">
-                                    @item.CategoryName
-                                </a>
+                                <a href="@CategoryHref(item)" class="public-section-label">@item.CategoryName</a>
                             }
                             @if (item.PublishAt.HasValue)
                             {
-                                <span class="pa-card-date">
-                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" /><line x1="16" y1="2" x2="16" y2="6" /><line x1="8" y1="2" x2="8" y2="6" /><line x1="3" y1="10" x2="21" y2="10" /></svg>
-                                    @item.PublishAt.Value.ToString("dd/MM/yyyy")
-                                </span>
+                                <span>@item.PublishAt.Value.ToString("dd/MM/yyyy")</span>
                             }
                         </div>
 
-                        <a class="pa-card-title" href="/posts/@item.Slug">@item.Title</a>
+                        <h2><a href="@PostHref(item)">@item.Title</a></h2>
 
                         @if (!string.IsNullOrWhiteSpace(item.Summary))
                         {
-                            <p class="pa-card-summary">@item.Summary</p>
+                            <p>@item.Summary</p>
                         }
 
-                        @if (item.Tags?.Any() == true)
+                        @if (item.Tags?.Any(x => !string.IsNullOrWhiteSpace(x.Slug)) == true)
                         {
-                            <div class="pa-card-tags">
-                                @foreach (var tag in item.Tags.Take(4))
+                            <div class="public-tag-row">
+                                @foreach (var tag in item.Tags.Where(x => !string.IsNullOrWhiteSpace(x.Slug)).Take(4))
                                 {
-                                    <a class="pa-tag" href="/posts/tag/@tag.Slug">@tag.TagName</a>
+                                    <a class="public-tag" href="@TagHref(tag)">@tag.TagName</a>
                                 }
                             </div>
                         }
                     </div>
 
-                    <!-- Footer -->
-                    <div class="pa-card-footer">
-                        <a class="pa-read-more" href="/posts/@item.Slug">
-                            Đọc bài viết
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    <div class="public-article-footer">
+                        <a href="@PostHref(item)">
+                            Đọc tiếp
+                            <span class="material-symbols-outlined">arrow_forward</span>
                         </a>
                     </div>
                 </article>
             }
-        </div>
+        </section>
 
-        <!-- Pagination -->
         @if (totalPages > 1)
         {
-            <div class="pa-pager">
-                <button class="pa-page-btn" @onclick="PrevPageAsync" disabled="@(trang <= 1)">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6" /></svg>
+            <nav class="public-pager" aria-label="Phân trang">
+                <button class="public-button public-button-ghost" @onclick="PrevPageAsync" disabled="@(trang <= 1)">
+                    <span class="material-symbols-outlined">chevron_left</span>
                     Trước
                 </button>
-                <span class="pa-page-info">Trang @trang / @totalPages</span>
-                <button class="pa-page-btn" @onclick="NextPageAsync" disabled="@(trang >= totalPages)">
+                <span>Trang @trang / @totalPages</span>
+                <button class="public-button public-button-ghost" @onclick="NextPageAsync" disabled="@(trang >= totalPages)">
                     Sau
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    <span class="material-symbols-outlined">chevron_right</span>
                 </button>
-            </div>
+            </nav>
         }
     }
-
 </div>
 
 @code {
@@ -982,7 +179,7 @@
             foreach (var post in posts)
             {
                 post.Tags = string.IsNullOrWhiteSpace(post.Id)
-                    ? new List<PublicPostTagItem>()
+                    ? []
                     : await PublicPostTagService.GetTagsByPostIdAsync(post.Id);
             }
         }
@@ -996,7 +193,8 @@
 
     private async Task HandleKeyDown(KeyboardEventArgs e)
     {
-        if (e.Key == "Enter") await SearchAsync();
+        if (e.Key == "Enter")
+            await SearchAsync();
     }
 
     private async Task SelectCategory(string? categoryId)
@@ -1015,7 +213,7 @@
 
     private async Task ClearAll()
     {
-        keyword = null;
+        keyword = string.Empty;
         selectedCategoryId = null;
         trang = 1;
         await LoadAsync();
@@ -1023,11 +221,28 @@
 
     private async Task PrevPageAsync()
     {
-        if (trang > 1) { trang--; await LoadAsync(); }
+        if (trang > 1)
+        {
+            trang--;
+            await LoadAsync();
+        }
     }
 
     private async Task NextPageAsync()
     {
-        if (trang < totalPages) { trang++; await LoadAsync(); }
+        if (trang < totalPages)
+        {
+            trang++;
+            await LoadAsync();
+        }
     }
+
+    private static string PostHref(PublicPostListItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/{item.Slug}";
+
+    private static string CategoryHref(PublicPostListItem item)
+        => string.IsNullOrWhiteSpace(item.CategorySlug) ? "/posts" : $"/posts/category/{item.CategorySlug}";
+
+    private static string TagHref(PublicPostTagItem tag)
+        => string.IsNullOrWhiteSpace(tag.Slug) ? "/posts" : $"/posts/tag/{tag.Slug}";
 }

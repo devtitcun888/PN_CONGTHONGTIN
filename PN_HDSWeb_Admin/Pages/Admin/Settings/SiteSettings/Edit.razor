@@ -2,316 +2,6 @@
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminSiteSettingService AdminSiteSettingService
 @inject NavigationManager Nav
-
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
-
-    :root {
-        --ss-bg: #f4f6fb;
-        --ss-surface: #ffffff;
-        --ss-surface-2: #f8fafd;
-        --ss-border: #e4e9f2;
-        --ss-border-focus: #3b6ef6;
-        --ss-primary: #3b6ef6;
-        --ss-primary-hover: #2554e0;
-        --ss-primary-soft: #eef2fe;
-        --ss-text: #0f1b35;
-        --ss-text-2: #5a6a8a;
-        --ss-text-3: #a0aec0;
-        --ss-radius: 14px;
-        --ss-radius-sm: 9px;
-        --ss-shadow: 0 4px 24px rgba(15,27,53,.07);
-        --ss-shadow-lg: 0 8px 40px rgba(15,27,53,.12);
-        --ss-transition: .2s cubic-bezier(.4,0,.2,1);
-    }
-
-    .ss-root * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    .ss-root {
-        font-family: 'Be Vietnam Pro', sans-serif;
-        background: var(--ss-bg);
-        min-height: 100vh;
-        color: var(--ss-text);
-    }
-
-    /* Topbar / Breadcrumb */
-    .ss-topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 32px 0;
-        gap: 12px;
-    }
-
-    .ss-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: var(--ss-text-2);
-    }
-
-    .ss-breadcrumb a {
-        color: var(--ss-primary);
-        text-decoration: none;
-        font-weight: 500;
-    }
-
-    .ss-breadcrumb a:hover { text-decoration: underline; }
-
-    .ss-breadcrumb-sep { color: var(--ss-text-3); }
-
-    .ss-breadcrumb-current {
-        color: var(--ss-text);
-        font-weight: 600;
-    }
-
-    /* Hero */
-    .ss-hero {
-        padding: 24px 32px 0;
-    }
-
-    .ss-hero h1 {
-        font-family: 'Instrument Serif', serif;
-        font-size: 28px;
-        font-weight: 400;
-        letter-spacing: -.3px;
-        line-height: 1.2;
-    }
-
-    .ss-hero p {
-        margin-top: 4px;
-        font-size: 13.5px;
-        color: var(--ss-text-2);
-    }
-
-    /* Layout */
-    .ss-layout {
-        display: grid;
-        grid-template-columns: 1fr 320px;
-        gap: 24px;
-        padding: 24px 32px 40px;
-        max-width: 1400px;
-    }
-
-    @@media (max-width: 1100px) {
-        .ss-layout { grid-template-columns: 1fr; }
-        .ss-topbar, .ss-hero { padding-left: 20px; padding-right: 20px; }
-        .ss-layout { padding: 20px; }
-    }
-
-    /* Card */
-    .ss-card {
-        background: var(--ss-surface);
-        border: 1px solid var(--ss-border);
-        border-radius: var(--ss-radius);
-        box-shadow: var(--ss-shadow);
-        overflow: hidden;
-        animation: ss-fadeup .3s ease both;
-    }
-
-    .ss-card-header {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 18px 22px 16px;
-        border-bottom: 1px solid var(--ss-border);
-        background: var(--ss-surface-2);
-    }
-
-    .ss-card-header-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: var(--ss-primary-soft);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--ss-primary);
-        flex-shrink: 0;
-    }
-
-    .ss-card-header h2 {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--ss-text);
-    }
-
-    .ss-card-body { padding: 22px; }
-
-    /* Form */
-    .ss-field { margin-bottom: 18px; }
-    .ss-field:last-child { margin-bottom: 0; }
-
-    .ss-label {
-        display: block;
-        font-size: 12.5px;
-        font-weight: 600;
-        color: var(--ss-text-2);
-        text-transform: uppercase;
-        letter-spacing: .4px;
-        margin-bottom: 7px;
-    }
-
-    .ss-input {
-        width: 100%;
-        padding: 10px 14px;
-        border: 1.5px solid var(--ss-border);
-        border-radius: var(--ss-radius-sm);
-        font-family: inherit;
-        font-size: 14px;
-        color: var(--ss-text);
-        background: var(--ss-surface);
-        transition: border-color var(--ss-transition), box-shadow var(--ss-transition);
-        outline: none;
-    }
-
-    .ss-input:focus {
-        border-color: var(--ss-border-focus);
-        box-shadow: 0 0 0 3px rgba(59,110,246,.12);
-    }
-
-    textarea.ss-input {
-        resize: vertical;
-        min-height: 80px;
-        line-height: 1.6;
-    }
-
-    select.ss-input { cursor: pointer; }
-
-    .ss-hint {
-        font-size: 12px;
-        color: var(--ss-text-3);
-        margin-top: 4px;
-        display: block;
-    }
-
-    /* Buttons */
-    .ss-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 10px 20px;
-        border-radius: var(--ss-radius-sm);
-        font-family: inherit;
-        font-size: 13.5px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 1.5px solid transparent;
-        transition: all var(--ss-transition);
-        white-space: nowrap;
-    }
-
-    .ss-btn:disabled { opacity: .5; cursor: not-allowed; }
-
-    .ss-btn-primary {
-        background: var(--ss-primary);
-        color: white;
-        border-color: var(--ss-primary);
-        box-shadow: 0 2px 12px rgba(59,110,246,.25);
-    }
-
-    .ss-btn-primary:hover:not(:disabled) {
-        background: var(--ss-primary-hover);
-        border-color: var(--ss-primary-hover);
-        box-shadow: 0 4px 18px rgba(59,110,246,.35);
-        transform: translateY(-1px);
-    }
-
-    .ss-btn-ghost {
-        background: transparent;
-        color: var(--ss-text-2);
-        border-color: var(--ss-border);
-    }
-
-    .ss-btn-ghost:hover:not(:disabled) {
-        border-color: var(--ss-text-2);
-        color: var(--ss-text);
-        background: var(--ss-surface-2);
-    }
-
-    .ss-btn-sm { padding: 7px 14px; font-size: 12.5px; }
-
-    /* Actions */
-    .ss-action-bar {
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-        margin-top: 24px;
-    }
-
-    /* Preview box (sidebar) */
-    .ss-preview-box {
-        background: var(--ss-surface);
-        border: 1px solid var(--ss-border);
-        border-radius: var(--ss-radius);
-        padding: 22px;
-        box-shadow: var(--ss-shadow);
-        font-size: 13px;
-        color: var(--ss-text-2);
-    }
-
-    .ss-preview-box h3 {
-        font-size: 14px;
-        font-weight: 600;
-        color: var(--ss-text);
-        margin-bottom: 16px;
-    }
-
-    .ss-preview-box p {
-        margin-bottom: 10px;
-        display: flex;
-        gap: 6px;
-    }
-
-    .ss-preview-box strong { font-weight: 600; }
-
-    .ss-preview-box ul {
-        list-style: none;
-        padding: 0;
-        margin-top: 12px;
-    }
-
-    .ss-preview-box li {
-        padding: 5px 0;
-        border-bottom: 1px solid var(--ss-border);
-        font-size: 13px;
-    }
-
-    /* Loading */
-    .ss-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        min-height: 50vh;
-        color: var(--ss-text-2);
-        font-size: 14px;
-    }
-
-    .ss-spinner {
-        width: 28px;
-        height: 28px;
-        border: 3px solid var(--ss-border);
-        border-top-color: var(--ss-primary);
-        border-radius: 50%;
-        animation: ss-spin .75s linear infinite;
-    }
-
-    @@keyframes ss-spin { to { transform: rotate(360deg); } }
-    @@keyframes ss-fadeup {
-        from { opacity: 0; transform: translateY(12px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-
-    .ss-main-col > .ss-card { animation-delay: .06s; }
-    .ss-side-col > .ss-card { animation-delay: .1s; }
-</style>
-
 <div class="ss-root">
     <!-- Breadcrumb -->
     <div class="ss-topbar">
@@ -354,7 +44,18 @@
                         <h2>Thông tin cấu hình</h2>
                     </div>
                     <div class="ss-card-body">
-                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                        <div class="u-grid-2">
+                            <div class="ss-field u-span-full">
+                                <label class="ss-label">Cấu hình public thường dùng</label>
+                                <select class="ss-input" value="@selectedTemplateKey" @onchange="ApplyTemplate">
+                                    <option value="">Tự nhập key</option>
+                                    @foreach (var item in PublicSettingTemplates)
+                                    {
+                                        <option value="@item.Key">@item.Label</option>
+                                    }
+                                </select>
+                                <span class="ss-hint">Chọn nhanh để map đúng key public đang đọc.</span>
+                            </div>
                             <div class="ss-field">
                                 <label class="ss-label">Key</label>
                                 <input class="ss-input" @bind="model.SettingKey" placeholder="Ví dụ: site_name" />
@@ -370,12 +71,12 @@
                                 </select>
                                 <span class="ss-hint">Nhóm giúp phân loại cấu hình theo nghiệp vụ.</span>
                             </div>
-                            <div class="ss-field" style="grid-column:1/-1;">
+                            <div class="ss-field u-span-full">
                                 <label class="ss-label">Value</label>
                                 <textarea class="ss-input" rows="6" @bind="model.SettingValue" placeholder="Nội dung cấu hình hoặc JSON"></textarea>
                                 <span class="ss-hint">Nếu là JSON, hãy dán đúng định dạng để public đọc được.</span>
                             </div>
-                            <div class="ss-field" style="grid-column:1/-1;">
+                            <div class="ss-field u-span-full">
                                 <label class="ss-label">Mô tả</label>
                                 <textarea class="ss-input" rows="3" @bind="model.Description" placeholder="Mô tả ngắn về ý nghĩa của key"></textarea>
                             </div>
@@ -387,6 +88,11 @@
                                 </select>
                             </div>
                         </div>
+
+                        @if (!string.IsNullOrWhiteSpace(errorMessage))
+                        {
+                            <div class="ss-form-error">@errorMessage</div>
+                        }
 
                         <div class="ss-action-bar">
                             <button type="button" class="ss-btn ss-btn-primary" @onclick="SaveAsync">
@@ -407,13 +113,12 @@
                     <p><strong>Key:</strong> @model.SettingKey</p>
                     <p><strong>Trạng thái:</strong> @(IsActiveText == "true" ? "Đang bật" : "Tắt")</p>
                     <div>
-                        <strong>Ví dụ key chuẩn</strong>
+                        <strong>Key public đang dùng</strong>
                         <ul>
-                            <li>site_name</li>
-                            <li>school_logo</li>
-                            <li>contact_hotline</li>
-                            <li>footer_json_info</li>
-                            <li>homepage_featured_posts_limit</li>
+                            @foreach (var item in PublicSettingTemplates.Take(6))
+                            {
+                                <li>@item.Key</li>
+                            }
                         </ul>
                     </div>
                 </div>
@@ -426,7 +131,38 @@
     [Parameter] public string? Id { get; set; }
     private AdminSiteSettingDetail? model;
     private string IsActiveText = "true";
+    private string selectedTemplateKey = string.Empty;
+    private string? errorMessage;
     private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
+
+    private readonly record struct SettingTemplate(string Key, string Group, string Label, string Description);
+
+    private static readonly List<SettingTemplate> PublicSettingTemplates = new()
+    {
+        new("site_name", "general", "Tên site / thương hiệu", "Tên hiển thị chính ở header, footer và title public."),
+        new("site_slogan", "general", "Slogan dưới tên site", "Dòng mô tả ngắn hiển thị dưới tên site."),
+        new("school_name", "school", "Tên trường", "Tên trường ưu tiên cao hơn site_name khi public hiển thị thương hiệu."),
+        new("school_logo", "school", "Logo trường", "URL logo dùng cho header public, footer và admin brand."),
+        new("school_address", "school", "Địa chỉ trường", "Địa chỉ hiển thị ở footer và trang liên hệ."),
+        new("school_phone", "school", "Số điện thoại trường", "Số điện thoại chung hiển thị ở footer."),
+        new("school_email", "school", "Email trường", "Email liên hệ hiển thị ở footer."),
+        new("school_website", "school", "Website trường", "Liên kết website chính trong footer."),
+        new("contact_hotline", "contact", "Hotline", "Hotline liên hệ, được dùng nếu chưa có school_phone."),
+        new("contact_facebook", "contact", "Facebook", "URL Facebook hiển thị ở footer."),
+        new("contact_youtube", "contact", "YouTube", "URL YouTube hiển thị ở footer."),
+        new("contact_zalo", "contact", "Zalo", "URL Zalo hiển thị ở footer."),
+        new("footer_text", "footer", "Mô tả footer", "Đoạn giới thiệu ngắn trong footer public."),
+        new("footer_show_logo", "footer", "Bật/tắt logo footer", "true hoặc false."),
+        new("footer_show_contact", "footer", "Bật/tắt khối liên hệ footer", "true hoặc false."),
+        new("footer_show_social", "footer", "Bật/tắt mạng xã hội footer", "true hoặc false."),
+        new("homepage_featured_posts_limit", "homepage", "Số tin nổi bật trang chủ", "Số từ 1 đến 12."),
+        new("homepage_latest_posts_limit", "homepage", "Số tin mới trang chủ", "Số từ 1 đến 24."),
+        new("homepage_documents_limit", "homepage", "Số văn bản trang chủ", "Số từ 1 đến 24."),
+        new("feature_news_enabled", "feature", "Bật/tắt tin tức", "true hoặc false."),
+        new("feature_documents_enabled", "feature", "Bật/tắt văn bản", "true hoặc false."),
+        new("feature_banners_enabled", "feature", "Bật/tắt banner", "true hoặc false."),
+        new("feature_search_enabled", "feature", "Bật/tắt tìm kiếm", "true hoặc false.")
+    };
 
     private static readonly List<string> SettingGroups = new()
     {
@@ -458,10 +194,23 @@
             model.SettingGroup = "general";
 
         IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+        selectedTemplateKey = PublicSettingTemplates.Any(item => string.Equals(item.Key, model.SettingKey, StringComparison.OrdinalIgnoreCase))
+            ? model.SettingKey ?? string.Empty
+            : string.Empty;
     }
 
     private async Task SaveAsync()
     {
+        errorMessage = null;
+
+        if (string.IsNullOrWhiteSpace(model?.SettingKey))
+        {
+            errorMessage = "Vui lòng nhập key cấu hình.";
+            return;
+        }
+
+        model.SettingKey = model.SettingKey.Trim();
+        model.SettingGroup = string.IsNullOrWhiteSpace(model.SettingGroup) ? "general" : model.SettingGroup.Trim();
         model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
 
         if (string.IsNullOrWhiteSpace(model.Id))
@@ -473,4 +222,17 @@
     }
 
     private void GoBack() => Nav.NavigateTo("/admin/settings");
+
+    private void ApplyTemplate(ChangeEventArgs args)
+    {
+        selectedTemplateKey = args.Value?.ToString() ?? string.Empty;
+        var template = PublicSettingTemplates.FirstOrDefault(item => string.Equals(item.Key, selectedTemplateKey, StringComparison.OrdinalIgnoreCase));
+        if (string.IsNullOrWhiteSpace(template.Key) || model == null)
+            return;
+
+        model.SettingKey = template.Key;
+        model.SettingGroup = template.Group;
+        if (string.IsNullOrWhiteSpace(model.Description))
+            model.Description = template.Description;
+    }
 }

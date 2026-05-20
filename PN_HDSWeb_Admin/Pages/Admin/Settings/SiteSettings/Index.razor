@@ -1,450 +1,10 @@
-@page "/admin/settings"
+﻿@page "/admin/settings"
 @attribute [Authorize(Roles = "Administrator")]
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminSiteSettingService AdminSiteSettingService
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
-
-    :root {
-        --st-bg: #f4f6fb;
-        --st-surface: #ffffff;
-        --st-surface-2: #f8fafd;
-        --st-border: #e4e9f2;
-        --st-border-focus: #3b6ef6;
-        --st-primary: #3b6ef6;
-        --st-primary-hover: #2554e0;
-        --st-primary-soft: #eef2fe;
-        --st-text: #0f1b35;
-        --st-text-2: #5a6a8a;
-        --st-text-3: #94a3b8;
-        --st-danger: #ef4444;
-        --st-danger-soft: #fff5f5;
-        --st-success: #22c55e;
-        --st-success-soft: #f0fdf4;
-        --st-radius: 16px;
-        --st-radius-sm: 10px;
-        --st-shadow: 0 4px 24px rgba(15,27,53,.07);
-        --st-transition: .2s cubic-bezier(.4,0,.2,1);
-    }
-
-    .st-root * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    .st-root {
-        min-height: 100vh;
-        background: var(--st-bg);
-        font-family: 'Be Vietnam Pro', sans-serif;
-        color: var(--st-text);
-    }
-
-    /* ── Topbar ── */
-    .st-topbar {
-        padding: 20px 32px 0;
-    }
-
-    .st-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: var(--st-text-2);
-    }
-
-        .st-breadcrumb a {
-            color: var(--st-primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-            .st-breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-    .st-breadcrumb-sep {
-        color: var(--st-text-3);
-    }
-
-    .st-breadcrumb-current {
-        color: var(--st-text);
-        font-weight: 600;
-    }
-
-    /* ── Hero ── */
-    .st-hero {
-        padding: 20px 32px 0;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .st-hero-text h1 {
-        font-family: 'Instrument Serif', serif;
-        font-size: 30px;
-        font-weight: 400;
-        line-height: 1.2;
-        letter-spacing: -.3px;
-    }
-
-    .st-hero-text p {
-        margin-top: 5px;
-        font-size: 13.5px;
-        color: var(--st-text-2);
-    }
-
-    /* ── Toolbar ── */
-    .st-toolbar {
-        padding: 20px 32px 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 12px;
-        flex-wrap: wrap;
-    }
-
-    .st-search-wrap {
-        position: relative;
-        width: 320px;
-        max-width: 100%;
-    }
-
-    .st-search-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--st-text-3);
-        pointer-events: none;
-    }
-
-    .st-input {
-        width: 100%;
-        padding: 10px 14px 10px 38px;
-        border-radius: var(--st-radius-sm);
-        border: 1.5px solid var(--st-border);
-        background: var(--st-surface);
-        font-family: inherit;
-        font-size: 13.5px;
-        outline: none;
-        transition: all var(--st-transition);
-    }
-
-        .st-input:focus {
-            border-color: var(--st-border-focus);
-            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
-        }
-
-    /* ── Buttons ── */
-    .st-btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-        padding: 10px 18px;
-        border-radius: var(--st-radius-sm);
-        border: 1.5px solid transparent;
-        font-family: inherit;
-        font-size: 13.5px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all var(--st-transition);
-        white-space: nowrap;
-    }
-
-    .st-btn-primary {
-        background: var(--st-primary);
-        color: white;
-        border-color: var(--st-primary);
-        box-shadow: 0 2px 12px rgba(59,110,246,.25);
-    }
-
-        .st-btn-primary:hover {
-            background: var(--st-primary-hover);
-            border-color: var(--st-primary-hover);
-            transform: translateY(-1px);
-        }
-
-    .st-btn-ghost {
-        background: var(--st-surface);
-        border-color: var(--st-border);
-        color: var(--st-text-2);
-    }
-
-        .st-btn-ghost:hover {
-            border-color: var(--st-primary);
-            background: var(--st-primary-soft);
-            color: var(--st-primary);
-        }
-
-    .st-btn-danger {
-        border: none;
-        background: none;
-        color: var(--st-danger);
-        padding: 8px 10px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: background var(--st-transition);
-    }
-
-        .st-btn-danger:hover {
-            background: var(--st-danger-soft);
-        }
-
-    /* ── Content ── */
-    .st-content {
-        padding: 20px 32px 40px;
-    }
-
-    .st-card {
-        background: var(--st-surface);
-        border: 1px solid var(--st-border);
-        border-radius: var(--st-radius);
-        box-shadow: var(--st-shadow);
-        overflow: hidden;
-        animation: st-fadeup .35s ease both;
-    }
-
-    @@keyframes st-fadeup {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* ── Table ── */
-    .st-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-        .st-table thead tr {
-            background: var(--st-surface-2);
-            border-bottom: 1px solid var(--st-border);
-        }
-
-        .st-table th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 11.5px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            color: var(--st-text-3);
-            white-space: nowrap;
-        }
-
-        .st-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--st-border);
-            vertical-align: middle;
-            font-size: 13.5px;
-            color: var(--st-text);
-        }
-
-        .st-table tbody tr:last-child td {
-            border-bottom: none;
-        }
-
-        .st-table tbody tr {
-            transition: background var(--st-transition);
-        }
-
-            .st-table tbody tr:hover {
-                background: var(--st-surface-2);
-            }
-
-    .st-key {
-        font-weight: 700;
-        color: var(--st-text);
-    }
-
-    .st-value {
-        max-width: 320px;
-        color: var(--st-text-2);
-        line-height: 1.5;
-        word-break: break-word;
-    }
-
-    .st-group {
-        display: inline-flex;
-        align-items: center;
-        padding: 4px 8px;
-        border-radius: 7px;
-        background: var(--st-primary-soft);
-        color: var(--st-primary);
-        font-size: 12px;
-        font-weight: 700;
-    }
-
-    /* ── Badge ── */
-    .st-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 5px 10px;
-        border-radius: 999px;
-        font-size: 12px;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-        .st-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-
-    .st-badge-active {
-        background: var(--st-success-soft);
-        color: #166534;
-    }
-
-        .st-badge-active .dot {
-            background: var(--st-success);
-        }
-
-    .st-badge-inactive {
-        background: #f1f5f9;
-        color: #64748b;
-    }
-
-        .st-badge-inactive .dot {
-            background: #94a3b8;
-        }
-
-    /* ── Actions ── */
-    .st-actions {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        flex-wrap: wrap;
-    }
-
-    /* ── Pagination ── */
-    .st-pagination {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 18px;
-        border-top: 1px solid var(--st-border);
-        background: var(--st-surface-2);
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .st-pagination-info {
-        font-size: 13px;
-        color: var(--st-text-2);
-    }
-
-        .st-pagination-info strong {
-            color: var(--st-text);
-        }
-
-    .st-pages {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    .st-page-btn {
-        min-width: 34px;
-        height: 34px;
-        border-radius: 8px;
-        border: 1.5px solid var(--st-border);
-        background: var(--st-surface);
-        color: var(--st-text-2);
-        font-family: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all var(--st-transition);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 10px;
-    }
-
-        .st-page-btn:hover:not(:disabled) {
-            border-color: var(--st-primary);
-            color: var(--st-primary);
-            background: var(--st-primary-soft);
-        }
-
-        .st-page-btn.active {
-            background: var(--st-primary);
-            border-color: var(--st-primary);
-            color: white;
-            box-shadow: 0 2px 8px rgba(59,110,246,.25);
-        }
-
-        .st-page-btn:disabled {
-            opacity: .4;
-            cursor: not-allowed;
-        }
-
-    .st-page-ellipsis {
-        padding: 0 2px;
-        color: var(--st-text-3);
-    }
-
-    /* ── Empty / Loading ── */
-    .st-loading,
-    .st-empty {
-        padding: 60px 24px;
-        text-align: center;
-        color: var(--st-text-3);
-        font-size: 14px;
-    }
-
-        .st-empty h3 {
-            font-size: 15px;
-            margin-bottom: 6px;
-            color: var(--st-text-2);
-        }
-
-    /* ── Responsive ── */
-    @@media (max-width: 768px) {
-        .st-topbar,
-        .st-hero,
-        .st-toolbar,
-        .st-content {
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-
-        .st-card {
-            overflow-x: auto;
-        }
-
-        .st-table {
-            min-width: 850px;
-        }
-
-        .st-toolbar {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .st-search-wrap {
-            width: 100%;
-        }
-    }
-</style>
 
 <div class="st-root">
 
@@ -461,8 +21,16 @@
     <div class="st-hero">
         <div class="st-hero-text">
             <h1>Cấu hình site</h1>
-            <p>Quản lý các thông số cấu hình cho website.</p>
+            <p>Quản lý các thông số cấu hình đang được public layout và trang chủ sử dụng.</p>
         </div>
+    </div>
+
+    <div class="st-sync-note">
+        <div>
+            <strong>Đã đồng bộ với public</strong>
+            <span>Các key như site_name, site_slogan, school_logo, footer_text, contact_* và homepage_* sẽ được trang public đọc trực tiếp khi đang bật.</span>
+        </div>
+        <a href="/" target="_blank" rel="noopener noreferrer">Xem public</a>
     </div>
 
     <!-- Toolbar -->
@@ -484,8 +52,18 @@
             </span>
 
             <input class="st-input"
-                   placeholder="Tìm theo key cấu hình..." />
+                   placeholder="Tìm theo key, value hoặc nhóm..."
+                   @bind="keyword"
+                   @bind:event="oninput" />
         </div>
+
+        <select class="st-input st-filter-select" @bind="groupFilter">
+            <option value="">Tất cả nhóm</option>
+            @foreach (var group in AvailableGroups)
+            {
+                <option value="@group">@group</option>
+            }
+        </select>
 
         <button class="st-btn st-btn-primary"
                 @onclick="GoCreateAsync">
@@ -516,12 +94,12 @@
                 Đang tải dữ liệu...
             </div>
         }
-        else if (!items.Any())
+        else if (!FilteredItems.Any())
         {
             <div class="st-card">
                 <div class="st-empty">
-                    <h3>Chưa có cấu hình</h3>
-                    <p>Bắt đầu bằng cách tạo cấu hình đầu tiên.</p>
+                    <h3>Không có cấu hình phù hợp</h3>
+                    <p>Thử đổi từ khóa hoặc nhóm lọc, hoặc tạo cấu hình mới.</p>
                 </div>
             </div>
         }
@@ -543,7 +121,7 @@
 
                     <tbody>
 
-                        @foreach (var item in items)
+                        @foreach (var item in FilteredItems)
                         {
                             <tr>
 
@@ -621,46 +199,12 @@
                 <div class="st-pagination">
 
                     <div class="st-pagination-info">
-                        Hiển thị <strong>1–10</strong>
+                        Hiển thị <strong>@FilteredItems.Count</strong>
                         trong tổng số <strong>@items.Count</strong> cấu hình
                     </div>
 
                     <div class="st-pages">
-
-                        <button class="st-page-btn" disabled>
-                            <svg width="13"
-                                 height="13"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2.5">
-
-                                <polyline points="15 18 9 12 15 6" />
-
-                            </svg>
-                        </button>
-
-                        <button class="st-page-btn active">1</button>
-                        <button class="st-page-btn">2</button>
-                        <button class="st-page-btn">3</button>
-
-                        <span class="st-page-ellipsis">…</span>
-
-                        <button class="st-page-btn">8</button>
-
-                        <button class="st-page-btn">
-                            <svg width="13"
-                                 height="13"
-                                 viewBox="0 0 24 24"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 stroke-width="2.5">
-
-                                <polyline points="9 18 15 12 9 6" />
-
-                            </svg>
-                        </button>
-
+                        <span class="st-page-note">Danh sách này lọc trực tiếp trên dữ liệu đã tải.</span>
                     </div>
 
                 </div>
@@ -674,6 +218,40 @@
 
 @code {
     private List<AdminSiteSettingItem>? items;
+    private string keyword = string.Empty;
+    private string groupFilter = string.Empty;
+
+    private List<string> AvailableGroups => (items ?? new List<AdminSiteSettingItem>())
+        .Select(item => item.SettingGroup ?? string.Empty)
+        .Where(group => !string.IsNullOrWhiteSpace(group))
+        .Distinct(StringComparer.OrdinalIgnoreCase)
+        .OrderBy(group => group)
+        .ToList();
+
+    private List<AdminSiteSettingItem> FilteredItems => (items ?? new List<AdminSiteSettingItem>())
+        .Where(MatchesFilter)
+        .ToList();
+
+    private bool MatchesFilter(AdminSiteSettingItem item)
+    {
+        var matchesGroup = string.IsNullOrWhiteSpace(groupFilter)
+            || string.Equals(item.SettingGroup, groupFilter, StringComparison.OrdinalIgnoreCase);
+
+        if (!matchesGroup)
+            return false;
+
+        if (string.IsNullOrWhiteSpace(keyword))
+            return true;
+
+        var value = keyword.Trim();
+        return Contains(item.SettingKey, value)
+            || Contains(item.SettingValue, value)
+            || Contains(item.SettingGroup, value);
+    }
+
+    private static bool Contains(string? source, string value)
+        => !string.IsNullOrWhiteSpace(source)
+           && source.Contains(value, StringComparison.OrdinalIgnoreCase);
 
     protected override async Task OnInitializedAsync()
     {
@@ -704,3 +282,4 @@
         }
     }
 }
+

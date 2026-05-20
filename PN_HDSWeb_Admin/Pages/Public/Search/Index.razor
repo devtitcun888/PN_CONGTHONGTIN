@@ -1,68 +1,113 @@
 @page "/search"
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.AspNetCore.Components.Web
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicSearchService PublicSearchService
 @inject NavigationManager Nav
 
-<div class="public-article">
-    <nav class="breadcrumb">
+<div class="public-page public-search-page">
+    <nav class="public-breadcrumb" aria-label="breadcrumb">
         <a href="/">Trang chủ</a>
         <span>/</span>
         <span>Tìm kiếm</span>
     </nav>
 
-    <section class="content-card">
-        <h1>Tìm kiếm</h1>
-        <div class="search-panel">
-            <input class="public-search-input" @bind="keyword" placeholder="Nhập từ khóa" />
-            <button class="public-search-btn" @onclick="SearchAsync">Tìm</button>
+    <section class="public-page-head">
+        <div>
+            <div class="public-kicker">Tra cứu nội dung</div>
+            <h1>Tìm kiếm</h1>
+            <p>Tìm nhanh bài viết, thông báo và văn bản công khai trong cổng thông tin.</p>
         </div>
     </section>
 
-    @if (result == null)
+    <section class="public-toolbar public-search-hero">
+        <div class="public-search-field">
+            <span class="material-symbols-outlined">search</span>
+            <input class="public-input"
+                   @bind="keyword"
+                   @bind:event="oninput"
+                   @onkeydown="HandleKeyDown"
+                   placeholder="Nhập từ khóa tìm kiếm..." />
+        </div>
+        <button class="public-button public-button-primary" type="button" @onclick="SearchAsync">
+            Tìm kiếm
+        </button>
+    </section>
+
+    @if (isLoading)
     {
-        <p>Đang tải...</p>
+        <div class="public-state-card">
+            <div class="spinner"></div>
+            <p>Đang tải kết quả...</p>
+        </div>
+    }
+    else if (result == null || string.IsNullOrWhiteSpace(keyword))
+    {
+        <div class="public-state-card">
+            <span class="material-symbols-outlined">manage_search</span>
+            <h2>Nhập từ khóa để bắt đầu</h2>
+            <p>Kết quả sẽ hiển thị theo nhóm bài viết và văn bản.</p>
+        </div>
     }
     else
     {
-        <section class="content-grid">
-            <div class="content-card">
-                <h2>Bài viết</h2>
+        var totalResults = result.Posts.Count + result.Documents.Count;
+        <div class="public-results-summary">
+            <span>Tìm thấy <strong>@totalResults</strong> kết quả cho "<strong>@keyword</strong>"</span>
+        </div>
+
+        <section class="public-results-grid">
+            <div class="public-card">
+                <div class="public-card-head">
+                    <h2>Bài viết</h2>
+                    <span>@result.Posts.Count</span>
+                </div>
                 @if (result.Posts.Any())
                 {
-                    <div class="search-result-list">
+                    <div class="public-result-list">
                         @foreach (var item in result.Posts)
                         {
-                            <article class="search-result-item">
-                                <h3><a href="/posts/@item.Slug">@item.Title</a></h3>
-                                <p>@item.Summary</p>
+                            <article class="public-result-item">
+                                <span class="public-result-type">Bài viết</span>
+                                <h3><a href="@PostHref(item)">@item.Title</a></h3>
+                                @if (!string.IsNullOrWhiteSpace(item.Summary))
+                                {
+                                    <p>@item.Summary</p>
+                                }
                             </article>
                         }
                     </div>
                 }
                 else
                 {
-                    <p>Không có bài viết phù hợp.</p>
+                    <p class="public-empty-text">Không có bài viết phù hợp.</p>
                 }
             </div>
 
-            <div class="content-card">
-                <h2>Văn bản</h2>
+            <div class="public-card">
+                <div class="public-card-head">
+                    <h2>Văn bản</h2>
+                    <span>@result.Documents.Count</span>
+                </div>
                 @if (result.Documents.Any())
                 {
-                    <div class="search-result-list">
+                    <div class="public-result-list">
                         @foreach (var item in result.Documents)
                         {
-                            <article class="search-result-item">
-                                <h3><a href="/documents/@item.Slug">@item.Title</a></h3>
-                                <p>@item.Summary</p>
+                            <article class="public-result-item">
+                                <span class="public-result-type">Văn bản</span>
+                                <h3><a href="@DocumentHref(item)">@item.Title</a></h3>
+                                @if (!string.IsNullOrWhiteSpace(item.Summary))
+                                {
+                                    <p>@item.Summary</p>
+                                }
                             </article>
                         }
                     </div>
                 }
                 else
                 {
-                    <p>Không có văn bản phù hợp.</p>
+                    <p class="public-empty-text">Không có văn bản phù hợp.</p>
                 }
             </div>
         </section>
@@ -70,22 +115,70 @@
 </div>
 
 @code {
-    private string keyword = string.Empty;
-    private PublicSearchResult? result;
+    [SupplyParameterFromQuery(Name = "q")]
+    public string? QueryKeyword { get; set; }
 
-    protected override async Task OnInitializedAsync()
+    private string keyword = string.Empty;
+    private string? loadedKeyword;
+    private PublicSearchResult? result;
+    private bool isLoading;
+
+    protected override async Task OnParametersSetAsync()
     {
-        var uri = Nav.ToAbsoluteUri(Nav.Uri);
-        var query = QueryHelpers.ParseQuery(uri.Query);
-        if (query.TryGetValue("q", out var q) && !string.IsNullOrWhiteSpace(q))
+        var queryKeyword = GetQueryKeyword();
+        if (!string.Equals(queryKeyword, loadedKeyword, StringComparison.Ordinal))
         {
-            keyword = q.ToString();
-            await SearchAsync();
+            loadedKeyword = queryKeyword;
+            keyword = queryKeyword;
+            await ExecuteSearchAsync();
         }
     }
 
     private async Task SearchAsync()
     {
-        result = await PublicSearchService.SearchAsync(PN_PublicVariables.MaTruong, keyword);
+        var trimmed = keyword.Trim();
+        var url = string.IsNullOrWhiteSpace(trimmed)
+            ? "/search"
+            : $"/search?q={Uri.EscapeDataString(trimmed)}";
+
+        Nav.NavigateTo(url);
+        if (string.Equals(trimmed, loadedKeyword, StringComparison.Ordinal))
+            await ExecuteSearchAsync();
     }
+
+    private async Task HandleKeyDown(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await SearchAsync();
+    }
+
+    private async Task ExecuteSearchAsync()
+    {
+        if (string.IsNullOrWhiteSpace(keyword))
+        {
+            result = new PublicSearchResult();
+            isLoading = false;
+            return;
+        }
+
+        isLoading = true;
+        result = await PublicSearchService.SearchAsync(PN_PublicVariables.MaTruong, keyword.Trim());
+        isLoading = false;
+    }
+
+    private string GetQueryKeyword()
+    {
+        if (!string.IsNullOrWhiteSpace(QueryKeyword))
+            return QueryKeyword;
+
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+        return query.TryGetValue("q", out var q) ? q.ToString() : string.Empty;
+    }
+
+    private static string PostHref(PublicSearchItem item)
+        => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/{item.Slug}";
+
+    private static string DocumentHref(PublicSearchItem item)
+        => string.IsNullOrWhiteSpace(item.Id) ? "/documents" : $"/documents/{item.Id}";
 }

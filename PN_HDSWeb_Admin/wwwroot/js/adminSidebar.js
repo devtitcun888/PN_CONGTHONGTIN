@@ -1,5 +1,6 @@
-﻿// wwwroot/js/adminSidebar.js
-export function initSidebar() {
+window.adminSidebar = window.adminSidebar || {};
+
+window.adminSidebar.init = function () {
     const STORAGE_KEY = 'admin_sidebar_collapsed';
     const shell = document.getElementById('adminShell');
     const collapseBtn = document.getElementById('sidebarCollapseBtn');
@@ -7,40 +8,43 @@ export function initSidebar() {
     const backdrop = document.getElementById('sidebarBackdrop');
 
     if (!shell || !collapseBtn || !mobileBtn || !backdrop) return;
+    if (shell.dataset.sidebarReady === '1') return;
 
-    // ── Khôi phục trạng thái đã lưu ──
+    shell.dataset.sidebarReady = '1';
+
     if (localStorage.getItem(STORAGE_KEY) === '1') {
         shell.classList.add('sidebar-collapsed');
     }
 
-    // ── Desktop: thu gọn / mở rộng ──
-    collapseBtn.addEventListener('click', () => {
+    collapseBtn.addEventListener('click', function () {
         const collapsed = shell.classList.toggle('sidebar-collapsed');
         localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0');
     });
 
-    // ── Mobile: mở / đóng sidebar ──
-    const openMobile = () => {
+    function openMobile() {
         shell.classList.add('mobile-open');
         document.body.style.overflow = 'hidden';
-    };
+    }
 
-    const closeMobile = () => {
+    function closeMobile() {
         shell.classList.remove('mobile-open');
         document.body.style.overflow = '';
-    };
+    }
 
-    mobileBtn.addEventListener('click', () => {
-        shell.classList.contains('mobile-open') ? closeMobile() : openMobile();
+    mobileBtn.addEventListener('click', function () {
+        if (shell.classList.contains('mobile-open')) {
+            closeMobile();
+        } else {
+            openMobile();
+        }
     });
 
-    // Click backdrop để đóng
     backdrop.addEventListener('click', closeMobile);
 
-    // Tự đóng khi điều hướng (click link)
-    document.addEventListener('click', (e) => {
-        if (e.target.closest('a[href]') && shell.classList.contains('mobile-open')) {
+    document.addEventListener('click', function (event) {
+        const link = event.target.closest('a[href]');
+        if (link && shell.classList.contains('mobile-open')) {
             closeMobile();
         }
     });
-}
+};

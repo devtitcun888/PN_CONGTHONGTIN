@@ -71,10 +71,10 @@
                     <h2>Hoạt động nhanh</h2>
                 </div>
                 <div class="quick-actions">
-                    <a class="quick-action" href="/admin/content/posts/edit">Tạo bài viết</a>
+                    <a class="quick-action" href="/admin/posts/edit">Tạo bài viết</a>
                     <a class="quick-action" href="/admin/documents/edit">Tạo văn bản</a>
                     <a class="quick-action" href="/admin/banners/edit">Quản lý banner</a>
-                    <a class="quick-action" href="/admin/settings/menus/edit">Cấu hình menu</a>
+                    <a class="quick-action" href="/admin/menus/edit">Cấu hình menu</a>
                 </div>
             </div>
 
@@ -91,7 +91,7 @@
 
 
         </section>
-        <div class="dashboard-panel" style="grid-column:1/-1;">
+        <div class="dashboard-panel dashboard-panel--wide">
             <div class="section-head">
                 <h2>Top trang được xem</h2>
             </div>
@@ -105,12 +105,12 @@
             }
             else
             {
-                <div class="quick-actions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+                <div class="traffic-grid">
                     @foreach (var trang in trafficPages)
                     {
-                        <div class="dashboard-card" style="padding:16px;">
-                            <span style="font-size:12px;color:#5a6a8a;">@trang.PagePath</span>
-                            <strong style="display:block;font-size:24px;margin:8px 0 4px;">@trang.Views</strong>
+                        <div class="dashboard-card traffic-card">
+                            <span class="traffic-page-path">@trang.PagePath</span>
+                            <strong class="traffic-view-count">@trang.Views</strong>
                             <small>@trang.UniqueVisitors IP duy nhất</small>
                         </div>
                     }

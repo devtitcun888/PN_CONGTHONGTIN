@@ -2,31 +2,39 @@
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicStaticPageService PublicStaticPageService
 
-@if (trang == null)
-{
-    <p>Đang tải hoặc không tìm thấy trang.</p>
-}
-else
-{
-    <div class="public-article">
-        <nav class="breadcrumb">
+<div class="public-page public-static-detail-page">
+    @if (trang == null)
+    {
+        <div class="public-state-card">
+            <span class="material-symbols-outlined">article</span>
+            <h2>Không tìm thấy trang</h2>
+            <p>Trang này chưa được công khai hoặc đường dẫn không còn tồn tại.</p>
+            <a class="public-button public-button-primary" href="/about">Về giới thiệu</a>
+        </div>
+    }
+    else
+    {
+        <nav class="public-breadcrumb" aria-label="breadcrumb">
             <a href="/">Trang chủ</a>
+            <span>/</span>
+            <a href="/about">Giới thiệu</a>
             <span>/</span>
             <span>@trang.Title</span>
         </nav>
 
-        <article class="article-card">
+        <article class="public-article-detail">
+            <div class="public-kicker">Trang thông tin</div>
             <h1>@trang.Title</h1>
             <div class="article-content">@((MarkupString)(trang.Content ?? string.Empty))</div>
         </article>
-    </div>
-}
+    }
+</div>
 
 @code {
     [Parameter] public string? Slug { get; set; }
     private PublicStaticPageDetail? trang;
 
-    protected override async Task OnInitializedAsync()
+    protected override async Task OnParametersSetAsync()
     {
         trang = await PublicStaticPageService.GetBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
     }

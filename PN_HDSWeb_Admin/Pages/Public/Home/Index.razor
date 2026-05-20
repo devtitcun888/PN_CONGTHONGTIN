@@ -4,865 +4,6 @@
 @inject IPublicPostCategoryService PublicPostCategoryService
 @inject IPublicDocumentService PublicDocumentService
 @implements IAsyncDisposable
-
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:wght@700;800&display=swap');
-
-    :root {
-        --hp-primary: #1a56db;
-        --hp-primary-dark: #1e40af;
-        --hp-primary-soft: #eff6ff;
-        --hp-red: #dc2626;
-        --hp-red-soft: #fef2f2;
-        --hp-green: #16a34a;
-        --hp-surface: #ffffff;
-        --hp-bg: #f0f4f9;
-        --hp-border: #e2e8f0;
-        --hp-text: #0f172a;
-        --hp-muted: #64748b;
-        --hp-shadow: 0 2px 12px rgba(15,23,42,.06);
-        --hp-shadow-lg: 0 6px 28px rgba(15,23,42,.10);
-        --hp-radius: 14px;
-        --hp-transition: .2s cubic-bezier(.4,0,.2,1);
-    }
-
-    .hp * { box-sizing: border-box; }
-
-    .hp {
-        font-family: 'Be Vietnam Pro', sans-serif;
-        color: var(--hp-text);
-        background: var(--hp-bg);
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        padding-bottom: 28px;
-    }
-
-    /* ═══════════════════════════════
-       FEATURED SLIDER — full width top
-    ═══════════════════════════════ */
-    .hp-featured {
-        position: relative;
-        border-radius: var(--hp-radius);
-        overflow: hidden;
-        box-shadow: var(--hp-shadow-lg);
-        background: #0f172a;
-        height: 320px;
-    }
-
-    .hp-slide {
-        position: absolute;
-        inset: 0;
-        opacity: 0;
-        transition: opacity .6s ease;
-        pointer-events: none;
-    }
-
-    .hp-slide.active {
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .hp-slide-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .hp-slide-overlay {
-        position: absolute;
-        inset: 0;
-        background: linear-gradient(90deg, rgba(10,18,40,.92) 0%, rgba(10,18,40,.6) 50%, rgba(10,18,40,.15) 100%);
-    }
-
-    .hp-slide-content {
-        position: absolute;
-        top: 50%;
-        left: 0;
-        transform: translateY(-50%);
-        padding: 28px 48px;
-        max-width: 62%;
-    }
-
-    .hp-slide-kicker {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: var(--hp-primary);
-        color: white;
-        font-size: 10px;
-        font-weight: 700;
-        letter-spacing: .08em;
-        text-transform: uppercase;
-        padding: 4px 12px;
-        border-radius: 999px;
-        margin-bottom: 12px;
-    }
-
-    .hp-slide-kicker::before {
-        content: "";
-        width: 5px;
-        height: 5px;
-        background: #93c5fd;
-        border-radius: 50%;
-        animation: hp-pulse 1.5s ease infinite;
-    }
-
-    @@keyframes hp-pulse {
-        0%, 100% { opacity: 1; }
-        50% { opacity: .4; }
-    }
-
-    .hp-slide-title {
-        font-family: 'Playfair Display', serif;
-        font-size: clamp(20px, 2.8vw, 34px);
-        font-weight: 700;
-        color: white;
-        line-height: 1.26;
-        margin: 0 0 10px;
-        text-shadow: 0 2px 14px rgba(0,0,0,.4);
-    }
-
-    .hp-slide-summary {
-        font-size: 13.5px;
-        color: rgba(255,255,255,.82);
-        line-height: 1.65;
-        margin: 0 0 16px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .hp-slide-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        background: white;
-        color: var(--hp-primary-dark);
-        padding: 9px 18px;
-        border-radius: 8px;
-        font-size: 13px;
-        font-weight: 700;
-        text-decoration: none;
-        transition: all var(--hp-transition);
-        box-shadow: 0 3px 14px rgba(0,0,0,.24);
-    }
-
-    .hp-slide-btn:hover {
-        background: var(--hp-primary-soft);
-        transform: translateY(-1px);
-        text-decoration: none;
-    }
-
-    .hp-dots {
-        position: absolute;
-        bottom: 14px;
-        left: 48px;
-        display: flex;
-        gap: 6px;
-        z-index: 10;
-    }
-
-    .hp-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 999px;
-        border: none;
-        background: rgba(255,255,255,.38);
-        cursor: pointer;
-        padding: 0;
-        transition: all var(--hp-transition);
-    }
-
-    .hp-dot.active {
-        background: white;
-        width: 22px;
-    }
-
-    .hp-arrow {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 36px;
-        height: 36px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.15);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,.2);
-        color: white;
-        cursor: pointer;
-        z-index: 10;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: background var(--hp-transition);
-    }
-
-    .hp-arrow:hover { background: rgba(255,255,255,.28); }
-    .hp-arrow-prev { left: 14px; }
-    .hp-arrow-next { right: 14px; }
-
-    .hp-progress {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 3px;
-        background: rgba(255,255,255,.12);
-        z-index: 10;
-    }
-
-    .hp-progress-bar {
-        height: 100%;
-        background: var(--hp-primary);
-        transition: width linear;
-    }
-
-    /* ═══════════════════════════════
-       SPOTLIGHT SCROLL CARDS (Nổi bật)
-    ═══════════════════════════════ */
-    .hp-spotlight-section {
-        background: var(--hp-surface);
-        border: 1px solid var(--hp-border);
-        border-radius: var(--hp-radius);
-        box-shadow: var(--hp-shadow);
-        overflow: hidden;
-    }
-
-    .hp-spotlight-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 12px 18px 11px;
-        border-bottom: 1px solid var(--hp-border);
-    }
-
-    .hp-spotlight-header-title {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 11.5px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        color: var(--hp-text);
-    }
-
-    .hp-card-title-bar {
-        width: 3px;
-        height: 16px;
-        border-radius: 2px;
-    }
-
-    .bar-blue  { background: var(--hp-primary); }
-    .bar-red   { background: var(--hp-red); }
-    .bar-green { background: var(--hp-green); }
-    .bar-gray  { background: #94a3b8; }
-
-    .hp-card-link {
-        font-size: 11.5px;
-        font-weight: 600;
-        color: var(--hp-primary);
-        text-decoration: none;
-        display: flex;
-        align-items: center;
-        gap: 3px;
-    }
-
-    .hp-card-link:hover { text-decoration: underline; }
-
-    /* Scroll track */
-    .hp-scroll-track-wrap {
-        position: relative;
-        padding: 14px 18px;
-    }
-
-    .hp-scroll-track {
-        display: flex;
-        gap: 12px;
-        overflow-x: auto;
-        scroll-behavior: smooth;
-        scrollbar-width: none;
-        -ms-overflow-style: none;
-        padding-bottom: 2px;
-    }
-
-    .hp-scroll-track::-webkit-scrollbar { display: none; }
-
-    /* Each spotlight card */
-    .hp-scard {
-        flex: 0 0 240px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        padding: 12px;
-        border-radius: 12px;
-        border: 1px solid var(--hp-border);
-        background: linear-gradient(160deg, #f8fbff 0%, #fff 100%);
-        text-decoration: none;
-        color: var(--hp-text);
-        transition: transform var(--hp-transition), box-shadow var(--hp-transition), border-color var(--hp-transition);
-        cursor: pointer;
-    }
-
-    .hp-scard:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 8px 24px rgba(15,23,42,.10);
-        border-color: rgba(29,78,216,.22);
-        text-decoration: none;
-    }
-
-    .hp-scard-icon {
-        width: 36px;
-        height: 36px;
-        border-radius: 10px;
-        background: var(--hp-primary-soft);
-        color: var(--hp-primary-dark);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .hp-scard-doc .hp-scard-icon {
-        background: #fef2f2;
-        color: var(--hp-red);
-    }
-
-    .hp-scard-img-wrap {
-        width: 100%;
-        height: 80px;
-        border-radius: 8px;
-        overflow: hidden;
-        background: linear-gradient(135deg,#dbeafe,#eff6ff);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--hp-primary);
-        flex-shrink: 0;
-    }
-
-    .hp-scard-img-wrap img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-    }
-
-    .hp-scard-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 2px 7px;
-        border-radius: 999px;
-        font-size: 10px;
-        font-weight: 700;
-        width: fit-content;
-    }
-
-    .badge-post { background: var(--hp-primary-soft); color: var(--hp-primary-dark); }
-    .badge-doc  { background: var(--hp-red-soft); color: var(--hp-red); }
-
-    .hp-scard-title {
-        margin: 0;
-        font-size: 12.5px;
-        font-weight: 700;
-        line-height: 1.45;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .hp-scard-meta {
-        font-size: 10.5px;
-        color: var(--hp-muted);
-    }
-
-    /* Scroll fade edges */
-    .hp-scroll-track-wrap::before,
-    .hp-scroll-track-wrap::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 14px;
-        width: 32px;
-        z-index: 2;
-        pointer-events: none;
-    }
-
-    .hp-scroll-track-wrap::before {
-        left: 0;
-        background: linear-gradient(90deg, white, transparent);
-    }
-
-    .hp-scroll-track-wrap::after {
-        right: 0;
-        background: linear-gradient(270deg, white, transparent);
-    }
-
-    /* ═══════════════════════════════
-       SHARED CARD
-    ═══════════════════════════════ */
-    .hp-card {
-        background: var(--hp-surface);
-        border: 1px solid var(--hp-border);
-        border-radius: var(--hp-radius);
-        box-shadow: var(--hp-shadow);
-        overflow: hidden;
-    }
-
-    .hp-card-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 11px 16px 10px;
-        border-bottom: 1px solid var(--hp-border);
-    }
-
-    .hp-card-title {
-        display: flex;
-        align-items: center;
-        gap: 7px;
-        font-size: 11.5px;
-        font-weight: 800;
-        text-transform: uppercase;
-        letter-spacing: .08em;
-        color: var(--hp-text);
-    }
-
-    .hp-card-body { padding: 12px 16px; }
-
-    /* ═══════════════════════════════
-       FEATURED DOCUMENTS
-    ═══════════════════════════════ */
-    .hp-doc-grid {
-        display: grid;
-        grid-template-columns: repeat(3, minmax(0,1fr));
-        gap: 14px;
-    }
-
-    .hp-doc-card {
-        display: flex;
-        flex-direction: column;
-        gap: 10px;
-        padding: 14px;
-        border-radius: 12px;
-        border: 1px solid var(--hp-border);
-        background: linear-gradient(180deg,#fff 0%,#f8fbff 100%);
-        box-shadow: var(--hp-shadow);
-        text-decoration: none;
-        color: var(--hp-text);
-        transition: transform var(--hp-transition), box-shadow var(--hp-transition), border-color var(--hp-transition);
-    }
-
-    .hp-doc-card:hover {
-        transform: translateY(-2px);
-        box-shadow: var(--hp-shadow-lg);
-        border-color: rgba(29,78,216,.22);
-        text-decoration: none;
-    }
-
-    .hp-doc-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        width: fit-content;
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: var(--hp-red-soft);
-        color: var(--hp-red);
-        font-size: 10.5px;
-        font-weight: 700;
-    }
-
-    .hp-doc-fallback {
-        width: 100%;
-        height: 72px;
-        border-radius: 10px;
-        background: linear-gradient(135deg,#dbeafe,#eff6ff);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--hp-primary);
-    }
-
-    .hp-doc-title {
-        margin: 0;
-        font-size: 13px;
-        line-height: 1.5;
-        font-weight: 700;
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .hp-doc-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        font-size: 11.5px;
-        color: var(--hp-muted);
-    }
-
-    .hp-doc-info {
-        display: grid;
-        gap: 3px;
-        margin-top: auto;
-        padding-top: 8px;
-        border-top: 1px dashed var(--hp-border);
-        font-size: 11px;
-        color: var(--hp-muted);
-    }
-
-    /* ═══════════════════════════════
-       MAIN 3-COL GRID
-    ═══════════════════════════════ */
-    .hp-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr 280px;
-        gap: 16px;
-        align-items: stretch; /* all columns same height */
-    }
-
-    /* Make the two news cards stretch full height */
-    .hp-grid > .hp-card {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .hp-grid > .hp-card > .hp-card-body {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        padding: 0;
-        overflow: hidden;
-    }
-
-    /* Fixed-height scrollable news container */
-    .hp-news-scroll,
-    .hp-bullet-scroll {
-        height: 420px;
-        overflow-y: auto;
-        padding: 10px 16px;
-        scrollbar-width: thin;
-        scrollbar-color: #cbd5e1 transparent;
-    }
-
-    .hp-news-scroll::-webkit-scrollbar,
-    .hp-bullet-scroll::-webkit-scrollbar {
-        width: 4px;
-    }
-
-    .hp-news-scroll::-webkit-scrollbar-track,
-    .hp-bullet-scroll::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .hp-news-scroll::-webkit-scrollbar-thumb,
-    .hp-bullet-scroll::-webkit-scrollbar-thumb {
-        background: #cbd5e1;
-        border-radius: 999px;
-    }
-
-    .hp-news-scroll::-webkit-scrollbar-thumb:hover,
-    .hp-bullet-scroll::-webkit-scrollbar-thumb:hover {
-        background: #94a3b8;
-    }
-
-    /* ═══════════════════════════════
-       NEWS LIST (Tin nổi bật)
-    ═══════════════════════════════ */
-    .hp-news-list { display: grid; gap: 0; }
-
-    .hp-news-item {
-        display: flex;
-        gap: 10px;
-        align-items: flex-start;
-        padding: 9px 0;
-        border-bottom: 1px solid var(--hp-border);
-    }
-
-    .hp-news-item:last-child  { border-bottom: none; padding-bottom: 0; }
-    .hp-news-item:first-child { padding-top: 0; }
-
-    .hp-news-thumb {
-        width: 64px; height: 48px;
-        border-radius: 7px;
-        object-fit: cover;
-        flex-shrink: 0;
-        background: #e2e8f0;
-    }
-
-    .hp-news-thumb-placeholder {
-        width: 64px; height: 48px;
-        border-radius: 7px;
-        background: linear-gradient(135deg,#e2e8f0,#cbd5e1);
-        flex-shrink: 0;
-        display: flex; align-items: center; justify-content: center;
-        color: #94a3b8;
-    }
-
-    .hp-news-info { flex: 1; min-width: 0; }
-
-    .hp-news-title {
-        font-size: 12.5px;
-        font-weight: 600;
-        color: var(--hp-text);
-        line-height: 1.42;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        text-decoration: none;
-        transition: color var(--hp-transition);
-    }
-
-    .hp-news-title:hover { color: var(--hp-primary); text-decoration: none; }
-
-    .hp-news-meta {
-        margin-top: 4px;
-        font-size: 11px;
-        color: var(--hp-muted);
-        display: flex; align-items: center; gap: 5px;
-    }
-
-    /* ═══════════════════════════════
-       BULLET LIST (Tin mới nhất)
-    ═══════════════════════════════ */
-    .hp-bullet-list { display: grid; gap: 0; }
-
-    .hp-bullet-item {
-        padding: 8px 0;
-        border-bottom: 1px solid var(--hp-border);
-    }
-
-    .hp-bullet-item:last-child  { border-bottom: none; padding-bottom: 0; }
-    .hp-bullet-item:first-child { padding-top: 0; }
-
-    .hp-bullet-link {
-        display: flex;
-        gap: 7px;
-        align-items: flex-start;
-        font-size: 12.5px;
-        font-weight: 500;
-        color: var(--hp-text);
-        line-height: 1.42;
-        text-decoration: none;
-        transition: color var(--hp-transition);
-    }
-
-    .hp-bullet-link:hover { color: var(--hp-primary); text-decoration: none; }
-
-    .hp-bullet {
-        color: var(--hp-primary);
-        font-size: 18px;
-        line-height: 1;
-        margin-top: -1px;
-        flex-shrink: 0;
-    }
-
-    .hp-bullet-red { color: var(--hp-red); }
-    .hp-bullet-date { font-size: 11px; color: var(--hp-muted); margin-top: 2px; padding-left: 15px; }
-
-    /* Sidebar stretches too */
-    .hp-sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        align-self: stretch;
-    }
-
-    /* ═══════════════════════════════
-       SIDEBAR
-    ═══════════════════════════════ */
-    .hp-quick-links { display: grid; gap: 6px; }
-
-    .hp-quick-link {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-        padding: 9px 12px;
-        border-radius: 9px;
-        background: var(--hp-primary-soft);
-        color: var(--hp-primary-dark);
-        font-size: 12.5px;
-        font-weight: 600;
-        text-decoration: none;
-        border: 1px solid rgba(29,78,216,.1);
-        transition: all var(--hp-transition);
-    }
-
-    .hp-quick-link:hover {
-        background: #dbeafe;
-        transform: translateX(3px);
-        text-decoration: none;
-    }
-
-    .hp-quick-link-icon {
-        width: 26px; height: 26px;
-        border-radius: 7px;
-        background: var(--hp-primary);
-        color: white;
-        display: flex; align-items: center; justify-content: center;
-        flex-shrink: 0;
-    }
-
-    .hp-quick-link-arrow { margin-left: auto; opacity: .45; }
-
-    .hp-cat-list { display: flex; flex-wrap: wrap; gap: 6px; }
-
-    .hp-cat-chip {
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        padding: 4px 10px;
-        border-radius: 999px;
-        background: #f1f5f9;
-        color: var(--hp-muted);
-        font-size: 11.5px;
-        font-weight: 600;
-        text-decoration: none;
-        border: 1px solid var(--hp-border);
-        transition: all var(--hp-transition);
-    }
-
-    .hp-cat-chip:hover {
-        background: var(--hp-primary-soft);
-        color: var(--hp-primary);
-        border-color: rgba(29,78,216,.22);
-        text-decoration: none;
-    }
-
-    /* ═══════════════════════════════
-       BOTTOM GRID
-    ═══════════════════════════════ */
-    .hp-bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-
-    .hp-mini-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-
-    .hp-mini-card {
-        border-radius: 10px;
-        overflow: hidden;
-        border: 1px solid var(--hp-border);
-        background: white;
-        text-decoration: none;
-        color: var(--hp-text);
-        transition: box-shadow var(--hp-transition), transform var(--hp-transition);
-        display: flex;
-        flex-direction: column;
-    }
-
-    .hp-mini-card:hover {
-        box-shadow: var(--hp-shadow-lg);
-        transform: translateY(-2px);
-        text-decoration: none;
-    }
-
-    .hp-mini-card-img {
-        width: 100%; height: 96px;
-        object-fit: cover;
-        background: #e2e8f0;
-        display: block;
-    }
-
-    .hp-mini-card-img-placeholder {
-        width: 100%; height: 96px;
-        background: linear-gradient(135deg,#e2e8f0,#cbd5e1);
-        display: flex; align-items: center; justify-content: center;
-        color: #94a3b8;
-    }
-
-    .hp-mini-card-body { padding: 8px 10px 10px; flex: 1; }
-
-    .hp-mini-card-title {
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.4;
-        color: var(--hp-text);
-        display: -webkit-box;
-        -webkit-line-clamp: 3;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .hp-mini-card-date { font-size: 10.5px; color: var(--hp-muted); margin-top: 5px; }
-
-    .hp-doc-section { display: flex; flex-direction: column; }
-
-    /* ═══════════════════════════════
-       LOADING
-    ═══════════════════════════════ */
-    .hp-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        min-height: 56vh;
-        color: var(--hp-muted);
-        font-size: 13.5px;
-    }
-
-    .hp-spinner {
-        width: 24px; height: 24px;
-        border: 2.5px solid #dbeafe;
-        border-top-color: var(--hp-primary);
-        border-radius: 50%;
-        animation: hp-spin .7s linear infinite;
-    }
-
-    @@keyframes hp-spin { to { transform: rotate(360deg); } }
-
-    /* ═══════════════════════════════
-       AUTO-SCROLL animation
-    ═══════════════════════════════ */
-    @@keyframes hp-scroll-x {
-        0%   { transform: translateX(0); }
-        100% { transform: translateX(-50%); }
-    }
-
-    .hp-scroll-track.auto-scroll {
-        overflow: hidden;
-        cursor: default;
-        padding-bottom: 0;
-    }
-
-    .hp-scroll-track.auto-scroll .hp-scroll-inner {
-        display: flex;
-        gap: 12px;
-        animation: hp-scroll-x 28s linear infinite;
-        width: max-content;
-    }
-
-    .hp-scroll-track.auto-scroll:hover .hp-scroll-inner {
-        animation-play-state: paused;
-    }
-
-    /* ═══════════════════════════════
-       RESPONSIVE
-    ═══════════════════════════════ */
-    @@media (max-width: 1100px) {
-        .hp-grid { grid-template-columns: 1fr; }
-        .hp-sidebar { display: contents; }
-        .hp-sidebar > * { grid-column: span 1; }
-        .hp-doc-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
-    }
-
-    @@media (max-width: 720px) {
-        .hp-featured { height: 220px; }
-        .hp-slide-content { max-width: 90%; padding: 16px 20px; }
-        .hp-slide-title { font-size: 18px; }
-        .hp-slide-summary { display: none; }
-        .hp-bottom { grid-template-columns: 1fr; }
-        .hp-mini-grid { grid-template-columns: 1fr; }
-        .hp-doc-grid { grid-template-columns: 1fr; }
-        .hp-dots { left: 20px; }
-    }
-</style>
-
 <div class="hp">
 
     @if (model == null)
@@ -874,61 +15,143 @@
     }
     else
     {
-        /* ── FEATURED SLIDER (top, full width) ── */
-        @if (model.FeaturedPosts?.Any() == true)
+        var slides = (model.FeaturedPosts ?? new()).Take(6).ToList();
+        var hasHeroIntro = model.SchoolIntro != null;
+        var hasHeroSlider = slides.Any();
+
+        @if (hasHeroSlider || hasHeroIntro)
         {
-            var slides = model.FeaturedPosts.Take(6).ToList();
-            <div class="hp-featured">
-                @for (int i = 0; i < slides.Count; i++)
+            <section class="hp-hero-grid @(!hasHeroSlider || !hasHeroIntro ? "single" : string.Empty)">
+                @if (hasHeroSlider)
                 {
-                    var post = slides[i];
-                    var idx  = i;
-                    <div class="hp-slide @(i == activeSlide ? "active" : "")">
-                        @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+                    <div class="hp-featured">
+                        @for (int i = 0; i < slides.Count; i++)
                         {
-                            <img class="hp-slide-img" src="@post.CoverImageUrl" alt="@post.Title" />
+                            var post = slides[i];
+                            var idx  = i;
+                            var slideImage = string.IsNullOrWhiteSpace(post.CoverImageUrl)
+                                ? "/image/banner-holder.png"
+                                : post.CoverImageUrl;
+                            <div class="hp-slide @(i == activeSlide ? "active" : "")">
+                                <img class="hp-slide-img" src="@slideImage" alt="@post.Title" data-fallback-src="/image/banner-holder.png" />
+                                <div class="hp-slide-content">
+                                    <div class="hp-slide-kicker">Tin nổi bật</div>
+                                    <h1 class="hp-slide-title">@post.Title</h1>
+                                    @if (!string.IsNullOrWhiteSpace(post.Summary))
+                                    {
+                                        <p class="hp-slide-summary">@post.Summary</p>
+                                    }
+                                    <a href="@PostHref(post)" class="hp-slide-btn">
+                                        Đọc bài viết
+                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                                    </a>
+                                </div>
+                            </div>
                         }
-                        else
-                        {
-                            <div class="hp-slide-img" style="background:linear-gradient(135deg,#0f172a,#1d4ed8);"></div>
-                        }
-                        <div class="hp-slide-overlay"></div>
-                        <div class="hp-slide-content">
-                            <div class="hp-slide-kicker">Tin nổi bật</div>
-                            <h1 class="hp-slide-title">@post.Title</h1>
-                            @if (!string.IsNullOrWhiteSpace(post.Summary))
+
+                        <div class="hp-dots">
+                            @for (int i = 0; i < slides.Count; i++)
                             {
-                                <p class="hp-slide-summary">@post.Summary</p>
+                                var idx = i;
+                                <button class="hp-dot @(i == activeSlide ? "active" : "")"
+                                        type="button" @onclick="() => GoToSlide(idx)"></button>
                             }
-                            <a href="/posts/@post.Slug" class="hp-slide-btn">
-                                Đọc bài viết
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                            </a>
+                        </div>
+
+                        <button class="hp-arrow hp-arrow-prev" type="button" @onclick="PrevSlide">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+                        </button>
+                        <button class="hp-arrow hp-arrow-next" type="button" @onclick="NextSlide">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                        </button>
+
+                        <div class="hp-progress">
+                            <div class="hp-progress-bar" @key="activeSlide"></div>
                         </div>
                     </div>
                 }
 
-                <div class="hp-dots">
-                    @for (int i = 0; i < slides.Count; i++)
-                    {
-                        var idx = i;
-                        <button class="hp-dot @(i == activeSlide ? "active" : "")"
-                                type="button" @onclick="() => GoToSlide(idx)"></button>
-                    }
-                </div>
+                @if (model.SchoolIntro != null)
+                {
+                    <aside class="hp-school-card" aria-label="Thông tin nhà trường">
+                        <div class="hp-school-top">
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.LogoUrl))
+                            {
+                                <img src="@model.SchoolIntro.LogoUrl" alt="@model.SchoolIntro.SchoolName" />
+                            }
+                            else
+                            {
+                                <span>@GetSchoolInitials(model.SchoolIntro.SchoolName)</span>
+                            }
+                            <div>
+                                <p>Thông tin nhà trường</p>
+                                <h2>@(model.SchoolIntro.SchoolName ?? "Nhà trường")</h2>
+                            </div>
+                        </div>
 
-                <button class="hp-arrow hp-arrow-prev" type="button" @onclick="PrevSlide">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <button class="hp-arrow hp-arrow-next" type="button" @onclick="NextSlide">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
+                        <p class="hp-school-intro">@SchoolIntroText</p>
 
-                <div class="hp-progress">
-                    <div class="hp-progress-bar"
-                         style="width:@(progressPct)%; transition-duration:@(progressMs)ms;"></div>
+                        <div class="hp-school-facts">
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.Address))
+                            {
+                                <div>
+                                    <span class="material-symbols-outlined">location_on</span>
+                                    <p>@model.SchoolIntro.Address</p>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.LevelText))
+                            {
+                                <div>
+                                    <span class="material-symbols-outlined">school</span>
+                                    <p>@model.SchoolIntro.LevelText</p>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.StudyTimeText))
+                            {
+                                <div>
+                                    <span class="material-symbols-outlined">schedule</span>
+                                    <p>@model.SchoolIntro.StudyTimeText</p>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.Phone))
+                            {
+                                <div>
+                                    <span class="material-symbols-outlined">call</span>
+                                    <p>@model.SchoolIntro.Phone</p>
+                                </div>
+                            }
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.LeaderName))
+                            {
+                                <div>
+                                    <span class="material-symbols-outlined">person</span>
+                                    <p>@model.SchoolIntro.LeaderName</p>
+                                </div>
+                            }
+                        </div>
+
+                        <div class="hp-school-actions">
+                            <a href="/about">Giới thiệu</a>
+                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.WebsiteUrl))
+                            {
+                                <a href="@model.SchoolIntro.WebsiteUrl" target="_blank" rel="noopener noreferrer">Website</a>
+                            }
+                        </div>
+                    </aside>
+                }
+            </section>
+        }
+        else
+        {
+            <section class="hp-school-card hp-school-card-empty">
+                <div class="hp-school-top">
+                    <span>PN</span>
+                    <div>
+                        <p>Thông tin nhà trường</p>
+                        <h2>Cổng thông tin điện tử</h2>
+                    </div>
                 </div>
-            </div>
+                <p class="hp-school-intro">Chưa có dữ liệu giới thiệu để hiển thị trên trang chủ.</p>
+            </section>
         }
 
         /* ── NỘI DUNG NỔI BẬT — horizontal auto-scroll cards ── */
@@ -959,7 +182,7 @@
                             @* First set *@
                             @foreach (var post in spotlightPosts)
                             {
-                                <a class="hp-scard" href="/posts/@post.Slug">
+                                <a class="hp-scard" href="@PostHref(post)">
                                     <div class="hp-scard-img-wrap">
                                         @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
                                         {
@@ -989,7 +212,7 @@
                             @* Duplicate set for seamless loop *@
                             @foreach (var post in spotlightPosts)
                             {
-                                <a class="hp-scard" href="/posts/@post.Slug" tabindex="-1" aria-hidden="true">
+                                <a class="hp-scard" href="@PostHref(post)" tabindex="-1" aria-hidden="true">
                                     <div class="hp-scard-img-wrap">
                                         @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
                                         {
@@ -1022,58 +245,61 @@
             </div>
         }
 
-        /* ── VĂN BẢN CÔNG KHAI NỔI BẬT ── */
-        <div class="hp-card">
-            <div class="hp-card-header">
-                <div class="hp-card-title">
-                    <span class="hp-card-title-bar bar-red"></span>
-                    Văn bản công khai nổi bật
-                </div>
-                <a class="hp-card-link" href="/documents">
-                    Xem tất cả
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                </a>
-            </div>
-            <div class="hp-card-body">
-                @if (featuredDocuments?.Any() == true)
-                {
-                    <div class="hp-doc-grid">
-                        @foreach (var doc in featuredDocuments)
-                        {
-                            <a class="hp-doc-card" href="@GetDocumentHref(doc)">
-                                <div class="hp-doc-badge">
-                                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                    Văn bản
-                                </div>
-                                <div class="hp-doc-fallback">
-                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                </div>
-                                <h3 class="hp-doc-title">@doc.DocTitle</h3>
-                                <div class="hp-doc-meta">
-                                    @if (!string.IsNullOrWhiteSpace(doc.DocNumber))
-                                    {
-                                        <span>Số: @doc.DocNumber</span>
-                                    }
-                                    @if (!string.IsNullOrWhiteSpace(doc.TypeName))
-                                    {
-                                        <span>•</span>
-                                        <span>@doc.TypeName</span>
-                                    }
-                                </div>
-                                <div class="hp-doc-info">
-                                    <span>Ngày ban hành: @FormatDate(doc.IssuedDate)</span>
-                                    <span>Xem chi tiết →</span>
-                                </div>
-                            </a>
-                        }
+        @if (model.FeatureDocumentsEnabled)
+        {
+            /* ── VĂN BẢN CÔNG KHAI NỔI BẬT ── */
+            <div class="hp-card">
+                <div class="hp-card-header">
+                    <div class="hp-card-title">
+                        <span class="hp-card-title-bar bar-red"></span>
+                        Văn bản công khai nổi bật
                     </div>
-                }
-                else
-                {
-                    <div class="hp-loading" style="min-height:140px;">Chưa có văn bản công khai nổi bật.</div>
-                }
+                    <a class="hp-card-link" href="/documents">
+                        Xem tất cả
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+                    </a>
+                </div>
+                <div class="hp-card-body">
+                    @if (featuredDocuments?.Any() == true)
+                    {
+                        <div class="hp-doc-grid">
+                            @foreach (var doc in featuredDocuments)
+                            {
+                                <a class="hp-doc-card" href="@GetDocumentHref(doc)">
+                                    <div class="hp-doc-badge">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                        Văn bản
+                                    </div>
+                                    <div class="hp-doc-fallback">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
+                                    </div>
+                                    <h3 class="hp-doc-title">@doc.DocTitle</h3>
+                                    <div class="hp-doc-meta">
+                                        @if (!string.IsNullOrWhiteSpace(doc.DocNumber))
+                                        {
+                                            <span>Số: @doc.DocNumber</span>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(doc.TypeName))
+                                        {
+                                            <span>•</span>
+                                            <span>@doc.TypeName</span>
+                                        }
+                                    </div>
+                                    <div class="hp-doc-info">
+                                        <span>Ngày ban hành: @FormatDate(doc.IssuedDate)</span>
+                                        <span>Xem chi tiết →</span>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="hp-loading u-min-h-140">Chưa có văn bản công khai nổi bật.</div>
+                    }
+                </div>
             </div>
-        </div>
+        }
 
         /* ── MAIN 3-COL GRID ── */
         <div class="hp-grid">
@@ -1105,7 +331,7 @@
                                         </div>
                                     }
                                     <div class="hp-news-info">
-                                        <a class="hp-news-title" href="/posts/@item.Slug">@item.Title</a>
+                                        <a class="hp-news-title" href="@PostHref(item)">@item.Title</a>
                                         <div class="hp-news-meta">
                                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
                                             @* @FormatDate(item.CreatedAt) *@
@@ -1135,7 +361,7 @@
                             @foreach (var item in (model.LatestPosts ?? new()).Take(10))
                             {
                                 <div class="hp-bullet-item">
-                                    <a class="hp-bullet-link" href="/posts/@item.Slug">
+                                    <a class="hp-bullet-link" href="@PostHref(item)">
                                         <span class="hp-bullet hp-bullet-red">›</span>
                                         <span>@item.Title</span>
                                     </a>
@@ -1159,7 +385,7 @@
                     </div>
                     <div class="hp-card-body">
                         <div class="hp-quick-links">
-                            @foreach (var link in quickLinks)
+                            @foreach (var link in VisibleQuickLinks)
                             {
                                 <a class="hp-quick-link" href="@link.Href">
                                     <div class="hp-quick-link-icon">
@@ -1186,7 +412,7 @@
                             <div class="hp-cat-list">
                                 @foreach (var cat in categories.Take(10))
                                 {
-                                    <a class="hp-cat-chip" href="/posts/category/@cat.Slug">@cat.CategoryName</a>
+                                    <a class="hp-cat-chip" href="@CategoryHref(cat)">@cat.CategoryName</a>
                                 }
                             </div>
                         </div>
@@ -1211,7 +437,7 @@
                         <div class="hp-mini-grid">
                             @foreach (var item in model.LatestPosts.Take(4))
                             {
-                                <a class="hp-mini-card" href="/posts/@item.Slug">
+                                <a class="hp-mini-card" href="@PostHref(item)">
                                     @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
                                     {
                                         <img class="hp-mini-card-img" src="@item.CoverImageUrl" alt="@item.Title" />
@@ -1245,7 +471,7 @@
                             @foreach (var item in (model.LatestPosts ?? new()).Skip(4).Take(7))
                             {
                                 <div class="hp-bullet-item">
-                                    <a class="hp-bullet-link" href="/posts/@item.Slug">
+                                    <a class="hp-bullet-link" href="@PostHref(item)">
                                         <span class="hp-bullet">›</span>
                                         <span>@item.Title</span>
                                     </a>
@@ -1270,8 +496,6 @@
     // ── Slider state ──
     private int activeSlide = 0;
     private int totalSlides = 0;
-    private double progressPct = 0;
-    private int progressMs = 4000;
     private System.Threading.Timer? _timer;
     private bool _disposed;
     private const int SlideIntervalMs = 4500;
@@ -1290,49 +514,37 @@
             """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>"""),
     };
 
+    private IEnumerable<QuickLink> VisibleQuickLinks
+        => model?.FeatureSearchEnabled == false
+            ? quickLinks.Where(link => !string.Equals(link.Href, "/search", StringComparison.OrdinalIgnoreCase))
+            : quickLinks;
+
+    private string SchoolIntroText
+        => string.IsNullOrWhiteSpace(model?.SchoolIntro?.IntroText)
+            ? "Thông tin tổng quan, địa chỉ liên hệ và các kênh chính thức của nhà trường được cập nhật từ dữ liệu trường học."
+            : model!.SchoolIntro!.IntroText!;
+
     protected override async Task OnInitializedAsync()
     {
         model = await HomepageService.GetHomepageAsync(PN_PublicVariables.MaTruong);
         categories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
-        featuredDocuments = await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, pageSize: 3);
+        featuredDocuments = model.FeatureDocumentsEnabled
+            ? await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, pageSize: Math.Clamp(model.HomepageDocumentsLimit, 1, 24))
+            : [];
         totalSlides = model?.FeaturedPosts?.Take(6).Count() ?? 0;
     }
 
     private void StartTimer()
     {
-        progressPct = 0;
-        progressMs = SlideIntervalMs;
-        InvokeAsync(StateHasChanged);
-
-        Task.Delay(50).ContinueWith(_ =>
-        {
-            progressPct = 100;
-            InvokeAsync(StateHasChanged);
-        });
-
         _timer = new System.Threading.Timer(_ =>
         {
             if (_disposed) return;
             InvokeAsync(() =>
             {
                 activeSlide = (activeSlide + 1) % totalSlides;
-                ResetProgress();
                 StateHasChanged();
             });
         }, null, SlideIntervalMs, SlideIntervalMs);
-    }
-
-    private void ResetProgress()
-    {
-        progressPct = 0;
-        progressMs = 0;
-        StateHasChanged();
-        Task.Delay(50).ContinueWith(_ =>
-        {
-            progressPct = 100;
-            progressMs = SlideIntervalMs;
-            InvokeAsync(StateHasChanged);
-        });
     }
 
     private void GoToSlide(int idx)
@@ -1350,9 +562,30 @@
         => dt.HasValue ? dt.Value.ToString("dd/MM/yyyy") : string.Empty;
 
     private static string GetDocumentHref(PublicDocumentListItem doc)
-        => !string.IsNullOrWhiteSpace(doc.TypeSlug) && !string.IsNullOrWhiteSpace(doc.Id)
+        => !string.IsNullOrWhiteSpace(doc.Id)
             ? $"/documents/{doc.Id}"
             : "/documents";
+
+    private static string PostHref(PublicPostListItem post)
+        => string.IsNullOrWhiteSpace(post.Slug) ? "/posts" : $"/posts/{post.Slug}";
+
+    private static string PostHref(PublicPostItem post)
+        => string.IsNullOrWhiteSpace(post.Slug) ? "/posts" : $"/posts/{post.Slug}";
+
+    private static string CategoryHref(PublicPostCategoryItem category)
+        => string.IsNullOrWhiteSpace(category.Slug) ? "/posts" : $"/posts/category/{category.Slug}";
+
+    private static string GetSchoolInitials(string? name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "PN";
+
+        var words = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        if (words.Length == 0)
+            return "PN";
+
+        return string.Concat(words.TakeLast(Math.Min(2, words.Length)).Select(word => char.ToUpperInvariant(word[0])));
+    }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

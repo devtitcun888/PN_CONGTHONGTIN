@@ -69,7 +69,7 @@
                         {
                             <tr>
                                 <td>
-                                    <input type="number" value="@item.SortOrder" @onchange="(e) => UpdateSortOrder(item, e)" style="width:90px;" />
+                                    <input class="u-sort-input" type="number" value="@item.SortOrder" @onchange="(e) => UpdateSortOrder(item, e)" />
                                 </td>
                                 <td>@item.MediaType</td>
                                 <td><a href="@item.FileUrl" target="_blank">@item.FileName</a></td>

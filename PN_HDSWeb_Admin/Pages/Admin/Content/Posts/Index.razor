@@ -5,724 +5,6 @@
 @inject IAdminPostCategoryService AdminPostCategoryService
 @inject NavigationManager Nav
 @inject IJSRuntime JS
-
-<style>
-    @@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
-
-    :root {
-        --ep-bg: #f4f6fb;
-        --ep-surface: #ffffff;
-        --ep-surface-2: #f8fafd;
-        --ep-border: #e4e9f2;
-        --ep-border-focus: #3b6ef6;
-        --ep-primary: #3b6ef6;
-        --ep-primary-hover: #2554e0;
-        --ep-primary-soft: #eef2fe;
-        --ep-text: #0f1b35;
-        --ep-text-2: #5a6a8a;
-        --ep-text-3: #a0aec0;
-        --ep-danger: #e53e3e;
-        --ep-danger-soft: #fff5f5;
-        --ep-success: #22c55e;
-        --ep-success-soft: #f0fdf4;
-        --ep-warning: #f59e0b;
-        --ep-warning-soft: #fffbeb;
-        --ep-radius: 14px;
-        --ep-radius-sm: 9px;
-        --ep-shadow: 0 4px 24px rgba(15,27,53,.07);
-        --ep-transition: .2s cubic-bezier(.4,0,.2,1);
-    }
-
-    .pl-root * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-    }
-
-    .pl-root {
-        font-family: 'Be Vietnam Pro', sans-serif;
-        background: var(--ep-bg);
-        min-height: 100vh;
-        color: var(--ep-text);
-    }
-
-    /* ── Topbar ── */
-    .pl-topbar {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 32px 0;
-        flex-wrap: wrap;
-        gap: 12px;
-    }
-
-    .pl-breadcrumb {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        font-size: 13px;
-        color: var(--ep-text-2);
-    }
-
-        .pl-breadcrumb a {
-            color: var(--ep-primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-            .pl-breadcrumb a:hover {
-                text-decoration: underline;
-            }
-
-    .pl-breadcrumb-sep {
-        color: var(--ep-text-3);
-    }
-
-    .pl-breadcrumb-current {
-        color: var(--ep-text);
-        font-weight: 600;
-    }
-
-    /* ── Hero ── */
-    .pl-hero {
-        padding: 20px 32px 0;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-        gap: 16px;
-        flex-wrap: wrap;
-    }
-
-    .pl-hero-text h1 {
-        font-family: 'Instrument Serif', serif;
-        font-size: 28px;
-        font-weight: 400;
-        color: var(--ep-text);
-        letter-spacing: -.3px;
-        line-height: 1.2;
-    }
-
-    .pl-hero-text p {
-        margin-top: 4px;
-        font-size: 13.5px;
-        color: var(--ep-text-2);
-    }
-
-    /* ── Stats row ── */
-    .pl-stats {
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        padding: 20px 32px 0;
-    }
-
-    .pl-stat {
-        background: var(--ep-surface);
-        border: 1px solid var(--ep-border);
-        border-radius: var(--ep-radius-sm);
-        padding: 12px 18px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        box-shadow: var(--ep-shadow);
-        animation: pl-fadeup .3s ease both;
-        min-width: 130px;
-    }
-
-        .pl-stat:nth-child(2) {
-            animation-delay: .04s;
-        }
-
-        .pl-stat:nth-child(3) {
-            animation-delay: .08s;
-        }
-
-        .pl-stat:nth-child(4) {
-            animation-delay: .12s;
-        }
-
-        .pl-stat:nth-child(5) {
-            animation-delay: .16s;
-        }
-
-    .pl-stat-dot {
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        flex-shrink: 0;
-    }
-
-    .pl-stat-info {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .pl-stat-value {
-        font-size: 20px;
-        font-weight: 700;
-        color: var(--ep-text);
-        line-height: 1;
-    }
-
-    .pl-stat-label {
-        font-size: 11.5px;
-        color: var(--ep-text-3);
-        margin-top: 3px;
-        font-weight: 500;
-        text-transform: uppercase;
-        letter-spacing: .4px;
-    }
-
-    /* ── Toolbar ── */
-    .pl-toolbar {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 20px 32px 0;
-        flex-wrap: wrap;
-    }
-
-    .pl-search-wrap {
-        position: relative;
-        flex: 1;
-        min-width: 200px;
-        max-width: 340px;
-    }
-
-    .pl-search-icon {
-        position: absolute;
-        left: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        color: var(--ep-text-3);
-        pointer-events: none;
-        display: flex;
-        align-items: center;
-    }
-
-    .pl-input {
-        width: 100%;
-        padding: 9px 14px 9px 38px;
-        border: 1.5px solid var(--ep-border);
-        border-radius: var(--ep-radius-sm);
-        font-family: inherit;
-        font-size: 13.5px;
-        color: var(--ep-text);
-        background: var(--ep-surface);
-        outline: none;
-        transition: border-color var(--ep-transition), box-shadow var(--ep-transition);
-    }
-
-        .pl-input:focus {
-            border-color: var(--ep-border-focus);
-            box-shadow: 0 0 0 3px rgba(59,110,246,.12);
-        }
-
-        .pl-input::placeholder {
-            color: var(--ep-text-3);
-        }
-
-    .pl-input-plain {
-        padding-left: 14px;
-    }
-
-    .pl-status-filter {
-        display: flex;
-        gap: 4px;
-        flex-wrap: wrap;
-        background: var(--ep-surface);
-        border: 1px solid var(--ep-border);
-        border-radius: var(--ep-radius-sm);
-        padding: 4px;
-        box-shadow: var(--ep-shadow);
-    }
-
-    .pl-status-tab {
-        padding: 5px 12px;
-        border-radius: 6px;
-        font-size: 12.5px;
-        font-weight: 600;
-        cursor: pointer;
-        border: none;
-        background: none;
-        color: var(--ep-text-2);
-        transition: all var(--ep-transition);
-        white-space: nowrap;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-        .pl-status-tab:hover {
-            background: var(--ep-surface-2);
-            color: var(--ep-text);
-        }
-
-        .pl-status-tab.active {
-            background: var(--ep-primary-soft);
-            color: var(--ep-primary);
-        }
-
-        .pl-status-tab .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-
-    .pl-spacer {
-        flex: 1;
-    }
-
-    /* ── Buttons ── */
-    .pl-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-        padding: 9px 18px;
-        border-radius: var(--ep-radius-sm);
-        font-family: inherit;
-        font-size: 13.5px;
-        font-weight: 600;
-        cursor: pointer;
-        border: 1.5px solid transparent;
-        transition: all var(--ep-transition);
-        white-space: nowrap;
-    }
-
-        .pl-btn:disabled {
-            opacity: .5;
-            cursor: not-allowed;
-        }
-
-    .pl-btn-primary {
-        background: var(--ep-primary);
-        color: white;
-        border-color: var(--ep-primary);
-        box-shadow: 0 2px 12px rgba(59,110,246,.25);
-    }
-
-        .pl-btn-primary:hover:not(:disabled) {
-            background: var(--ep-primary-hover);
-            border-color: var(--ep-primary-hover);
-            box-shadow: 0 4px 18px rgba(59,110,246,.35);
-            transform: translateY(-1px);
-        }
-
-    .pl-btn-ghost {
-        background: var(--ep-surface);
-        color: var(--ep-text-2);
-        border-color: var(--ep-border);
-    }
-
-        .pl-btn-ghost:hover:not(:disabled) {
-            border-color: var(--ep-text-2);
-            color: var(--ep-text);
-            background: var(--ep-surface-2);
-        }
-
-    .pl-btn-danger-ghost {
-        background: none;
-        color: var(--ep-danger);
-        border: none;
-        padding: 5px 8px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: 13px;
-        transition: background var(--ep-transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-        .pl-btn-danger-ghost:hover {
-            background: var(--ep-danger-soft);
-        }
-
-    .pl-btn-icon {
-        background: none;
-        color: var(--ep-text-2);
-        border: none;
-        padding: 5px 8px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-family: inherit;
-        font-size: 13px;
-        transition: all var(--ep-transition);
-        display: inline-flex;
-        align-items: center;
-        gap: 4px;
-        font-weight: 600;
-    }
-
-        .pl-btn-icon:hover {
-            background: var(--ep-primary-soft);
-            color: var(--ep-primary);
-        }
-
-    /* ── Main content ── */
-    .pl-content {
-        padding: 20px 32px 40px;
-    }
-
-    /* ── Card ── */
-    .pl-card {
-        background: var(--ep-surface);
-        border: 1px solid var(--ep-border);
-        border-radius: var(--ep-radius);
-        box-shadow: var(--ep-shadow);
-        overflow: hidden;
-        animation: pl-fadeup .35s ease both;
-        animation-delay: .1s;
-    }
-
-    @@keyframes pl-fadeup {
-        from {
-            opacity: 0;
-            transform: translateY(10px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* ── Table ── */
-    .pl-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-        .pl-table thead tr {
-            background: var(--ep-surface-2);
-            border-bottom: 1px solid var(--ep-border);
-        }
-
-        .pl-table th {
-            padding: 11px 16px;
-            font-size: 11.5px;
-            font-weight: 700;
-            color: var(--ep-text-3);
-            text-transform: uppercase;
-            letter-spacing: .5px;
-            text-align: left;
-            white-space: nowrap;
-        }
-
-            .pl-table th:last-child {
-                text-align: right;
-            }
-
-        .pl-table tbody tr {
-            border-bottom: 1px solid var(--ep-border);
-            transition: background var(--ep-transition);
-        }
-
-            .pl-table tbody tr:last-child {
-                border-bottom: none;
-            }
-
-            .pl-table tbody tr:hover {
-                background: var(--ep-surface-2);
-            }
-
-        .pl-table td {
-            padding: 14px 16px;
-            font-size: 13.5px;
-            color: var(--ep-text);
-            vertical-align: middle;
-        }
-
-            .pl-table td:last-child {
-                text-align: right;
-            }
-
-    /* Title cell */
-    .pl-title-cell {
-        max-width: 360px;
-    }
-
-    .pl-title-main {
-        font-weight: 600;
-        font-size: 14px;
-        color: var(--ep-text);
-        line-height: 1.4;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .pl-title-meta {
-        margin-top: 3px;
-        font-size: 12px;
-        color: var(--ep-text-3);
-        display: flex;
-        align-items: center;
-        gap: 6px;
-    }
-
-        .pl-title-meta .sep {
-            opacity: .4;
-        }
-
-    .pl-featured-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 3px;
-        background: #fef9c3;
-        color: #854d0e;
-        border: 1px solid #fde68a;
-        border-radius: 4px;
-        padding: 1px 6px;
-        font-size: 11px;
-        font-weight: 600;
-    }
-
-    /* Status badge */
-    .pl-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        padding: 4px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-        white-space: nowrap;
-    }
-
-        .pl-badge .dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-
-    .badge-draft {
-        background: #f1f5f9;
-        color: #64748b;
-    }
-
-        .badge-draft .dot {
-            background: #94a3b8;
-        }
-
-    .badge-pending {
-        background: var(--ep-warning-soft);
-        color: #92400e;
-    }
-
-        .badge-pending .dot {
-            background: var(--ep-warning);
-        }
-
-    .badge-approved {
-        background: #eff6ff;
-        color: #1d4ed8;
-    }
-
-        .badge-approved .dot {
-            background: #38bdf8;
-        }
-
-    .badge-published {
-        background: var(--ep-success-soft);
-        color: #166534;
-    }
-
-        .badge-published .dot {
-            background: var(--ep-success);
-        }
-
-    .badge-rejected {
-        background: var(--ep-danger-soft);
-        color: var(--ep-danger);
-    }
-
-        .badge-rejected .dot {
-            background: var(--ep-danger);
-        }
-
-    /* Date cell */
-    .pl-date {
-        font-size: 13px;
-        color: var(--ep-text-2);
-        white-space: nowrap;
-    }
-
-    .pl-date-relative {
-        font-size: 11.5px;
-        color: var(--ep-text-3);
-        margin-top: 2px;
-    }
-
-    /* Actions cell */
-    .pl-actions {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 2px;
-    }
-
-    /* ── Empty state ── */
-    .pl-empty {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 60px 24px;
-        text-align: center;
-        color: var(--ep-text-3);
-    }
-
-    .pl-empty-icon {
-        width: 56px;
-        height: 56px;
-        background: var(--ep-surface-2);
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        color: var(--ep-text-3);
-    }
-
-    .pl-empty h3 {
-        font-size: 15px;
-        color: var(--ep-text-2);
-        font-weight: 600;
-        margin-bottom: 6px;
-    }
-
-    .pl-empty p {
-        font-size: 13px;
-    }
-
-    /* ── Loading ── */
-    .pl-loading {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        min-height: 40vh;
-        color: var(--ep-text-2);
-        font-size: 14px;
-    }
-
-    .pl-spinner {
-        width: 26px;
-        height: 26px;
-        border: 3px solid var(--ep-border);
-        border-top-color: var(--ep-primary);
-        border-radius: 50%;
-        animation: pl-spin .75s linear infinite;
-    }
-
-    @@keyframes pl-spin {
-        to {
-            transform: rotate(360deg);
-        }
-    }
-
-    /* ── Pagination ── */
-    .pl-pagination {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 14px 18px;
-        border-top: 1px solid var(--ep-border);
-        background: var(--ep-surface-2);
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .pl-pagination-info {
-        font-size: 13px;
-        color: var(--ep-text-2);
-    }
-
-        .pl-pagination-info strong {
-            color: var(--ep-text);
-        }
-
-    .pl-pages {
-        display: flex;
-        align-items: center;
-        gap: 4px;
-    }
-
-    .pl-page-btn {
-        min-width: 32px;
-        height: 32px;
-        border: 1.5px solid var(--ep-border);
-        border-radius: 7px;
-        background: var(--ep-surface);
-        font-family: inherit;
-        font-size: 13px;
-        font-weight: 600;
-        color: var(--ep-text-2);
-        cursor: pointer;
-        transition: all var(--ep-transition);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0 8px;
-    }
-
-        .pl-page-btn:hover:not(:disabled) {
-            border-color: var(--ep-primary);
-            color: var(--ep-primary);
-            background: var(--ep-primary-soft);
-        }
-
-        .pl-page-btn.active {
-            background: var(--ep-primary);
-            border-color: var(--ep-primary);
-            color: white;
-            box-shadow: 0 2px 8px rgba(59,110,246,.3);
-        }
-
-        .pl-page-btn:disabled {
-            opacity: .4;
-            cursor: not-allowed;
-        }
-
-    .pl-page-ellipsis {
-        padding: 0 4px;
-        color: var(--ep-text-3);
-        font-size: 13px;
-    }
-
-    @@media (max-width: 768px) {
-        .pl-topbar, .pl-hero, .pl-stats, .pl-toolbar, .pl-content {
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-
-        .pl-stats {
-            gap: 8px;
-        }
-
-        .pl-stat {
-            min-width: 100px;
-            padding: 10px 12px;
-        }
-
-        .pl-title-cell {
-            max-width: 200px;
-        }
-
-        .pl-table td, .pl-table th {
-            padding: 12px 10px;
-        }
-
-        .pl-hero {
-            flex-direction: column;
-            align-items: flex-start;
-        }
-    }
-</style>
-
 <div class="pl-root">
     <!-- Topbar -->
     <div class="pl-topbar">
@@ -749,8 +31,8 @@
     @if (posts != null)
     {
         <div class="pl-stats">
-            <div class="pl-stat" style="animation-delay:.04s">
-                <div class="pl-stat-dot" style="background:#94a3b8;"></div>
+            <div class="pl-stat">
+                <div class="pl-stat-dot status-dot-neutral"></div>
                 <div class="pl-stat-info">
                     <span class="pl-stat-value">@totalCount</span>
                     <span class="pl-stat-label">Tổng bài</span>
@@ -758,8 +40,8 @@
             </div>
             @foreach (var s in statusStats)
             {
-                <div class="pl-stat" style="animation-delay:@(s.Delay)s">
-                    <div class="pl-stat-dot" style="background:@s.Color;"></div>
+                <div class="pl-stat">
+                    <div class="pl-stat-dot @s.DotClass"></div>
                     <div class="pl-stat-info">
                         <span class="pl-stat-value">@s.Count</span>
                         <span class="pl-stat-label">@s.Label</span>
@@ -787,9 +69,9 @@
             {
                 <button class="pl-status-tab @(status == tab.Value ? "active" : "")"
                         type="button" @onclick="() => SetStatusFilter(tab.Value)">
-                    @if (!string.IsNullOrEmpty(tab.Color))
+                    @if (!string.IsNullOrEmpty(tab.DotClass))
                     {
-                        <span class="dot" style="background:@tab.Color;"></span>
+                        <span class="dot @tab.DotClass"></span>
                     }
                     @tab.Label
                 </button>
@@ -832,7 +114,7 @@
                     <table class="pl-table">
                         <thead>
                             <tr>
-                                <th style="width:42%">Tiêu đề</th>
+                                <th class="u-table-title-42">Tiêu đề</th>
                                 <th>Trạng thái</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
@@ -859,7 +141,7 @@
                                             }
                                             @if (!string.IsNullOrWhiteSpace(item.Slug))
                                             {
-                                                <span style="font-family:monospace;font-size:11.5px;opacity:.7">/tin/@item.Slug</span>
+                                                <span class="u-code-soft">/tin/@item.Slug</span>
                                             }
                                         </div>
                                     </td>
@@ -941,19 +223,19 @@
     private int totaltrangs => Math.Max(1, (int)Math.Ceiling(totalCount / (double)trangSize));
 
     // Status tabs definition
-    private record StatusTab(string Label, string Value, string Color);
+    private record StatusTab(string Label, string Value, string DotClass);
     private readonly List<StatusTab> statusTabs = new()
     {
         new("Tất cả",    "",          ""),
-        new("Nháp",      "Draft",     "#94a3b8"),
-        new("Chờ duyệt", "Pending",   "#f59e0b"),
-        new("Đã duyệt",  "Approved",  "#38bdf8"),
-        new("Xuất bản",  "Published", "#22c55e"),
-        new("Từ chối",   "Rejected",  "#e53e3e"),
+        new("Nháp",      "Draft",     "status-dot-draft"),
+        new("Chờ duyệt", "Pending",   "status-dot-pending"),
+        new("Đã duyệt",  "Approved",  "status-dot-approved"),
+        new("Xuất bản",  "Published", "status-dot-published"),
+        new("Từ chối",   "Rejected",  "status-dot-rejected"),
     };
 
     // Stats computed from posts count by status
-    private record StatItem(string Label, string Color, int Count, double Delay);
+    private record StatItem(string Label, string DotClass, int Count);
     private List<StatItem> statusStats = new();
 
     protected override async Task OnInitializedAsync() => await LoadAsync();
@@ -971,17 +253,17 @@
         if (!string.IsNullOrWhiteSpace(status)) return;
 
         var statDefs = new[] {
-            ("Draft",     "Nháp",      "#94a3b8", .08),
-            ("Pending",   "Chờ duyệt", "#f59e0b", .12),
-            ("Published", "Xuất bản",  "#22c55e", .16),
-            ("Rejected",  "Từ chối",   "#e53e3e", .20),
+            ("Draft",     "Nháp",      "status-dot-draft"),
+            ("Pending",   "Chờ duyệt", "status-dot-pending"),
+            ("Published", "Xuất bản",  "status-dot-published"),
+            ("Rejected",  "Từ chối",   "status-dot-rejected"),
         };
 
         statusStats = new();
-        foreach (var (sv, label, color, delay) in statDefs)
+        foreach (var (sv, label, dotClass) in statDefs)
         {
             var count = await AdminPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, null, sv);
-            statusStats.Add(new StatItem(label, color, count, delay));
+            statusStats.Add(new StatItem(label, dotClass, count));
         }
     }
 
