@@ -69,6 +69,10 @@
                         {
                             <article class="public-result-item">
                                 <span class="public-result-type">Bài viết</span>
+                                <span class="post-card-view-count post-card-view-count-inline">
+                                    <span class="material-symbols-outlined">visibility</span>
+                                    @FormatViews(item.ViewCount)
+                                </span>
                                 <h3><a href="@PostHref(item)">@item.Title</a></h3>
                                 @if (!string.IsNullOrWhiteSpace(item.Summary))
                                 {
@@ -181,4 +185,7 @@
 
     private static string DocumentHref(PublicSearchItem item)
         => string.IsNullOrWhiteSpace(item.Id) ? "/documents" : $"/documents/{item.Id}";
+
+    private static string FormatViews(long views)
+        => views < 1_000 ? $"{views:N0}" : $"{views / 1_000d:0.#}K";
 }

@@ -334,7 +334,11 @@
                                         <a class="hp-news-title" href="@PostHref(item)">@item.Title</a>
                                         <div class="hp-news-meta">
                                             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                            @* @FormatDate(item.CreatedAt) *@
+                                            @FormatDate(item.PublishAt)
+                                            <span class="hp-view-count">
+                                                <span class="material-symbols-outlined">visibility</span>
+                                                @FormatViews(item.ViewCount)
+                                            </span>
                                         </div>
                                     </div>
                                 </div>
@@ -366,7 +370,7 @@
                                         <span>@item.Title</span>
                                     </a>
                                     <div class="hp-bullet-date">
-                                        @* @FormatDate(item.CreatedAt) *@
+                                        @FormatDate(item.PublishAt) · @FormatViews(item.ViewCount) lượt xem
                                     </div>
                                 </div>
                             }
@@ -450,7 +454,7 @@
                                     }
                                     <div class="hp-mini-card-body">
                                         <div class="hp-mini-card-title">@item.Title</div>
-                                        @* <div class="hp-mini-card-date">@FormatDate(item.CreatedAt)</div> *@
+                                        <div class="hp-mini-card-date">@FormatDate(item.PublishAt) · @FormatViews(item.ViewCount) lượt xem</div>
                                     </div>
                                 </a>
                             }
@@ -476,7 +480,7 @@
                                         <span>@item.Title</span>
                                     </a>
                                     <div class="hp-bullet-date">
-                                        @* @FormatDate(item.CreatedAt) *@
+                                        @FormatDate(item.PublishAt) · @FormatViews(item.ViewCount) lượt xem
                                     </div>
                                 </div>
                             }
@@ -560,6 +564,9 @@
 
     private static string FormatDate(DateTime? dt)
         => dt.HasValue ? dt.Value.ToString("dd/MM/yyyy") : string.Empty;
+
+    private static string FormatViews(long views)
+        => views < 1_000 ? $"{views:N0}" : $"{views / 1_000d:0.#}K";
 
     private static string GetDocumentHref(PublicDocumentListItem doc)
         => !string.IsNullOrWhiteSpace(doc.Id)

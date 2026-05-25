@@ -1,14 +1,17 @@
 @page "/posts/{Slug}"
 @using PN_HDSWeb_Admin.Services.Public
+@implements IDisposable
 @inject IPublicPostService PublicPostService
 @inject IPublicPostMediaService PublicPostMediaService
 @inject IPublicPostTagService PublicPostTagService
 @inject IJSRuntime JS
 @inject NavigationManager Nav
 
+<PageTitle>@(post?.Title ?? "Bài viết")</PageTitle>
+
 @if (isLoading)
 {
-    <div class="article-detail-loading">
+    <div class="post-loading">
         <div class="spinner"></div>
         <span>Đang tải bài viết...</span>
     </div>
@@ -24,173 +27,208 @@ else if (post == null)
 }
 else
 {
-    <div class="article-detail-shell">
-        <aside class="article-share-rail" aria-label="Chia sẻ bài viết">
-            <span>Chia sẻ</span>
-            <button type="button" title="Chia sẻ" @onclick="ShareNativeAsync">
-                <span class="material-symbols-outlined">ios_share</span>
-            </button>
-            <button type="button" title="Sao chép liên kết" @onclick="CopyLinkAsync">
-                <span class="material-symbols-outlined">link</span>
-            </button>
-            @if (!string.IsNullOrWhiteSpace(shareMessage))
-            {
-                <small>@shareMessage</small>
-            }
-        </aside>
+    <div class="post-page">
+        <div class="post-page-inner">
 
-        <article class="article-detail-main">
-            <nav class="article-breadcrumb" aria-label="Điều hướng bài viết">
-                <a href="/">Trang chủ</a>
-                <span>/</span>
-                <a href="/posts">Bài viết</a>
-                @if (!string.IsNullOrWhiteSpace(post.CategoryName))
-                {
-                    <span>/</span>
-                    <a href="@CategoryHref(post.CategorySlug)">@post.CategoryName</a>
-                }
-            </nav>
+            <main class="post-main">
 
-            <header class="article-detail-head">
-                <h1>@post.Title</h1>
+                <nav class="post-breadcrumb" aria-label="breadcrumb">
+                    <a href="/">Trang chủ</a>
+                    <span class="post-breadcrumb-sep">/</span>
+                    <a href="/posts">Bài viết</a>
+                    @if (!string.IsNullOrWhiteSpace(post.CategoryName))
+                    {
+                        <span class="post-breadcrumb-sep">/</span>
+                        <a href="@CategoryHref(post.CategorySlug)">@post.CategoryName</a>
+                    }
+                </nav>
 
-                <div class="article-meta-bar">
-                    <div class="article-author">
-                        <div>
-                            <strong>Ban biên tập</strong>
-                            <span>Cổng thông tin điện tử</span>
-                        </div>
+                <header class="post-header">
+                    @if (!string.IsNullOrWhiteSpace(post.CategoryName))
+                    {
+                        <a class="post-category-badge" href="@CategoryHref(post.CategorySlug)">@post.CategoryName</a>
+                    }
+
+                    <div class="post-title-row">
+                        <h1 class="post-title">@post.Title</h1>
+                        <span class="post-view-pill" title="Lượt xem">
+                            <span class="material-symbols-outlined">visibility</span>
+                            @FormatViews(post.ViewCount)
+                        </span>
                     </div>
 
-                    <div class="article-meta-list">
+                    @if (!string.IsNullOrWhiteSpace(post.Summary))
+                    {
+                        <p class="post-lead">@post.Summary</p>
+                    }
+
+                    <div class="post-meta-row">
+                        <span class="post-author">
+                            <span class="post-author-dot">●</span>
+                            Ban biên tập
+                        </span>
                         @if (post.PublishAt.HasValue)
                         {
-                            <span>
-                                <span class="material-symbols-outlined">schedule</span>
+                            <time class="post-time" datetime="@post.PublishAt.Value.ToString("yyyy-MM-ddTHH:mm")">
                                 @FormatDate(post.PublishAt)
-                            </span>
-                        }
-                        @if (!string.IsNullOrWhiteSpace(post.CategoryName))
-                        {
-                            <a href="@CategoryHref(post.CategorySlug)">@post.CategoryName</a>
+                            </time>
                         }
                     </div>
+                </header>
+
+                @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
+                {
+                    <figure class="post-cover">
+                        <img src="@post.CoverImageUrl" alt="@post.Title" data-fallback-src="/image/banner-holder.png" />
+                        @if (!string.IsNullOrWhiteSpace(post.Title))
+                        {
+                            <figcaption>@post.Title</figcaption>
+                        }
+                    </figure>
+                }
+
+                <div class="post-body article-content">
+                    @((MarkupString)(post.Content ?? string.Empty))
                 </div>
 
-                @if (!string.IsNullOrWhiteSpace(post.Summary))
+                @if (media?.Any() == true)
                 {
-                    <p class="article-lead">@post.Summary</p>
-                }
-            </header>
-
-            @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
-            {
-                <figure class="article-cover">
-                    <img src="@post.CoverImageUrl" alt="@post.Title" />
-                    <figcaption>@post.Title</figcaption>
-                </figure>
-            }
-
-            <div class="article-content">
-                @((MarkupString)(post.Content ?? string.Empty))
-            </div>
-
-            @if (media?.Any() == true)
-            {
-                <section class="article-attachments">
-                    <h2>Tài liệu đính kèm</h2>
-                    <div class="article-attachment-list">
-                        @foreach (var item in media)
-                        {
-                            var fileType = GetFileType(GetExtension(item.FileUrl ?? item.FileName ?? string.Empty));
-                            <article class="article-attachment-card">
-                                <span class="material-symbols-outlined @GetFileIconClass(fileType)">@GetFileIconName(fileType)</span>
-                                <div>
-                                    <strong>@(item.FileName ?? "Tệp đính kèm")</strong>
-                                    @if (!string.IsNullOrWhiteSpace(item.Caption))
-                                    {
-                                        <p>@item.Caption</p>
-                                    }
-                                </div>
-                                <div class="article-attachment-actions">
-                                    @if (!string.IsNullOrWhiteSpace(item.FileUrl))
-                                    {
-                                        @if (CanPreviewInOverlay(fileType))
+                    <section class="post-attachments">
+                        <h3 class="post-attachments-heading">
+                            <span class="material-symbols-outlined">attach_file</span>
+                            Tài liệu đính kèm
+                        </h3>
+                        <div class="post-attachment-list">
+                            @foreach (var item in media)
+                            {
+                                var fileType = GetFileType(GetExtension(item.FileUrl ?? item.FileName ?? string.Empty));
+                                <div class="post-attachment-card">
+                                    <span class="material-symbols-outlined @GetFileIconClass(fileType)">@GetFileIconName(fileType)</span>
+                                    <div class="post-attachment-info">
+                                        <strong>@(item.FileName ?? "Tệp đính kèm")</strong>
+                                        @if (!string.IsNullOrWhiteSpace(item.Caption))
                                         {
-                                            <button type="button" @onclick="() => OpenAttachmentPreview(item)">Mở</button>
+                                            <p>@item.Caption</p>
+                                        }
+                                    </div>
+                                    <div class="post-attachment-actions">
+                                        @if (!string.IsNullOrWhiteSpace(item.FileUrl))
+                                        {
+                                            @if (CanPreviewInOverlay(fileType))
+                                            {
+                                                <button type="button" class="post-att-open" @onclick="() => OpenAttachmentPreview(item)">
+                                                    <span class="material-symbols-outlined">open_in_new</span>
+                                                    Mở
+                                                </button>
+                                            }
+                                            else
+                                            {
+                                                <a class="post-att-open" href="@item.FileUrl" target="_blank" rel="noopener noreferrer">
+                                                    <span class="material-symbols-outlined">open_in_new</span>
+                                                    Mở
+                                                </a>
+                                            }
+                                            <a class="post-att-dl" href="@item.FileUrl" download>
+                                                <span class="material-symbols-outlined">download</span>
+                                                Tải
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    </section>
+                }
+
+                @if (postTags?.Any() == true)
+                {
+                    <div class="post-tags">
+                        <span class="post-tags-label">Từ khóa:</span>
+                        @foreach (var tag in postTags.Where(x => !string.IsNullOrWhiteSpace(x.Slug)))
+                        {
+                            <a class="post-tag" href="@TagHref(tag)">#@tag.TagName</a>
+                        }
+                    </div>
+                }
+
+                <div class="post-share-bar post-share-bar-bottom">
+                    <span class="post-share-label-text">Chia sẻ bài viết:</span>
+                    <button class="post-share-btn psb-fb" type="button" @onclick="ShareFacebookAsync">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                        Facebook
+                    </button>
+                    <button class="post-share-btn psb-zalo" type="button" @onclick="ShareZaloAsync">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><text x="1" y="18" font-size="17" font-weight="900" font-family="Arial,sans-serif">Z</text></svg>
+                        Zalo
+                    </button>
+                    <button class="post-share-btn psb-copy" type="button" @onclick="CopyLinkAsync">
+                        <span class="material-symbols-outlined">link</span>
+                        Sao chép link
+                    </button>
+                    <button class="post-share-btn psb-print" type="button" @onclick="PrintPageAsync">
+                        <span class="material-symbols-outlined">print</span>
+                        In
+                    </button>
+                </div>
+
+                @if (relatedPosts?.Any() == true)
+                {
+                    <section class="post-related">
+                        <h2 class="post-section-title">
+                            <span class="post-section-title-bar"></span>
+                            Bài viết liên quan
+                        </h2>
+                        <div class="post-related-grid">
+                            @foreach (var item in relatedPosts.Take(4))
+                            {
+                                <a class="post-related-card" href="@PostHref(item)">
+                                    <div class="post-related-thumb">
+                                        @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
+                                        {
+                                            <img src="@item.CoverImageUrl" alt="@item.Title" loading="lazy" data-fallback-src="/image/banner-holder.png" />
                                         }
                                         else
                                         {
-                                            <a href="@item.FileUrl" target="_blank" rel="noopener noreferrer">Mở</a>
+                                            <span class="material-symbols-outlined">article</span>
                                         }
-                                        <a href="@item.FileUrl" download>Tải</a>
-                                    }
-                                </div>
-                            </article>
-                        }
-                    </div>
-                </section>
-            }
+                                    </div>
+                                    <div class="post-related-body">
+                                        @if (!string.IsNullOrWhiteSpace(item.CategoryName))
+                                        {
+                                            <span class="post-related-cat">@item.CategoryName</span>
+                                        }
+                                        <p class="post-related-title">@item.Title</p>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    </section>
+                }
 
-            @if (postTags?.Any() == true)
-            {
-                <div class="article-tags">
-                    <span>Từ khóa:</span>
-                    @foreach (var tag in postTags.Where(x => !string.IsNullOrWhiteSpace(x.Slug)))
-                    {
-                        <a href="@TagHref(tag)"># @tag.TagName</a>
-                    }
-                </div>
-            }
-        </article>
+            </main>
 
-        <aside class="article-detail-sidebar">
-            @if (relatedPosts?.Any() == true)
-            {
-                <section class="article-side-panel">
-                    <h2>Bài viết liên quan</h2>
-                    <div class="article-related-list">
-                        @foreach (var item in relatedPosts.Take(3))
-                        {
-                            <a class="article-related-card" href="@PostHref(item)">
-                                @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
-                                {
-                                    <img src="@item.CoverImageUrl" alt="@item.Title" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <span class="article-related-fallback material-symbols-outlined">article</span>
-                                }
-                                <span>
-                                    <strong>@item.Title</strong>
-                                    @if (!string.IsNullOrWhiteSpace(item.CategoryName))
-                                    {
-                                        <small>@item.CategoryName</small>
-                                    }
-                                </span>
-                            </a>
-                        }
-                    </div>
-                </section>
-            }
+            <aside class="post-sidebar">
+                @if (latestPosts?.Any() == true)
+                {
+                    <section class="post-sidebar-panel">
+                        <h2 class="post-sidebar-heading">
+                            <span class="post-section-title-bar"></span>
+                            Đọc nhiều nhất
+                        </h2>
+                        <ol class="post-most-read">
+                            @foreach (var item in latestPosts.Take(7).Select((val, idx) => new { val, idx }))
+                            {
+                                <li class="post-most-read-item">
+                                    <span class="post-most-read-num @(item.idx < 3 ? "top3" : string.Empty)">@((item.idx + 1).ToString("00"))</span>
+                                    <a href="@PostHref(item.val)">@item.val.Title</a>
+                                </li>
+                            }
+                        </ol>
+                    </section>
+                }
+            </aside>
 
-            @if (latestPosts?.Any() == true)
-            {
-                <section class="article-side-panel">
-                    <h2>Đọc nhiều nhất</h2>
-                    <ol class="article-most-read">
-                        @foreach (var item in latestPosts.Take(5).Select((value, index) => new { value, index }))
-                        {
-                            <li>
-                                <span>@((item.index + 1).ToString("00"))</span>
-                                <a href="@PostHref(item.value)">@item.value.Title</a>
-                            </li>
-                        }
-                    </ol>
-                </section>
-            }
-
-        </aside>
+        </div>
     </div>
 
     @if (previewAttachment != null && !string.IsNullOrWhiteSpace(previewAttachment.FileUrl))
@@ -210,7 +248,6 @@ else
                         <span class="material-symbols-outlined">close</span>
                     </button>
                 </header>
-
                 <div class="article-file-preview-body">
                     @if (previewType == "pdf")
                     {
@@ -232,7 +269,6 @@ else
                         </div>
                     }
                 </div>
-
                 <footer>
                     <a href="@previewAttachment.FileUrl" target="_blank" rel="noopener noreferrer">Mở tab mới</a>
                     <a href="@previewAttachment.FileUrl" download>Tải xuống</a>
@@ -253,36 +289,77 @@ else
     private PublicPostMediaItem? previewAttachment;
     private string? shareMessage;
     private bool isLoading = true;
+    private bool imageFallbacksApplied;
+    private bool viewCounterScheduled;
+    private CancellationTokenSource? viewCounterCts;
 
     protected override async Task OnParametersSetAsync()
     {
+        CancelViewCounter();
         isLoading = true;
+        imageFallbacksApplied = false;
+        viewCounterScheduled = false;
         post = null;
         media = null;
         postTags = null;
         relatedPosts = null;
         latestPosts = null;
         previewAttachment = null;
+        shareMessage = null;
 
         post = await PublicPostService.GetPostBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
-        latestPosts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, pageSize: 6);
 
         if (post != null)
         {
             media = await PublicPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, post.Id ?? string.Empty);
             postTags = await PublicPostTagService.GetTagsByPostIdAsync(post.Id ?? string.Empty);
-            relatedPosts = await PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty, 5);
-            latestPosts = latestPosts
-                .Where(item => !string.Equals(item.Id, post.Id, StringComparison.OrdinalIgnoreCase))
-                .ToList();
+            relatedPosts = await PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty, 4);
+            latestPosts = await PublicPostService.GetMostViewedPostsAsync(PN_PublicVariables.MaTruong, 8, post.Id);
         }
 
         isLoading = false;
     }
 
-    private async Task ShareNativeAsync()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        shareMessage = await JS.InvokeAsync<string>("AppUtils.shareArticle", GetShareTitle(), GetShareText(), GetShareUrl());
+        if (!isLoading && post != null && !imageFallbacksApplied)
+        {
+            imageFallbacksApplied = true;
+            await JS.InvokeVoidAsync("AppUtils.applyImageFallbacks", ".post-body");
+        }
+
+        if (!isLoading && post != null && !viewCounterScheduled && !string.IsNullOrWhiteSpace(post.Id))
+        {
+            viewCounterScheduled = true;
+            viewCounterCts = new CancellationTokenSource();
+            _ = CountViewAfterDelayAsync(post.Id, viewCounterCts.Token);
+        }
+    }
+
+    private async Task CountViewAfterDelayAsync(string postId, CancellationToken token)
+    {
+        try
+        {
+            await Task.Delay(TimeSpan.FromSeconds(3), token);
+            if (token.IsCancellationRequested)
+                return;
+
+            var counted = await PublicPostService.IncrementPostViewAsync(PN_PublicVariables.MaTruong, postId);
+            if (!counted)
+                return;
+
+            await InvokeAsync(() =>
+            {
+                if (post?.Id == postId)
+                {
+                    post.ViewCount++;
+                    StateHasChanged();
+                }
+            });
+        }
+        catch (OperationCanceledException)
+        {
+        }
     }
 
     private async Task CopyLinkAsync()
@@ -302,11 +379,12 @@ else
         shareMessage = "Đã mở Zalo";
     }
 
+    private async Task PrintPageAsync()
+    {
+        await JS.InvokeVoidAsync("window.print");
+    }
+
     private string GetShareUrl() => Nav.ToAbsoluteUri($"/posts/{Slug}").ToString();
-
-    private string GetShareTitle() => post?.Title ?? "Bài viết";
-
-    private string GetShareText() => post?.Summary ?? "Mời bạn xem bài viết này.";
 
     private static string CategoryHref(string? slug)
         => string.IsNullOrWhiteSpace(slug) ? "/posts" : $"/posts/category/{slug}";
@@ -320,6 +398,9 @@ else
     private static string FormatDate(DateTime? date)
         => date.HasValue ? date.Value.ToString("dd/MM/yyyy HH:mm") : string.Empty;
 
+    private static string FormatViews(long views)
+        => views < 1_000 ? $"{views:N0} lượt xem" : $"{views / 1_000d:0.#}K lượt xem";
+
     private static string GetExtension(string url)
     {
         try
@@ -329,10 +410,7 @@ else
                 : url;
             return System.IO.Path.GetExtension(path).ToLowerInvariant().TrimStart('.');
         }
-        catch
-        {
-            return string.Empty;
-        }
+        catch { return string.Empty; }
     }
 
     private static string GetFileType(string ext) => ext switch
@@ -357,48 +435,24 @@ else
         _ => "draft"
     };
 
-    private static string GetFileIconClass(string fileType)
-        => $"article-file-icon-{fileType}";
+    private static string GetFileIconClass(string fileType) => $"article-file-icon-{fileType}";
 
-    private void OpenAttachmentPreview(PublicPostMediaItem item)
-    {
-        previewAttachment = item;
-    }
+    private void OpenAttachmentPreview(PublicPostMediaItem item) => previewAttachment = item;
+    private void CloseAttachmentPreview() => previewAttachment = null;
 
-    private void CloseAttachmentPreview()
-    {
-        previewAttachment = null;
-    }
-
-    private static bool CanPreviewInOverlay(string fileType)
-        => fileType is "pdf" or "image" or "word";
+    private static bool CanPreviewInOverlay(string fileType) => fileType is "pdf" or "image" or "word";
 
     private static string GetPdfPreviewUrl(string? fileUrl)
     {
-        if (string.IsNullOrWhiteSpace(fileUrl))
-            return string.Empty;
-
-        return fileUrl.Contains('#')
-            ? fileUrl
-            : $"{fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH";
+        if (string.IsNullOrWhiteSpace(fileUrl)) return string.Empty;
+        return fileUrl.Contains('#') ? fileUrl : $"{fileUrl}#toolbar=1&navpanes=1&scrollbar=1&view=FitH";
     }
 
     private string GetOfficePreviewUrl(string? fileUrl)
     {
-        if (string.IsNullOrWhiteSpace(fileUrl))
-            return string.Empty;
-
-        string absoluteUrl;
-        try
-        {
-            absoluteUrl = Nav.ToAbsoluteUri(fileUrl).ToString();
-        }
-        catch
-        {
-            absoluteUrl = fileUrl;
-        }
-
-        return $"https://view.officeapps.live.com/op/embed.aspx?src={Uri.EscapeDataString(absoluteUrl)}";
+        if (string.IsNullOrWhiteSpace(fileUrl)) return string.Empty;
+        try { return $"https://view.officeapps.live.com/op/embed.aspx?src={Uri.EscapeDataString(Nav.ToAbsoluteUri(fileUrl).ToString())}"; }
+        catch { return string.Empty; }
     }
 
     private static string GetPreviewHint(string fileType) => fileType switch
@@ -408,4 +462,16 @@ else
         "word" => "Xem Word qua khung Office viewer",
         _ => "Xem tài liệu đính kèm"
     };
+
+    private void CancelViewCounter()
+    {
+        viewCounterCts?.Cancel();
+        viewCounterCts?.Dispose();
+        viewCounterCts = null;
+    }
+
+    public void Dispose()
+    {
+        CancelViewCounter();
+    }
 }

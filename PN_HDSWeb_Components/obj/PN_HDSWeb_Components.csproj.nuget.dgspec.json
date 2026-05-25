@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj": {}
+    "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj": {}
   },
   "projects": {
-    "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj": {
+    "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj",
+        "projectUniqueName": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj",
         "projectName": "PN_HDSWeb_Components",
-        "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj",
-        "packagesPath": "C:\\Users\\hgggg\\.nuget\\packages\\",
-        "outputPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Components\\obj\\",
+        "projectPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Components\\PN_HDSWeb_Components.csproj",
+        "packagesPath": "C:\\Users\\Tô Khôi\\.nuget\\packages\\",
+        "outputPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Components\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\hgggg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tô Khôi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,15 +26,15 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
-            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {
-              "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
-                "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj"
+              "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
+                "projectPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj"
               }
             }
           }
@@ -49,11 +49,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
-          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "BlazorDateRangePicker": {
@@ -79,19 +78,19 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             },
             {
               "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             }
           ],
           "frameworkReferences": {
@@ -102,24 +101,24 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     },
-    "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
+    "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+        "projectUniqueName": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
         "projectName": "PN_HDSWeb_Library",
-        "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
-        "packagesPath": "C:\\Users\\hgggg\\.nuget\\packages\\",
-        "outputPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\obj\\",
+        "projectPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+        "packagesPath": "C:\\Users\\Tô Khôi\\.nuget\\packages\\",
+        "outputPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\hgggg\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Tô Khôi\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -128,11 +127,11 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
-            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -147,11 +146,10 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "10.0.300"
+        "SdkAnalysisLevel": "10.0.100"
       },
       "frameworks": {
         "net8.0": {
-          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "BCrypt.Net-Next": {
@@ -181,15 +179,15 @@
           "downloadDependencies": [
             {
               "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             },
             {
               "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.27, 8.0.27]"
+              "version": "[8.0.24, 8.0.24]"
             }
           ],
           "frameworkReferences": {
@@ -197,7 +195,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.300/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.103/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

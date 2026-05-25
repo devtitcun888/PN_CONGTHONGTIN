@@ -107,6 +107,10 @@
                             {
                                 <span>@item.PublishAt.Value.ToString("dd/MM/yyyy")</span>
                             }
+                            <span class="post-card-view-count">
+                                <span class="material-symbols-outlined">visibility</span>
+                                @FormatViews(item.ViewCount)
+                            </span>
                         </div>
 
                         <h2><a href="@PostHref(item)">@item.Title</a></h2>
@@ -245,4 +249,7 @@
 
     private static string TagHref(PublicPostTagItem tag)
         => string.IsNullOrWhiteSpace(tag.Slug) ? "/posts" : $"/posts/tag/{tag.Slug}";
+
+    private static string FormatViews(long views)
+        => views < 1_000 ? $"{views:N0}" : $"{views / 1_000d:0.#}K";
 }

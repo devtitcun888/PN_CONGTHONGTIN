@@ -29,7 +29,7 @@ public class PublicSearchService : IPublicSearchService
         try
         {
             var sqlPosts = $@"
-                SELECT id, title, slug, summary
+                SELECT id, title, slug, summary, view_count
                 FROM posts
                 WHERE ma_truong_bo = '{Escape(maTruongBo)}'
                   AND is_deleted = FALSE
@@ -40,7 +40,15 @@ public class PublicSearchService : IPublicSearchService
             var dtPosts = await hdataLib.hgetDataTableAsync(LoginID_Index, sqlPosts);
             foreach (DataRow row in dtPosts.Rows)
             {
-                result.Posts.Add(new PublicSearchItem { Id = row["id"]?.ToString(), Title = row["title"]?.ToString(), Slug = row["slug"]?.ToString(), Summary = row["summary"]?.ToString(), Type = "Post" });
+                result.Posts.Add(new PublicSearchItem
+                {
+                    Id = row["id"]?.ToString(),
+                    Title = row["title"]?.ToString(),
+                    Slug = row["slug"]?.ToString(),
+                    Summary = row["summary"]?.ToString(),
+                    ViewCount = row["view_count"] == DBNull.Value ? 0 : Convert.ToInt64(row["view_count"]),
+                    Type = "Post"
+                });
             }
 
             var sqlDocs = $@"
@@ -82,5 +90,6 @@ public class PublicSearchItem
     public string? Title { get; set; }
     public string? Slug { get; set; }
     public string? Summary { get; set; }
+    public long ViewCount { get; set; }
     public string? Type { get; set; }
 }

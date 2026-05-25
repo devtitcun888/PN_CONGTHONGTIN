@@ -154,6 +154,36 @@
         );
 
         if (popup) popup.focus();
+    },
+
+    applyImageFallback: (target) => {
+        if (!(target instanceof HTMLImageElement)) return;
+        if (target.dataset.fallbackApplied === "true") return;
+
+        const fallbackSrc = target.dataset.fallbackSrc
+            || (target.closest(".article-content") ? "/image/banner-holder.png" : "");
+
+        if (!fallbackSrc) return;
+
+        target.dataset.fallbackApplied = "true";
+        target.classList.add("image-fallback-applied");
+        target.removeAttribute("srcset");
+        target.src = fallbackSrc;
+    },
+
+    applyImageFallbacks: (rootSelector) => {
+        const root = rootSelector ? document.querySelector(rootSelector) : document;
+        if (!root) return;
+
+        root.querySelectorAll("img").forEach((img) => {
+            if (!img.dataset.fallbackSrc && img.closest(".article-content")) {
+                img.dataset.fallbackSrc = "/image/banner-holder.png";
+            }
+
+            if (img.complete && img.naturalWidth === 0) {
+                window.AppUtils.applyImageFallback(img);
+            }
+        });
     }
 };
 
@@ -161,9 +191,9 @@ document.addEventListener("error", function (event) {
     const target = event.target;
     if (!(target instanceof HTMLImageElement)) return;
 
-    const fallbackSrc = target.dataset.fallbackSrc;
-    if (!fallbackSrc || target.dataset.fallbackApplied === "true") return;
-
-    target.dataset.fallbackApplied = "true";
-    target.src = fallbackSrc;
+    window.AppUtils.applyImageFallback(target);
 }, true);
+
+document.addEventListener("DOMContentLoaded", function () {
+    window.AppUtils.applyImageFallbacks();
+});

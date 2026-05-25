@@ -9,6 +9,7 @@ public interface IAdminPostService
 {
     Task<List<AdminPostItem>> GetPostsAsync(string maTruongBo, string? keyword = null, string? status = null, int page = 1, int pageSize = 20);
     Task<int> GetPostsCountAsync(string maTruongBo, string? keyword = null, string? status = null);
+    Task<long> GetPostsViewCountTotalAsync(string maTruongBo, string? keyword = null, string? status = null);
     Task<AdminPostDetail?> GetPostByIdAsync(string id);
     Task<bool> CreatePostAsync(AdminPostDetail model);
     Task<bool> UpdatePostAsync(AdminPostDetail model);
@@ -32,7 +33,7 @@ public class AdminPostService : IAdminPostService
         var where = BuildWhere(maTruongBo, keyword, status);
 
         var sql = $@"
-            SELECT p.id, p.title, p.slug, p.post_type, p.is_featured, p.status, p.publish_at, p.created_at,
+            SELECT p.id, p.title, p.slug, p.post_type, p.is_featured, p.status, p.publish_at, p.created_at, p.view_count,
                    p.category_id, c.category_name
             FROM posts p
             LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
@@ -56,6 +57,7 @@ public class AdminPostService : IAdminPostService
                     Status = row["status"]?.ToString(),
                     IsFeatured = row["is_featured"] != DBNull.Value && Convert.ToBoolean(row["is_featured"]),
                     PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
+                    ViewCount = row["view_count"] == DBNull.Value ? 0 : Convert.ToInt64(row["view_count"]),
                     CreatedAt = row["created_at"] == DBNull.Value ? DateTime.MinValue : Convert.ToDateTime(row["created_at"])
                 });
             }
@@ -76,6 +78,15 @@ public class AdminPostService : IAdminPostService
         var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
         if (dt.Rows.Count == 0) return 0;
         return dt.Rows[0]["total"] == DBNull.Value ? 0 : Convert.ToInt32(dt.Rows[0]["total"]);
+    }
+
+    public async Task<long> GetPostsViewCountTotalAsync(string maTruongBo, string? keyword = null, string? status = null)
+    {
+        var where = BuildWhere(maTruongBo, keyword, status);
+        var sql = $"SELECT COALESCE(SUM(COALESCE(p.view_count, 0)), 0) AS total_views FROM posts p {where}";
+        var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+        if (dt.Rows.Count == 0) return 0;
+        return dt.Rows[0]["total_views"] == DBNull.Value ? 0 : Convert.ToInt64(dt.Rows[0]["total_views"]);
     }
 
     public async Task<AdminPostDetail?> GetPostByIdAsync(string id)
@@ -219,6 +230,7 @@ public class AdminPostItem
     public string? Status { get; set; }
     public bool IsFeatured { get; set; }
     public DateTime? PublishAt { get; set; }
+    public long ViewCount { get; set; }
     public DateTime CreatedAt { get; set; }
 }
 

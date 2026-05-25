@@ -11,7 +11,9 @@ public interface IPublicPostService
     Task<int> GetPostsCountAsync(string maTruongBo, string? keyword = null, string? categoryId = null);
     Task<PublicPostDetail?> GetPostBySlugAsync(string maTruongBo, string slug);
     Task<List<PublicPostListItem>> GetRelatedPostsAsync(string maTruongBo, string? categoryId, string currentPostId, int take = 4);
+    Task<List<PublicPostListItem>> GetMostViewedPostsAsync(string maTruongBo, int take = 8, string? excludePostId = null);
     Task<List<PublicPostListItem>> GetPostsByTagIdAsync(string maTruongBo, string tagId, int page = 1, int pageSize = 30);
+    Task<bool> IncrementPostViewAsync(string maTruongBo, string postId);
 }
 
 public class PublicPostService : IPublicPostService
@@ -30,7 +32,7 @@ public class PublicPostService : IPublicPostService
         var offset = Math.Max(page - 1, 0) * pageSize;
         var where = BuildWhere(maTruongBo, keyword, categoryId);
         var sql = $@"
-            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id,
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id, p.view_count,
                    c.category_name, c.slug AS category_slug
             FROM posts p
             LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
@@ -56,7 +58,7 @@ public class PublicPostService : IPublicPostService
     public async Task<PublicPostDetail?> GetPostBySlugAsync(string maTruongBo, string slug)
     {
         var sql = $@"
-            SELECT p.id, p.title, p.slug, p.summary, p.content, p.cover_image_url, p.publish_at, p.category_id,
+            SELECT p.id, p.title, p.slug, p.summary, p.content, p.cover_image_url, p.publish_at, p.category_id, p.view_count,
                    c.category_name, c.slug AS category_slug
             FROM posts p
             LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
@@ -75,7 +77,7 @@ public class PublicPostService : IPublicPostService
     {
         var categoryFilter = string.IsNullOrWhiteSpace(categoryId) ? string.Empty : $"AND p.category_id = '{Escape(categoryId)}'";
         var sql = $@"
-            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id,
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id, p.view_count,
                    c.category_name, c.slug AS category_slug
             FROM posts p
             LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
@@ -96,11 +98,36 @@ public class PublicPostService : IPublicPostService
         return result;
     }
 
+    public async Task<List<PublicPostListItem>> GetMostViewedPostsAsync(string maTruongBo, int take = 8, string? excludePostId = null)
+    {
+        var result = new List<PublicPostListItem>();
+        var safeTake = Math.Clamp(take, 1, 20);
+        var excludeFilter = string.IsNullOrWhiteSpace(excludePostId) ? string.Empty : $"AND p.id <> '{Escape(excludePostId)}'";
+        var sql = $@"
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id, p.view_count,
+                   c.category_name, c.slug AS category_slug
+            FROM posts p
+            LEFT JOIN post_categories c ON c.id = p.category_id AND c.is_deleted = FALSE
+            WHERE p.ma_truong_bo = '{Escape(maTruongBo)}'
+              AND p.is_deleted = FALSE
+              AND p.status = 'Published'
+              {excludeFilter}
+            ORDER BY COALESCE(p.view_count, 0) DESC, p.publish_at DESC, p.created_at DESC
+            LIMIT {safeTake}";
+
+        var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+        foreach (DataRow row in dt.Rows)
+        {
+            result.Add(MapListItem(row));
+        }
+        return result;
+    }
+
     public async Task<List<PublicPostListItem>> GetPostsByTagIdAsync(string maTruongBo, string tagId, int page = 1, int pageSize = 30)
     {
         var offset = Math.Max(page - 1, 0) * pageSize;
         var sql = $@"
-            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id,
+            SELECT p.id, p.title, p.slug, p.summary, p.cover_image_url, p.publish_at, p.category_id, p.view_count,
                    c.category_name, c.slug AS category_slug
             FROM posts p
             INNER JOIN post_tag_map m ON m.post_id = p.id
@@ -119,6 +146,32 @@ public class PublicPostService : IPublicPostService
             result.Add(MapListItem(row));
         }
         return result;
+    }
+
+    public async Task<bool> IncrementPostViewAsync(string maTruongBo, string postId)
+    {
+        if (string.IsNullOrWhiteSpace(maTruongBo) || string.IsNullOrWhiteSpace(postId))
+            return false;
+
+        var sql = $@"
+            UPDATE posts
+               SET view_count = COALESCE(view_count, 0) + 1,
+                   updated_at = NOW()
+             WHERE ma_truong_bo = '{Escape(maTruongBo)}'
+               AND id = '{Escape(postId)}'
+               AND is_deleted = FALSE
+               AND status = 'Published'";
+
+        try
+        {
+            await hdataLib.hrunQueryAsync(LoginID_Index, sql);
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "IncrementPostViewAsync failed for post {PostId}", postId);
+            return false;
+        }
     }
 
     private static string BuildWhere(string maTruongBo, string? keyword, string? categoryId)
@@ -152,6 +205,7 @@ public class PublicPostService : IPublicPostService
         Summary = row["summary"]?.ToString(),
         CoverImageUrl = row["cover_image_url"]?.ToString(),
         PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
+        ViewCount = row.Table.Columns.Contains("view_count") && row["view_count"] != DBNull.Value ? Convert.ToInt64(row["view_count"]) : 0,
         CategoryId = row.Table.Columns.Contains("category_id") ? row["category_id"]?.ToString() : null,
         CategoryName = row.Table.Columns.Contains("category_name") ? row["category_name"]?.ToString() : null,
         CategorySlug = row.Table.Columns.Contains("category_slug") ? row["category_slug"]?.ToString() : null
@@ -166,6 +220,7 @@ public class PublicPostService : IPublicPostService
         Content = row["content"]?.ToString(),
         CoverImageUrl = row["cover_image_url"]?.ToString(),
         PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
+        ViewCount = row.Table.Columns.Contains("view_count") && row["view_count"] != DBNull.Value ? Convert.ToInt64(row["view_count"]) : 0,
         CategoryId = row["category_id"]?.ToString(),
         CategoryName = row.Table.Columns.Contains("category_name") ? row["category_name"]?.ToString() : null,
         CategorySlug = row.Table.Columns.Contains("category_slug") ? row["category_slug"]?.ToString() : null
@@ -182,6 +237,7 @@ public class PublicPostListItem
     public string? Summary { get; set; }
     public string? CoverImageUrl { get; set; }
     public DateTime? PublishAt { get; set; }
+    public long ViewCount { get; set; }
     public string? CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public string? CategorySlug { get; set; }
@@ -197,6 +253,7 @@ public class PublicPostDetail
     public string? Content { get; set; }
     public string? CoverImageUrl { get; set; }
     public DateTime? PublishAt { get; set; }
+    public long ViewCount { get; set; }
     public string? CategoryId { get; set; }
     public string? CategoryName { get; set; }
     public string? CategorySlug { get; set; }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {}
+    "d:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {}
   },
   "projects": {
-    "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
+    "d:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+        "projectUniqueName": "d:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
         "projectName": "PN_HDSWeb_Library",
-        "projectPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+        "projectPath": "d:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
         "packagesPath": "C:\\Users\\Tô Khôi\\.nuget\\packages\\",
-        "outputPath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\obj\\",
+        "outputPath": "d:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

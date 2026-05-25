@@ -103,6 +103,10 @@
                                 <div class="public-article-body">
                                     <div class="public-article-meta">
                                         <span>@(item.PublishAt?.ToString("dd/MM/yyyy") ?? "Chưa có ngày")</span>
+                                        <span class="post-card-view-count">
+                                            <span class="material-symbols-outlined">visibility</span>
+                                            @FormatViews(item.ViewCount)
+                                        </span>
                                     </div>
                                     <h2><a href="@PostHref(item)">@item.Title</a></h2>
                                     @if (!string.IsNullOrWhiteSpace(item.Summary))
@@ -149,6 +153,10 @@
                     <div class="public-article-body">
                         <div class="public-article-meta">
                             <span>@(item.PublishAt?.ToString("dd/MM/yyyy") ?? "Chưa có ngày")</span>
+                            <span class="post-card-view-count">
+                                <span class="material-symbols-outlined">visibility</span>
+                                @FormatViews(item.ViewCount)
+                            </span>
                         </div>
                         <h2><a href="@PostHref(item)">@item.Title</a></h2>
                         @if (!string.IsNullOrWhiteSpace(item.Summary))
@@ -227,4 +235,7 @@
 
     private static string CategoryHref(PublicPostCategoryItem item)
         => string.IsNullOrWhiteSpace(item.Slug) ? "/posts" : $"/posts/category/{item.Slug}";
+
+    private static string FormatViews(long views)
+        => views < 1_000 ? $"{views:N0}" : $"{views / 1_000d:0.#}K";
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "bJUkDjTiXRg=",
+  "dgSpecHash": "DAFDuWsfZy4=",
   "success": true,
-  "projectFilePath": "D:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+  "projectFilePath": "d:\\STUDY\\VS CSharp\\TITKUL_TINTUC\\PN_CONGTHONGTIN\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Tô Khôi\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Tô Khôi\\.nuget\\packages\\blazorinputfile\\0.2.0\\blazorinputfile.0.2.0.nupkg.sha512",

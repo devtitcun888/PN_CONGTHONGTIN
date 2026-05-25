@@ -120,7 +120,7 @@ public class PublicHomepageService : IPublicHomepageService
         var list = new List<PublicPostItem>();
         var safeLimit = ClampLimit(limit, 6);
         var sql = $@"
-            SELECT id, title, slug, summary, cover_image_url, publish_at
+            SELECT id, title, slug, summary, cover_image_url, publish_at, view_count
             FROM posts
             WHERE ma_truong_bo = '{Escape(maTruongBo)}'
               AND is_deleted = FALSE
@@ -142,7 +142,7 @@ public class PublicHomepageService : IPublicHomepageService
         var list = new List<PublicPostItem>();
         var safeLimit = ClampLimit(limit, 10);
         var sql = $@"
-            SELECT id, title, slug, summary, cover_image_url, publish_at
+            SELECT id, title, slug, summary, cover_image_url, publish_at, view_count
             FROM posts
             WHERE ma_truong_bo = '{Escape(maTruongBo)}'
               AND is_deleted = FALSE
@@ -193,7 +193,8 @@ public class PublicHomepageService : IPublicHomepageService
         Slug = row["slug"]?.ToString(),
         Summary = row["summary"]?.ToString(),
         CoverImageUrl = row["cover_image_url"]?.ToString(),
-        PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"])
+        PublishAt = row["publish_at"] == DBNull.Value ? null : Convert.ToDateTime(row["publish_at"]),
+        ViewCount = row.Table.Columns.Contains("view_count") && row["view_count"] != DBNull.Value ? Convert.ToInt64(row["view_count"]) : 0
     };
 
     private static void ApplySettings(PublicHomepageViewModel model, IReadOnlyDictionary<string, string> settings)
@@ -524,6 +525,7 @@ public class PublicPostItem
     public string? Summary { get; set; }
     public string? CoverImageUrl { get; set; }
     public DateTime? PublishAt { get; set; }
+    public long ViewCount { get; set; }
 }
 
 public class PublicDocumentItem

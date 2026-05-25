@@ -38,6 +38,13 @@
                     <span class="pl-stat-label">Tổng bài</span>
                 </div>
             </div>
+            <div class="pl-stat">
+                <div class="pl-stat-dot status-dot-view"></div>
+                <div class="pl-stat-info">
+                    <span class="pl-stat-value">@FormatViewsShort(totalViews)</span>
+                    <span class="pl-stat-label">Lượt xem</span>
+                </div>
+            </div>
             @foreach (var s in statusStats)
             {
                 <div class="pl-stat">
@@ -116,6 +123,7 @@
                             <tr>
                                 <th class="u-table-title-42">Tiêu đề</th>
                                 <th>Trạng thái</th>
+                                <th>Lượt xem</th>
                                 <th>Ngày tạo</th>
                                 <th>Thao tác</th>
                             </tr>
@@ -149,6 +157,12 @@
                                         <span class="pl-badge @GetBadgeClass(item.Status)">
                                             <span class="dot"></span>
                                             @GetStatusLabel(item.Status)
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <span class="pl-view-count">
+                                            <span class="material-symbols-outlined">visibility</span>
+                                            @FormatViewsShort(item.ViewCount)
                                         </span>
                                     </td>
                                     <td>
@@ -220,6 +234,7 @@
     private int trang = 1;
     private int trangSize = 20;
     private int totalCount;
+    private long totalViews;
     private int totaltrangs => Math.Max(1, (int)Math.Ceiling(totalCount / (double)trangSize));
 
     // Status tabs definition
@@ -243,6 +258,7 @@
     private async Task LoadAsync()
     {
         totalCount = await AdminPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, keyword, status);
+        totalViews = await AdminPostService.GetPostsViewCountTotalAsync(PN_PublicVariables.MaTruong, keyword, status);
         posts = await AdminPostService.GetPostsAsync(PN_PublicVariables.MaTruong, keyword, status, trang, trangSize);
         await LoadStatsAsync();
     }
@@ -342,6 +358,9 @@
 
     private static string FormatDate(DateTime? dt) =>
         dt.HasValue ? dt.Value.ToString("dd/MM/yyyy") : "—";
+
+    private static string FormatViewsShort(long views) =>
+        views < 1_000 ? $"{views:N0}" : $"{views / 1_000d:0.#}K";
 
     private static string FormatRelative(DateTime? dt)
     {

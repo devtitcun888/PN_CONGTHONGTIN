@@ -1,41 +1,156 @@
 @page "/pages/{Slug}"
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicStaticPageService PublicStaticPageService
+@inject IJSRuntime JS
+@inject NavigationManager Nav
 
-<div class="public-page public-static-detail-page">
-    @if (trang == null)
-    {
-        <div class="public-state-card">
-            <span class="material-symbols-outlined">article</span>
-            <h2>Không tìm thấy trang</h2>
-            <p>Trang này chưa được công khai hoặc đường dẫn không còn tồn tại.</p>
-            <a class="public-button public-button-primary" href="/about">Về giới thiệu</a>
-        </div>
-    }
-    else
-    {
-        <nav class="public-breadcrumb" aria-label="breadcrumb">
-            <a href="/">Trang chủ</a>
-            <span>/</span>
-            <a href="/about">Giới thiệu</a>
-            <span>/</span>
-            <span>@trang.Title</span>
-        </nav>
+<PageTitle>@(trang?.Title ?? "Trang thông tin")</PageTitle>
 
-        <article class="public-article-detail">
-            <div class="public-kicker">Trang thông tin</div>
-            <h1>@trang.Title</h1>
-            <div class="article-content">@((MarkupString)(trang.Content ?? string.Empty))</div>
+@if (isLoading)
+{
+    <div class="article-detail-loading">
+        <div class="spinner"></div>
+        <span>Đang tải nội dung...</span>
+    </div>
+}
+else if (trang == null)
+{
+    <section class="public-state-card">
+        <span class="material-symbols-outlined">article</span>
+        <h1>Không tìm thấy trang</h1>
+        <p>Trang này chưa được công khai hoặc đường dẫn không còn tồn tại.</p>
+        <a class="public-button public-button-primary" href="/about">Về giới thiệu</a>
+    </section>
+}
+else
+{
+    <div class="article-detail-shell">
+
+        <aside class="article-share-rail" aria-label="Thao tác trang">
+            <span>Chia sẻ</span>
+            <button type="button" title="Chia sẻ" @onclick="ShareNativeAsync">
+                <span class="material-symbols-outlined">ios_share</span>
+            </button>
+            <button type="button" title="Sao chép liên kết" @onclick="CopyLinkAsync">
+                <span class="material-symbols-outlined">link</span>
+            </button>
+            <button type="button" title="In trang" @onclick="PrintPageAsync">
+                <span class="material-symbols-outlined">print</span>
+            </button>
+            @if (!string.IsNullOrWhiteSpace(shareMessage))
+            {
+                <small>@shareMessage</small>
+            }
+        </aside>
+
+        <article class="article-detail-main">
+            <nav class="article-breadcrumb" aria-label="breadcrumb">
+                <a href="/">Trang chủ</a>
+                <span>/</span>
+                <a href="/about">Giới thiệu</a>
+                <span>/</span>
+                <span>@trang.Title</span>
+            </nav>
+
+            <header class="article-detail-head">
+                <div class="static-page-kicker">
+                    <span class="material-symbols-outlined">article</span>
+                    Trang thông tin
+                </div>
+                <h1>@trang.Title</h1>
+            </header>
+
+            <div class="article-content">
+                @((MarkupString)(trang.Content ?? string.Empty))
+            </div>
         </article>
-    }
-</div>
+
+        <aside class="article-detail-sidebar">
+            @if (relatedPages?.Any() == true)
+            {
+                <section class="article-side-panel">
+                    <h2>Xem thêm</h2>
+                    <ul class="static-page-nav-list">
+                        @foreach (var navItem in relatedPages)
+                        {
+                            var href = string.IsNullOrWhiteSpace(navItem.Slug) ? "/about" : $"/pages/{navItem.Slug}";
+                            var isCurrent = string.Equals(navItem.Slug, Slug, StringComparison.OrdinalIgnoreCase);
+                            var itemClass = isCurrent ? "is-current" : string.Empty;
+                            var itemIcon = isCurrent ? "chevron_right" : "article";
+                            <li class="@itemClass">
+                                <a href="@href">
+                                    <span class="material-symbols-outlined">@itemIcon</span>
+                                    @navItem.Title
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </section>
+            }
+
+            <section class="article-side-panel">
+                <h2>Truy cập nhanh</h2>
+                <div class="static-quick-links">
+                    <a href="/posts">
+                        <span class="material-symbols-outlined">newspaper</span>
+                        Bài viết
+                    </a>
+                    <a href="/documents">
+                        <span class="material-symbols-outlined">folder_open</span>
+                        Văn bản
+                    </a>
+                    <a href="/organization">
+                        <span class="material-symbols-outlined">groups</span>
+                        Tổ chức
+                    </a>
+                    <a href="/contact">
+                        <span class="material-symbols-outlined">mail</span>
+                        Liên hệ
+                    </a>
+                </div>
+            </section>
+        </aside>
+
+    </div>
+}
 
 @code {
     [Parameter] public string? Slug { get; set; }
+
     private PublicStaticPageDetail? trang;
+    private List<PublicStaticPageMenuItem>? relatedPages;
+    private string? shareMessage;
+    private bool isLoading = true;
 
     protected override async Task OnParametersSetAsync()
     {
-        trang = await PublicStaticPageService.GetBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+        isLoading = true;
+        trang = null;
+        shareMessage = null;
+
+        var detailTask = PublicStaticPageService.GetBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+        var pagesTask = PublicStaticPageService.GetPagesByMenuAsync(PN_PublicVariables.MaTruong);
+        await Task.WhenAll(detailTask, pagesTask);
+
+        trang = detailTask.Result;
+        relatedPages = pagesTask.Result;
+        isLoading = false;
     }
+
+    private async Task ShareNativeAsync()
+    {
+        shareMessage = await JS.InvokeAsync<string>("AppUtils.shareArticle", trang?.Title ?? "Trang thông tin", "", GetShareUrl());
+    }
+
+    private async Task CopyLinkAsync()
+    {
+        shareMessage = await JS.InvokeAsync<string>("AppUtils.copyToClipboard", GetShareUrl());
+    }
+
+    private async Task PrintPageAsync()
+    {
+        await JS.InvokeVoidAsync("window.print");
+    }
+
+    private string GetShareUrl() => Nav.ToAbsoluteUri($"/pages/{Slug}").ToString();
 }
