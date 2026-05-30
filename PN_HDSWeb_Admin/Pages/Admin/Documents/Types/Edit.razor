@@ -47,16 +47,16 @@
                     <div class="dt-card-body">
                         <div class="u-grid-2">
                             <div class="dt-field">
-                                <label class="dt-label">Mã loại</label>
-                                <input class="dt-input" @bind="model.TypeCode" placeholder="Ví dụ: QD" />
+                                <label class="dt-label">Mã loại (Tự động sinh)</label>
+                                <input class="dt-input" value="@model.TypeCode" disabled placeholder="Ví dụ: QD" />
                             </div>
                             <div class="dt-field">
                                 <label class="dt-label">Tên loại</label>
-                                <input class="dt-input" @bind="model.TypeName" placeholder="Ví dụ: Quyết định" />
+                                <input class="dt-input" value="@model.TypeName" @oninput="OnTypeNameInput" placeholder="Ví dụ: Quyết định" />
                             </div>
                             <div class="dt-field">
-                                <label class="dt-label">Slug</label>
-                                <input class="dt-input" @bind="model.Slug" placeholder="quyet-dinh" />
+                                <label class="dt-label">Slug (Tự động sinh)</label>
+                                <input class="dt-input" value="@model.Slug" disabled placeholder="quyet-dinh" />
                             </div>
                             <div class="dt-field">
                                 <label class="dt-label">Thứ tự</label>
@@ -127,11 +127,28 @@
         };
 
         IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+        UpdateAutoSlug();
+    }
+
+    private void OnTypeNameInput(ChangeEventArgs e)
+    {
+        model!.TypeName = e.Value?.ToString();
+        UpdateAutoSlug();
+    }
+
+    private void UpdateAutoSlug()
+    {
+        if (model != null)
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.TypeName);
+            model.TypeCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GenerateTypeCode(model.TypeName);
+        }
     }
 
     private async Task SaveAsync()
     {
         model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
+        UpdateAutoSlug();
 
         if (string.IsNullOrWhiteSpace(model.Id))
             await AdminDocumentTypeService.CreateDocumentTypeAsync(model);

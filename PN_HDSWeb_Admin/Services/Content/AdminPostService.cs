@@ -105,6 +105,11 @@ public class AdminPostService : IAdminPostService
 
     public async Task<bool> CreatePostAsync(AdminPostDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.Title);
+        }
+
         var sql = $@"
             INSERT INTO posts
             (ma_truong_bo, category_id, title, slug, summary, content, cover_image_url, post_type,
@@ -122,6 +127,11 @@ public class AdminPostService : IAdminPostService
 
     public async Task<bool> UpdatePostAsync(AdminPostDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.Title);
+        }
+
         var sql = $@"
             UPDATE posts
                SET category_id = '{Escape(model.CategoryId)}',

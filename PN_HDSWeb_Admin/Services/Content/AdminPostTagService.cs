@@ -93,6 +93,11 @@ public class AdminPostTagService : IAdminPostTagService
 
     public async Task<bool> CreateTagAsync(AdminPostTagDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.TagName);
+        }
+
         var sql = $@"
             INSERT INTO post_tags
             (ma_truong_bo, tag_name, slug, is_active, created_at, updated_at, is_deleted)
@@ -104,6 +109,11 @@ public class AdminPostTagService : IAdminPostTagService
 
     public async Task<bool> EnsureTagAsync(AdminPostTagDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.TagName);
+        }
+
         var existing = await GetTagBySlugAsync(model.MaTruongBo ?? string.Empty, model.Slug ?? string.Empty);
         if (existing != null)
         {
@@ -116,6 +126,11 @@ public class AdminPostTagService : IAdminPostTagService
 
     public async Task<bool> UpdateTagAsync(AdminPostTagDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.TagName);
+        }
+
         var sql = $@"
             UPDATE post_tags
                SET tag_name = '{Escape(model.TagName)}',

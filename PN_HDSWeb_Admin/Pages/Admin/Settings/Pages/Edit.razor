@@ -47,16 +47,16 @@
                     <div class="pe-card-body">
                         <div class="u-grid-2">
                             <div class="pe-field">
-                                <label class="pe-label">Mã trang</label>
-                                <input class="pe-input" @bind="model.PageCode" placeholder="about-us" />
+                                <label class="pe-label">Mã trang (Tự động sinh)</label>
+                                <input class="pe-input" value="@model.PageCode" disabled placeholder="about-us" />
                             </div>
                             <div class="pe-field">
-                                <label class="pe-label">Slug</label>
-                                <input class="pe-input" @bind="model.Slug" placeholder="gioi-thieu" />
+                                <label class="pe-label">Slug (Tự động sinh)</label>
+                                <input class="pe-input" value="@model.Slug" disabled placeholder="gioi-thieu" />
                             </div>
                             <div class="pe-field u-span-full">
                                 <label class="pe-label">Tiêu đề</label>
-                                <input class="pe-input" @bind="model.Title" placeholder="Giới thiệu" />
+                                <input class="pe-input" value="@model.Title" @oninput="OnTitleInput" placeholder="Giới thiệu" />
                             </div>
                             <div class="pe-field">
                                 <label class="pe-label">Trạng thái</label>
@@ -128,10 +128,29 @@
             Status = "Draft",
             SortOrder = 0
         };
+
+        UpdateAutoSlug();
+    }
+
+    private void OnTitleInput(ChangeEventArgs e)
+    {
+        model!.Title = e.Value?.ToString();
+        UpdateAutoSlug();
+    }
+
+    private void UpdateAutoSlug()
+    {
+        if (model != null)
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.Title);
+            model.PageCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GeneratePageCode(model.Title);
+        }
     }
 
     private async Task SaveAsync()
     {
+        UpdateAutoSlug();
+
         if (string.IsNullOrWhiteSpace(model!.Id))
             await AdminStaticPageService.CreatePageAsync(model);
         else

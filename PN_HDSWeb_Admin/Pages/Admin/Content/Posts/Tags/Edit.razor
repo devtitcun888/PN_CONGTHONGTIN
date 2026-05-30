@@ -20,11 +20,11 @@
             <div class="admin-form-grid">
                 <label>
                     Tên tag
-                    <input class="admin-input" @bind="model.TagName" placeholder="VD: Tuyển sinh" />
+                    <input class="admin-input" value="@model.TagName" @oninput="OnTagNameInput" placeholder="VD: Tuyển sinh" />
                 </label>
                 <label>
-                    Slug
-                    <input class="admin-input" @bind="model.Slug" placeholder="tuyen-sinh" />
+                    Slug (Tự động sinh)
+                    <input class="admin-input" value="@model.Slug" disabled placeholder="Tự động sinh từ tên tag..." />
                 </label>
                 <label>
                     Trạng thái
@@ -62,13 +62,28 @@
 
         model.MaTruongBo ??= PN_PublicVariables.MaTruong;
         IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+        UpdateAutoSlug();
+    }
+
+    private void OnTagNameInput(ChangeEventArgs e)
+    {
+        model!.TagName = e.Value?.ToString();
+        UpdateAutoSlug();
+    }
+
+    private void UpdateAutoSlug()
+    {
+        if (model != null)
+        {
+            model.Slug = GenerateSlug(model.TagName ?? string.Empty);
+        }
     }
 
     private async Task SaveAsync()
     {
         model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
         model.MaTruongBo ??= PN_PublicVariables.MaTruong;
-        model.Slug = GenerateSlug(model.TagName ?? model.Slug ?? string.Empty);
+        UpdateAutoSlug();
 
         if (!await IsDuplicateAsync())
         {

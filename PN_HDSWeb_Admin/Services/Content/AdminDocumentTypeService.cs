@@ -80,6 +80,15 @@ public class AdminDocumentTypeService : IAdminDocumentTypeService
 
     public async Task<bool> CreateDocumentTypeAsync(AdminDocumentTypeDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.TypeName);
+        }
+        if (string.IsNullOrWhiteSpace(model.TypeCode))
+        {
+            model.TypeCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GenerateTypeCode(model.TypeName);
+        }
+
         var sql = $@"
             INSERT INTO document_types
             (ma_truong_bo, type_code, type_name, slug, description, sort_order, is_active, created_at, updated_at, is_deleted)
@@ -92,6 +101,15 @@ public class AdminDocumentTypeService : IAdminDocumentTypeService
 
     public async Task<bool> UpdateDocumentTypeAsync(AdminDocumentTypeDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.TypeName);
+        }
+        if (string.IsNullOrWhiteSpace(model.TypeCode))
+        {
+            model.TypeCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GenerateTypeCode(model.TypeName);
+        }
+
         var sql = $@"
             UPDATE document_types
                SET type_code = '{Escape(model.TypeCode)}',

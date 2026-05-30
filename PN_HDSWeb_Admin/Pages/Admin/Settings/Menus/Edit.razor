@@ -1,4 +1,4 @@
-﻿@page "/admin/menus/edit/{Id?}"
+@page "/admin/menus/edit/{Id?}"
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminMenuService AdminMenuService
 @inject NavigationManager Nav
@@ -47,15 +47,22 @@
                     <div class="me-form-grid">
                         <div class="me-field">
                             <label class="me-label">Tên menu</label>
-                            <input class="me-input" @bind="model.MenuName" placeholder="Nhập tên menu..." />
+                            <input class="me-input" value="@model.MenuName" @oninput="OnMenuNameInput" placeholder="Nhập tên menu..." />
                         </div>
                         <div class="me-field">
-                            <label class="me-label">Menu cha</label>
-                            <input class="me-input" @bind="model.ParentId" placeholder="Nhập ID menu cha..." />
+                            <label class="me-label">Menu cha (ID)</label>
+                            <input class="me-input" value="@model.ParentId" @oninput="OnParentIdInput" placeholder="Nhập ID menu cha..." />
                         </div>
                         <div class="me-field">
-                            <label class="me-label">URL</label>
-                            <input class="me-input" @bind="model.Url" placeholder="Nhập đường dẫn..." />
+                            <label class="me-label">URL @(string.IsNullOrWhiteSpace(model.ParentId) ? "(Tự động sinh)" : "")</label>
+                            @if (string.IsNullOrWhiteSpace(model.ParentId))
+                            {
+                                <input class="me-input" value="@model.Url" disabled placeholder="Tự động sinh từ tên menu..." />
+                            }
+                            else
+                            {
+                                <input class="me-input" @bind="model.Url" placeholder="Nhập đường dẫn..." />
+                            }
                         </div>
                         <div class="me-field">
                             <label class="me-label">Target</label>
@@ -111,11 +118,35 @@
         };
 
         IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+        UpdateAutoUrl();
+    }
+
+    private void OnMenuNameInput(ChangeEventArgs e)
+    {
+        model!.MenuName = e.Value?.ToString();
+        UpdateAutoUrl();
+    }
+
+    private void OnParentIdInput(ChangeEventArgs e)
+    {
+        model!.ParentId = e.Value?.ToString();
+        UpdateAutoUrl();
+    }
+
+    private void UpdateAutoUrl()
+    {
+        if (model != null && string.IsNullOrWhiteSpace(model.ParentId))
+        {
+            model.Url = $"/posts/category/{PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.MenuName)}";
+        }
     }
 
     private async Task SaveAsync()
     {
         model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
+
+        // Ensure URL is updated one last time for root menu
+        UpdateAutoUrl();
 
         if (string.IsNullOrWhiteSpace(model.Id))
             await AdminMenuService.CreateMenuAsync(model);

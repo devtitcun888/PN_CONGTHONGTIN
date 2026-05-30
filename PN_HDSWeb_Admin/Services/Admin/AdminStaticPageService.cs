@@ -82,6 +82,15 @@ public class AdminStaticPageService : IAdminStaticPageService
 
     public async Task<bool> CreatePageAsync(AdminStaticPageDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = AdminMenuService.ToSlug(model.Title);
+        }
+        if (string.IsNullOrWhiteSpace(model.PageCode))
+        {
+            model.PageCode = AdminMenuService.GeneratePageCode(model.Title);
+        }
+
         var sql = $@"
             INSERT INTO static_pages
             (ma_truong_bo, page_code, title, slug, content, status, sort_order, meta_title, meta_description, created_at, updated_at, is_deleted)
@@ -94,6 +103,15 @@ public class AdminStaticPageService : IAdminStaticPageService
 
     public async Task<bool> UpdatePageAsync(AdminStaticPageDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = AdminMenuService.ToSlug(model.Title);
+        }
+        if (string.IsNullOrWhiteSpace(model.PageCode))
+        {
+            model.PageCode = AdminMenuService.GeneratePageCode(model.Title);
+        }
+
         var sql = $@"
             UPDATE static_pages
                SET page_code = '{Escape(model.PageCode)}',

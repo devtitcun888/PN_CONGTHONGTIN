@@ -3,6 +3,7 @@
 @using PN_HDSWeb_Admin.Services.Content
 @inject IAdminPostCategoryService AdminPostCategoryService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 <div class="pc-root">
     <!-- Breadcrumb -->
     <div class="pc-topbar">
@@ -45,52 +46,71 @@
                         <h2>Thông tin chuyên mục</h2>
                     </div>
                     <div class="pc-card-body">
+                        @if (IsRootCategory)
+                        {
+                            <div class="alert alert-warning" style="margin-bottom: 20px; padding: 15px; border-radius: 6px; background-color: #fff3cd; border: 1px solid #ffeeba; color: #856404;">
+                                Chuyên mục này là chuyên mục cha (gốc) được liên kết với Menu. 
+                                Vui lòng thực hiện chỉnh sửa hoặc quản lý tại trang <a href="/admin/menus" style="font-weight: bold; color: #533f03; text-decoration: underline;">Quản lý Menu</a>.
+                            </div>
+                        }
+
                         <div class="u-grid-2">
                             <div class="pc-field">
-                                <label class="pc-label">Mã chuyên mục</label>
-                                <input class="pc-input" @bind="model.CategoryCode" placeholder="VD: TIN01" />
+                                <label class="pc-label">Mã chuyên mục (Tự động sinh)</label>
+                                <input class="pc-input" value="@model.CategoryCode" disabled placeholder="VD: TIN" />
                             </div>
                             <div class="pc-field">
                                 <label class="pc-label">Tên chuyên mục</label>
-                                <input class="pc-input" @bind="model.CategoryName" placeholder="VD: Chi bộ" />
+                                <input class="pc-input" value="@model.CategoryName" @oninput="OnCategoryNameInput" placeholder="VD: Chi bộ" disabled="@IsRootCategory" />
                             </div>
                             <div class="pc-field">
-                                <label class="pc-label">Slug</label>
-                                <input class="pc-input" @bind="model.Slug" placeholder="chi-bo" />
+                                <label class="pc-label">Slug (Tự động sinh)</label>
+                                <input class="pc-input" value="@model.Slug" placeholder="chi-bo" disabled />
                             </div>
                             <div class="pc-field">
                                 <label class="pc-label">Chuyên mục cha</label>
-                                <select class="pc-input" @bind="model.ParentId">
-                                    <option value="">-- Không có --</option>
-                                    @foreach (var option in ParentOptions)
-                                    {
-                                        <option value="@option.Item1">@option.Item2</option>
-                                    }
-                                </select>
+                                @if (IsRootCategory)
+                                {
+                                    <select class="pc-input" value="" disabled>
+                                        <option value="">-- Danh mục gốc --</option>
+                                    </select>
+                                }
+                                else
+                                {
+                                    <select class="pc-input" @bind="model.ParentId">
+                                        @foreach (var option in ParentOptions)
+                                        {
+                                            <option value="@option.Item1">@option.Item2</option>
+                                        }
+                                    </select>
+                                }
                             </div>
                             <div class="pc-field">
                                 <label class="pc-label">Thứ tự</label>
-                                <input class="pc-input" type="number" @bind="model.SortOrder" min="0" />
+                                <input class="pc-input" type="number" @bind="model.SortOrder" min="0" disabled="@IsRootCategory" />
                             </div>
                             <div class="pc-field">
                                 <label class="pc-label">Trạng thái</label>
-                                <select class="pc-input" @bind="IsActiveText">
+                                <select class="pc-input" @bind="IsActiveText" disabled="@IsRootCategory">
                                     <option value="true">Đang bật</option>
                                     <option value="false">Tắt</option>
                                 </select>
                             </div>
                             <div class="pc-field u-span-full">
                                 <label class="pc-label">Mô tả</label>
-                                <textarea class="pc-input" rows="4" @bind="model.Description" placeholder="Mô tả về chuyên mục..."></textarea>
+                                <textarea class="pc-input" rows="4" @bind="model.Description" placeholder="Mô tả về chuyên mục..." disabled="@IsRootCategory"></textarea>
                             </div>
                         </div>
 
                         <div class="pc-action-bar">
-                            <button type="button" class="pc-btn pc-btn-primary" @onclick="SaveAsync">
-                                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
-                                Lưu
-                            </button>
-                            <button type="button" class="pc-btn pc-btn-ghost" @onclick="GoBack">Hủy</button>
+                            @if (!IsRootCategory)
+                            {
+                                <button type="button" class="pc-btn pc-btn-primary" @onclick="SaveAsync">
+                                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" /><polyline points="17 21 17 13 7 13" /><polyline points="7 3 7 8 15 8" /></svg>
+                                    Lưu
+                                </button>
+                            }
+                            <button type="button" class="pc-btn pc-btn-ghost" @onclick="GoBack">@(IsRootCategory ? "Quay lại" : "Hủy")</button>
                         </div>
                     </div>
                 </div>
@@ -116,6 +136,7 @@
     private List<AdminPostCategoryItem>? allCategories;
     private string IsActiveText = "true";
     private bool IsEditMode => !string.IsNullOrWhiteSpace(Id);
+    private bool IsRootCategory => IsEditMode && string.IsNullOrWhiteSpace(model?.ParentId);
 
     private IEnumerable<(string Item1, string Item2)> ParentOptions =>
         allCategories == null || model == null
@@ -143,11 +164,40 @@
 
         model.MaTruongBo ??= PN_PublicVariables.MaTruong;
         IsActiveText = model.IsActive.ToString().ToLowerInvariant();
+
+        if (!IsEditMode && string.IsNullOrWhiteSpace(model.ParentId) && ParentOptions.Any())
+        {
+            model.ParentId = ParentOptions.First().Item1;
+        }
+
+        UpdateAutoSlug();
+    }
+
+    private void OnCategoryNameInput(ChangeEventArgs e)
+    {
+        model!.CategoryName = e.Value?.ToString();
+        UpdateAutoSlug();
+    }
+
+    private void UpdateAutoSlug()
+    {
+        if (model != null)
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.CategoryName);
+            model.CategoryCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GenerateCategoryCode(model.CategoryName);
+        }
     }
 
     private async Task SaveAsync()
     {
+        if (string.IsNullOrWhiteSpace(model!.ParentId))
+        {
+            await JS.InvokeVoidAsync("alert", "Vui lòng chọn chuyên mục cha. Trang này chỉ cho phép tạo chuyên mục con!");
+            return;
+        }
+
         model!.IsActive = bool.TryParse(IsActiveText, out var active) && active;
+        UpdateAutoSlug();
 
         if (string.IsNullOrWhiteSpace(model.Id))
             await AdminPostCategoryService.CreateCategoryAsync(model);

@@ -1,4 +1,4 @@
-﻿@page "/admin/post-categories"
+@page "/admin/post-categories"
 @attribute [Authorize(Roles = "Administrator")]
 @using PN_HDSWeb_Admin.Services.Content
 @inject IAdminPostCategoryService AdminPostCategoryService
@@ -77,8 +77,14 @@
                             <tr>
 
                                 <td>
-                                    <div class="pc-category-name">
+                                    <div class="pc-category-name" style="display: flex; align-items: center;">
                                         @item.CategoryName
+                                        @if (string.IsNullOrWhiteSpace(item.ParentId))
+                                        {
+                                            <span style="margin-left: 8px; font-size: 0.75rem; background: #e0f2fe; color: #0369a1; padding: 2px 6px; border-radius: 4px; font-weight: normal; border: 1px solid #bae6fd;">
+                                                Gốc (Menu)
+                                            </span>
+                                        }
                                     </div>
                                 </td>
 
@@ -152,10 +158,37 @@
     }
 
     private void GoCreate() => Nav.NavigateTo("/admin/post-categories/edit");
-    private void Edit(AdminPostCategoryItem item) => Nav.NavigateTo($"/admin/post-categories/edit/{item.Id}");
+    
+    private string? GetMenuId(AdminPostCategoryItem item)
+    {
+        if (item.CategoryCode != null && item.CategoryCode.StartsWith("MENU_"))
+        {
+            return item.CategoryCode.Substring("MENU_".Length);
+        }
+        return null;
+    }
+
+    private void Edit(AdminPostCategoryItem item)
+    {
+        if (string.IsNullOrWhiteSpace(item.ParentId))
+        {
+            var menuId = GetMenuId(item);
+            if (!string.IsNullOrWhiteSpace(menuId))
+            {
+                Nav.NavigateTo($"/admin/menus/edit/{menuId}");
+                return;
+            }
+        }
+        Nav.NavigateTo($"/admin/post-categories/edit/{item.Id}");
+    }
 
     private async Task ToggleAsync(AdminPostCategoryItem item)
     {
+        if (string.IsNullOrWhiteSpace(item.ParentId))
+        {
+            await JS.InvokeVoidAsync("alert", "Không thể trực tiếp bật/tắt chuyên mục gốc. Vui lòng bật/tắt Menu tương ứng tại trang Quản lý Menu.");
+            return;
+        }
         if (await JS.InvokeAsync<bool>("confirm", $"Đổi trạng thái chuyên mục '{item.CategoryName}'?"))
         {
             await AdminPostCategoryService.SetActiveAsync(item.Id ?? string.Empty, !item.IsActive);
@@ -165,6 +198,11 @@
 
     private async Task DeleteAsync(AdminPostCategoryItem item)
     {
+        if (string.IsNullOrWhiteSpace(item.ParentId))
+        {
+            await JS.InvokeVoidAsync("alert", "Không thể trực tiếp xóa chuyên mục gốc. Vui lòng xóa Menu tương ứng tại trang Quản lý Menu để đồng bộ xóa chuyên mục.");
+            return;
+        }
         if (await JS.InvokeAsync<bool>("confirm", $"Xóa chuyên mục '{item.CategoryName}'?"))
         {
             await AdminPostCategoryService.DeleteCategoryAsync(item.Id ?? string.Empty);

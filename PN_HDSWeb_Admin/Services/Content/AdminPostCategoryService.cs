@@ -87,6 +87,15 @@ public class AdminPostCategoryService : IAdminPostCategoryService
 
     public async Task<bool> CreateCategoryAsync(AdminPostCategoryDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.CategoryName);
+        }
+        if (string.IsNullOrWhiteSpace(model.CategoryCode))
+        {
+            model.CategoryCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GenerateCategoryCode(model.CategoryName);
+        }
+
         var sql = $@"
             INSERT INTO post_categories
             (ma_truong_bo, category_code, category_name, slug, parent_id, description, sort_order, is_active, created_by, updated_by, created_at, updated_at, is_deleted)
@@ -100,6 +109,15 @@ public class AdminPostCategoryService : IAdminPostCategoryService
 
     public async Task<bool> UpdateCategoryAsync(AdminPostCategoryDetail model)
     {
+        if (string.IsNullOrWhiteSpace(model.Slug))
+        {
+            model.Slug = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.ToSlug(model.CategoryName);
+        }
+        if (string.IsNullOrWhiteSpace(model.CategoryCode))
+        {
+            model.CategoryCode = PN_HDSWeb_Admin.Services.Admin.AdminMenuService.GenerateCategoryCode(model.CategoryName);
+        }
+
         var sql = $@"
             UPDATE post_categories
                SET category_code = '{Escape(model.CategoryCode)}',
