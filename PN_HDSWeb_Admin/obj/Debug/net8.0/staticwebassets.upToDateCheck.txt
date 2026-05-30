@@ -4009,6 +4009,7 @@ wwwroot\favicon.png
 wwwroot\file\File-mau-nhap-danh-sach-giao-vien.xlsx
 wwwroot\file\File-mau-nhap-danh-sach-hoc-sinh.xlsx
 wwwroot\file\Mau_import_thucdon.xlsx
+wwwroot\image\Background_public.png
 wwwroot\image\avtmacdinh.jpg
 wwwroot\image\background.jpg
 wwwroot\image\banner-corner.png

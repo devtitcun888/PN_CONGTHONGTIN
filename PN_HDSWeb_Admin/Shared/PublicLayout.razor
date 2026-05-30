@@ -11,6 +11,80 @@
 
 <PageTitle>@BrandName</PageTitle>
 
+<style>
+    /* Styling for level 3 post categories submenu */
+    .public-dropdown li {
+        position: relative;
+    }
+
+    .public-dropdown-sub {
+        display: none !important;
+        position: absolute;
+        left: 100%;
+        top: 0;
+        z-index: 1050;
+        min-width: 220px;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: -5px;
+        padding: 4px;
+        border: 1px solid var(--color-outline-soft);
+        border-radius: var(--radius-sm);
+        background: #fff;
+        box-shadow: var(--shadow-2);
+    }
+
+    /* Show sub-dropdown on hover or focus */
+    .public-dropdown li.has-sub-dropdown:hover > .public-dropdown-sub,
+    .public-dropdown li.has-sub-dropdown:focus-within > .public-dropdown-sub {
+        display: flex !important;
+    }
+
+    .dropdown-item-flex {
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between !important;
+        width: 100%;
+    }
+
+    .dropdown-item-flex .sub-arrow {
+        font-size: 16px !important;
+        color: var(--color-text-muted);
+        margin-left: 8px;
+        transition: color 0.15s ease;
+    }
+
+    .dropdown-item-flex:hover .sub-arrow,
+    .public-dropdown li.active .sub-arrow {
+        color: var(--color-primary);
+    }
+
+  
+    @@media (max-width: 1024px) {
+        .public-dropdown-sub {
+            position: static;
+            display: none !important;
+            box-shadow: none;
+            border: 0;
+            border-left: 1.5px solid var(--color-outline-soft);
+            padding-left: 12px;
+            margin-left: 8px;
+            margin-top: 2px;
+            min-width: unset;
+            background: transparent;
+        }
+
+        .public-dropdown li.has-sub-dropdown:hover > .public-dropdown-sub,
+        .public-dropdown li.has-sub-dropdown:focus-within > .public-dropdown-sub {
+            display: flex !important;
+        }
+
+        .dropdown-item-flex .sub-arrow {
+            transform: rotate(90deg);
+        }
+    }
+</style>
+
 <div class="public-layout">
     <header class="public-site-header">
         <div class="public-sticky-shell">
@@ -51,7 +125,7 @@
                                     var hasDropdown = childMenus.Any() || categoryChildren.Any();
                                     var active = IsActiveMenu(href)
                                         || childMenus.Any(child => IsActiveMenu(NormalizePublicHref(GetMenuHref(child))))
-                                        || categoryChildren.Any(cat => IsActiveMenu(PostCategoryHref(cat)));
+                                        || categoryChildren.Any(cat => IsActiveMenu(PostCategoryHref(cat)) || GetLevel3Children(cat.Id).Any(c3 => IsActiveMenu(PostCategoryHref(c3))));
 
                                     <li class="nav-item @(hasDropdown ? "has-dropdown" : string.Empty) @(active ? "active" : string.Empty)">
                                         @if (IsNavigableHref(href))
@@ -90,8 +164,30 @@
                                                 @foreach (var cat in categoryChildren)
                                                 {
                                                     var catHref = PostCategoryHref(cat);
-                                                    <li class="@(IsActiveMenu(catHref) ? "active" : string.Empty)">
-                                                        <a href="@catHref" @onclick="CloseMobileMenu">@cat.CategoryName</a>
+                                                    var level3Children = GetLevel3Children(cat.Id);
+                                                    var hasLevel3 = level3Children.Any();
+                                                    var catActive = IsActiveMenu(catHref) || level3Children.Any(c3 => IsActiveMenu(PostCategoryHref(c3)));
+
+                                                    <li class="@(catActive ? "active" : string.Empty) @(hasLevel3 ? "has-sub-dropdown" : string.Empty)">
+                                                        <a href="@catHref" @onclick="CloseMobileMenu" class="dropdown-item-flex">
+                                                            <span>@cat.CategoryName</span>
+                                                            @if (hasLevel3)
+                                                            {
+                                                                <span class="sub-arrow material-symbols-outlined">chevron_right</span>
+                                                            }
+                                                        </a>
+                                                        @if (hasLevel3)
+                                                        {
+                                                            <ul class="public-dropdown-sub">
+                                                                @foreach (var c3 in level3Children)
+                                                                {
+                                                                    var c3Href = PostCategoryHref(c3);
+                                                                    <li class="@(IsActiveMenu(c3Href) ? "active" : string.Empty)">
+                                                                        <a href="@c3Href" @onclick="CloseMobileMenu">@c3.CategoryName</a>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        }
                                                     </li>
                                                 }
                                             </ul>
@@ -369,6 +465,14 @@
             return [];
 
         return postCategories.Where(x => x.ParentId == root.Id).OrderBy(x => x.SortOrder).ToList();
+    }
+
+    private List<PublicPostCategoryItem> GetLevel3Children(string? parentId)
+    {
+        if (string.IsNullOrWhiteSpace(parentId) || postCategories == null || postCategories.Count == 0)
+            return [];
+
+        return postCategories.Where(x => x.ParentId == parentId).OrderBy(x => x.SortOrder).ToList();
     }
 
     private string GetMenuHref(PublicNavItem menu) => PublicNavigationService.ResolveMenuUrl(menu);

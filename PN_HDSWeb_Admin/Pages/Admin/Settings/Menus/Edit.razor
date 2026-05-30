@@ -49,10 +49,10 @@
                             <label class="me-label">Tên menu</label>
                             <input class="me-input" value="@model.MenuName" @oninput="OnMenuNameInput" placeholder="Nhập tên menu..." />
                         </div>
-                        <div class="me-field">
+@*                         <div class="me-field">
                             <label class="me-label">Menu cha (ID)</label>
                             <input class="me-input" value="@model.ParentId" @oninput="OnParentIdInput" placeholder="Nhập ID menu cha..." />
-                        </div>
+                        </div> *@
                         <div class="me-field">
                             <label class="me-label">URL @(string.IsNullOrWhiteSpace(model.ParentId) ? "(Tự động sinh)" : "")</label>
                             @if (string.IsNullOrWhiteSpace(model.ParentId))

@@ -19,7 +19,7 @@
     <EmbeddedResource Remove="Pages\QuanLyDiem\**" />
     <None Remove="Pages\DiemCapTHPT\**" />
     <None Remove="Pages\HocTap\**" />
-    <None Remove="Pages\QuanLyDiem\**" />
+    <None Remove="Pages\QuanLyDiem\**" />   
   </ItemGroup>
 
   <ItemGroup>
