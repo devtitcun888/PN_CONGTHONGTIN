@@ -245,62 +245,6 @@
             </div>
         }
 
-        @if (model.FeatureDocumentsEnabled)
-        {
-            /* ── VĂN BẢN CÔNG KHAI NỔI BẬT ── */
-            <div class="hp-card">
-                <div class="hp-card-header">
-                    <div class="hp-card-title">
-                        <span class="hp-card-title-bar bar-red"></span>
-                        Văn bản công khai nổi bật
-                    </div>
-                    <a class="hp-card-link" href="/documents">
-                        Xem tất cả
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
-                </div>
-                <div class="hp-card-body">
-                    @if (featuredDocuments?.Any() == true)
-                    {
-                        <div class="hp-doc-grid">
-                            @foreach (var doc in featuredDocuments)
-                            {
-                                <a class="hp-doc-card" href="@GetDocumentHref(doc)">
-                                    <div class="hp-doc-badge">
-                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                        Văn bản
-                                    </div>
-                                    <div class="hp-doc-fallback">
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                    </div>
-                                    <h3 class="hp-doc-title">@doc.DocTitle</h3>
-                                    <div class="hp-doc-meta">
-                                        @if (!string.IsNullOrWhiteSpace(doc.DocNumber))
-                                        {
-                                            <span>Số: @doc.DocNumber</span>
-                                        }
-                                        @if (!string.IsNullOrWhiteSpace(doc.TypeName))
-                                        {
-                                            <span>•</span>
-                                            <span>@doc.TypeName</span>
-                                        }
-                                    </div>
-                                    <div class="hp-doc-info">
-                                        <span>Ngày ban hành: @FormatDate(doc.IssuedDate)</span>
-                                        <span>Xem chi tiết →</span>
-                                    </div>
-                                </a>
-                            }
-                        </div>
-                    }
-                    else
-                    {
-                        <div class="hp-loading u-min-h-140">Chưa có văn bản công khai nổi bật.</div>
-                    }
-                </div>
-            </div>
-        }
-
         /* ── MAIN 3-COL GRID ── */
         <div class="hp-grid">
             <div class="hp-card">
@@ -424,7 +368,61 @@
                 }
             </div>
         </div>
-
+        @if (model.FeatureDocumentsEnabled)
+        {
+            /* ── VĂN BẢN CÔNG KHAI NỔI BẬT ── */
+            <div class="hp-card">
+                <div class="hp-card-header">
+                    <div class="hp-card-title">
+                        <span class="hp-card-title-bar bar-red"></span>
+                        Văn bản công khai nổi bật
+                    </div>
+                    <a class="hp-card-link" href="/documents">
+                        Xem tất cả
+                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
+                    </a>
+                </div>
+                <div class="hp-card-body">
+                    @if (featuredDocuments?.Any() == true)
+                    {
+                        <div class="hp-doc-grid">
+                            @foreach (var doc in featuredDocuments)
+                            {
+                                <a class="hp-doc-card" href="@GetDocumentHref(doc)">
+                                    <div class="hp-doc-badge">
+                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
+                                        Văn bản
+                                    </div>
+                                    <div class="hp-doc-fallback">
+                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
+                                    </div>
+                                    <h3 class="hp-doc-title">@doc.DocTitle</h3>
+                                    <div class="hp-doc-meta">
+                                        @if (!string.IsNullOrWhiteSpace(doc.DocNumber))
+                                        {
+                                            <span>Số: @doc.DocNumber</span>
+                                        }
+                                        @if (!string.IsNullOrWhiteSpace(doc.TypeName))
+                                        {
+                                            <span>•</span>
+                                            <span>@doc.TypeName</span>
+                                        }
+                                    </div>
+                                    <div class="hp-doc-info">
+                                        <span>Ngày ban hành: @FormatDate(doc.IssuedDate)</span>
+                                        <span>Xem chi tiết →</span>
+                                    </div>
+                                </a>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="hp-loading u-min-h-140">Chưa có văn bản công khai nổi bật.</div>
+                    }
+                </div>
+            </div>
+        }
         /* ── BOTTOM: Tin nhà trường ── */
         @if (model.LatestPosts?.Any() == true)
         {
