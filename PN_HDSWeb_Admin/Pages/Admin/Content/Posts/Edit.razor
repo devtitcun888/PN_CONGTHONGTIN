@@ -602,6 +602,14 @@
             model.Content = await ckEditorModule.InvokeAsync<string>("waitForUploadsAndGetData", EditorId);
         }
 
+        if (selectedCoverFile != null)
+        {
+            var savedCover = await FileStorage.SaveImageAsync(selectedCoverFile, "posts/covers");
+            if (!string.IsNullOrWhiteSpace(savedCover))
+                model.CoverImageUrl = savedCover;
+            selectedCoverFile = null;
+        }
+
         if (string.IsNullOrWhiteSpace(model.Id))
         {
             await AdminPostService.CreatePostAsync(model);
@@ -615,14 +623,6 @@
 
         if (string.IsNullOrWhiteSpace(model.Id))
             return;
-
-        if (selectedCoverFile != null)
-        {
-            var savedCover = await FileStorage.SaveImageAsync(selectedCoverFile, "posts/covers");
-            if (!string.IsNullOrWhiteSpace(savedCover))
-                model.CoverImageUrl = savedCover;
-            selectedCoverFile = null;
-        }
 
         if (selectedMediaFiles.Any())
         {

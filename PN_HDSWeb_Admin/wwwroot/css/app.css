@@ -1,6 +1,6 @@
-:root {
-    --font-body: "Work Sans", Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --font-heading: "Newsreader", Georgia, "Times New Roman", serif;
+﻿:root {
+    --font-body: 'Roboto', sans-serif;
+    --font-heading: 'Roboto', sans-serif;
     --color-background: #f9f9fe;
     --color-surface: #ffffff;
     --color-surface-low: #f3f3f8;
@@ -2258,7 +2258,7 @@ button {
     }
 
 .ac-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--ac-bg);
     min-height: 100vh;
     color: var(--ac-text);
@@ -2306,7 +2306,7 @@ button {
 }
 
     .ac-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -2566,11 +2566,11 @@ select.ac-input {
 .ac-root {
     min-height: 100vh;
     background: var(--ac-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--ac-text);
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 
 .ac-hero {
     padding: 28px 32px 0;
@@ -2582,7 +2582,7 @@ select.ac-input {
 }
 
 .ac-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1.2;
@@ -2596,7 +2596,7 @@ select.ac-input {
     color: var(--ac-text-2);
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 
 .ac-toolbar {
     padding: 20px 32px 0;
@@ -2650,7 +2650,7 @@ select.ac-input {
     flex: 1;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 
 .ac-btn {
     display: inline-flex;
@@ -2709,7 +2709,7 @@ select.ac-input {
         background: var(--ac-danger-soft);
     }
 
-/* ── Content ── */
+/* â”€â”€ Content â”€â”€ */
 
 .ac-content {
     padding: 20px 32px 40px;
@@ -2736,7 +2736,7 @@ select.ac-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 
 .ac-table {
     width: 100%;
@@ -2778,7 +2778,7 @@ select.ac-input {
             background: var(--ac-surface-2);
         }
 
-/* ── User ── */
+/* â”€â”€ User â”€â”€ */
 
 .ac-user {
     display: flex;
@@ -2807,7 +2807,7 @@ select.ac-input {
     font-weight: 600;
 }
 
-/* ── Status ── */
+/* â”€â”€ Status â”€â”€ */
 
 .ac-badge {
     display: inline-flex;
@@ -2853,7 +2853,7 @@ select.ac-input {
         background: var(--ac-warning);
     }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 
 .ac-actions {
     display: flex;
@@ -2862,7 +2862,7 @@ select.ac-input {
     flex-wrap: wrap;
 }
 
-/* ── Pagination ── */
+/* â”€â”€ Pagination â”€â”€ */
 
 .ac-pagination {
     display: flex;
@@ -2915,7 +2915,7 @@ select.ac-input {
         cursor: not-allowed;
     }
 
-/* ── Loading ── */
+/* â”€â”€ Loading â”€â”€ */
 
 .ac-loading {
     padding: 70px 24px;
@@ -2924,7 +2924,7 @@ select.ac-input {
     font-size: 14px;
 }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 
 @media (max-width: 768px) {
     .ac-hero,
@@ -2975,7 +2975,7 @@ select.ac-input {
     }
 
 .pc-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--pc-bg);
     min-height: 100vh;
     color: var(--pc-text);
@@ -3023,7 +3023,7 @@ select.ac-input {
 }
 
     .pc-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -3317,11 +3317,11 @@ select.pc-input {
 .pc-root {
     min-height: 100vh;
     background: var(--pc-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--pc-text);
 }
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .pc-topbar {
     padding: 20px 32px 0;
 }
@@ -3353,7 +3353,7 @@ select.pc-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .pc-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -3364,7 +3364,7 @@ select.pc-input {
 }
 
 .pc-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1.2;
@@ -3378,14 +3378,14 @@ select.pc-input {
     color: var(--pc-text-2);
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 .pc-toolbar {
     padding: 20px 32px 0;
     display: flex;
     justify-content: flex-end;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .pc-btn {
     display: inline-flex;
     align-items: center;
@@ -3444,12 +3444,12 @@ select.pc-input {
         background: var(--pc-danger-soft);
     }
 
-/* ── Content ── */
+/* â”€â”€ Content â”€â”€ */
 .pc-content {
     padding: 20px 32px 40px;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .pc-card {
     background: var(--pc-surface);
     border: 1px solid var(--pc-border);
@@ -3471,7 +3471,7 @@ select.pc-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .pc-table {
     width: 100%;
     border-collapse: collapse;
@@ -3513,7 +3513,7 @@ select.pc-input {
             background: var(--pc-surface-2);
         }
 
-/* ── Category ── */
+/* â”€â”€ Category â”€â”€ */
 .pc-category-name {
     font-weight: 600;
     color: var(--pc-text);
@@ -3530,7 +3530,7 @@ select.pc-input {
     align-items: center;
 }
 
-/* ── Badge ── */
+/* â”€â”€ Badge â”€â”€ */
 .pc-badge {
     display: inline-flex;
     align-items: center;
@@ -3566,7 +3566,7 @@ select.pc-input {
         background: #94a3b8;
     }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 .pc-actions {
     display: flex;
     align-items: center;
@@ -3574,7 +3574,7 @@ select.pc-input {
     flex-wrap: wrap;
 }
 
-/* ── Empty / Loading ── */
+/* â”€â”€ Empty / Loading â”€â”€ */
 .pc-loading,
 .pc-empty {
     padding: 60px 24px;
@@ -3589,7 +3589,7 @@ select.pc-input {
         margin-bottom: 6px;
     }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 768px) {
     .pc-topbar,
     .pc-hero,
@@ -3646,13 +3646,13 @@ select.pc-input {
     }
 
 .ep-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--ep-bg);
     min-height: 100vh;
     color: var(--ep-text);
 }
 
-/* ── Header breadcrumb ── */
+/* â”€â”€ Header breadcrumb â”€â”€ */
 .ep-topbar {
     display: flex;
     align-items: center;
@@ -3693,13 +3693,13 @@ select.pc-input {
     gap: 10px;
 }
 
-/* ── Page title ── */
+/* â”€â”€ Page title â”€â”€ */
 .ep-page-hero {
     padding: 24px 32px 0;
 }
 
     .ep-page-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         color: var(--ep-text);
@@ -3713,7 +3713,7 @@ select.pc-input {
         color: var(--ep-text-2);
     }
 
-/* ── Layout ── */
+/* â”€â”€ Layout â”€â”€ */
 .ep-layout {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -3738,7 +3738,7 @@ select.pc-input {
     }
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .ep-card {
     background: var(--ep-surface);
     border: 1px solid var(--ep-border);
@@ -3779,7 +3779,7 @@ select.pc-input {
     padding: 22px;
 }
 
-/* ── Form Fields ── */
+/* â”€â”€ Form Fields â”€â”€ */
 .ep-field {
     margin-bottom: 18px;
 }
@@ -3890,7 +3890,7 @@ select.ep-input {
     padding: 12px 14px;
 }
 
-/* ── Rich Editor ── */
+/* â”€â”€ Rich Editor â”€â”€ */
 .ep-editor-wrap {
     border: 1.5px solid var(--ep-border);
     border-radius: var(--ep-radius-sm);
@@ -3915,7 +3915,7 @@ select.ep-input {
         min-height: 420px;
         border: none !important;
         padding: 18px 20px;
-        font-family: "Be Vietnam Pro", sans-serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 15px;
         line-height: 1.75;
     }
@@ -3934,7 +3934,7 @@ select.ep-input {
     color: var(--ep-danger);
 }
 
-/* ── Tags ── */
+/* â”€â”€ Tags â”€â”€ */
 .ep-tags-grid {
     display: flex;
     flex-wrap: wrap;
@@ -3986,7 +3986,7 @@ select.ep-input {
     background: var(--ep-primary);
 }
 
-/* ── Attachment upload ── */
+/* â”€â”€ Attachment upload â”€â”€ */
 .ep-attachment-zone {
     border: 2px dashed var(--ep-border);
     border-radius: var(--ep-radius-sm);
@@ -4046,7 +4046,7 @@ select.ep-input {
         flex-shrink: 0;
     }
 
-/* ── Type badges ── */
+/* â”€â”€ Type badges â”€â”€ */
 .ep-type-select-row {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -4078,7 +4078,7 @@ select.ep-input {
         color: var(--ep-primary);
     }
 
-/* ── Status badge select ── */
+/* â”€â”€ Status badge select â”€â”€ */
 .ep-status-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -4141,7 +4141,7 @@ select.ep-input {
     background: var(--ep-danger);
 }
 
-/* ── Featured toggle ── */
+/* â”€â”€ Featured toggle â”€â”€ */
 .ep-toggle-row {
     display: flex;
     align-items: center;
@@ -4204,7 +4204,7 @@ select.ep-input {
     transform: translateX(18px);
 }
 
-/* ── Cover image preview ── */
+/* â”€â”€ Cover image preview â”€â”€ */
 .ep-cover-preview {
     width: 100%;
     height: 140px;
@@ -4237,7 +4237,7 @@ select.ep-input {
         margin-bottom: 6px;
     }
 
-/* ── Sort order ── */
+/* â”€â”€ Sort order â”€â”€ */
 .ep-number-input-wrap {
     position: relative;
 }
@@ -4283,7 +4283,7 @@ select.ep-input {
             color: var(--ep-primary);
         }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .ep-btn {
     display: inline-flex;
     align-items: center;
@@ -4353,7 +4353,7 @@ select.ep-input {
     padding-top: 4px;
 }
 
-/* ── Loading ── */
+/* â”€â”€ Loading â”€â”€ */
 .ep-loading {
     display: flex;
     align-items: center;
@@ -4379,19 +4379,19 @@ select.ep-input {
     }
 }
 
-/* ── Divider ── */
+/* â”€â”€ Divider â”€â”€ */
 .ep-divider {
     height: 1px;
     background: var(--ep-border);
     margin: 4px 0 18px;
 }
 
-/* ── Sticky sidebar save bar (mobile) ── */
+/* â”€â”€ Sticky sidebar save bar (mobile) â”€â”€ */
 .ep-sticky-save {
     display: none;
 }
 
-/* ── Animations ── */
+/* â”€â”€ Animations â”€â”€ */
 .ep-card {
     animation: ep-fadeup 0.3s ease both;
 }
@@ -4474,13 +4474,13 @@ select.ep-input {
 }
 
 .pl-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--ep-bg);
     min-height: 100vh;
     color: var(--ep-text);
 }
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .pl-topbar {
     display: flex;
     align-items: center;
@@ -4517,7 +4517,7 @@ select.ep-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .pl-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -4528,7 +4528,7 @@ select.ep-input {
 }
 
 .pl-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 28px;
     font-weight: 400;
     color: var(--ep-text);
@@ -4542,7 +4542,7 @@ select.ep-input {
     color: var(--ep-text-2);
 }
 
-/* ── Stats row ── */
+/* â”€â”€ Stats row â”€â”€ */
 .pl-stats {
     display: flex;
     gap: 12px;
@@ -4607,7 +4607,7 @@ select.ep-input {
     letter-spacing: 0.4px;
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 .pl-toolbar {
     display: flex;
     align-items: center;
@@ -4707,7 +4707,7 @@ select.ep-input {
     flex: 1;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .pl-btn {
     display: inline-flex;
     align-items: center;
@@ -4794,12 +4794,12 @@ select.ep-input {
         color: var(--ep-primary);
     }
 
-/* ── Main content ── */
+/* â”€â”€ Main content â”€â”€ */
 .pl-content {
     padding: 20px 32px 40px;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .pl-card {
     background: var(--ep-surface);
     border: 1px solid var(--ep-border);
@@ -4822,7 +4822,7 @@ select.ep-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .pl-table {
     width: 100%;
     border-collapse: collapse;
@@ -4998,7 +4998,7 @@ select.ep-input {
     gap: 2px;
 }
 
-/* ── Empty state ── */
+/* â”€â”€ Empty state â”€â”€ */
 .pl-empty {
     display: flex;
     flex-direction: column;
@@ -5032,7 +5032,7 @@ select.ep-input {
     font-size: 13px;
 }
 
-/* ── Loading ── */
+/* â”€â”€ Loading â”€â”€ */
 .pl-loading {
     display: flex;
     align-items: center;
@@ -5058,7 +5058,7 @@ select.ep-input {
     }
 }
 
-/* ── Pagination ── */
+/* â”€â”€ Pagination â”€â”€ */
 .pl-pagination {
     display: flex;
     align-items: center;
@@ -5188,7 +5188,7 @@ select.ep-input {
     }
 
 .sp-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--sp-bg);
     min-height: 100vh;
     color: var(--sp-text);
@@ -5236,7 +5236,7 @@ select.ep-input {
 }
 
     .sp-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -5565,7 +5565,7 @@ select.sp-input {
     }
 
 .pf-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--pf-bg);
     min-height: 100vh;
     color: var(--pf-text);
@@ -5619,7 +5619,7 @@ select.sp-input {
 }
 
 .pf-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 28px;
     font-weight: 400;
     letter-spacing: -0.3px;
@@ -6065,7 +6065,7 @@ select.sp-input {
     }
 
 .dt-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--dt-bg);
     min-height: 100vh;
     color: var(--dt-text);
@@ -6113,7 +6113,7 @@ select.sp-input {
 }
 
     .dt-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -6417,11 +6417,11 @@ select.dt-input {
 .dt-root {
     min-height: 100vh;
     background: var(--dt-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--dt-text);
 }
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .dt-topbar {
     padding: 20px 32px 0;
 }
@@ -6453,7 +6453,7 @@ select.dt-input {
     color: var(--dt-text);
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .dt-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -6464,7 +6464,7 @@ select.dt-input {
 }
 
 .dt-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1.2;
@@ -6478,14 +6478,14 @@ select.dt-input {
     color: var(--dt-text-2);
 }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 .dt-toolbar {
     padding: 20px 32px 0;
     display: flex;
     justify-content: flex-end;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .dt-btn {
     display: inline-flex;
     align-items: center;
@@ -6539,12 +6539,12 @@ select.dt-input {
         background: var(--dt-danger-soft);
     }
 
-/* ── Content ── */
+/* â”€â”€ Content â”€â”€ */
 .dt-content {
     padding: 20px 32px 40px;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .dt-card {
     background: var(--dt-surface);
     border: 1px solid var(--dt-border);
@@ -6566,7 +6566,7 @@ select.dt-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .dt-table {
     width: 100%;
     border-collapse: collapse;
@@ -6608,7 +6608,7 @@ select.dt-input {
             background: var(--dt-surface-2);
         }
 
-/* ── Type info ── */
+/* â”€â”€ Type info â”€â”€ */
 .dt-type-code {
     display: inline-flex;
     align-items: center;
@@ -6632,7 +6632,7 @@ select.dt-input {
     color: var(--dt-text-2);
 }
 
-/* ── Status ── */
+/* â”€â”€ Status â”€â”€ */
 .dt-badge {
     display: inline-flex;
     align-items: center;
@@ -6668,14 +6668,14 @@ select.dt-input {
         background: #94a3b8;
     }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 .dt-actions {
     display: flex;
     align-items: center;
     gap: 4px;
 }
 
-/* ── Empty / Loading ── */
+/* â”€â”€ Empty / Loading â”€â”€ */
 .dt-empty,
 .dt-loading {
     padding: 60px 24px;
@@ -6690,7 +6690,7 @@ select.dt-input {
         margin-bottom: 6px;
     }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 768px) {
     .dt-topbar,
     .dt-hero,
@@ -6715,7 +6715,7 @@ select.dt-input {
 }
 
 /* Extracted from .\PN_HDSWeb_Admin\Pages\Admin\Documents\Edit.razor */
-/* ── Design Tokens ── */
+/* â”€â”€ Design Tokens â”€â”€ */
 .de-root {
     --de-bg: #f4f6fb;
     --de-surface: #ffffff;
@@ -6739,7 +6739,7 @@ select.dt-input {
     --de-shadow: 0 4px 24px rgba(15, 27, 53, 0.07);
     --de-shadow-lg: 0 8px 40px rgba(15, 27, 53, 0.12);
     --de-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--de-bg);
     min-height: 100vh;
     color: var(--de-text);
@@ -6751,7 +6751,7 @@ select.dt-input {
         padding: 0;
     }
 
-/* ── Breadcrumb / Topbar ── */
+/* â”€â”€ Breadcrumb / Topbar â”€â”€ */
 .de-topbar {
     display: flex;
     align-items: center;
@@ -6787,13 +6787,13 @@ select.dt-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .de-page-hero {
     padding: 24px 32px 0;
 }
 
     .de-page-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -6806,7 +6806,7 @@ select.dt-input {
         color: var(--de-text-2);
     }
 
-/* ── Layout ── */
+/* â”€â”€ Layout â”€â”€ */
 .de-layout {
     display: grid;
     grid-template-columns: 1fr 340px;
@@ -6831,7 +6831,7 @@ select.dt-input {
     }
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .de-card {
     background: var(--de-surface);
     border: 1px solid var(--de-border);
@@ -6881,7 +6881,7 @@ select.dt-input {
     padding: 22px;
 }
 
-/* ── Form Fields ── */
+/* â”€â”€ Form Fields â”€â”€ */
 .de-field {
     margin-bottom: 18px;
 }
@@ -6943,7 +6943,7 @@ select.de-input {
     cursor: pointer;
 }
 
-/* ── File Upload Zone ── */
+/* â”€â”€ File Upload Zone â”€â”€ */
 .de-file-zone {
     border: 2px dashed var(--de-border);
     border-radius: var(--de-radius-sm);
@@ -7002,7 +7002,7 @@ select.de-input {
         flex-shrink: 0;
     }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .de-btn {
     display: inline-flex;
     align-items: center;
@@ -7055,7 +7055,7 @@ select.de-input {
     font-size: 12.5px;
 }
 
-/* ── Loading ── */
+/* â”€â”€ Loading â”€â”€ */
 .de-loading {
     display: flex;
     align-items: center;
@@ -7093,7 +7093,7 @@ select.de-input {
     }
 }
 
-/* ── Responsive sidebar ── */
+/* â”€â”€ Responsive sidebar â”€â”€ */
 .de-side {
     display: flex;
     flex-direction: column;
@@ -7145,13 +7145,13 @@ select.de-input {
     }
 
 .dl-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--dl-bg);
     min-height: 100vh;
     color: var(--dl-text);
 }
 
-/* ── Topbar / Breadcrumb ── */
+/* â”€â”€ Topbar / Breadcrumb â”€â”€ */
 .dl-topbar {
     display: flex;
     align-items: center;
@@ -7188,7 +7188,7 @@ select.de-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .dl-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -7199,7 +7199,7 @@ select.de-input {
 }
 
 .dl-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 28px;
     font-weight: 400;
     color: var(--dl-text);
@@ -7213,7 +7213,7 @@ select.de-input {
     color: var(--dl-text-2);
 }
 
-/* ── Stats row ── */
+/* â”€â”€ Stats row â”€â”€ */
 .dl-stats {
     display: flex;
     gap: 12px;
@@ -7282,7 +7282,7 @@ select.de-input {
     letter-spacing: 0.4px;
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 .dl-toolbar {
     display: flex;
     align-items: center;
@@ -7400,7 +7400,7 @@ select.de-input {
     flex: 1;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .dl-btn {
     display: inline-flex;
     align-items: center;
@@ -7487,12 +7487,12 @@ select.de-input {
         color: var(--dl-primary);
     }
 
-/* ── Main content ── */
+/* â”€â”€ Main content â”€â”€ */
 .dl-content {
     padding: 20px 32px 40px;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .dl-card {
     background: var(--dl-surface);
     border: 1px solid var(--dl-border);
@@ -7515,7 +7515,7 @@ select.de-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .dl-table {
     width: 100%;
     border-collapse: collapse;
@@ -7674,7 +7674,7 @@ select.de-input {
     gap: 2px;
 }
 
-/* ── Empty state ── */
+/* â”€â”€ Empty state â”€â”€ */
 .dl-empty {
     display: flex;
     flex-direction: column;
@@ -7708,7 +7708,7 @@ select.de-input {
     font-size: 13px;
 }
 
-/* ── Loading ── */
+/* â”€â”€ Loading â”€â”€ */
 .dl-loading {
     display: flex;
     align-items: center;
@@ -7734,7 +7734,7 @@ select.de-input {
     }
 }
 
-/* ── Pagination ── */
+/* â”€â”€ Pagination â”€â”€ */
 .dl-pagination {
     display: flex;
     align-items: center;
@@ -7864,7 +7864,7 @@ select.de-input {
     }
 
 .bn-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--bn-bg);
     min-height: 100vh;
     color: var(--bn-text);
@@ -7912,7 +7912,7 @@ select.de-input {
 }
 
     .bn-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -8244,11 +8244,11 @@ select.bn-input {
 .bn-root {
     min-height: 100vh;
     background: var(--bn-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--bn-text);
 }
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .bn-topbar {
     padding: 20px 32px 0;
 }
@@ -8280,7 +8280,7 @@ select.bn-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .bn-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -8291,7 +8291,7 @@ select.bn-input {
 }
 
 .bn-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1.2;
@@ -8305,14 +8305,14 @@ select.bn-input {
     color: var(--bn-text-2);
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 .bn-toolbar {
     padding: 20px 32px 0;
     display: flex;
     justify-content: flex-end;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .bn-btn {
     display: inline-flex;
     align-items: center;
@@ -8372,12 +8372,12 @@ select.bn-input {
         background: var(--bn-danger-soft);
     }
 
-/* ── Content ── */
+/* â”€â”€ Content â”€â”€ */
 .bn-content {
     padding: 20px 32px 40px;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .bn-card {
     background: var(--bn-surface);
     border: 1px solid var(--bn-border);
@@ -8399,7 +8399,7 @@ select.bn-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .bn-table {
     width: 100%;
     border-collapse: collapse;
@@ -8441,7 +8441,7 @@ select.bn-input {
             background: var(--bn-surface-2);
         }
 
-/* ── Banner info ── */
+/* â”€â”€ Banner info â”€â”€ */
 .bn-title {
     font-weight: 600;
     color: var(--bn-text);
@@ -8465,7 +8465,7 @@ select.bn-input {
     color: var(--bn-text-2);
 }
 
-/* ── Badge ── */
+/* â”€â”€ Badge â”€â”€ */
 .bn-badge {
     display: inline-flex;
     align-items: center;
@@ -8501,7 +8501,7 @@ select.bn-input {
         background: #94a3b8;
     }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 .bn-actions {
     display: flex;
     align-items: center;
@@ -8509,7 +8509,7 @@ select.bn-input {
     flex-wrap: wrap;
 }
 
-/* ── Empty / Loading ── */
+/* â”€â”€ Empty / Loading â”€â”€ */
 .bn-loading,
 .bn-empty {
     padding: 60px 24px;
@@ -8524,7 +8524,7 @@ select.bn-input {
         margin-bottom: 6px;
     }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 768px) {
     .bn-topbar,
     .bn-hero,
@@ -8574,7 +8574,7 @@ select.bn-input {
     }
 
 .me-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--me-bg);
     min-height: 100vh;
     color: var(--me-text);
@@ -8622,7 +8622,7 @@ select.bn-input {
 }
 
     .me-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -8874,11 +8874,11 @@ select.me-input {
 .mn-root {
     min-height: 100vh;
     background: var(--mn-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--mn-text);
 }
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .mn-topbar {
     padding: 20px 32px 0;
 }
@@ -8910,7 +8910,7 @@ select.me-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .mn-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -8921,7 +8921,7 @@ select.me-input {
 }
 
 .mn-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1.2;
@@ -8934,14 +8934,14 @@ select.me-input {
     color: var(--mn-text-2);
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 .mn-toolbar {
     padding: 20px 32px 0;
     display: flex;
     justify-content: flex-end;
 }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .mn-btn {
     display: inline-flex;
     align-items: center;
@@ -9001,12 +9001,12 @@ select.me-input {
         background: var(--mn-danger-soft);
     }
 
-/* ── Content ── */
+/* â”€â”€ Content â”€â”€ */
 .mn-content {
     padding: 20px 32px 40px;
 }
 
-/* ── Card ── */
+/* â”€â”€ Card â”€â”€ */
 .mn-card {
     background: var(--mn-surface);
     border: 1px solid var(--mn-border);
@@ -9028,7 +9028,7 @@ select.me-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .mn-table {
     width: 100%;
     border-collapse: collapse;
@@ -9070,7 +9070,7 @@ select.me-input {
             background: var(--mn-surface-2);
         }
 
-/* ── Menu info ── */
+/* â”€â”€ Menu info â”€â”€ */
 .mn-name {
     font-weight: 600;
     color: var(--mn-text);
@@ -9097,7 +9097,7 @@ select.me-input {
     color: var(--mn-text-2);
 }
 
-/* ── Badge ── */
+/* â”€â”€ Badge â”€â”€ */
 .mn-badge {
     display: inline-flex;
     align-items: center;
@@ -9133,7 +9133,7 @@ select.me-input {
         background: #94a3b8;
     }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 .mn-actions {
     display: flex;
     align-items: center;
@@ -9141,7 +9141,7 @@ select.me-input {
     flex-wrap: wrap;
 }
 
-/* ── Loading / Empty ── */
+/* â”€â”€ Loading / Empty â”€â”€ */
 .mn-loading,
 .mn-empty {
     padding: 60px 24px;
@@ -9156,7 +9156,7 @@ select.me-input {
         margin-bottom: 6px;
     }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 768px) {
     .mn-topbar,
     .mn-hero,
@@ -9207,7 +9207,7 @@ select.me-input {
     }
 
 .pe-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--pe-bg);
     min-height: 100vh;
     color: var(--pe-text);
@@ -9255,7 +9255,7 @@ select.me-input {
 }
 
     .pe-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -9555,7 +9555,7 @@ select.pe-input {
     }
 
 .ps-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--ps-bg);
     min-height: 100vh;
     color: var(--ps-text);
@@ -9608,7 +9608,7 @@ select.pe-input {
 }
 
 .ps-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 28px;
     font-weight: 400;
     letter-spacing: -0.3px;
@@ -9932,7 +9932,7 @@ select.pe-input {
     }
 
 .ss-root {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     background: var(--ss-bg);
     min-height: 100vh;
     color: var(--ss-text);
@@ -9980,7 +9980,7 @@ select.pe-input {
 }
 
     .ss-hero h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 28px;
         font-weight: 400;
         letter-spacing: -0.3px;
@@ -10291,11 +10291,11 @@ select.ss-input {
 .st-root {
     min-height: 100vh;
     background: var(--st-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--st-text);
 }
 
-/* ── Topbar ── */
+/* â”€â”€ Topbar â”€â”€ */
 .st-topbar {
     padding: 20px 32px 0;
 }
@@ -10327,7 +10327,7 @@ select.ss-input {
     font-weight: 600;
 }
 
-/* ── Hero ── */
+/* â”€â”€ Hero â”€â”€ */
 .st-hero {
     padding: 20px 32px 0;
     display: flex;
@@ -10338,7 +10338,7 @@ select.ss-input {
 }
 
 .st-hero-text h1 {
-    font-family: "Instrument Serif", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: 30px;
     font-weight: 400;
     line-height: 1.2;
@@ -10351,7 +10351,7 @@ select.ss-input {
     color: var(--st-text-2);
 }
 
-/* ── Toolbar ── */
+/* â”€â”€ Toolbar â”€â”€ */
 .st-toolbar {
     padding: 20px 32px 0;
     display: flex;
@@ -10393,7 +10393,7 @@ select.ss-input {
         box-shadow: 0 0 0 3px rgba(59, 110, 246, 0.12);
     }
 
-/* ── Buttons ── */
+/* â”€â”€ Buttons â”€â”€ */
 .st-btn {
     display: inline-flex;
     align-items: center;
@@ -10451,7 +10451,7 @@ select.ss-input {
         background: var(--st-danger-soft);
     }
 
-/* ── Content ── */
+/* â”€â”€ Content â”€â”€ */
 .st-content {
     padding: 20px 32px 40px;
 }
@@ -10477,7 +10477,7 @@ select.ss-input {
     }
 }
 
-/* ── Table ── */
+/* â”€â”€ Table â”€â”€ */
 .st-table {
     width: 100%;
     border-collapse: collapse;
@@ -10542,7 +10542,7 @@ select.ss-input {
     font-weight: 700;
 }
 
-/* ── Badge ── */
+/* â”€â”€ Badge â”€â”€ */
 .st-badge {
     display: inline-flex;
     align-items: center;
@@ -10578,7 +10578,7 @@ select.ss-input {
         background: #94a3b8;
     }
 
-/* ── Actions ── */
+/* â”€â”€ Actions â”€â”€ */
 .st-actions {
     display: flex;
     align-items: center;
@@ -10586,7 +10586,7 @@ select.ss-input {
     flex-wrap: wrap;
 }
 
-/* ── Pagination ── */
+/* â”€â”€ Pagination â”€â”€ */
 .st-pagination {
     display: flex;
     align-items: center;
@@ -10654,7 +10654,7 @@ select.ss-input {
     color: var(--st-text-3);
 }
 
-/* ── Empty / Loading ── */
+/* â”€â”€ Empty / Loading â”€â”€ */
 .st-loading,
 .st-empty {
     padding: 60px 24px;
@@ -10669,7 +10669,7 @@ select.ss-input {
         color: var(--st-text-2);
     }
 
-/* ── Responsive ── */
+/* â”€â”€ Responsive â”€â”€ */
 @media (max-width: 768px) {
     .st-topbar,
     .st-hero,
@@ -10723,7 +10723,7 @@ select.ss-input {
     justify-content: center;
     min-height: 100vh;
     background: var(--lg-bg);
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--lg-text);
     padding: 20px;
     box-sizing: border-box;
@@ -10740,7 +10740,7 @@ select.ss-input {
 }
 
     .lg-card h1 {
-        font-family: "Instrument Serif", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 26px;
         font-weight: 400;
         text-align: center;
@@ -10897,7 +10897,7 @@ select.ss-input {
 }
 
 .doc-wrap {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--doc-text);
     background: var(--doc-bg);
     max-width: 980px;
@@ -10974,7 +10974,7 @@ select.ss-input {
 }
 
 .doc-title {
-    font-family: "Playfair Display", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: clamp(22px, 3.5vw, 38px);
     font-weight: 800;
     line-height: 1.25;
@@ -11019,7 +11019,7 @@ select.ss-input {
     .doc-content h2,
     .doc-content h3,
     .doc-content h4 {
-        font-family: "Playfair Display", serif;
+        font-family: 'Roboto', sans-serif;
         color: var(--doc-text);
         margin: 1.5em 0 0.6em;
         line-height: 1.3;
@@ -11213,7 +11213,7 @@ select.ss-input {
 
     .doc-related h2 {
         margin: 0 0 18px;
-        font-family: "Playfair Display", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 24px;
     }
 
@@ -11317,9 +11317,9 @@ select.ss-input {
     padding-bottom: 28px;
 }
 
-/* ═══════════════════════════════
-       FEATURED SLIDER — full width top
-    ═══════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       FEATURED SLIDER â€” full width top
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-featured {
     position: relative;
     border-radius: var(--hp-radius);
@@ -11407,7 +11407,7 @@ select.ss-input {
 }
 
 .hp-slide-title {
-    font-family: "Playfair Display", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: clamp(20px, 2.8vw, 34px);
     font-weight: 700;
     color: var(--hp-text);
@@ -11531,9 +11531,9 @@ select.ss-input {
     }
 }
 
-/* ═══════════════════════════════
-       SPOTLIGHT SCROLL CARDS (Nổi bật)
-    ═══════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       SPOTLIGHT SCROLL CARDS (Ná»•i báº­t)
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-spotlight-section {
     background: var(--hp-surface);
     border: 1px solid var(--hp-border);
@@ -11736,9 +11736,9 @@ select.ss-input {
     background: linear-gradient(270deg, white, transparent);
 }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        SHARED CARD
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-card {
     background: var(--hp-surface);
     border: 1px solid var(--hp-border);
@@ -11770,9 +11770,9 @@ select.ss-input {
     padding: 12px 16px;
 }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        FEATURED DOCUMENTS
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-doc-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -11853,9 +11853,9 @@ select.ss-input {
     color: var(--hp-muted);
 }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        MAIN 3-COL GRID
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-grid {
     display: grid;
     grid-template-columns: 1fr 1fr 280px;
@@ -11908,9 +11908,9 @@ select.ss-input {
             background: #94a3b8;
         }
 
-/* ═══════════════════════════════
-       NEWS LIST (Tin nổi bật)
-    ═══════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       NEWS LIST (Tin ná»•i báº­t)
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-news-list {
     display: grid;
     gap: 0;
@@ -11986,9 +11986,9 @@ select.ss-input {
     gap: 5px;
 }
 
-/* ═══════════════════════════════
-       BULLET LIST (Tin mới nhất)
-    ═══════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+       BULLET LIST (Tin má»›i nháº¥t)
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-bullet-list {
     display: grid;
     gap: 0;
@@ -12052,9 +12052,9 @@ select.ss-input {
     align-self: stretch;
 }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        SIDEBAR
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-quick-links {
     display: grid;
     gap: 6px;
@@ -12126,9 +12126,9 @@ select.ss-input {
         text-decoration: none;
     }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        BOTTOM GRID
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-bottom {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -12204,9 +12204,9 @@ select.ss-input {
     flex-direction: column;
 }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        LOADING
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 .hp-loading {
     display: flex;
     align-items: center;
@@ -12232,9 +12232,9 @@ select.ss-input {
     }
 }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        AUTO-SCROLL animation
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @keyframes hp-scroll-x {
     0% {
         transform: translateX(0);
@@ -12262,9 +12262,9 @@ select.ss-input {
         animation-play-state: paused;
     }
 
-/* ═══════════════════════════════
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
        RESPONSIVE
-    ═══════════════════════════════ */
+    â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 @media (max-width: 1100px) {
     .hp-grid {
         grid-template-columns: 1fr;
@@ -12337,9 +12337,9 @@ select.ss-input {
     --pd-tr: 0.22s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ════════ WRAPPER ════════ */
+/* â•â•â•â•â•â•â•â• WRAPPER â•â•â•â•â•â•â•â• */
 .pd-wrap {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--pd-text);
     background: var(--pd-bg);
     max-width: 900px;
@@ -12350,7 +12350,7 @@ select.ss-input {
     gap: 28px;
 }
 
-/* ════════ BREADCRUMB ════════ */
+/* â•â•â•â•â•â•â•â• BREADCRUMB â•â•â•â•â•â•â•â• */
 .pd-breadcrumb {
     display: flex;
     align-items: center;
@@ -12383,7 +12383,7 @@ select.ss-input {
     font-weight: 500;
 }
 
-/* ════════ ARTICLE CARD ════════ */
+/* â•â•â•â•â•â•â•â• ARTICLE CARD â•â•â•â•â•â•â•â• */
 .pd-article {
     background: var(--pd-surface);
     border-radius: var(--pd-radius);
@@ -12392,7 +12392,7 @@ select.ss-input {
     overflow: hidden;
 }
 
-/* ── Cover Image ── */
+/* â”€â”€ Cover Image â”€â”€ */
 .pd-cover {
     width: 100%;
     max-height: 420px;
@@ -12400,7 +12400,7 @@ select.ss-input {
     display: block;
 }
 
-/* ── Article Head ── */
+/* â”€â”€ Article Head â”€â”€ */
 .pd-head {
     padding: 32px 40px 24px;
     border-bottom: 1px solid var(--pd-border);
@@ -12430,7 +12430,7 @@ select.ss-input {
     }
 
 .pd-title {
-    font-family: "Playfair Display", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: clamp(22px, 3.5vw, 38px);
     font-weight: 800;
     line-height: 1.25;
@@ -12469,7 +12469,7 @@ select.ss-input {
         flex-shrink: 0;
     }
 
-/* ── Tags ── */
+/* â”€â”€ Tags â”€â”€ */
 .pd-tags {
     display: flex;
     flex-wrap: wrap;
@@ -12506,19 +12506,19 @@ select.ss-input {
         text-decoration: none;
     }
 
-/* ── Article Body ── */
+/* â”€â”€ Article Body â”€â”€ */
 .pd-body {
     padding: 32px 40px 36px;
     font-size: 15.5px;
     line-height: 1.85;
     color: #1e293b;
 }
-    /* Nội dung HTML từ editor */
+    /* Ná»™i dung HTML tá»« editor */
     .pd-body h1,
     .pd-body h2,
     .pd-body h3,
     .pd-body h4 {
-        font-family: "Playfair Display", serif;
+        font-family: 'Roboto', sans-serif;
         color: var(--pd-text);
         margin: 1.6em 0 0.6em;
         line-height: 1.3;
@@ -12620,7 +12620,7 @@ select.ss-input {
             padding: 0;
         }
 
-/* ════════ MEDIA SECTION ════════ */
+/* â•â•â•â•â•â•â•â• MEDIA SECTION â•â•â•â•â•â•â•â• */
 .pd-media-section {
     background: var(--pd-surface);
     border-radius: var(--pd-radius);
@@ -12682,7 +12682,7 @@ select.ss-input {
         border-bottom: none;
     }
 
-/* ── File row (header của mỗi media) ── */
+/* â”€â”€ File row (header cá»§a má»—i media) â”€â”€ */
 .pd-media-row {
     display: flex;
     align-items: center;
@@ -12839,7 +12839,7 @@ select.ss-input {
         transform: rotate(180deg);
     }
 
-/* ── Viewer panel ── */
+/* â”€â”€ Viewer panel â”€â”€ */
 .pd-viewer {
     overflow: hidden;
     max-height: 0;
@@ -12901,7 +12901,7 @@ select.ss-input {
         flex: 1;
     }
 
-/* ── PDF nav bar ── */
+/* â”€â”€ PDF nav bar â”€â”€ */
 .pd-pdf-nav {
     display: flex;
     align-items: center;
@@ -12936,7 +12936,7 @@ select.ss-input {
         text-decoration: none;
     }
 
-/* ════════ RELATED POSTS ════════ */
+/* â•â•â•â•â•â•â•â• RELATED POSTS â•â•â•â•â•â•â•â• */
 .pd-related {
     background: var(--pd-surface);
     border-radius: var(--pd-radius);
@@ -13005,7 +13005,7 @@ select.ss-input {
     opacity: 1;
 }
 
-/* ════════ LOADING / NOT FOUND ════════ */
+/* â•â•â•â•â•â•â•â• LOADING / NOT FOUND â•â•â•â•â•â•â•â• */
 .pd-loading {
     display: flex;
     align-items: center;
@@ -13014,7 +13014,7 @@ select.ss-input {
     min-height: 40vh;
     color: var(--pd-muted);
     font-size: 14px;
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
 }
 
 .pd-spinner {
@@ -13032,7 +13032,7 @@ select.ss-input {
     }
 }
 
-/* ════════ RESPONSIVE ════════ */
+/* â•â•â•â•â•â•â•â• RESPONSIVE â•â•â•â•â•â•â•â• */
 @media (max-width: 720px) {
     .pd-head,
     .pd-body {
@@ -13094,7 +13094,7 @@ select.ss-input {
     }
 
 .pa {
-    font-family: "Be Vietnam Pro", sans-serif;
+    font-family: 'Roboto', sans-serif;
     color: var(--p-text);
     background: var(--p-bg);
     display: flex;
@@ -13103,7 +13103,7 @@ select.ss-input {
     padding-bottom: 36px;
 }
 
-/* ── BREADCRUMB ── */
+/* â”€â”€ BREADCRUMB â”€â”€ */
 .pa-breadcrumb {
     display: flex;
     align-items: center;
@@ -13129,7 +13129,7 @@ select.ss-input {
     font-size: 14px;
 }
 
-/* ── PAGE HEADER BANNER ── */
+/* â”€â”€ PAGE HEADER BANNER â”€â”€ */
 .pa-header {
     background: linear-gradient(130deg, #0f172a 0%, #1d4ed8 60%, #3b82f6 100%);
     border-radius: var(--p-radius);
@@ -13188,7 +13188,7 @@ select.ss-input {
 }
 
 .pa-header-title {
-    font-family: "Playfair Display", serif;
+    font-family: 'Roboto', sans-serif;
     font-size: clamp(20px, 2.4vw, 28px);
     font-weight: 700;
     color: white;
@@ -13247,7 +13247,7 @@ select.ss-input {
         transform: translateY(-1px);
     }
 
-/* ── FILTER PANEL ── */
+/* â”€â”€ FILTER PANEL â”€â”€ */
 .pa-filter-card {
     background: var(--p-surface);
     border: 1px solid var(--p-border);
@@ -13424,7 +13424,7 @@ select.ss-input {
             border-color: var(--p-primary-dark);
         }
 
-/* ── RESULTS META BAR ── */
+/* â”€â”€ RESULTS META BAR â”€â”€ */
 .pa-results-bar {
     display: flex;
     align-items: center;
@@ -13457,14 +13457,14 @@ select.ss-input {
     gap: 6px;
 }
 
-/* ── POST GRID ── */
+/* â”€â”€ POST GRID â”€â”€ */
 .pa-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 16px;
 }
 
-/* ── POST CARD ── */
+/* â”€â”€ POST CARD â”€â”€ */
 .pa-post-card {
     background: var(--p-surface);
     border: 1px solid var(--p-border);
@@ -13648,7 +13648,7 @@ select.ss-input {
         text-decoration: none;
     }
 
-/* ── EMPTY STATE ── */
+/* â”€â”€ EMPTY STATE â”€â”€ */
 .pa-empty {
     display: flex;
     flex-direction: column;
@@ -13687,7 +13687,7 @@ select.ss-input {
     margin: 0;
 }
 
-/* ── LOADING ── */
+/* â”€â”€ LOADING â”€â”€ */
 .pa-loading {
     display: flex;
     align-items: center;
@@ -13717,7 +13717,7 @@ select.ss-input {
     }
 }
 
-/* ── PAGINATION ── */
+/* â”€â”€ PAGINATION â”€â”€ */
 .pa-pager {
     display: flex;
     align-items: center;
@@ -13768,7 +13768,7 @@ select.ss-input {
     white-space: nowrap;
 }
 
-/* ── RESPONSIVE ── */
+/* â”€â”€ RESPONSIVE â”€â”€ */
 @media (max-width: 900px) {
     .pa-header {
         flex-direction: column;
@@ -14166,6 +14166,7 @@ select.ss-input {
     display: flex;
     flex-direction: column;
     gap: 22px;
+    background: #f0f4f9;
 }
 
 .public-breadcrumb {
@@ -14964,7 +14965,6 @@ select.ss-input {
     position: relative;
     min-height: 100vh;
     color: var(--color-text);
-    overflow: hidden;
     isolation: isolate;
 }
 
@@ -15564,6 +15564,8 @@ select.ss-input {
 
 /* Public footer polish and share feedback */
 .public-footer {
+    position: relative;
+    z-index: 10;
     margin-top: 48px;
     padding: 0;
     background: var(--color-primary);
@@ -15890,7 +15892,7 @@ select.ss-input {
     .hp-school-top h2 {
         margin: 0;
         color: var(--hp-text, #0f172a);
-        font-family: "Playfair Display", serif;
+        font-family: 'Roboto', sans-serif;
         font-size: 21px;
         line-height: 1.2;
     }
@@ -16220,8 +16222,8 @@ select.ss-input {
     --admin-muted: #64748b;
     --admin-page-max: 1280px;
     --admin-card-radius: 12px;
-    --admin-font-body: "Work Sans", Roboto, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    --admin-font-heading: "Newsreader", Georgia, "Times New Roman", serif;
+    --admin-font-body: 'Roboto', sans-serif;
+    --admin-font-heading: 'Roboto', sans-serif;
 }
 
 .admin-shell {
@@ -16568,11 +16570,11 @@ tr:hover {
     }
 }
 
-/* ═══════════════════════════════════════════════
-   POST DETAIL PAGE  —  VnExpress-style reader
-   ═══════════════════════════════════════════════ */
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+   POST DETAIL PAGE  â€”  VnExpress-style reader
+   â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
 
-/* Outer wrapper — uses the public-main's gray bg */
+/* Outer wrapper â€” uses the public-main's gray bg */
 .post-page {
     width: min(100% - 40px, 1100px);
     margin-inline: auto;
@@ -16595,7 +16597,7 @@ tr:hover {
     align-items: start;
 }
 
-/* ── Main column ─────────────────────────────── */
+/* â”€â”€ Main column â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .post-main {
     min-width: 0;
     background: var(--color-surface);
@@ -16796,7 +16798,7 @@ tr:hover {
         line-height: 1.5;
     }
 
-/* Article body — reuse .article-content typography */
+/* Article body â€” reuse .article-content typography */
 .post-body {
     padding: 20px 28px 28px;
 }
@@ -17028,7 +17030,7 @@ tr:hover {
     overflow: hidden;
 }
 
-/* ── Sidebar ─────────────────────────────────── */
+/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .post-sidebar {
     position: sticky;
     top: 78px;
@@ -17108,7 +17110,7 @@ tr:hover {
         color: var(--color-primary);
     }
 
-/* ── Responsive ──────────────────────────────── */
+/* â”€â”€ Responsive â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media (max-width: 960px) {
     .post-page-inner {
         grid-template-columns: 1fr;
@@ -17157,7 +17159,7 @@ tr:hover {
     }
 }
 
-/* ── Print ───────────────────────────────────── */
+/* â”€â”€ Print â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @media print {
     .public-site-header,
     .public-footer,
@@ -17183,7 +17185,7 @@ tr:hover {
     }
 }
 
-/* ── Static page (Pages/Index.razor) ── */
+/* â”€â”€ Static page (Pages/Index.razor) â”€â”€ */
 :root {
     --color-heading: var(--color-text);
 }
@@ -17282,7 +17284,7 @@ tr:hover {
             flex: 0 0 auto;
         }
 
-/* ── Print styles (all article pages) ── */
+/* â”€â”€ Print styles (all article pages) â”€â”€ */
 @media print {
     .public-site-header,
     .public-footer,
@@ -17740,7 +17742,7 @@ tr:hover {
     }
 
 /* ============================================================
-       BADGES — level & root tag
+       BADGES â€” level & root tag
    ============================================================ */
 .apc-badge {
     display: inline-flex;
@@ -17754,14 +17756,14 @@ tr:hover {
     flex-shrink: 0;
 }
 
-/* Chuyên mục gốc (liên kết Menu) */
+/* ChuyÃªn má»¥c gá»‘c (liÃªn káº¿t Menu) */
 .apc-badge-root {
     background: #e6f1fb;
     color: #0c447c;
     border: 0.5px solid #b5d4f4;
 }
 
-/* Danh mục con cấp 2+ */
+/* Danh má»¥c con cáº¥p 2+ */
 .apc-badge-sub {
     background: var(--color-background-secondary);
     color: var(--color-text-tertiary);
@@ -17837,7 +17839,7 @@ tr:hover {
 }
 
 /* ============================================================
-       ACTION BUTTONS (trong bảng)
+       ACTION BUTTONS (trong báº£ng)
    ============================================================ */
 .apc-actions {
     display: flex;
@@ -17873,12 +17875,12 @@ tr:hover {
         font-size: 14px;
     }
 
-/* Nút sửa */
+/* NÃºt sá»­a */
 .apc-action-edit {
     color: var(--color-text-secondary);
 }
 
-/* Nút tắt (đang bật → tắt) */
+/* NÃºt táº¯t (Ä‘ang báº­t â†’ táº¯t) */
 .apc-action-deactivate {
     color: #0f6e56;
     border-color: #9fe1cb;
@@ -17891,7 +17893,7 @@ tr:hover {
         color: #085041;
     }
 
-/* Nút bật (đang tắt → bật) */
+/* NÃºt báº­t (Ä‘ang táº¯t â†’ báº­t) */
 .apc-action-activate {
     color: var(--color-text-tertiary);
     border-color: var(--color-border-tertiary);
@@ -17904,7 +17906,7 @@ tr:hover {
         color: var(--color-text-primary);
     }
 
-/* Nút liên kết Menu */
+/* NÃºt liÃªn káº¿t Menu */
 .apc-action-menu {
     color: #0c447c;
     border-color: #b5d4f4;
@@ -17916,7 +17918,7 @@ tr:hover {
         color: #042c53;
     }
 
-/* Nút xóa */
+/* NÃºt xÃ³a */
 .apc-action-delete {
     color: #a32d2d;
     border-color: #f7c1c1;
@@ -18043,3 +18045,4 @@ tr:hover {
         width: 180px;
     }
 }
+

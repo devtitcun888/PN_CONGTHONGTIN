@@ -537,12 +537,23 @@ button {
         color: var(--color-text-muted);
     }
 
-.public-main {
+/*.public-main {
     flex: 1;
     padding: 20px 0 40px;
     background: var(--color-background);
-}
+}*/
 
+
+.public-main {
+    flex: 1;
+   /* padding: 20px 0 40px;*/
+    min-height: 100vh;
+    background: linear-gradient( rgba(255, 255, 255, 0.35), rgba(255, 255, 255, 0.35) ), url('/image/Background_public.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: var(--color-text);
+}
 .public-container,
 .public-footer-grid,
 .public-home {
@@ -11302,7 +11313,7 @@ select.ss-input {
     background: var(--hp-bg);
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 5px;
     padding-bottom: 28px;
 }
 
@@ -11334,7 +11345,7 @@ select.ss-input {
 .hp-slide-img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
     display: block;
 }
 
@@ -13806,7 +13817,8 @@ select.ss-input {
 }
 
 .public-container {
-    width: min(100% - 40px, var(--container-max));
+   /* width: min(100% - 40px, var(--container-max));*/
+   width:1000px;
     margin-inline: auto;
 }
 
@@ -14147,13 +14159,14 @@ select.ss-input {
 }
 
 .public-main {
-    padding: 28px 0 56px;
+ /*   padding: 28px 0 56px;*/
 }
 
 .public-page {
     display: flex;
     flex-direction: column;
     gap: 22px;
+    background: #f0f4f9;
 }
 
 .public-breadcrumb {
@@ -14949,10 +14962,51 @@ select.ss-input {
     }
 
 .public-main {
-    padding: 28px 0 0;
-    background: var(--color-surface-low);
+    position: relative;
+    min-height: 100vh;
+    color: var(--color-text);
+    isolation: isolate;
 }
 
+    .public-main::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -2;
+        background-image: url("/image/Background_public2.png");
+        background-size: cover;
+        background-position: center center;
+        background-repeat: no-repeat;
+        filter: brightness(0.92) saturate(1.12) contrast(1.04);
+        transform: scale(1.03);
+        animation: publicBgFloat 18s ease-in-out infinite;
+    }
+
+    .public-main::after {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: radial-gradient(circle at top left, rgba(37, 99, 235, 0.20), transparent 32%), radial-gradient(circle at top right, rgba(236, 72, 153, 0.16), transparent 30%), linear-gradient( 180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.58) 45%, rgba(239, 246, 255, 0.78) 100% );
+        backdrop-filter: blur(1px);
+        -webkit-backdrop-filter: blur(1px);
+    }
+
+@keyframes publicBgFloat {
+    0% {
+        transform: scale(1.03) translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: scale(1.06) translate3d(-8px, -6px, 0);
+    }
+
+    100% {
+        transform: scale(1.03) translate3d(0, 0, 0);
+    }
+}
+    
 .article-detail-loading {
     min-height: 280px;
     display: grid;
@@ -15478,7 +15532,7 @@ select.ss-input {
     }
 
     .public-main {
-        padding-top: 20px;
+       /* padding-top: 20px;*/
     }
 
     .public-brand-text strong {
@@ -15510,6 +15564,8 @@ select.ss-input {
 
 /* Public footer polish and share feedback */
 .public-footer {
+    position: relative;
+    z-index: 10;
     margin-top: 48px;
     padding: 0;
     background: var(--color-primary);
@@ -17344,5 +17400,648 @@ tr:hover {
     .post-view-pill {
         min-height: 30px;
         font-size: 12px;
+    }
+}
+
+/* ============================================================
+       POST CATEGORIES INDEX PAGE (apc-root)
+   ============================================================ */
+.apc-root *,
+.apc-root *::before,
+.apc-root *::after {
+    box-sizing: border-box;
+}
+
+.apc-root {
+    --apc-primary: #1a6fd4;
+    --apc-primary-bg: #e6f1fb;
+    --apc-primary-bd: #b5d4f4;
+    --apc-radius-sm: 6px;
+    --apc-radius-md: 8px;
+    --apc-radius-lg: 12px;
+    --apc-radius-xl: 16px;
+    --apc-transition: all .14s ease;
+    font-family: inherit;
+}
+
+/* ============================================================
+       BREADCRUMB
+   ============================================================ */
+.apc-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin-bottom: 20px;
+}
+
+    .apc-breadcrumb a {
+        color: var(--color-text-tertiary);
+        text-decoration: none;
+        transition: color .14s;
+    }
+
+        .apc-breadcrumb a:hover {
+            color: var(--color-text-primary);
+        }
+
+.apc-breadcrumb-sep {
+    opacity: .4;
+    user-select: none;
+}
+
+/* ============================================================
+       PAGE HERO
+   ============================================================ */
+.apc-hero {
+    margin-bottom: 20px;
+}
+
+    .apc-hero h1 {
+        font-size: 22px;
+        font-weight: 500;
+        color: var(--color-text-primary);
+        margin: 0 0 4px 0;
+        line-height: 1.3;
+    }
+
+    .apc-hero p {
+        font-size: 13.5px;
+        color: var(--color-text-secondary);
+        margin: 0;
+    }
+
+/* ============================================================
+       STATS ROW
+   ============================================================ */
+.apc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.apc-stat {
+    background: var(--color-background-secondary);
+    border-radius: var(--apc-radius-md);
+    padding: 14px 16px;
+}
+
+.apc-stat-num {
+    font-size: 24px;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    line-height: 1.1;
+}
+
+.apc-stat-label {
+    font-size: 12px;
+    color: var(--color-text-tertiary);
+    margin-top: 3px;
+}
+
+/* ============================================================
+       TOOLBAR
+   ============================================================ */
+.apc-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.apc-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.apc-search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.apc-search-icon {
+    position: absolute;
+    left: 10px;
+    font-size: 15px;
+    color: var(--color-text-tertiary);
+    pointer-events: none;
+}
+
+.apc-search-input {
+    padding: 7px 10px 7px 32px;
+    border-radius: var(--apc-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    font-size: 13px;
+    color: var(--color-text-primary);
+    width: 220px;
+    outline: none;
+    transition: border-color .14s;
+}
+
+    .apc-search-input:focus {
+        border-color: var(--color-border-secondary);
+    }
+
+    .apc-search-input::placeholder {
+        color: var(--color-text-tertiary);
+    }
+
+.apc-filter-select {
+    padding: 7px 10px;
+    border-radius: var(--apc-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-primary);
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    outline: none;
+    cursor: pointer;
+    transition: border-color .14s;
+}
+
+    .apc-filter-select:focus {
+        border-color: var(--color-border-secondary);
+    }
+
+/* ============================================================
+       BUTTONS
+   ============================================================ */
+.apc-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 14px;
+    border-radius: var(--apc-radius-md);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid var(--color-border-secondary);
+    background: var(--color-background-primary);
+    color: var(--color-text-secondary);
+    transition: var(--apc-transition);
+    text-decoration: none;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+    .apc-btn:hover {
+        background: var(--color-background-secondary);
+        color: var(--color-text-primary);
+    }
+
+    .apc-btn svg,
+    .apc-btn .material-symbols-outlined {
+        width: 15px;
+        height: 15px;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+
+.apc-btn-primary {
+    background: var(--apc-primary);
+    color: #fff;
+    border-color: transparent;
+}
+
+    .apc-btn-primary:hover {
+        opacity: .9;
+        color: #fff;
+    }
+
+/* ============================================================
+       CARD WRAPPER
+   ============================================================ */
+.apc-card {
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--apc-radius-lg);
+    overflow: hidden;
+}
+
+/* ============================================================
+       TABLE
+   ============================================================ */
+.apc-table-wrap {
+    overflow-x: auto;
+}
+
+.apc-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 13px;
+}
+
+    .apc-table thead th {
+        padding: 10px 14px;
+        text-align: left;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--color-text-tertiary);
+        text-transform: uppercase;
+        letter-spacing: .06em;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        background: var(--color-background-secondary);
+        white-space: nowrap;
+    }
+
+    .apc-table tbody td {
+        padding: 12px 14px;
+        border-bottom: 0.5px solid var(--color-border-tertiary);
+        vertical-align: middle;
+        color: var(--color-text-primary);
+    }
+
+    .apc-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .apc-table tbody tr:hover td {
+        background: var(--color-background-secondary);
+    }
+
+/* Column widths */
+.apc-col-name {
+    width: 34%;
+}
+
+.apc-col-slug {
+    width: 21%;
+}
+
+.apc-col-order {
+    width: 9%;
+}
+
+.apc-col-status {
+    width: 13%;
+}
+
+.apc-col-action {
+    width: 23%;
+}
+
+/* ============================================================
+       CATEGORY NAME CELL
+   ============================================================ */
+.apc-name-cell {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 0;
+}
+
+/* Indent indicator for child categories */
+.apc-indent {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.apc-indent-line {
+    width: 18px;
+    height: 1px;
+    background: var(--color-border-tertiary);
+    margin-left: 6px;
+}
+
+.apc-indent-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--color-border-secondary);
+    flex-shrink: 0;
+}
+
+.apc-cat-icon {
+    font-size: 15px;
+    color: var(--color-text-tertiary);
+    flex-shrink: 0;
+}
+
+.apc-cat-name {
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+}
+
+    .apc-cat-name.child {
+        font-weight: 400;
+        font-size: 13px;
+    }
+
+/* ============================================================
+       BADGES — level & root tag
+   ============================================================ */
+.apc-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+/* Chuyên mục gốc (liên kết Menu) */
+.apc-badge-root {
+    background: #e6f1fb;
+    color: #0c447c;
+    border: 0.5px solid #b5d4f4;
+}
+
+/* Danh mục con cấp 2+ */
+.apc-badge-sub {
+    background: var(--color-background-secondary);
+    color: var(--color-text-tertiary);
+    border: 0.5px solid var(--color-border-tertiary);
+}
+
+/* ============================================================
+       SLUG PILL
+   ============================================================ */
+.apc-slug {
+    display: inline-block;
+    font-size: 12px;
+    font-family: var(--font-mono, monospace);
+    color: var(--color-text-secondary);
+    background: var(--color-background-secondary);
+    padding: 3px 8px;
+    border-radius: var(--apc-radius-md);
+    border: 0.5px solid var(--color-border-tertiary);
+    white-space: nowrap;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ============================================================
+       SORT ORDER CHIP
+   ============================================================ */
+.apc-order {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 28px;
+    height: 28px;
+    border-radius: var(--apc-radius-md);
+    background: var(--color-background-secondary);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+/* ============================================================
+       STATUS BADGES
+   ============================================================ */
+.apc-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+}
+
+    .apc-status .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+    }
+
+.apc-status-active {
+    color: #27500a;
+    background: #eaf3de;
+    border: 0.5px solid #c0dd97;
+}
+
+.apc-status-inactive {
+    color: var(--color-text-tertiary);
+    background: var(--color-background-secondary);
+    border: 0.5px solid var(--color-border-tertiary);
+}
+
+/* ============================================================
+       ACTION BUTTONS (trong bảng)
+   ============================================================ */
+.apc-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: nowrap;
+}
+
+.apc-action-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 5px 10px;
+    border-radius: var(--apc-radius-md);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 0.5px solid var(--color-border-tertiary);
+    background: transparent;
+    color: var(--color-text-secondary);
+    transition: var(--apc-transition);
+    white-space: nowrap;
+    line-height: 1;
+}
+
+    .apc-action-btn:hover {
+        background: var(--color-background-secondary);
+        color: var(--color-text-primary);
+        border-color: var(--color-border-secondary);
+    }
+
+    .apc-action-btn .material-symbols-outlined {
+        font-size: 14px;
+    }
+
+/* Nút sửa */
+.apc-action-edit {
+    color: var(--color-text-secondary);
+}
+
+/* Nút tắt (đang bật → tắt) */
+.apc-action-deactivate {
+    color: #0f6e56;
+    border-color: #9fe1cb;
+    background: #e1f5ee;
+}
+
+    .apc-action-deactivate:hover {
+        background: #9fe1cb;
+        border-color: #5dcaa5;
+        color: #085041;
+    }
+
+/* Nút bật (đang tắt → bật) */
+.apc-action-activate {
+    color: var(--color-text-tertiary);
+    border-color: var(--color-border-tertiary);
+    background: var(--color-background-secondary);
+}
+
+    .apc-action-activate:hover {
+        background: var(--color-background-primary);
+        border-color: var(--color-border-secondary);
+        color: var(--color-text-primary);
+    }
+
+/* Nút liên kết Menu */
+.apc-action-menu {
+    color: #0c447c;
+    border-color: #b5d4f4;
+    background: #e6f1fb;
+}
+
+    .apc-action-menu:hover {
+        background: #b5d4f4;
+        color: #042c53;
+    }
+
+/* Nút xóa */
+.apc-action-delete {
+    color: #a32d2d;
+    border-color: #f7c1c1;
+    background: #fcebeb;
+}
+
+    .apc-action-delete:hover {
+        background: #f7c1c1;
+        color: #791f1f;
+        border-color: #f09595;
+    }
+
+/* ============================================================
+       TABLE FOOTER
+   ============================================================ */
+.apc-table-footer {
+    padding: 11px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 0.5px solid var(--color-border-tertiary);
+    background: var(--color-background-secondary);
+}
+
+.apc-table-footer-count {
+    font-size: 12.5px;
+    color: var(--color-text-tertiary);
+}
+
+/* ============================================================
+       LOADING STATE
+   ============================================================ */
+.apc-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    padding: 64px 20px;
+    color: var(--color-text-secondary);
+    background: var(--color-background-primary);
+    border: 0.5px solid var(--color-border-tertiary);
+    border-radius: var(--apc-radius-lg);
+}
+
+    .apc-loading p {
+        font-size: 13.5px;
+        margin: 0;
+    }
+
+/* ============================================================
+       EMPTY STATE
+   ============================================================ */
+.apc-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    text-align: center;
+    padding: 64px 24px;
+    background: var(--color-background-primary);
+    border: 0.5px dashed var(--color-border-secondary);
+    border-radius: var(--apc-radius-lg);
+    color: var(--color-text-tertiary);
+}
+
+    .apc-empty .material-symbols-outlined {
+        font-size: 40px;
+        opacity: .35;
+    }
+
+    .apc-empty h3 {
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+        margin: 0;
+    }
+
+    .apc-empty p {
+        font-size: 13px;
+        margin: 0;
+    }
+
+/* ============================================================
+       RESPONSIVE
+   ============================================================ */
+@media (max-width: 860px) {
+    .apc-stats {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .apc-col-name {
+        width: 40%;
+    }
+
+    .apc-col-slug {
+        display: none;
+    }
+
+    .apc-col-order {
+        width: 10%;
+    }
+
+    .apc-col-status {
+        width: 16%;
+    }
+
+    .apc-col-action {
+        width: 34%;
+    }
+}
+
+@media (max-width: 600px) {
+    .apc-stats {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .apc-toolbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .apc-search-input {
+        width: 180px;
     }
 }

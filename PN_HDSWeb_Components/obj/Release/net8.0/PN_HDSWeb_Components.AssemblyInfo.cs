@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PN_HDSWeb_Components")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+5601b6ba69f862414a9ce627035b1c6a3a5f52e4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+67279cf57c8db27f6064e588abdc9f06010c889e")]
 [assembly: System.Reflection.AssemblyProductAttribute("PN_HDSWeb_Components")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PN_HDSWeb_Components")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
