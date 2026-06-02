@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -15,14 +16,22 @@ public class PublicDocumentTypeService : IPublicDocumentTypeService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicDocumentTypeService> _logger;
+    private readonly IMemoryCache _cache;
 
-    public PublicDocumentTypeService(ILogger<PublicDocumentTypeService> logger)
+    public PublicDocumentTypeService(ILogger<PublicDocumentTypeService> logger, IMemoryCache cache)
     {
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<List<PublicDocumentTypeItem>> GetDocumentTypesAsync(string maTruongBo)
     {
+        string cacheKey = $"DocumentTypes_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out List<PublicDocumentTypeItem>? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var result = new List<PublicDocumentTypeItem>();
         var sql = $@"
             SELECT id, type_name, slug, description, sort_order
@@ -44,6 +53,8 @@ public class PublicDocumentTypeService : IPublicDocumentTypeService
                 SortOrder = row["sort_order"] == DBNull.Value ? 0 : Convert.ToInt32(row["sort_order"])
             });
         }
+
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(2));
         return result;
     }
 

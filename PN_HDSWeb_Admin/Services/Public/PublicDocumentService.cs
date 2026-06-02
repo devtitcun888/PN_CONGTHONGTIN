@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -17,14 +18,22 @@ public class PublicDocumentService : IPublicDocumentService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicDocumentService> _logger;
+    private readonly IMemoryCache _cache;
 
-    public PublicDocumentService(ILogger<PublicDocumentService> logger)
+    public PublicDocumentService(ILogger<PublicDocumentService> logger, IMemoryCache cache)
     {
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<List<PublicDocumentListItem>> GetDocumentsAsync(string maTruongBo, string? keyword = null, string? documentTypeId = null, int page = 1, int pageSize = 10)
     {
+        string cacheKey = $"DocumentsList_{maTruongBo}_{keyword ?? string.Empty}_{documentTypeId ?? string.Empty}_{page}_{pageSize}";
+        if (_cache.TryGetValue(cacheKey, out List<PublicDocumentListItem>? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var result = new List<PublicDocumentListItem>();
         var offset = Math.Max(page - 1, 0) * pageSize;
         var where = BuildWhere(maTruongBo, keyword, documentTypeId);
@@ -53,6 +62,7 @@ public class PublicDocumentService : IPublicDocumentService
                 TypeSlug = row["type_slug"]?.ToString()
             });
         }
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(2));
         return result;
     }
 

@@ -8,6 +8,7 @@ namespace PN_HDSWeb_Admin.Services.Public;
 public interface IPublicPostTagService
 {
     Task<List<PublicPostTagItem>> GetTagsByPostIdAsync(string postId);
+    Task<Dictionary<string, List<PublicPostTagItem>>> GetTagsByPostIdsAsync(IEnumerable<string> postIds);
     Task<PublicPostTagItem?> GetTagBySlugAsync(string maTruongBo, string slug);
 }
 
@@ -19,6 +20,45 @@ public class PublicPostTagService : IPublicPostTagService
     public PublicPostTagService(ILogger<PublicPostTagService> logger)
     {
         _logger = logger;
+    }
+
+    public async Task<Dictionary<string, List<PublicPostTagItem>>> GetTagsByPostIdsAsync(IEnumerable<string> postIds)
+    {
+        var result = new Dictionary<string, List<PublicPostTagItem>>();
+        var idsList = postIds.Where(id => !string.IsNullOrWhiteSpace(id)).Select(id => $"'{Escape(id)}'").ToList();
+        if (idsList.Count == 0) return result;
+
+        var sql = $@"
+            SELECT m.post_id, t.id, t.tag_name, t.slug
+            FROM post_tag_map m
+            INNER JOIN post_tags t ON t.id = m.tag_id AND t.is_deleted = FALSE AND t.is_active = TRUE
+            WHERE m.post_id IN ({string.Join(",", idsList)})
+            ORDER BY t.tag_name ASC";
+
+        try
+        {
+            var dt = await hdataLib.hgetDataTableAsync(LoginID_Index, sql);
+            foreach (DataRow row in dt.Rows)
+            {
+                var postId = row["post_id"]?.ToString() ?? string.Empty;
+                if (string.IsNullOrWhiteSpace(postId)) continue;
+
+                if (!result.ContainsKey(postId))
+                    result[postId] = new List<PublicPostTagItem>();
+
+                result[postId].Add(new PublicPostTagItem
+                {
+                    Id = row["id"]?.ToString(),
+                    TagName = row["tag_name"]?.ToString(),
+                    Slug = row["slug"]?.ToString()
+                });
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "GetTagsByPostIdsAsync failed");
+        }
+        return result;
     }
 
     public async Task<List<PublicPostTagItem>> GetTagsByPostIdAsync(string postId)

@@ -528,8 +528,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        model = await HomepageService.GetHomepageAsync(PN_PublicVariables.MaTruong);
-        categories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        var modelTask = HomepageService.GetHomepageAsync(PN_PublicVariables.MaTruong);
+        var categoriesTask = PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+
+        await Task.WhenAll(modelTask, categoriesTask);
+
+        model = await modelTask;
+        categories = await categoriesTask;
+
         featuredDocuments = model.FeatureDocumentsEnabled
             ? await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, pageSize: Math.Clamp(model.HomepageDocumentsLimit, 1, 24))
             : [];

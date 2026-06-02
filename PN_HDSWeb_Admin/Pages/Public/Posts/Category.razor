@@ -1174,8 +1174,13 @@
         childCategories = [];
         childCategoryGroups = [];
 
-        allCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
-        category = await PublicPostCategoryService.GetCategoryBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+        var allCategoriesTask = PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        var categoryTask = PublicPostCategoryService.GetCategoryBySlugAsync(PN_PublicVariables.MaTruong, Slug ?? string.Empty);
+
+        await Task.WhenAll(allCategoriesTask, categoryTask);
+
+        allCategories = await allCategoriesTask;
+        category = await categoryTask;
 
         if (category != null && allCategories != null)
         {
@@ -1184,11 +1189,16 @@
 
             if (childCategories.Any())
             {
-                // Show child category groups — load 6 posts each, no pagination here
-                foreach (var child in childCategories)
-                {
+                // Show child category groups — load 6 posts each, concurrently
+                var tasks = childCategories.Select(async child => {
                     var childPosts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, child.Id, 1, 6);
-                    childCategoryGroups.Add((child, childPosts));
+                    return (child, childPosts);
+                }).ToList();
+
+                var results = await Task.WhenAll(tasks);
+                foreach (var res in results)
+                {
+                    childCategoryGroups.Add(res);
                 }
                 // Count total for hero stat
                 totalPostCount = childCategoryGroups.Sum(g => g.Posts.Count);
@@ -1196,7 +1206,6 @@
             else
             {
                 // Leaf category — paginated
-                // NOTE: Adjust GetPostsAsync signature if your service supports total count return
                 posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, null, category.Id, currentPage, pageSize);
 
                 // To get total count, fetch once with large page or a dedicated count method

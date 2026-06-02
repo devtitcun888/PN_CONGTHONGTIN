@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -15,14 +16,22 @@ public class PublicPostCategoryService : IPublicPostCategoryService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicPostCategoryService> _logger;
+    private readonly IMemoryCache _cache;
 
-    public PublicPostCategoryService(ILogger<PublicPostCategoryService> logger)
+    public PublicPostCategoryService(ILogger<PublicPostCategoryService> logger, IMemoryCache cache)
     {
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<List<PublicPostCategoryItem>> GetCategoriesAsync(string maTruongBo)
     {
+        string cacheKey = $"PostCategories_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out List<PublicPostCategoryItem>? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var result = new List<PublicPostCategoryItem>();
         var sql = $@"
             SELECT id, category_name, slug, parent_id, description, sort_order
@@ -45,6 +54,8 @@ public class PublicPostCategoryService : IPublicPostCategoryService
                 SortOrder = row["sort_order"] == DBNull.Value ? 0 : Convert.ToInt32(row["sort_order"])
             });
         }
+
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(2));
         return result;
     }
 

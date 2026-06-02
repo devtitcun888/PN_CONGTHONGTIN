@@ -33,6 +33,7 @@ builder.Services.AddBlazorBootstrap();
 Console.OutputEncoding = System.Text.Encoding.UTF8;
 builder.Services.AddMudServices();
 builder.Services.AddDistributedMemoryCache();
+builder.Services.AddMemoryCache();
 builder.Services.AddSession(options =>
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30);

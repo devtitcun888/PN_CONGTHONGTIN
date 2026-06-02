@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -15,10 +16,12 @@ public class PublicStaticPageService : IPublicStaticPageService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicStaticPageService> _logger;
+    private readonly IMemoryCache _cache;
 
-    public PublicStaticPageService(ILogger<PublicStaticPageService> logger)
+    public PublicStaticPageService(ILogger<PublicStaticPageService> logger, IMemoryCache cache)
     {
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<PublicStaticPageDetail?> GetBySlugAsync(string maTruongBo, string slug)
@@ -46,6 +49,12 @@ public class PublicStaticPageService : IPublicStaticPageService
 
     public async Task<List<PublicStaticPageMenuItem>> GetPagesByMenuAsync(string maTruongBo)
     {
+        string cacheKey = $"StaticPagesMenu_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out List<PublicStaticPageMenuItem>? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var list = new List<PublicStaticPageMenuItem>();
         var sql = $@"
             SELECT id, title, slug
@@ -65,6 +74,8 @@ public class PublicStaticPageService : IPublicStaticPageService
                 Slug = row["slug"]?.ToString()
             });
         }
+
+        _cache.Set(cacheKey, list, TimeSpan.FromMinutes(2));
         return list;
     }
 

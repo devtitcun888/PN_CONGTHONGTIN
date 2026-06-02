@@ -1236,13 +1236,15 @@
         totalCount = await PublicPostService.GetPostsCountAsync(PN_PublicVariables.MaTruong, keyword, selectedCategoryId);
         posts = await PublicPostService.GetPostsAsync(PN_PublicVariables.MaTruong, keyword, selectedCategoryId, trang, pageSize);
 
-        if (posts != null)
+        if (posts != null && posts.Count > 0)
         {
+            var postIds = posts.Select(x => x.Id).Where(id => !string.IsNullOrWhiteSpace(id)).Cast<string>().ToList();
+            var tagsMap = await PublicPostTagService.GetTagsByPostIdsAsync(postIds);
             foreach (var post in posts)
             {
-                post.Tags = string.IsNullOrWhiteSpace(post.Id)
-                    ? []
-                    : await PublicPostTagService.GetTagsByPostIdAsync(post.Id);
+                post.Tags = !string.IsNullOrWhiteSpace(post.Id) && tagsMap.TryGetValue(post.Id, out var tags)
+                    ? tags
+                    : [];
             }
         }
     }

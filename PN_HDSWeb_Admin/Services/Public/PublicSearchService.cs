@@ -37,7 +37,25 @@ public class PublicSearchService : IPublicSearchService
                   AND (title ILIKE '%{k}%' OR summary ILIKE '%{k}%')
                 ORDER BY publish_at DESC, created_at DESC
                 LIMIT {pageSize} OFFSET {offset}";
-            var dtPosts = await hdataLib.hgetDataTableAsync(LoginID_Index, sqlPosts);
+
+            var sqlDocs = $@"
+                SELECT id, doc_title, doc_number, summary
+                FROM documents
+                WHERE ma_truong_bo = '{Escape(maTruongBo)}'
+                  AND is_deleted = FALSE
+                  AND status = 'Published'
+                  AND (doc_title ILIKE '%{k}%' OR doc_number ILIKE '%{k}%')
+                ORDER BY issued_date DESC, created_at DESC
+                LIMIT {pageSize} OFFSET {offset}";
+
+            var postsTask = hdataLib.hgetDataTableAsync(LoginID_Index, sqlPosts);
+            var docsTask = hdataLib.hgetDataTableAsync(LoginID_Index, sqlDocs);
+
+            await Task.WhenAll(postsTask, docsTask);
+
+            var dtPosts = await postsTask;
+            var dtDocs = await docsTask;
+
             foreach (DataRow row in dtPosts.Rows)
             {
                 result.Posts.Add(new PublicSearchItem
@@ -51,16 +69,6 @@ public class PublicSearchService : IPublicSearchService
                 });
             }
 
-            var sqlDocs = $@"
-                SELECT id, doc_title, doc_number, summary
-                FROM documents
-                WHERE ma_truong_bo = '{Escape(maTruongBo)}'
-                  AND is_deleted = FALSE
-                  AND status = 'Published'
-                  AND (doc_title ILIKE '%{k}%' OR doc_number ILIKE '%{k}%')
-                ORDER BY issued_date DESC, created_at DESC
-                LIMIT {pageSize} OFFSET {offset}";
-            var dtDocs = await hdataLib.hgetDataTableAsync(LoginID_Index, sqlDocs);
             foreach (DataRow row in dtDocs.Rows)
             {
                 result.Documents.Add(new PublicSearchItem { Id = row["id"]?.ToString(), Title = row["doc_title"]?.ToString(), Slug = row["id"]?.ToString(), Summary = row["summary"]?.ToString(), Type = "Document" });

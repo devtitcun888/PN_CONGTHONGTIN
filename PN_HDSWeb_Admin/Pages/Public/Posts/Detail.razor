@@ -311,10 +311,17 @@ else
 
         if (post != null)
         {
-            media = await PublicPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, post.Id ?? string.Empty);
-            postTags = await PublicPostTagService.GetTagsByPostIdAsync(post.Id ?? string.Empty);
-            relatedPosts = await PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty, 4);
-            latestPosts = await PublicPostService.GetMostViewedPostsAsync(PN_PublicVariables.MaTruong, 8, post.Id);
+            var mediaTask = PublicPostMediaService.GetMediaAsync(PN_PublicVariables.MaTruong, post.Id ?? string.Empty);
+            var postTagsTask = PublicPostTagService.GetTagsByPostIdAsync(post.Id ?? string.Empty);
+            var relatedPostsTask = PublicPostService.GetRelatedPostsAsync(PN_PublicVariables.MaTruong, post.CategoryId, post.Id ?? string.Empty, 4);
+            var latestPostsTask = PublicPostService.GetMostViewedPostsAsync(PN_PublicVariables.MaTruong, 8, post.Id);
+
+            await Task.WhenAll(mediaTask, postTagsTask, relatedPostsTask, latestPostsTask);
+
+            media = await mediaTask;
+            postTags = await postTagsTask;
+            relatedPosts = await relatedPostsTask;
+            latestPosts = await latestPostsTask;
         }
 
         isLoading = false;

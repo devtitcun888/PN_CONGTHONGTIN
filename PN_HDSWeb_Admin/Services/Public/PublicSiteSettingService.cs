@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -14,14 +15,22 @@ public class PublicSiteSettingService : IPublicSiteSettingService
 {
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicSiteSettingService> _logger;
+    private readonly IMemoryCache _cache;
 
-    public PublicSiteSettingService(ILogger<PublicSiteSettingService> logger)
+    public PublicSiteSettingService(ILogger<PublicSiteSettingService> logger, IMemoryCache cache)
     {
         _logger = logger;
+        _cache = cache;
     }
 
     public async Task<Dictionary<string, string>> GetSettingsAsync(string maTruongBo)
     {
+        string cacheKey = $"SiteSettings_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out Dictionary<string, string>? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var sql = $@"
             SELECT setting_key, setting_value
@@ -47,6 +56,7 @@ public class PublicSiteSettingService : IPublicSiteSettingService
             _logger.LogWarning(ex, "GetSettingsAsync failed. Public site will use fallback school data.");
         }
 
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(2));
         return result;
     }
 

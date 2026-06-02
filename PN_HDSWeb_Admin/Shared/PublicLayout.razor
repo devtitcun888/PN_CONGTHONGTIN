@@ -407,11 +407,19 @@
     {
         Nav.LocationChanged += HandleLocationChanged;
 
-        menus = await PublicNavigationService.GetMenusAsync(PN_PublicVariables.MaTruong);
-        staticPages = await PublicStaticPageService.GetPagesByMenuAsync(PN_PublicVariables.MaTruong);
-        postCategories = await PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
-        documentTypes = await PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
-        footer = await PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
+        var menusTask = PublicNavigationService.GetMenusAsync(PN_PublicVariables.MaTruong);
+        var staticPagesTask = PublicStaticPageService.GetPagesByMenuAsync(PN_PublicVariables.MaTruong);
+        var postCategoriesTask = PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
+        var documentTypesTask = PublicDocumentTypeService.GetDocumentTypesAsync(PN_PublicVariables.MaTruong);
+        var footerTask = PublicNavigationService.GetFooterAsync(PN_PublicVariables.MaTruong);
+
+        await Task.WhenAll(menusTask, staticPagesTask, postCategoriesTask, documentTypesTask, footerTask);
+
+        menus = await menusTask;
+        staticPages = await staticPagesTask;
+        postCategories = await postCategoriesTask;
+        documentTypes = await documentTypesTask;
+        footer = await footerTask;
 
         isLoading = false;
     }

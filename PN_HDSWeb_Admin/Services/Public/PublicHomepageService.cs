@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 using System.Text.Json;
@@ -16,42 +17,102 @@ public class PublicHomepageService : IPublicHomepageService
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicHomepageService> _logger;
     private readonly IPublicSiteSettingService _siteSettingService;
+    private readonly IMemoryCache _cache;
 
-    public PublicHomepageService(ILogger<PublicHomepageService> logger, IPublicSiteSettingService siteSettingService)
+    public PublicHomepageService(ILogger<PublicHomepageService> logger, IPublicSiteSettingService siteSettingService, IMemoryCache cache)
     {
         _logger = logger;
         _siteSettingService = siteSettingService;
+        _cache = cache;
     }
 
     public async Task<PublicHomepageViewModel> GetHomepageAsync(string maTruongBo)
     {
+        string cacheKey = $"HomepageModel_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out PublicHomepageViewModel? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var model = new PublicHomepageViewModel();
         try
         {
             var settings = await _siteSettingService.GetSettingsAsync(maTruongBo);
             ApplySettings(model, settings);
-            model.SchoolIntro = await GetSchoolIntroAsync(maTruongBo);
+
+            var schoolIntroTask = GetSchoolIntroAsync(maTruongBo);
+            
+            Task<List<PublicBannerItem>>? bannersTask = null;
+            Task<List<PublicBannerItem>>? homeMiddleBannersTask = null;
+            Task<List<PublicBannerItem>>? homeBottomBannersTask = null;
+            Task<List<PublicBannerItem>>? sidebarBannersTask = null;
+
+            if (model.FeatureBannersEnabled)
+            {
+                bannersTask = GetBannersAsync(maTruongBo, "HomeTop");
+                homeMiddleBannersTask = GetBannersAsync(maTruongBo, "HomeMiddle");
+                homeBottomBannersTask = GetBannersAsync(maTruongBo, "HomeBottom");
+                sidebarBannersTask = GetBannersAsync(maTruongBo, "Sidebar");
+            }
+
+            Task<List<PublicPostItem>>? featuredPostsTask = null;
+            Task<List<PublicPostItem>>? latestPostsTask = null;
+
+            if (model.FeatureNewsEnabled)
+            {
+                featuredPostsTask = GetFeaturedPostsAsync(maTruongBo, model.HomepageFeaturedPostsLimit);
+                latestPostsTask = GetLatestPostsAsync(maTruongBo, model.HomepageLatestPostsLimit);
+            }
+
+            Task<List<PublicDocumentItem>>? publishedDocsTask = null;
+
+            if (model.FeatureDocumentsEnabled)
+            {
+                publishedDocsTask = GetPublishedDocumentsAsync(maTruongBo, model.HomepageDocumentsLimit);
+            }
+
+            var tasksToWait = new List<Task> { schoolIntroTask };
+            if (bannersTask != null)
+            {
+                tasksToWait.Add(bannersTask);
+                tasksToWait.Add(homeMiddleBannersTask!);
+                tasksToWait.Add(homeBottomBannersTask!);
+                tasksToWait.Add(sidebarBannersTask!);
+            }
+            if (featuredPostsTask != null)
+            {
+                tasksToWait.Add(featuredPostsTask);
+                tasksToWait.Add(latestPostsTask!);
+            }
+            if (publishedDocsTask != null)
+            {
+                tasksToWait.Add(publishedDocsTask);
+            }
+
+            await Task.WhenAll(tasksToWait);
+
+            model.SchoolIntro = await schoolIntroTask;
             model.SchoolIntro ??= CreateSchoolIntroFromSettings(maTruongBo, settings);
             if (model.SchoolIntro != null)
                 ApplySchoolSettings(model.SchoolIntro, settings);
 
-            if (model.FeatureBannersEnabled)
+            if (bannersTask != null)
             {
-                model.Banners = await GetBannersAsync(maTruongBo, "HomeTop");
-                model.HomeMiddleBanners = await GetBannersAsync(maTruongBo, "HomeMiddle");
-                model.HomeBottomBanners = await GetBannersAsync(maTruongBo, "HomeBottom");
-                model.SidebarBanners = await GetBannersAsync(maTruongBo, "Sidebar");
+                model.Banners = await bannersTask;
+                model.HomeMiddleBanners = await homeMiddleBannersTask!;
+                model.HomeBottomBanners = await homeBottomBannersTask!;
+                model.SidebarBanners = await sidebarBannersTask!;
             }
 
-            if (model.FeatureNewsEnabled)
+            if (featuredPostsTask != null)
             {
-                model.FeaturedPosts = await GetFeaturedPostsAsync(maTruongBo, model.HomepageFeaturedPostsLimit);
-                model.LatestPosts = await GetLatestPostsAsync(maTruongBo, model.HomepageLatestPostsLimit);
+                model.FeaturedPosts = await featuredPostsTask;
+                model.LatestPosts = await latestPostsTask!;
             }
 
-            if (model.FeatureDocumentsEnabled)
+            if (publishedDocsTask != null)
             {
-                model.PublishedDocuments = await GetPublishedDocumentsAsync(maTruongBo, model.HomepageDocumentsLimit);
+                model.PublishedDocuments = await publishedDocsTask;
             }
         }
         catch (Exception ex)
@@ -60,6 +121,7 @@ public class PublicHomepageService : IPublicHomepageService
             throw;
         }
 
+        _cache.Set(cacheKey, model, TimeSpan.FromMinutes(2));
         return model;
     }
 

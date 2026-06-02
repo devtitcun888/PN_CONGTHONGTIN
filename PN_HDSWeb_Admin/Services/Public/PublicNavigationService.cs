@@ -1,5 +1,6 @@
 using hDataLibraryN8;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Memory;
 using PN_HDSWeb_Library;
 using System.Data;
 
@@ -19,15 +20,23 @@ public class PublicNavigationService : IPublicNavigationService
     private static readonly string LoginID_Index = PN_LoginService.LoginID_CongThongTin;
     private readonly ILogger<PublicNavigationService> _logger;
     private readonly IPublicSiteSettingService _siteSettingService;
+    private readonly IMemoryCache _cache;
 
-    public PublicNavigationService(ILogger<PublicNavigationService> logger, IPublicSiteSettingService siteSettingService)
+    public PublicNavigationService(ILogger<PublicNavigationService> logger, IPublicSiteSettingService siteSettingService, IMemoryCache cache)
     {
         _logger = logger;
         _siteSettingService = siteSettingService;
+        _cache = cache;
     }
 
     public async Task<List<PublicNavItem>> GetMenusAsync(string maTruongBo)
     {
+        string cacheKey = $"Menus_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out List<PublicNavItem>? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var result = new List<PublicNavItem>();
         var sql = $@"
             SELECT id, menu_name, url, target, parent_id, sort_order, page_slug, page_type
@@ -53,6 +62,7 @@ public class PublicNavigationService : IPublicNavigationService
             });
         }
 
+        _cache.Set(cacheKey, result, TimeSpan.FromMinutes(2));
         return result;
     }
 
@@ -86,6 +96,12 @@ public class PublicNavigationService : IPublicNavigationService
 
     public async Task<PublicFooterInfo> GetFooterAsync(string maTruongBo)
     {
+        string cacheKey = $"Footer_{maTruongBo}";
+        if (_cache.TryGetValue(cacheKey, out PublicFooterInfo? cachedResult) && cachedResult != null)
+        {
+            return cachedResult;
+        }
+
         var sql = $@"
             SELECT tentruong, thongtin
             FROM l_truong
@@ -98,6 +114,7 @@ public class PublicNavigationService : IPublicNavigationService
             var fallbackFooter = new PublicFooterInfo();
             var fallbackSettings = await _siteSettingService.GetSettingsAsync(maTruongBo);
             ApplySiteSettings(fallbackFooter, fallbackSettings);
+            _cache.Set(cacheKey, fallbackFooter, TimeSpan.FromMinutes(2));
             return fallbackFooter;
         }
 
@@ -109,6 +126,7 @@ public class PublicNavigationService : IPublicNavigationService
         var settings = await _siteSettingService.GetSettingsAsync(maTruongBo);
         ApplySiteSettings(footer, settings);
 
+        _cache.Set(cacheKey, footer, TimeSpan.FromMinutes(2));
         return footer;
     }
 
