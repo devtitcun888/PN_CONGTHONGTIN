@@ -1,0 +1,511 @@
+/* Loaded after app.css to make the public portal layout deterministic. */
+:root {
+  --portal-max: 1360px;
+  --portal-gutter: 32px;
+  --portal-ink: #111827;
+  --portal-muted: #475569;
+  --portal-border: #e5e7eb;
+  --portal-primary: #0b5ed7;
+  --portal-primary-dark: #084b9a;
+}
+
+body .public-layout {
+  background: #f8fafc !important;
+}
+
+body .public-main {
+  min-height: 100vh !important;
+  padding: 18px 0 56px !important;
+  background: #f8fafc !important;
+  color: var(--portal-ink) !important;
+}
+
+body .public-main::before,
+body .public-main::after {
+  display: none !important;
+}
+
+body .public-container,
+body .public-footer-grid,
+body .public-footer-bottom {
+  width: min(
+    var(--portal-max),
+    calc(100% - var(--portal-gutter) - var(--portal-gutter))
+  ) !important;
+  max-width: var(--portal-max) !important;
+  margin-inline: auto !important;
+}
+
+body .hp {
+  width: 100% !important;
+  max-width: none !important;
+  gap: 20px !important;
+  padding-bottom: 42px !important;
+  background: transparent !important;
+}
+
+body .hp-hero-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 2.15fr) minmax(320px, 0.85fr) !important;
+  gap: 20px !important;
+  align-items: stretch !important;
+}
+
+body .hp-hero-grid.single {
+  grid-template-columns: minmax(0, 1fr) !important;
+}
+
+body .hp-featured {
+  height: clamp(320px, 35vw, 380px) !important;
+  border: 1px solid var(--portal-border) !important;
+  border-radius: 10px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06) !important;
+}
+
+body .hp-slide {
+  position: absolute !important;
+  inset: 0 !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.55fr) minmax(320px, 0.9fr) !important;
+  background: #fff !important;
+}
+
+body .hp-slide-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  border-right: 1px solid var(--portal-border) !important;
+}
+
+body .hp-slide-content {
+  position: relative !important;
+  inset: auto !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  transform: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  max-width: none !important;
+  min-width: 0 !important;
+  height: 100% !important;
+  padding: clamp(24px, 3vw, 42px) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  color: var(--portal-ink) !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+}
+
+body .hp-slide-kicker {
+  width: fit-content !important;
+  background: var(--portal-primary) !important;
+  color: #fff !important;
+}
+
+body .hp-slide-title {
+  color: var(--portal-ink) !important;
+  font-size: clamp(22px, 1.8vw, 30px) !important;
+  line-height: 1.38 !important;
+  text-shadow: none !important;
+}
+
+body .hp-slide-summary {
+  color: var(--portal-muted) !important;
+  font-size: 13px !important;
+  line-height: 1.72 !important;
+  -webkit-line-clamp: 4 !important;
+}
+
+body .hp-slide-btn,
+body .hp-school-actions a:first-child,
+body .public-button-primary,
+body .doc-btn-primary,
+body .pa-search-btn,
+body .post-share-btn {
+  background: var(--portal-primary) !important;
+  border-color: var(--portal-primary) !important;
+  color: #fff !important;
+}
+
+body .hp-slide-btn *,
+body .hp-school-actions a:first-child *,
+body .public-button-primary *,
+body .doc-btn-primary *,
+body .pa-search-btn *,
+body .post-share-btn * {
+  color: #fff !important;
+}
+
+body .hp-school-actions a:not(:first-child),
+body .public-button-soft,
+body .public-button-ghost {
+  background: #fff !important;
+  border-color: #cbd5e1 !important;
+  color: var(--portal-primary-dark) !important;
+}
+
+body .hp-arrow-next {
+  right: calc(36.7% + 14px) !important;
+}
+
+body .hp-progress {
+  right: 36.7% !important;
+}
+
+body .hp-school-card,
+body .hp-spotlight-section,
+body .hp-card,
+body .hp-scard,
+body .hp-mini-card,
+body .hp-doc-card {
+  border: 1px solid var(--portal-border) !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05) !important;
+}
+
+body .hp-school-card {
+  min-height: clamp(320px, 35vw, 380px) !important;
+  padding: clamp(20px, 2.3vw, 30px) !important;
+}
+
+body .hp-school-top h2,
+body .hp-school-facts p,
+body .hp-spotlight-header-title,
+body .hp-card-title,
+body .hp-news-title,
+body .hp-bullet-link,
+body .hp-scard-title,
+body .hp-mini-card-title,
+body .hp-doc-title,
+body .hp-quick-link,
+body .hp-cat-chip {
+  color: var(--portal-ink) !important;
+}
+
+body .hp-school-intro,
+body .hp-scard-meta,
+body .hp-news-meta,
+body .hp-bullet-date,
+body .hp-mini-card-date,
+body .hp-doc-meta,
+body .hp-doc-info {
+  color: var(--portal-muted) !important;
+}
+
+body .hp-spotlight-header,
+body .hp-card-header {
+  padding: 14px 20px !important;
+}
+
+body .hp-scroll-track-wrap {
+  overflow: hidden !important;
+  padding: 16px 20px !important;
+}
+
+body .hp-scroll-track.auto-scroll {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  cursor: grab !important;
+  padding-bottom: 4px !important;
+}
+
+body .hp-scroll-track.auto-scroll .hp-scroll-inner {
+  gap: 14px !important;
+  width: max-content !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+body .hp-scroll-track.auto-scroll .hp-scroll-inner > [aria-hidden="true"] {
+  display: none !important;
+}
+
+body .hp-scard {
+  flex-basis: clamp(230px, 18vw, 286px) !important;
+  padding: 14px !important;
+}
+
+body .hp-scard-img-wrap {
+  height: 98px !important;
+  border-radius: 8px !important;
+}
+
+body .hp-scard-badge.badge-post {
+  background: var(--portal-primary) !important;
+  color: #fff !important;
+}
+
+body .hp-scard-badge.badge-doc {
+  background: #dc2626 !important;
+  color: #fff !important;
+}
+
+body .hp-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(300px, 0.72fr) !important;
+  gap: 20px !important;
+  align-items: start !important;
+}
+
+body .hp-news-scroll,
+body .hp-bullet-scroll {
+  height: auto !important;
+  max-height: 500px !important;
+  padding: 14px 20px !important;
+}
+
+body .hp-news-item {
+  gap: 14px !important;
+  padding: 12px 0 !important;
+}
+
+body .hp-news-thumb,
+body .hp-news-thumb-placeholder {
+  width: 104px !important;
+  height: 72px !important;
+  border-radius: 8px !important;
+}
+
+body .hp-news-title,
+body .hp-bullet-link,
+body .hp-mini-card-title,
+body .hp-doc-title,
+body .hp-scard-title {
+  font-size: 13px !important;
+  line-height: 1.55 !important;
+}
+
+body .hp-quick-link {
+  min-height: 48px !important;
+  background: #f8fafc !important;
+  border-color: var(--portal-border) !important;
+}
+
+body .public-footer {
+  margin-top: 0 !important;
+  background: #074b7a !important;
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+body .public-footer :where(p, a, span, small, strong, h1, h2, h3, h4, li, div) {
+  color: rgba(255, 255, 255, 0.88) !important;
+}
+
+body .public-footer :where(h1, h2, h3, h4, strong),
+body .footer-brand-heading strong,
+body .footer-contact-block h2,
+body .footer-links-block h2 {
+  color: #fff !important;
+}
+
+body .public-footer .material-icons,
+body .public-footer .material-icons-round,
+body .public-footer .material-symbols-outlined,
+body .public-footer i,
+body .public-footer svg {
+  color: #fff !important;
+}
+
+body .public-footer .footer-logo-fallback {
+  color: var(--portal-primary-dark) !important;
+}
+
+@media (max-width: 1180px) {
+  body .hp-hero-grid,
+  body .hp-hero-grid.single {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+
+  body .hp-school-card {
+    min-height: auto !important;
+  }
+
+  body .hp-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
+  }
+
+  body .hp-sidebar {
+    grid-column: 1 / -1 !important;
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 860px) {
+  :root {
+    --portal-gutter: 14px;
+  }
+
+  body .hp-featured {
+    height: auto !important;
+  }
+
+  body .hp-slide {
+    position: relative !important;
+    display: none !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    opacity: 1 !important;
+  }
+
+  body .hp-slide.active {
+    display: grid !important;
+  }
+
+  body .hp-slide-img {
+    height: 260px !important;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--portal-border) !important;
+  }
+
+  body .hp-arrow-next {
+    right: 14px !important;
+  }
+
+  body .hp-progress {
+    right: 0 !important;
+  }
+
+  body .hp-grid,
+  body .hp-sidebar,
+  body .hp-bottom,
+  body .hp-doc-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 560px) {
+  :root {
+    --portal-gutter: 10px;
+  }
+
+  body .hp {
+    gap: 14px !important;
+  }
+
+  body .hp-slide-img {
+    height: 220px !important;
+  }
+
+  body .hp-slide-content {
+    padding: 18px !important;
+  }
+
+  body .hp-news-item {
+    display: grid !important;
+    grid-template-columns: 92px minmax(0, 1fr) !important;
+  }
+
+  body .hp-news-thumb,
+  body .hp-news-thumb-placeholder {
+    width: 92px !important;
+    height: 64px !important;
+  }
+}
+
+/* Public title hierarchy: keep article titles distinct from normal text. */
+body
+  .public-layout
+  :where(
+    .hp-scard-title,
+    .hp-news-title,
+    .hp-bullet-link,
+    .hp-mini-card-title,
+    .hp-doc-title,
+    .pa-card-title,
+    .pd-related-card-title,
+    .post-related-title,
+    .post-most-read-item a,
+    .pl-title-main,
+    .ps-title-main
+  ) {
+  color: var(--portal-ink) !important;
+  font-family: "Merriweather", serif !important;
+  font-size: 13px !important;
+  font-weight: 550 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.45 !important;
+}
+
+body
+  .public-layout
+  :where(.hp-slide-title, .post-title, .article-detail-head h1) {
+  color: var(--portal-ink) !important;
+  font-family: "Merriweather", serif !important;
+  font-size: clamp(14px, 1.5vw, 17px) !important;
+  font-weight: 550 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.34 !important;
+}
+
+body
+  .public-layout
+  :where(
+    .hp-spotlight-header-title,
+    .hp-card-title,
+    .hp-school-top h2,
+    .footer-brand-heading strong,
+    .footer-contact-block h2,
+    .footer-links-block h2
+  ) {
+  font-family: "Merriweather", serif !important;
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  line-height: 1.35 !important;
+}
+
+body
+  .public-layout
+  :where(
+    .hp-slide-summary,
+    .hp-school-intro,
+    .hp-school-facts p,
+    .hp-scard-meta,
+    .hp-news-meta,
+    .hp-bullet-date,
+    .hp-mini-card-date,
+    .hp-doc-meta,
+    .hp-doc-info,
+    .hp-card-link,
+    .hp-quick-link,
+    .hp-cat-chip,
+    .hp-slide-btn,
+    .hp-school-actions a
+  ) {
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+}
+
+@media (max-width: 720px) {
+  body
+    .public-layout
+    :where(
+      .hp-scard-title,
+      .hp-news-title,
+      .hp-bullet-link,
+      .hp-mini-card-title,
+      .hp-doc-title,
+      .pa-card-title,
+      .pd-related-card-title,
+      .post-related-title,
+      .post-most-read-item a,
+      .pl-title-main,
+      .ps-title-main
+    ) {
+    font-size: 18px !important;
+  }
+
+  body
+    .public-layout
+    :where(.hp-slide-title, .post-title, .article-detail-head h1) {
+    font-size: 24px !important;
+  }
+}

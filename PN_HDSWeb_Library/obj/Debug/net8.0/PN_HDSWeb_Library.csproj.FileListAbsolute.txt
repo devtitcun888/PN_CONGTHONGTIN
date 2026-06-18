@@ -784,28 +784,6 @@ C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-pages-index-check\PN_HDSWeb_Libr
 C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-pages-index-rz-check\PN_HDSWeb_Library.deps.json
 C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-pages-index-rz-check\PN_HDSWeb_Library.dll
 C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-pages-index-rz-check\PN_HDSWeb_Library.pdb
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.deps.json
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.pdb
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\hDataLibraryN8.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\hUltiLibraryN8.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Newtonsoft.Json.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.sourcelink.json
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWe.60F16D59.Up2Date
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\refint\PN_HDSWeb_Library.dll
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.pdb
-D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\ref\PN_HDSWeb_Library.dll
 C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-view-count-check\PN_HDSWeb_Library.deps.json
 C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-view-count-check\PN_HDSWeb_Library.dll
 C:\Users\Tô Khôi\AppData\Local\Temp\pn-hdsweb-view-count-check\PN_HDSWeb_Library.pdb
@@ -831,3 +809,25 @@ D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HD
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Library\obj\Debug\net8.0\refint\PN_HDSWeb_Library.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.pdb
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Library\obj\Debug\net8.0\ref\PN_HDSWeb_Library.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.deps.json
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\PN_HDSWeb_Library.pdb
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\hDataLibraryN8.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\hUltiLibraryN8.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Newtonsoft.Json.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.Tokens.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.Logging.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\bin\Debug\net8.0\Microsoft.IdentityModel.Abstractions.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.csproj.AssemblyReference.cache
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.GeneratedMSBuildEditorConfig.editorconfig
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.AssemblyInfoInputs.cache
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.AssemblyInfo.cs
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.csproj.CoreCompileInputs.cache
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.sourcelink.json
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWe.60F16D59.Up2Date
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\refint\PN_HDSWeb_Library.dll
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.pdb
+D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\ref\PN_HDSWeb_Library.dll
