@@ -1,0 +1,180 @@
+@page "/admin/rentals"
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminRentalService RentalService
+@inject NavigationManager Nav
+
+<PageTitle>Quản lý đơn thuê — Admin</PageTitle>
+
+<div class="ev-admin-page">
+    <div class="ev-admin-header">
+        <h1>📋 Quản lý đơn thuê xe</h1>
+    </div>
+
+    <!-- Filter -->
+    <div class="ev-filter-bar ev-filter-bar--admin">
+        <input class="ev-input" @bind="filter.Search" @bind:after="LoadData" placeholder="Tìm mã đơn, tên khách, SĐT..." />
+        <select class="ev-select" @bind="filter.TrangThai" @bind:after="LoadData">
+            <option value="">Tất cả trạng thái</option>
+            <option value="pending">Chờ xác nhận</option>
+            <option value="confirmed">Đã xác nhận</option>
+            <option value="active">Đang thuê</option>
+            <option value="completed">Hoàn thành</option>
+            <option value="cancelled">Đã hủy</option>
+        </select>
+        <input type="date" class="ev-input" @bind="filter.TuNgay" @bind:after="LoadData" />
+        <input type="date" class="ev-input" @bind="filter.DenNgay" @bind:after="LoadData" />
+        <button class="ev-btn ev-btn--ghost" @onclick="ResetFilter">Xóa lọc</button>
+    </div>
+
+    @if (loading)
+    {
+        <div class="ev-loading"><div class="ev-spinner"></div></div>
+    }
+    else
+    {
+        <div class="ev-results-info">Tổng: <strong>@total</strong> đơn</div>
+
+        @if (rentals.Count == 0)
+        {
+            <div class="ev-empty"><p>Không có đơn nào phù hợp.</p></div>
+        }
+        else
+        {
+            <div class="ev-table-wrap">
+                <table class="ev-table">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Xe</th>
+                            <th>Khách hàng</th>
+                            <th>Thời gian thuê</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
+                            <th>Đặt lúc</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var r in rentals)
+                        {
+                            <tr class="ev-tr-@r.TrangThai">
+                                <td><strong>@r.MaDon</strong></td>
+                                <td>@r.TenXe<br /><small class="ev-text-muted">@r.BienSo</small></td>
+                                <td>@r.KhachTen<br /><small>@r.KhachSdt</small></td>
+                                <td>
+                                    <small>@r.BatDauThue.ToString("dd/MM HH:mm")</small><br />
+                                    <small>→ @r.KetThucThue.ToString("dd/MM HH:mm")</small>
+                                </td>
+                                <td>@FormatVnd(r.TongTien)</td>
+                                <td><span class="ev-badge ev-badge--@r.TrangThai">@r.TrangThaiLabel</span></td>
+                                <td><small>@r.CreatedAt.ToString("dd/MM HH:mm")</small></td>
+                                <td>
+                                    <div class="ev-action-group">
+                                        <a href="/admin/rentals/@r.Id" class="ev-btn ev-btn--sm ev-btn--ghost">Chi tiết</a>
+                                        @if (r.TrangThai == "pending")
+                                        {
+                                            <button class="ev-btn ev-btn--sm ev-btn--success"
+                                                    @onclick="() => QuickConfirm(r.Id)">✅ Duyệt</button>
+                                        }
+                                        @if (r.TrangThai is "pending" or "confirmed")
+                                        {
+                                            <button class="ev-btn ev-btn--sm ev-btn--danger-ghost"
+                                                    @onclick="() => SetCancelTarget(r)">Hủy</button>
+                                        }
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            @if (totalPages > 1)
+            {
+                <div class="ev-pagination">
+                    <button class="ev-btn ev-btn--ghost ev-btn--sm" disabled="@(filter.Page <= 1)"
+                            @onclick="() => GoPage(filter.Page - 1)">‹</button>
+                    @for (int p = 1; p <= totalPages; p++)
+                    {
+                        var pageNum = p;
+                        <button class="ev-btn ev-btn--sm @(filter.Page == pageNum ? "ev-btn--primary" : "ev-btn--ghost")"
+                                @onclick="() => GoPage(pageNum)">@pageNum</button>
+                    }
+                    <button class="ev-btn ev-btn--ghost ev-btn--sm" disabled="@(filter.Page >= totalPages)"
+                            @onclick="() => GoPage(filter.Page + 1)">›</button>
+                </div>
+            }
+        }
+    }
+
+    <!-- Cancel Modal -->
+    @if (cancelTarget != null)
+    {
+        <div class="ev-modal-overlay">
+            <div class="ev-modal">
+                <h3>Hủy đơn @cancelTarget.MaDon?</h3>
+                <div class="ev-form-field">
+                    <label>Lý do hủy</label>
+                    <textarea class="ev-input ev-textarea" @bind="cancelReason" rows="2" placeholder="Nhập lý do..."></textarea>
+                </div>
+                <div class="ev-modal-actions">
+                    <button class="ev-btn ev-btn--ghost" @onclick="() => cancelTarget = null">Không</button>
+                    <button class="ev-btn ev-btn--danger" @onclick="DoCancel">Xác nhận hủy</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery] public string? trang_thai { get; set; }
+
+    private AdminRentalFilter filter = new();
+    private List<AdminRentalItem> rentals = [];
+    private int total;
+    private int totalPages => (int)Math.Ceiling((double)total / filter.PageSize);
+    private bool loading = true;
+
+    private AdminRentalItem? cancelTarget;
+    private string cancelReason = "";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(trang_thai))
+            filter.TrangThai = trang_thai;
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        loading = true;
+        (rentals, total) = await RentalService.GetAllAsync(filter);
+        loading = false;
+    }
+
+    private async Task GoPage(int page) { filter.Page = page; await LoadData(); }
+
+    private async Task ResetFilter()
+    {
+        filter = new AdminRentalFilter();
+        await LoadData();
+    }
+
+    private async Task QuickConfirm(int id)
+    {
+        await RentalService.ConfirmAsync(id, "admin");
+        await LoadData();
+    }
+
+    private void SetCancelTarget(AdminRentalItem r) { cancelTarget = r; cancelReason = ""; }
+
+    private async Task DoCancel()
+    {
+        if (cancelTarget == null) return;
+        await RentalService.CancelAsync(cancelTarget.Id, cancelReason, "admin");
+        cancelTarget = null;
+        await LoadData();
+    }
+
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+}

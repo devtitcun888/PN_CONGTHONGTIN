@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PN_HDSWeb_Library", "PN_HDS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PN_HDSWeb_Admin", "PN_HDSWeb_Admin\PN_HDSWeb_Admin.csproj", "{A61CC3EF-9A9B-4F23-8BF5-ABB438A59967}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PN_HDSWeb_Components", "PN_HDSWeb_Components\PN_HDSWeb_Components.csproj", "{DC6D8FE5-243A-4D04-97EB-0A545A9746FE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{A61CC3EF-9A9B-4F23-8BF5-ABB438A59967}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A61CC3EF-9A9B-4F23-8BF5-ABB438A59967}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A61CC3EF-9A9B-4F23-8BF5-ABB438A59967}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DC6D8FE5-243A-4D04-97EB-0A545A9746FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DC6D8FE5-243A-4D04-97EB-0A545A9746FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DC6D8FE5-243A-4D04-97EB-0A545A9746FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DC6D8FE5-243A-4D04-97EB-0A545A9746FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

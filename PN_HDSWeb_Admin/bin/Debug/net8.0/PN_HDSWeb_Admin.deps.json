@@ -32,7 +32,6 @@
           "Newtonsoft.Json": "13.0.0.0",
           "Npgsql": "7.0.2.0",
           "Npgsql.Json.NET": "7.0.2.0",
-          "PN_HDSWeb_Components": "1.0.0.0",
           "PN_HDSWeb_Library.Reference": "1.0.0.0",
           "Serilog": "2.0.0.0",
           "Serilog.Sinks.File": "5.0.0.0",
@@ -882,14 +881,6 @@
           }
         }
       },
-      "PN_HDSWeb_Components/1.0.0.0": {
-        "runtime": {
-          "PN_HDSWeb_Components.dll": {
-            "assemblyVersion": "1.0.0.0",
-            "fileVersion": "1.0.0.0"
-          }
-        }
-      },
       "PN_HDSWeb_Library.Reference/1.0.0.0": {
         "runtime": {
           "PN_HDSWeb_Library.dll": {
@@ -1441,11 +1432,6 @@
       "sha512": ""
     },
     "Npgsql.Json.NET/7.0.2.0": {
-      "type": "reference",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "PN_HDSWeb_Components/1.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

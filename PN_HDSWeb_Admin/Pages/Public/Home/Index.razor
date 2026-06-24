@@ -1,616 +1,455 @@
 @page "/"
 @using PN_HDSWeb_Admin.Services.Public
-@inject IPublicHomepageService HomepageService
-@inject IPublicPostCategoryService PublicPostCategoryService
-@inject IPublicDocumentService PublicDocumentService
-@implements IAsyncDisposable
-<div class="hp">
+@inject IPublicVehicleService VehicleService
+@inject IPublicSiteSettingService SiteSettingService
+@inject NavigationManager Nav
 
-    @if (model == null)
-    {
-        <div class="hp-loading">
-            <div class="hp-spinner"></div>
-            <span>Đang tải nội dung...</span>
+<PageTitle>@siteName — Thuê Xe Điện Nhanh, Sạch, Thông Minh</PageTitle>
+
+<div class="ev-home">
+
+    <!-- ===== HERO ===== -->
+    <section class="ev-hero">
+        <div class="ev-hero-bg-grid"></div>
+        <div class="ev-hero__content">
+            <!-- Badge -->
+            <div class="ev-hero__badge">
+                <span class="ev-hero__badge-dot"></span>
+                ⚡ Thuê xe điện thông minh · Sạch · Nhanh
+            </div>
+
+            <!-- Title -->
+            <h1 class="ev-hero__title">
+                Trải nghiệm<br />
+                <span class="ev-hero__title-accent">xe điện</span> thế hệ mới
+            </h1>
+
+            <p class="ev-hero__sub">
+                @siteSlogan — Đặt xe trong vài giây, nhận xe tận nơi, hành trình không khí thải.
+            </p>
+
+            <!-- Booking panel -->
+            <div class="ev-booking-panel">
+                <div class="ev-booking-panel__field">
+                    <span class="ev-booking-panel__label">🚗 Loại xe</span>
+                    <select @bind="filterLoai" class="ev-select" style="color:black">
+                        <option value="">Tất cả xe</option>
+                        <option value="scooter">🛵 Xe máy điện</option>
+                        <option value="car">🚗 Ô tô điện</option>
+                        <option value="bike">🚲 Xe đạp điện</option>
+                        <option value="van">🚐 Van điện</option>
+                    </select>
+                </div>
+                <div class="ev-booking-panel__field">
+                    <span class="ev-booking-panel__label">📅 Ngày bắt đầu</span>
+                    <input type="datetime-local" @bind="filterStart" class="ev-input" style="color:black" />
+                </div>
+                <div class="ev-booking-panel__field">
+                    <span class="ev-booking-panel__label">🏁 Ngày kết thúc</span>
+                    <input type="datetime-local" @bind="filterEnd" class="ev-input" style="color:black"   />
+                </div>
+                <button class="ev-btn ev-btn--primary ev-booking-panel__btn" @onclick="DoSearch">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Tìm xe
+                </button>
+            </div>
+
+            <!-- Trust row -->
+            <div class="ev-hero-trust">
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                    Đặt xe miễn phí
+                </div>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                    Hủy linh hoạt
+                </div>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                    Hỗ trợ 24/7
+                </div>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                    100% xe điện
+                </div>
+            </div>
         </div>
-    }
-    else
-    {
-        var slides = (model.FeaturedPosts ?? new()).Take(6).ToList();
-        var hasHeroIntro = model.SchoolIntro != null;
-        var hasHeroSlider = slides.Any();
+    </section>
 
-        @if (hasHeroSlider || hasHeroIntro)
-        {
-            <section class="hp-hero-grid @(!hasHeroSlider || !hasHeroIntro ? "single" : string.Empty)">
-                @if (hasHeroSlider)
-                {
-                    <div class="hp-featured">
-                        @for (int i = 0; i < slides.Count; i++)
-                        {
-                            var post = slides[i];
-                            var idx  = i;
-                            var slideImage = string.IsNullOrWhiteSpace(post.CoverImageUrl)
-                                ? "/image/banner-holder.png"
-                                : post.CoverImageUrl;
-                            <div class="hp-slide @(i == activeSlide ? "active" : "")">
-                                <img class="hp-slide-img" src="@slideImage" alt="@post.Title" data-fallback-src="/image/banner-holder.png" />
-                                <div class="hp-slide-content">
-                                    <div class="hp-slide-kicker">Tin nổi bật</div>
-                                    <h1 class="hp-slide-title">@post.Title</h1>
-                                    @if (!string.IsNullOrWhiteSpace(post.Summary))
-                                    {
-                                        <p class="hp-slide-summary">@post.Summary</p>
-                                    }
-                                    <a href="@PostHref(post)" class="hp-slide-btn">
-                                        Đọc bài viết
-                                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                                    </a>
-                                </div>
-                            </div>
-                        }
-
-                        <div class="hp-dots">
-                            @for (int i = 0; i < slides.Count; i++)
-                            {
-                                var idx = i;
-                                <button class="hp-dot @(i == activeSlide ? "active" : "")"
-                                        type="button" @onclick="() => GoToSlide(idx)"></button>
-                            }
-                        </div>
-
-                        <button class="hp-arrow hp-arrow-prev" type="button" @onclick="PrevSlide">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
-                        </button>
-                        <button class="hp-arrow hp-arrow-next" type="button" @onclick="NextSlide">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                        </button>
-
-                        <div class="hp-progress">
-                            <div class="hp-progress-bar" @key="activeSlide"></div>
-                        </div>
-                    </div>
-                }
-
-                @if (model.SchoolIntro != null)
-                {
-                    <aside class="hp-school-card" aria-label="Thông tin nhà trường">
-                        <div class="hp-school-top">
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.LogoUrl))
-                            {
-                                <img src="@model.SchoolIntro.LogoUrl" alt="@model.SchoolIntro.SchoolName" />
-                            }
-                            else
-                            {
-                                <span>@GetSchoolInitials(model.SchoolIntro.SchoolName)</span>
-                            }
-                            <div>
-                                <p>Thông tin nhà trường</p>
-                                <h2>@(model.SchoolIntro.SchoolName ?? "Nhà trường")</h2>
-                            </div>
-                        </div>
-
-                        <p class="hp-school-intro">@SchoolIntroText</p>
-
-                        <div class="hp-school-facts">
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.Address))
-                            {
-                                <div>
-                                    <span class="material-symbols-outlined">location_on</span>
-                                    <p>@model.SchoolIntro.Address</p>
-                                </div>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.LevelText))
-                            {
-                                <div>
-                                    <span class="material-symbols-outlined">school</span>
-                                    <p>@model.SchoolIntro.LevelText</p>
-                                </div>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.StudyTimeText))
-                            {
-                                <div>
-                                    <span class="material-symbols-outlined">schedule</span>
-                                    <p>@model.SchoolIntro.StudyTimeText</p>
-                                </div>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.Phone))
-                            {
-                                <div>
-                                    <span class="material-symbols-outlined">call</span>
-                                    <p>@model.SchoolIntro.Phone</p>
-                                </div>
-                            }
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.LeaderName))
-                            {
-                                <div>
-                                    <span class="material-symbols-outlined">person</span>
-                                    <p>@model.SchoolIntro.LeaderName</p>
-                                </div>
-                            }
-                        </div>
-
-                        <div class="hp-school-actions">
-                            <a href="/about">Giới thiệu</a>
-                            @if (!string.IsNullOrWhiteSpace(model.SchoolIntro.WebsiteUrl))
-                            {
-                                <a href="@model.SchoolIntro.WebsiteUrl" target="_blank" rel="noopener noreferrer">Website</a>
-                            }
-                        </div>
-                    </aside>
-                }
-            </section>
-        }
-        else
-        {
-            <section class="hp-school-card hp-school-card-empty">
-                <div class="hp-school-top">
-                    <span>PN</span>
-                    <div>
-                        <p>Thông tin nhà trường</p>
-                        <h2>Cổng thông tin điện tử</h2>
-                    </div>
+    <!-- ===== STATS ===== -->
+    <section class="ev-stats-section">
+        <div class="ev-container">
+            <div class="ev-stats-grid">
+                <div class="ev-stat-item ev-reveal">
+                    <span class="ev-stat-item__num ev-stat-item__num--blue">@vehicles.Count+</span>
+                    <span class="ev-stat-item__label">Xe sẵn sàng</span>
                 </div>
-                <p class="hp-school-intro">Chưa có dữ liệu giới thiệu để hiển thị trên trang chủ.</p>
-            </section>
-        }
-
-        /* ── NỘI DUNG NỔI BẬT — horizontal auto-scroll cards ── */
-
-            var spotlightPosts = (model.FeaturedPosts ?? new()).Take(6).ToList();
-            var spotlightDocs  = (featuredDocuments ?? new()).Take(3).ToList();
-            var hasSpotlight   = spotlightPosts.Any() || spotlightDocs.Any();
-
-
-        @if (hasSpotlight)
-        {
-            <div class="hp-spotlight-section">
-                <div class="hp-spotlight-header">
-                    <div class="hp-spotlight-header-title">
-                        <span class="hp-card-title-bar bar-blue"></span>
-                        Nội dung nổi bật
-                    </div>
-                    <a class="hp-card-link" href="/posts">
-                        Xem tất cả
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
+                <div class="ev-stat-item ev-reveal">
+                    <span class="ev-stat-item__num ev-stat-item__num--green">0g</span>
+                    <span class="ev-stat-item__label">CO₂ phát thải</span>
                 </div>
-
-                <div class="hp-scroll-track-wrap">
-                    <!-- Auto-scroll: duplicate items for seamless loop -->
-                    <div class="hp-scroll-track auto-scroll">
-                        <div class="hp-scroll-inner">
-                            @* First set *@
-                            @foreach (var post in spotlightPosts)
-                            {
-                                <a class="hp-scard" href="@PostHref(post)">
-                                    <div class="hp-scard-img-wrap">
-                                        @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
-                                        {
-                                            <img src="@post.CoverImageUrl" alt="@post.Title" />
-                                        }
-                                        else
-                                        {
-                                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                        }
-                                    </div>
-                                    <span class="hp-scard-badge badge-post">Bài viết</span>
-                                    <p class="hp-scard-title">@post.Title</p>
-                                    <span class="hp-scard-meta">Xem chi tiết →</span>
-                                </a>
-                            }
-                            @foreach (var doc in spotlightDocs)
-                            {
-                                <a class="hp-scard hp-scard-doc" href="@GetDocumentHref(doc)">
-                                    <div class="hp-scard-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                    </div>
-                                    <span class="hp-scard-badge badge-doc">Văn bản</span>
-                                    <p class="hp-scard-title">@doc.DocTitle</p>
-                                    <span class="hp-scard-meta">Văn bản công khai →</span>
-                                </a>
-                            }
-                            @* Duplicate set for seamless loop *@
-                            @foreach (var post in spotlightPosts)
-                            {
-                                <a class="hp-scard" href="@PostHref(post)" tabindex="-1" aria-hidden="true">
-                                    <div class="hp-scard-img-wrap">
-                                        @if (!string.IsNullOrWhiteSpace(post.CoverImageUrl))
-                                        {
-                                            <img src="@post.CoverImageUrl" alt="@post.Title" />
-                                        }
-                                        else
-                                        {
-                                            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                        }
-                                    </div>
-                                    <span class="hp-scard-badge badge-post">Bài viết</span>
-                                    <p class="hp-scard-title">@post.Title</p>
-                                    <span class="hp-scard-meta">Xem chi tiết →</span>
-                                </a>
-                            }
-                            @foreach (var doc in spotlightDocs)
-                            {
-                                <a class="hp-scard hp-scard-doc" href="@GetDocumentHref(doc)" tabindex="-1" aria-hidden="true">
-                                    <div class="hp-scard-icon">
-                                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>
-                                    </div>
-                                    <span class="hp-scard-badge badge-doc">Văn bản</span>
-                                    <p class="hp-scard-title">@doc.DocTitle</p>
-                                    <span class="hp-scard-meta">Văn bản công khai →</span>
-                                </a>
-                            }
-                        </div>
-                    </div>
+                <div class="ev-stat-item ev-reveal">
+                    <span class="ev-stat-item__num ev-stat-item__num--purple">24/7</span>
+                    <span class="ev-stat-item__label">Hỗ trợ liên tục</span>
+                </div>
+                <div class="ev-stat-item ev-reveal">
+                    <span class="ev-stat-item__num">100%</span>
+                    <span class="ev-stat-item__label">Xe điện xanh</span>
                 </div>
             </div>
-        }
+        </div>
+    </section>
 
-        /* ── MAIN 3-COL GRID ── */
-        <div class="hp-grid">
-            <div class="hp-card">
-                <div class="hp-card-header">
-                    <div class="hp-card-title">
-                        <span class="hp-card-title-bar bar-blue"></span>
-                        Tin nổi bật
-                    </div>
-                    <a class="hp-card-link" href="/posts">
-                        Xem thêm
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
+    <!-- ===== VEHICLE LIST ===== -->
+    <section class="ev-section ev-section--gray">
+        <div class="ev-container">
+            <div class="ev-section-header-row ev-reveal">
+                <div>
+                    <span class="ev-section__eyebrow">Xe sẵn sàng</span>
+                    <h2 class="ev-section__title">Chọn xe phù hợp với bạn</h2>
                 </div>
-                <div class="hp-card-body">
-                    <div class="hp-news-scroll">
-                        <div class="hp-news-list">
-                            @foreach (var item in (model.FeaturedPosts ?? new()).Take(10))
-                            {
-                                <div class="hp-news-item">
-                                    @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
-                                    {
-                                        <img class="hp-news-thumb" src="@item.CoverImageUrl" alt="@item.Title" />
-                                    }
-                                    else
-                                    {
-                                        <div class="hp-news-thumb-placeholder">
-                                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                        </div>
-                                    }
-                                    <div class="hp-news-info">
-                                        <a class="hp-news-title" href="@PostHref(item)">@item.Title</a>
-                                        <div class="hp-news-meta">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
-                                            @FormatDate(item.PublishAt)
-                                            <span class="hp-view-count">
-                                                <span class="material-symbols-outlined">visibility</span>
-                                                @FormatViews(item.ViewCount)
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
+                <a href="/vehicles" class="ev-link-more">
+                    Xem tất cả xe
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </a>
             </div>
 
-            <div class="hp-card">
-                <div class="hp-card-header">
-                    <div class="hp-card-title">
-                        <span class="hp-card-title-bar bar-red"></span>
-                        Tin mới nhất
-                    </div>
-                    <a class="hp-card-link" href="/posts">
-                        Xem thêm
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                    </a>
-                </div>
-                <div class="hp-card-body">
-                    <div class="hp-bullet-scroll">
-                        <div class="hp-bullet-list">
-                            @foreach (var item in (model.LatestPosts ?? new()).Take(10))
-                            {
-                                <div class="hp-bullet-item">
-                                    <a class="hp-bullet-link" href="@PostHref(item)">
-                                        <span class="hp-bullet hp-bullet-red">›</span>
-                                        <span>@item.Title</span>
-                                    </a>
-                                    <div class="hp-bullet-date">
-                                        @FormatDate(item.PublishAt) · @FormatViews(item.ViewCount) lượt xem
-                                    </div>
-                                </div>
-                            }
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="hp-sidebar">
-                <div class="hp-card">
-                    <div class="hp-card-header">
-                        <div class="hp-card-title">
-                            <span class="hp-card-title-bar bar-green"></span>
-                            Liên kết nhanh
-                        </div>
-                    </div>
-                    <div class="hp-card-body">
-                        <div class="hp-quick-links">
-                            @foreach (var link in VisibleQuickLinks)
-                            {
-                                <a class="hp-quick-link" href="@link.Href">
-                                    <div class="hp-quick-link-icon">
-                                        @((MarkupString)link.IconSvg)
-                                    </div>
-                                    @link.Label
-                                    <svg class="hp-quick-link-arrow" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
-                                </a>
-                            }
-                        </div>
-                    </div>
-                </div>
-
-                @if (categories?.Any() == true)
-                {
-                    <div class="hp-card">
-                        <div class="hp-card-header">
-                            <div class="hp-card-title">
-                                <span class="hp-card-title-bar bar-gray"></span>
-                                Chuyên mục
+            @if (loading)
+            {
+                <!-- Skeleton loading -->
+                <div class="ev-vehicle-grid ev-stagger">
+                    @for (int i = 0; i < 4; i++)
+                    {
+                        <div class="ev-skeleton-card">
+                            <div class="ev-skeleton ev-skeleton-img"></div>
+                            <div class="ev-skeleton-body">
+                                <div class="ev-skeleton ev-skeleton-line ev-skeleton-line--sm" style="margin-bottom:8px"></div>
+                                <div class="ev-skeleton ev-skeleton-line ev-skeleton-line--lg" style="margin-bottom:12px"></div>
+                                <div class="ev-skeleton ev-skeleton-line ev-skeleton-line--sm"></div>
                             </div>
                         </div>
-                        <div class="hp-card-body">
-                            <div class="hp-cat-list">
-                                @foreach (var cat in categories.Take(10))
+                    }
+                </div>
+            }
+            else if (vehicles.Count == 0)
+            {
+                <div class="ev-empty ev-reveal">
+                    <div class="ev-empty__icon">🔌</div>
+                    <p>Hiện chưa có xe sẵn sàng. Vui lòng thử lại sau.</p>
+                    <button class="ev-btn ev-btn--primary" @onclick="Reload">Tải lại</button>
+                </div>
+            }
+            else
+            {
+                <div class="ev-vehicle-grid ev-stagger">
+                    @foreach (var xe in vehicles.Take(8))
+                    {
+                        <div class="ev-vehicle-card ev-reveal" @onclick="() => GoToDetail(xe.Id)">
+                            <!-- Image -->
+                            <div class="ev-vehicle-card__img-wrap">
+                                @if (!string.IsNullOrWhiteSpace(xe.HinhAnhChinh))
                                 {
-                                    <a class="hp-cat-chip" href="@CategoryHref(cat)">@cat.CategoryName</a>
+                                    <img src="@xe.HinhAnhChinh" alt="@xe.TenXe" loading="lazy" />
                                 }
+                                else
+                                {
+                                    <div class="ev-vehicle-card__img-placeholder">
+                                        @LoaiXeIcon(xe.LoaiXe)
+                                    </div>
+                                }
+                                <div class="ev-vehicle-card__status">
+                                    <span class="ev-badge ev-badge--@xe.TinhTrang">
+                                        @(xe.TinhTrang == "available" ? "✓ Sẵn sàng" : xe.TinhTrang)
+                                    </span>
+                                </div>
+                                <div class="ev-vehicle-card__battery">
+                                    <span class="ev-vehicle-card__battery-icon">⚡</span>
+                                    @xe.PinPhanTram%
+                                </div>
+                            </div>
+
+                            <!-- Body -->
+                            <div class="ev-vehicle-card__body">
+                                <div class="ev-vehicle-card__type">@LoaiXeLabel(xe.LoaiXe)</div>
+                                <h3 class="ev-vehicle-card__name">@xe.TenXe</h3>
+
+                                <div class="ev-vehicle-card__specs">
+                                    @if (!string.IsNullOrWhiteSpace(xe.MauXe))
+                                    {
+                                        <span class="ev-vehicle-card__spec">🎨 @xe.MauXe</span>
+                                    }
+                                    @if (xe.KmHangLanSac > 0)
+                                    {
+                                        <span class="ev-vehicle-card__spec">🛣️ @xe.KmHangLanSac km</span>
+                                    }
+                                    @if (!string.IsNullOrWhiteSpace(xe.HangXe))
+                                    {
+                                        <span class="ev-vehicle-card__spec">🏭 @xe.HangXe</span>
+                                    }
+                                </div>
+
+                                <div class="ev-vehicle-card__price-row">
+                                    @if (xe.GiaThueGio > 0)
+                                    {
+                                        <span class="ev-price-hour">
+                                            @FormatVnd(xe.GiaThueGio)<small>/giờ</small>
+                                        </span>
+                                    }
+                                    @if (xe.GiaThueNgay > 0)
+                                    {
+                                        <span class="ev-price-day">@FormatVnd(xe.GiaThueNgay)<small>/ngày</small></span>
+                                    }
+                                </div>
+
+                                <div class="ev-vehicle-card__actions">
+                                    <button class="ev-btn ev-btn--primary ev-btn--sm"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="() => GoToDetail(xe.Id)">
+                                        Đặt ngay
+                                    </button>
+                                    <button class="ev-btn ev-btn--ghost ev-btn--sm"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="() => GoToDetail(xe.Id)">
+                                        Chi tiết
+                                    </button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                }
-            </div>
-        </div>
-        @if (model.FeatureDocumentsEnabled)
-        {
-            /* ── VĂN BẢN CÔNG KHAI NỔI BẬT ── */
-            <div class="hp-card">
-                <div class="hp-card-header">
-                    <div class="hp-card-title">
-                        <span class="hp-card-title-bar bar-red"></span>
-                        Văn bản công khai nổi bật
-                    </div>
-                    <a class="hp-card-link" href="/documents">
-                        Xem tất cả
-                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6" /></svg>
-                    </a>
-                </div>
-                <div class="hp-card-body">
-                    @if (featuredDocuments?.Any() == true)
-                    {
-                        <div class="hp-doc-grid">
-                            @foreach (var doc in featuredDocuments)
-                            {
-                                <a class="hp-doc-card" href="@GetDocumentHref(doc)">
-                                    <div class="hp-doc-badge">
-                                        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
-                                        Văn bản
-                                    </div>
-                                    <div class="hp-doc-fallback">
-                                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z" /><polyline points="13 2 13 9 20 9" /></svg>
-                                    </div>
-                                    <h3 class="hp-doc-title">@doc.DocTitle</h3>
-                                    <div class="hp-doc-meta">
-                                        @if (!string.IsNullOrWhiteSpace(doc.DocNumber))
-                                        {
-                                            <span>Số: @doc.DocNumber</span>
-                                        }
-                                        @if (!string.IsNullOrWhiteSpace(doc.TypeName))
-                                        {
-                                            <span>•</span>
-                                            <span>@doc.TypeName</span>
-                                        }
-                                    </div>
-                                    <div class="hp-doc-info">
-                                        <span>Ngày ban hành: @FormatDate(doc.IssuedDate)</span>
-                                        <span>Xem chi tiết →</span>
-                                    </div>
-                                </a>
-                            }
-                        </div>
                     }
-                    else
-                    {
-                        <div class="hp-loading u-min-h-140">Chưa có văn bản công khai nổi bật.</div>
-                    }
-                </div>
-            </div>
-        }
-        /* ── BOTTOM: Tin nhà trường ── */
-        @if (model.LatestPosts?.Any() == true)
-        {
-            <div class="hp-bottom">
-                <div class="hp-card">
-                    <div class="hp-card-header">
-                        <div class="hp-card-title">
-                            <span class="hp-card-title-bar bar-blue"></span>
-                            Tin nhà trường
-                        </div>
-                        <a class="hp-card-link" href="/posts">Xem tất cả</a>
-                    </div>
-                    <div class="hp-card-body">
-                        <div class="hp-mini-grid">
-                            @foreach (var item in model.LatestPosts.Take(4))
-                            {
-                                <a class="hp-mini-card" href="@PostHref(item)">
-                                    @if (!string.IsNullOrWhiteSpace(item.CoverImageUrl))
-                                    {
-                                        <img class="hp-mini-card-img" src="@item.CoverImageUrl" alt="@item.Title" />
-                                    }
-                                    else
-                                    {
-                                        <div class="hp-mini-card-img-placeholder">
-                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
-                                        </div>
-                                    }
-                                    <div class="hp-mini-card-body">
-                                        <div class="hp-mini-card-title">@item.Title</div>
-                                        <div class="hp-mini-card-date">@FormatDate(item.PublishAt) · @FormatViews(item.ViewCount) lượt xem</div>
-                                    </div>
-                                </a>
-                            }
-                        </div>
-                    </div>
                 </div>
 
-                <div class="hp-card hp-doc-section">
-                    <div class="hp-card-header">
-                        <div class="hp-card-title">
-                            <span class="hp-card-title-bar bar-red"></span>
-                            Bài viết mới
-                        </div>
-                        <a class="hp-card-link" href="/posts">Xem thêm</a>
+                <!-- View all CTA -->
+                @if (vehicles.Count > 8)
+                {
+                    <div style="text-align:center;margin-top:40px;" class="ev-reveal">
+                        <a href="/vehicles" class="ev-btn ev-btn--outline ev-btn--lg">
+                            Xem thêm @(vehicles.Count - 8) xe khác →
+                        </a>
                     </div>
-                    <div class="hp-card-body">
-                        <div class="hp-bullet-list">
-                            @foreach (var item in (model.LatestPosts ?? new()).Skip(4).Take(7))
-                            {
-                                <div class="hp-bullet-item">
-                                    <a class="hp-bullet-link" href="@PostHref(item)">
-                                        <span class="hp-bullet">›</span>
-                                        <span>@item.Title</span>
-                                    </a>
-                                    <div class="hp-bullet-date">
-                                        @FormatDate(item.PublishAt) · @FormatViews(item.ViewCount) lượt xem
-                                    </div>
-                                </div>
-                            }
-                        </div>
+                }
+            }
+        </div>
+    </section>
+
+    <!-- ===== HOW IT WORKS ===== -->
+    <section class="ev-section ev-section--white">
+        <div class="ev-container">
+            <div class="ev-section__header ev-reveal" style="text-align:center">
+                <span class="ev-section__eyebrow">Đơn giản</span>
+                <h2 class="ev-section__title">Đặt xe trong 3 bước</h2>
+                <p class="ev-section__sub" style="margin:0 auto">
+                    Quy trình thuê xe được tối ưu để bạn có thể đặt xe nhanh nhất có thể.
+                </p>
+            </div>
+
+            <div class="ev-how-grid ev-stagger">
+                <div class="ev-step-card ev-reveal">
+                    <div class="ev-step-card__num">1</div>
+                    <div class="ev-step-card__icon">🔍</div>
+                    <h3>Chọn xe phù hợp</h3>
+                    <p>Duyệt danh sách xe điện đa dạng, lọc theo loại, giá, khu vực và thời gian bạn muốn thuê.</p>
+                </div>
+                <div class="ev-step-card ev-reveal">
+                    <div class="ev-step-card__num ev-step-card__num--2">2</div>
+                    <div class="ev-step-card__icon">📝</div>
+                    <h3>Đặt & xác nhận</h3>
+                    <p>Nhập thông tin cá nhân, chọn thời gian thuê và nhận xác nhận đặt xe ngay lập tức.</p>
+                </div>
+                <div class="ev-step-card ev-reveal">
+                    <div class="ev-step-card__num ev-step-card__num--3">3</div>
+                    <div class="ev-step-card__icon">🚀</div>
+                    <h3>Nhận xe & lên đường</h3>
+                    <p>Nhận xe tại điểm hẹn, tận hưởng hành trình xanh và theo dõi đơn thuê realtime.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FEATURES ===== -->
+    <section class="ev-section ev-section--gray">
+        <div class="ev-container">
+            <div class="ev-section__header ev-reveal" style="text-align:center">
+                <span class="ev-section__eyebrow">Tại sao chọn chúng tôi</span>
+                <h2 class="ev-section__title">Trải nghiệm thuê xe cao cấp</h2>
+            </div>
+
+            <div class="ev-features-grid ev-stagger">
+                <div class="ev-feature-card ev-reveal">
+                    <div class="ev-feature-card__icon ev-feature-card__icon--blue">⚡</div>
+                    <div class="ev-feature-card__body">
+                        <h4>100% Xe điện</h4>
+                        <p>Tất cả phương tiện đều chạy điện, không khí thải, thân thiện môi trường.</p>
+                    </div>
+                </div>
+                <div class="ev-feature-card ev-reveal">
+                    <div class="ev-feature-card__icon ev-feature-card__icon--green">🌿</div>
+                    <div class="ev-feature-card__body">
+                        <h4>Xanh & Sạch</h4>
+                        <p>Góp phần giảm thiểu ô nhiễm không khí, bảo vệ môi trường cho thế hệ tương lai.</p>
+                    </div>
+                </div>
+                <div class="ev-feature-card ev-reveal">
+                    <div class="ev-feature-card__icon ev-feature-card__icon--blue">🔒</div>
+                    <div class="ev-feature-card__body">
+                        <h4>An toàn & Bảo hiểm</h4>
+                        <p>Xe được bảo dưỡng định kỳ, bảo hiểm đầy đủ, GPS theo dõi thời gian thực.</p>
+                    </div>
+                </div>
+                <div class="ev-feature-card ev-reveal">
+                    <div class="ev-feature-card__icon ev-feature-card__icon--green">💳</div>
+                    <div class="ev-feature-card__body">
+                        <h4>Giá minh bạch</h4>
+                        <p>Không phụ phí ẩn. Giá hiển thị rõ ràng theo giờ và theo ngày từ trước.</p>
+                    </div>
+                </div>
+                <div class="ev-feature-card ev-reveal">
+                    <div class="ev-feature-card__icon ev-feature-card__icon--purple">📱</div>
+                    <div class="ev-feature-card__body">
+                        <h4>Theo dõi đơn realtime</h4>
+                        <p>Kiểm tra trạng thái đơn thuê, lịch sử và thông tin xe mọi lúc mọi nơi.</p>
+                    </div>
+                </div>
+                <div class="ev-feature-card ev-reveal">
+                    <div class="ev-feature-card__icon ev-feature-card__icon--purple">🎯</div>
+                    <div class="ev-feature-card__body">
+                        <h4>Hỗ trợ 24/7</h4>
+                        <p>Đội ngũ hỗ trợ luôn sẵn sàng giải quyết mọi vấn đề của bạn bất kỳ lúc nào.</p>
                     </div>
                 </div>
             </div>
-        }
-    }
+        </div>
+    </section>
+
+    <!-- ===== CTA ===== -->
+    <section class="ev-section ev-section--white">
+        <div class="ev-container">
+            <div class="ev-cta-section ev-reveal">
+                <h2>Sẵn sàng trải nghiệm?</h2>
+                <p>Đặt xe điện ngay hôm nay — nhanh, sạch và hoàn toàn miễn phí đặt cọc.</p>
+                <div class="ev-cta-actions">
+                    <a href="/vehicles" class="ev-btn ev-btn--white ev-btn--lg">
+                        🚗 Tìm xe ngay
+                    </a>
+                    <a href="/booking/track" class="ev-btn ev-btn--lg" style="background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.3);">
+                        📦 Tra cứu đơn
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CONTACT & TRACK ===== -->
+    <section class="ev-contact-section">
+        <div class="ev-container ev-contact-grid">
+            <div class="ev-reveal">
+                <h2>Liên hệ với chúng tôi</h2>
+                <p class="ev-contact-sub">Hỗ trợ 24/7 — luôn sẵn sàng giúp bạn trên mọi hành trình</p>
+                @if (!string.IsNullOrWhiteSpace(contactPhone))
+                {
+                    <div class="ev-contact-item">
+                        📞 <a href="tel:@contactPhone">@contactPhone</a>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(contactEmail))
+                {
+                    <div class="ev-contact-item">
+                        ✉️ <a href="mailto:@contactEmail">@contactEmail</a>
+                    </div>
+                }
+                @if (!string.IsNullOrWhiteSpace(contactAddress))
+                {
+                    <div class="ev-contact-item">📍 @contactAddress</div>
+                }
+            </div>
+            <div class="ev-track-box ev-reveal">
+                <h3>🔍 Tra cứu đơn thuê</h3>
+                <p>Nhập mã đơn để xem trạng thái và thông tin đơn thuê của bạn</p>
+                <div class="ev-track-input-group">
+                    <input class="ev-input" @bind="trackCode" placeholder="VD: EV20260622001" />
+                    <button class="ev-btn ev-btn--primary" @onclick="DoTrack">Tra cứu</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
 </div>
 
 @code {
-    private PublicHomepageViewModel? model;
-    private List<PublicPostCategoryItem>? categories;
-    private List<PublicDocumentListItem>? featuredDocuments;
+    private List<PublicVehicleItem> vehicles = [];
+    private bool loading = true;
+    private string siteName = "EV Rental";
+    private string siteSlogan = "Đặt xe điện — Nhanh, sạch, thông minh";
+    private string contactPhone = "";
+    private string contactEmail = "";
+    private string contactAddress = "";
 
-    // ── Slider state ──
-    private int activeSlide = 0;
-    private int totalSlides = 0;
-    private System.Threading.Timer? _timer;
-    private bool _disposed;
-    private const int SlideIntervalMs = 4500;
-
-    // ── Quick links ──
-    private readonly record struct QuickLink(string Label, string Href, string IconSvg);
-    private readonly List<QuickLink> quickLinks = new()
-    {
-        new("Bài viết", "/posts",
-            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>"""),
-        new("Tìm kiếm", "/search",
-            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>"""),
-        new("Văn bản công khai", "/documents",
-            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/></svg>"""),
-        new("Cơ cấu tổ chức", "/organization",
-            """<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>"""),
-    };
-
-    private IEnumerable<QuickLink> VisibleQuickLinks
-        => model?.FeatureSearchEnabled == false
-            ? quickLinks.Where(link => !string.Equals(link.Href, "/search", StringComparison.OrdinalIgnoreCase))
-            : quickLinks;
-
-    private string SchoolIntroText
-        => string.IsNullOrWhiteSpace(model?.SchoolIntro?.IntroText)
-            ? "Thông tin tổng quan, địa chỉ liên hệ và các kênh chính thức của nhà trường được cập nhật từ dữ liệu trường học."
-            : model!.SchoolIntro!.IntroText!;
+    private string filterLoai = "";
+    private DateTime filterStart = DateTime.Now;
+    private DateTime filterEnd = DateTime.Now.AddDays(1);
+    private string trackCode = "";
 
     protected override async Task OnInitializedAsync()
     {
-        var modelTask = HomepageService.GetHomepageAsync(PN_PublicVariables.MaTruong);
-        var categoriesTask = PublicPostCategoryService.GetCategoriesAsync(PN_PublicVariables.MaTruong);
-
-        await Task.WhenAll(modelTask, categoriesTask);
-
-        model = await modelTask;
-        categories = await categoriesTask;
-
-        featuredDocuments = model.FeatureDocumentsEnabled
-            ? await PublicDocumentService.GetDocumentsAsync(PN_PublicVariables.MaTruong, pageSize: Math.Clamp(model.HomepageDocumentsLimit, 1, 24))
-            : [];
-        totalSlides = model?.FeaturedPosts?.Take(6).Count() ?? 0;
-    }
-
-    private void StartTimer()
-    {
-        _timer = new System.Threading.Timer(_ =>
+        try
         {
-            if (_disposed) return;
-            InvokeAsync(() =>
-            {
-                activeSlide = (activeSlide + 1) % totalSlides;
-                StateHasChanged();
-            });
-        }, null, SlideIntervalMs, SlideIntervalMs);
-    }
+            var settings = await SiteSettingService.GetSettingsAsync("xedien");
+            siteName = GetSetting(settings, "site_name", "EV Rental");
+            siteSlogan = GetSetting(settings, "site_slogan", "Đặt xe điện — Nhanh, sạch, thông minh");
+            contactPhone = GetSetting(settings, "contact_phone", "");
+            contactEmail = GetSetting(settings, "contact_email", "");
+            contactAddress = GetSetting(settings, "contact_address", "");
 
-    private void GoToSlide(int idx)
-    {
-        _timer?.Dispose();
-        _timer = null;
-        activeSlide = idx;
-        if (totalSlides > 1) StartTimer();
-    }
-
-    private void PrevSlide() => GoToSlide((activeSlide - 1 + totalSlides) % totalSlides);
-    private void NextSlide() => GoToSlide((activeSlide + 1) % totalSlides);
-
-    private static string FormatDate(DateTime? dt)
-        => dt.HasValue ? dt.Value.ToString("dd/MM/yyyy") : string.Empty;
-
-    private static string FormatViews(long views)
-        => views < 1_000 ? $"{views:N0}" : $"{views / 1_000d:0.#}K";
-
-    private static string GetDocumentHref(PublicDocumentListItem doc)
-        => !string.IsNullOrWhiteSpace(doc.Id)
-            ? $"/documents/{doc.Id}"
-            : "/documents";
-
-    private static string PostHref(PublicPostListItem post)
-        => string.IsNullOrWhiteSpace(post.Slug) ? "/posts" : $"/posts/{post.Slug}";
-
-    private static string PostHref(PublicPostItem post)
-        => string.IsNullOrWhiteSpace(post.Slug) ? "/posts" : $"/posts/{post.Slug}";
-
-    private static string CategoryHref(PublicPostCategoryItem category)
-        => string.IsNullOrWhiteSpace(category.Slug) ? "/posts" : $"/posts/category/{category.Slug}";
-
-    private static string GetSchoolInitials(string? name)
-    {
-        if (string.IsNullOrWhiteSpace(name))
-            return "PN";
-
-        var words = name.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        if (words.Length == 0)
-            return "PN";
-
-        return string.Concat(words.TakeLast(Math.Min(2, words.Length)).Select(word => char.ToUpperInvariant(word[0])));
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender && totalSlides > 1)
-        {
-            StartTimer();
-            await InvokeAsync(StateHasChanged);
+            vehicles = await VehicleService.GetAvailableVehiclesAsync(new VehicleFilter());
         }
+        catch { vehicles = []; }
+        finally { loading = false; }
     }
 
-    public ValueTask DisposeAsync()
+    private async Task Reload()
     {
-        _disposed = true;
-        _timer?.Dispose();
-        return ValueTask.CompletedTask;
+        loading = true;
+        try { vehicles = await VehicleService.GetAvailableVehiclesAsync(new VehicleFilter()); }
+        catch { vehicles = []; }
+        finally { loading = false; }
     }
+
+    private void DoSearch()
+    {
+        var query = $"?loai={Uri.EscapeDataString(filterLoai)}&start={filterStart:yyyy-MM-ddTHH:mm}&end={filterEnd:yyyy-MM-ddTHH:mm}";
+        Nav.NavigateTo("/vehicles" + query);
+    }
+
+    private void GoToDetail(int id) => Nav.NavigateTo($"/vehicles/{id}");
+
+    private void DoTrack()
+    {
+        if (!string.IsNullOrWhiteSpace(trackCode))
+            Nav.NavigateTo($"/booking/track?ma={Uri.EscapeDataString(trackCode.Trim())}");
+    }
+
+    private static string LoaiXeIcon(string? loai) => loai switch
+    {
+        "car"     => "🚗",
+        "scooter" => "🛵",
+        "bike"    => "🚲",
+        "van"     => "🚐",
+        _ => "⚡"
+    };
+
+    private static string LoaiXeLabel(string? loai) => loai switch
+    {
+        "car"     => "Ô tô điện",
+        "scooter" => "Xe máy điện",
+        "bike"    => "Xe đạp điện",
+        "van"     => "Van điện",
+        _ => "Xe điện"
+    };
+
+    private static string FormatVnd(decimal val) =>
+        val.ToString("N0").Replace(",", ".") + "đ";
+
+    private static string GetSetting(IReadOnlyDictionary<string, string> dict, string key, string fallback) =>
+        dict.TryGetValue(key, out var v) && !string.IsNullOrWhiteSpace(v) ? v : fallback;
 }

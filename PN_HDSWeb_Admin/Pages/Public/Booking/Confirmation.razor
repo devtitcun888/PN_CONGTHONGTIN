@@ -1,0 +1,121 @@
+@page "/booking/confirmation"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicRentalService RentalService
+@inject NavigationManager Nav
+
+<PageTitle>Đặt xe thành công — EV Rental</PageTitle>
+
+<div class="ev-container ev-confirmation-page">
+
+    @if (loading)
+    {
+        <div class="ev-loading"><div class="ev-spinner"></div></div>
+    }
+    else if (rental == null)
+    {
+        <div class="ev-empty">
+            <div class="ev-empty__icon">😔</div>
+            <h2>Không tìm thấy đơn</h2>
+            <button class="ev-btn ev-btn--primary" @onclick='() => Nav.NavigateTo("/")'>Về trang chủ</button>
+        </div>
+    }
+    else
+    {
+        <div class="ev-confirm-card">
+            <div class="ev-confirm-icon">✅</div>
+            <h1>Đặt xe thành công!</h1>
+            <p class="ev-confirm-sub">Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
+
+            <div class="ev-confirm-code">
+                <span>Mã đơn của bạn</span>
+                <strong>@rental.MaDon</strong>
+            </div>
+
+            <div class="ev-confirm-detail">
+                <div class="ev-confirm-row">
+                    <span>Xe</span>
+                    <strong>@rental.TenXe</strong>
+                </div>
+                <div class="ev-confirm-row">
+                    <span>Khách hàng</span>
+                    <strong>@rental.KhachTen</strong>
+                </div>
+                <div class="ev-confirm-row">
+                    <span>Số điện thoại</span>
+                    <strong>@rental.KhachSdt</strong>
+                </div>
+                <div class="ev-confirm-row">
+                    <span>Bắt đầu</span>
+                    <strong>@rental.BatDauThue.ToString("dd/MM/yyyy HH:mm")</strong>
+                </div>
+                <div class="ev-confirm-row">
+                    <span>Kết thúc</span>
+                    <strong>@rental.KetThucThue.ToString("dd/MM/yyyy HH:mm")</strong>
+                </div>
+                <div class="ev-confirm-row">
+                    <span>Thời gian</span>
+                    <strong>@GetTimeText()</strong>
+                </div>
+                <div class="ev-confirm-row ev-confirm-row--total">
+                    <span>Tổng tiền (ước tính)</span>
+                    <strong>@FormatVnd(rental.TongTien)</strong>
+                </div>
+                @if (rental.TienDatCoc > 0)
+                {
+                    <div class="ev-confirm-row ev-confirm-row--deposit">
+                        <span>Đặt cọc</span>
+                        <strong>@FormatVnd(rental.TienDatCoc)</strong>
+                    </div>
+                }
+                <div class="ev-confirm-row">
+                    <span>Trạng thái</span>
+                    <span class="ev-badge ev-badge--@rental.TrangThai">@rental.TrangThaiLabel</span>
+                </div>
+            </div>
+
+            <div class="ev-confirm-note">
+                <strong>📞 Lưu ý:</strong> Vui lòng đến đúng giờ và mang theo CMND/CCCD.
+                Liên hệ chúng tôi nếu cần thay đổi hoặc hủy đơn.
+            </div>
+
+            <div class="ev-confirm-actions">
+                <button class="ev-btn ev-btn--ghost" @onclick="GoToTrack">
+                    Theo dõi đơn
+                </button>
+                <button class="ev-btn ev-btn--primary" @onclick='() => Nav.NavigateTo("/vehicles")'>
+                    Đặt thêm xe
+                </button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [SupplyParameterFromQuery] public string? ma { get; set; }
+
+    private PublicRentalInfo? rental;
+    private bool loading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        if (!string.IsNullOrWhiteSpace(ma))
+            rental = await RentalService.GetRentalByMaDonAsync(ma);
+        loading = false;
+    }
+
+    private void GoToTrack()
+    {
+        if (rental != null)
+            Nav.NavigateTo("/booking/track?ma=" + Uri.EscapeDataString(rental.MaDon ?? ""));
+    }
+
+    private string GetTimeText()
+    {
+        if (rental == null) return "";
+        if (rental.SoNgay >= 1) return $"{rental.SoNgay} ngày";
+        return $"{rental.SoGio} giờ";
+    }
+
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+}

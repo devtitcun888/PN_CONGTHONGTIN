@@ -1,0 +1,362 @@
+@page "/admin/rentals/{Id:int}"
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminRentalService RentalService
+@inject NavigationManager Nav
+
+<PageTitle>Chi tiết đơn #@Id — Admin</PageTitle>
+
+<div class="ev-admin-page">
+    <div class="ev-admin-header">
+        <div class="ev-admin-header__left">
+            <button class="ev-btn ev-btn--ghost ev-btn--sm" @onclick='() => Nav.NavigateTo("/admin/rentals")'>
+                ← Danh sách đơn
+            </button>
+            <h1>📋 Chi tiết đơn thuê</h1>
+        </div>
+    </div>
+
+    @if (loading)
+    {
+        <div class="ev-loading"><div class="ev-spinner"></div></div>
+    }
+    else if (rental == null)
+    {
+        <div class="ev-empty"><p>Không tìm thấy đơn #@Id.</p></div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(alertMsg))
+        {
+            <div class="ev-alert ev-alert--@alertType">@alertMsg</div>
+        }
+
+        <div class="ev-detail-layout">
+            <!-- CỘT TRÁI: thông tin chính -->
+            <div class="ev-detail-main">
+
+                <!-- Mã đơn + trạng thái -->
+                <div class="ev-card">
+                    <div class="ev-detail-header">
+                        <div>
+                            <p class="ev-text-muted ev-text-sm">Mã đơn</p>
+                            <h2 class="ev-don-code">@rental.MaDon</h2>
+                        </div>
+                        <span class="ev-badge ev-badge--lg ev-badge--@rental.TrangThai">
+                            @rental.TrangThaiLabel
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Timeline trạng thái -->
+                <div class="ev-card">
+                    <h3 class="ev-section-title">🕐 Timeline</h3>
+                    <div class="ev-timeline">
+                        @foreach (var step in GetTimeline())
+                        {
+                            <div class="ev-timeline-step @(step.Done ? "ev-timeline-step--done" : "") @(step.Current ? "ev-timeline-step--current" : "")">
+                                <div class="ev-timeline-dot">@(step.Done ? "✓" : step.Icon)</div>
+                                <div class="ev-timeline-content">
+                                    <strong>@step.Label</strong>
+                                    @if (step.Time.HasValue)
+                                    {
+                                        <small class="ev-text-muted">@step.Time.Value.ToString("dd/MM/yyyy HH:mm")</small>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Thông tin xe -->
+                <div class="ev-card">
+                    <h3 class="ev-section-title">🚗 Thông tin xe</h3>
+                    <div class="ev-xe-info">
+                        @if (!string.IsNullOrWhiteSpace(rental.HinhAnhXe))
+                        {
+                            <img src="@rental.HinhAnhXe" alt="@rental.TenXe" class="ev-xe-thumb" />
+                        }
+                        <div class="ev-xe-detail">
+                            <p><strong>@rental.TenXe</strong></p>
+                            <p class="ev-text-muted">@LoaiXeLabel(rental.LoaiXe) @(rental.BienSo != null ? $"· {rental.BienSo}" : "")</p>
+                            <div class="ev-xe-metrics">
+                                <span>🔋 Bắt đầu: <strong>@(rental.StartPin > 0 ? rental.StartPin + "%" : "—")</strong></span>
+                                <span>🔋 Kết thúc: <strong>@(rental.EndPin > 0 ? rental.EndPin + "%" : "—")</strong></span>
+                                <span>📍 Bắt đầu: <strong>@(rental.StartKm > 0 ? rental.StartKm + " km" : "—")</strong></span>
+                                <span>📍 Kết thúc: <strong>@(rental.EndKm > 0 ? rental.EndKm + " km" : "—")</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Thời gian thuê -->
+                <div class="ev-card">
+                    <h3 class="ev-section-title">📅 Thời gian thuê</h3>
+                    <div class="ev-info-grid">
+                        <div class="ev-info-item">
+                            <span class="ev-info-label">Bắt đầu thuê</span>
+                            <span class="ev-info-value">@rental.BatDauThue.ToString("HH:mm dd/MM/yyyy")</span>
+                        </div>
+                        <div class="ev-info-item">
+                            <span class="ev-info-label">Kết thúc thuê</span>
+                            <span class="ev-info-value">@rental.KetThucThue.ToString("HH:mm dd/MM/yyyy")</span>
+                        </div>
+                        <div class="ev-info-item">
+                            <span class="ev-info-label">Thời lượng</span>
+                            <span class="ev-info-value">
+                                @(rental.SoNgay > 0 ? $"{rental.SoNgay} ngày" : "")
+                                @(rental.SoGio > 0 ? $"{rental.SoGio} giờ" : "")
+                            </span>
+                        </div>
+                        <div class="ev-info-item">
+                            <span class="ev-info-label">Đặt lúc</span>
+                            <span class="ev-info-value">@rental.CreatedAt.ToString("HH:mm dd/MM/yyyy")</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI: khách + tài chính + actions -->
+            <div class="ev-detail-sidebar">
+
+                <!-- Thông tin khách -->
+                <div class="ev-card">
+                    <h3 class="ev-section-title">👤 Khách hàng</h3>
+                    <div class="ev-customer-card">
+                        <p class="ev-customer-name">@rental.KhachTen</p>
+                        <p>📞 <a href="tel:@rental.KhachSdt">@rental.KhachSdt</a></p>
+                        @if (!string.IsNullOrEmpty(rental.KhachEmail))
+                        { <p>✉️ @rental.KhachEmail</p> }
+                        @if (!string.IsNullOrEmpty(rental.KhachCmnd))
+                        { <p>🪪 CMND/CCCD: @rental.KhachCmnd</p> }
+                    </div>
+                </div>
+
+                <!-- Tài chính -->
+                <div class="ev-card">
+                    <h3 class="ev-section-title">💰 Tài chính</h3>
+                    <div class="ev-finance">
+                        <div class="ev-finance-row">
+                            <span>Đơn giá</span>
+                            <span>@FormatVnd(rental.DonGia)</span>
+                        </div>
+                        <div class="ev-finance-row">
+                            <span>Đặt cọc</span>
+                            <span>@FormatVnd(rental.TienDatCoc)</span>
+                        </div>
+                        <div class="ev-finance-row ev-finance-row--total">
+                            <span>Tổng cộng</span>
+                            <strong>@FormatVnd(rental.TongTien)</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ghi chú / Lý do hủy -->
+                @if (!string.IsNullOrEmpty(rental.GhiChu) || !string.IsNullOrEmpty(rental.LyDoHuy))
+                {
+                    <div class="ev-card">
+                        @if (!string.IsNullOrEmpty(rental.LyDoHuy))
+                        {
+                            <h3 class="ev-section-title">❌ Lý do hủy</h3>
+                            <p class="ev-note ev-note--danger">@rental.LyDoHuy</p>
+                        }
+                        @if (!string.IsNullOrEmpty(rental.GhiChu))
+                        {
+                            <h3 class="ev-section-title">📝 Ghi chú</h3>
+                            <p class="ev-note">@rental.GhiChu</p>
+                        }
+                    </div>
+                }
+
+                <!-- Actions -->
+                <div class="ev-card ev-actions-card">
+                    <h3 class="ev-section-title">⚡ Thao tác</h3>
+
+                    @if (rental.TrangThai == "pending")
+                    {
+                        <button class="ev-btn ev-btn--primary ev-btn--full" @onclick="DoConfirm" disabled="@busy">
+                            ✅ Xác nhận đơn
+                        </button>
+                        <button class="ev-btn ev-btn--danger-ghost ev-btn--full" @onclick="ShowCancelModal" disabled="@busy">
+                            ❌ Hủy đơn
+                        </button>
+                    }
+                    else if (rental.TrangThai == "confirmed")
+                    {
+                        <div class="ev-action-sub">
+                            <p class="ev-hint">Nhập thông số bàn giao xe:</p>
+                            <div class="ev-form-row">
+                                <div class="ev-form-group">
+                                    <label class="ev-label">Km đầu</label>
+                                    <input class="ev-input ev-input--sm" type="number" @bind="startKm" min="0" />
+                                </div>
+                                <div class="ev-form-group">
+                                    <label class="ev-label">Pin (%)</label>
+                                    <input class="ev-input ev-input--sm" type="number" @bind="startPin" min="0" max="100" />
+                                </div>
+                            </div>
+                            <button class="ev-btn ev-btn--success ev-btn--full" @onclick="DoStart" disabled="@busy">
+                                🚗 Bàn giao xe
+                            </button>
+                        </div>
+                        <button class="ev-btn ev-btn--danger-ghost ev-btn--full" @onclick="ShowCancelModal" disabled="@busy">
+                            ❌ Hủy đơn
+                        </button>
+                    }
+                    else if (rental.TrangThai == "active")
+                    {
+                        <div class="ev-action-sub">
+                            <p class="ev-hint">Nhập thông số nhận xe trả:</p>
+                            <div class="ev-form-row">
+                                <div class="ev-form-group">
+                                    <label class="ev-label">Km cuối</label>
+                                    <input class="ev-input ev-input--sm" type="number" @bind="endKm" min="0" />
+                                </div>
+                                <div class="ev-form-group">
+                                    <label class="ev-label">Pin (%)</label>
+                                    <input class="ev-input ev-input--sm" type="number" @bind="endPin" min="0" max="100" />
+                                </div>
+                            </div>
+                            <button class="ev-btn ev-btn--primary ev-btn--full" @onclick="DoComplete" disabled="@busy">
+                                🏁 Hoàn thành đơn
+                            </button>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="ev-text-muted ev-text-center">Đơn đã @rental.TrangThaiLabel — không có thao tác.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<!-- Modal hủy đơn -->
+@if (showCancelModal)
+{
+    <div class="ev-modal-overlay">
+        <div class="ev-modal">
+            <h3>❌ Xác nhận hủy đơn</h3>
+            <p>Nhập lý do hủy đơn <strong>@rental?.MaDon</strong>:</p>
+            <textarea class="ev-textarea" rows="3" @bind="cancelReason"
+                      placeholder="Lý do hủy..."></textarea>
+            <div class="ev-modal-actions">
+                <button class="ev-btn ev-btn--ghost" @onclick="() => showCancelModal = false">Quay lại</button>
+                <button class="ev-btn ev-btn--danger" @onclick="DoCancel" disabled="@busy">Xác nhận hủy</button>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private AdminRentalDetail? rental;
+    private bool loading = true;
+    private bool busy = false;
+    private string? alertMsg;
+    private string alertType = "success";
+
+    // Form inputs
+    private int startKm, startPin = 100, endKm, endPin;
+    private bool showCancelModal = false;
+    private string cancelReason = "";
+
+    // Dùng tên admin tạm — sau có thể lấy từ auth
+    private const string AdminUser = "admin";
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        rental = await RentalService.GetByIdAsync(Id);
+        if (rental != null)
+        {
+            startKm  = rental.StartKm > 0 ? rental.StartKm : 0;
+            startPin = rental.StartPin > 0 ? rental.StartPin : 100;
+            endKm    = rental.EndKm > 0 ? rental.EndKm : 0;
+            endPin   = rental.EndPin > 0 ? rental.EndPin : 100;
+        }
+        loading = false;
+    }
+
+    private async Task DoConfirm()
+    {
+        busy = true;
+        var ok = await RentalService.ConfirmAsync(Id, AdminUser);
+        if (ok) { rental = await RentalService.GetByIdAsync(Id); ShowAlert("✅ Đã xác nhận đơn!", "success"); }
+        else ShowAlert("Lỗi xác nhận.", "error");
+        busy = false;
+    }
+
+    private async Task DoStart()
+    {
+        busy = true;
+        var ok = await RentalService.StartRentalAsync(Id, startKm, startPin, AdminUser);
+        if (ok) { rental = await RentalService.GetByIdAsync(Id); ShowAlert("🚗 Đã bàn giao xe!", "success"); }
+        else ShowAlert("Lỗi bàn giao.", "error");
+        busy = false;
+    }
+
+    private async Task DoComplete()
+    {
+        busy = true;
+        var ok = await RentalService.CompleteAsync(Id, endKm, endPin, AdminUser);
+        if (ok) { rental = await RentalService.GetByIdAsync(Id); ShowAlert("🏁 Hoàn thành đơn thuê!", "success"); }
+        else ShowAlert("Lỗi hoàn thành.", "error");
+        busy = false;
+    }
+
+    private void ShowCancelModal() => showCancelModal = true;
+
+    private async Task DoCancel()
+    {
+        if (string.IsNullOrWhiteSpace(cancelReason)) return;
+        busy = true;
+        showCancelModal = false;
+        var ok = await RentalService.CancelAsync(Id, cancelReason, AdminUser);
+        if (ok) { rental = await RentalService.GetByIdAsync(Id); ShowAlert("Đã hủy đơn.", "info"); }
+        else ShowAlert("Lỗi hủy đơn.", "error");
+        busy = false;
+    }
+
+    private void ShowAlert(string msg, string type) { alertMsg = msg; alertType = type; }
+
+    // Timeline
+    private record TimelineStep(string Icon, string Label, bool Done, bool Current, DateTime? Time);
+
+    private List<TimelineStep> GetTimeline()
+    {
+        if (rental == null) return [];
+        var status = rental.TrangThai;
+        var isDone  = (string s) => StatusRank(status) > StatusRank(s);
+        var isCurr  = (string s) => status == s;
+
+        return [
+            new("📝", "Đặt xe",      isDone("pending"),    isCurr("pending"),    rental.CreatedAt),
+            new("✅", "Xác nhận",    isDone("confirmed"),  isCurr("confirmed"),  rental.ConfirmedAt),
+            new("🚗", "Đang thuê",   isDone("active"),     isCurr("active"),     null),
+            new("🏁", "Hoàn thành",  isDone("completed"),  isCurr("completed"),  rental.ReturnedAt),
+        ];
+    }
+
+    private static int StatusRank(string? s) => s switch
+    {
+        "pending"   => 1,
+        "confirmed" => 2,
+        "active"    => 3,
+        "completed" => 4,
+        _           => 0
+    };
+
+    private static string LoaiXeLabel(string? l) => l switch
+    {
+        "car"     => "Ô tô điện",
+        "scooter" => "Xe máy điện",
+        "bike"    => "Xe đạp điện",
+        "van"     => "Van điện",
+        _         => "Xe điện"
+    };
+
+    private static string FormatVnd(decimal v) =>
+        v > 0 ? v.ToString("N0").Replace(",", ".") + "đ" : "—";
+}

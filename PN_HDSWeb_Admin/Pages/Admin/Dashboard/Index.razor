@@ -1,132 +1,179 @@
 @page "/dashboard"
-@attribute [Authorize(Roles = "Administrator")]
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminDashboardService DashboardService
+@inject NavigationManager Nav
 
-<div class="admin-dashboard">
-    <section class="dashboard-hero">
-        <div>
-            <span class="dashboard-kicker">Tổng quan hệ thống</span>
-            <h1>Dashboard quản trị</h1>
-            <p>Theo dõi nhanh tình trạng nội dung, tài liệu và các chỉ số vận hành của cổng thông tin.</p>
-        </div>
+<PageTitle>Dashboard — EV Rental Admin</PageTitle>
 
-        <div class="dashboard-hero-card">
-            <div>
-                <small>Đơn vị quản lý</small>
-                <strong>Trường TH-THPT-THPT TITKUL</strong>
-            </div>
-            <div>
-                <small>Trạng thái</small>
-                <strong>Đang hoạt động</strong>
-            </div>
-        </div>
-    </section>
+<div class="ev-admin-page">
+    <div class="ev-admin-header">
+        <h1>📊 Dashboard</h1>
+        <div class="ev-admin-date">@DateTime.Now.ToString("dddd, dd/MM/yyyy", new System.Globalization.CultureInfo("vi-VN"))</div>
+    </div>
 
-    @if (summary == null)
+    @if (loading)
     {
-        <div class="dashboard-loading">
-            <div class="spinner"></div>
-            <p>Đang tải dữ liệu dashboard...</p>
-        </div>
+        <div class="ev-loading"><div class="ev-spinner"></div><span>Đang tải...</span></div>
     }
     else
     {
-        <section class="dashboard-grid">
-            <article class="dashboard-card accent-blue">
-                <span>Tổng bài viết</span>
-                <strong>@summary.TotalPosts</strong>
-                <small>Toàn bộ bài viết trong hệ thống</small>
-            </article>
-            <article class="dashboard-card accent-amber">
-                <span>Bài chờ duyệt</span>
-                <strong>@summary.PendingPosts</strong>
-                <small>Cần kiểm tra và xuất bản</small>
-            </article>
-            <article class="dashboard-card accent-emerald">
-                <span>Bài đã xuất bản</span>
-                <strong>@summary.PublishedPosts</strong>
-                <small>Đang hiển thị ngoài site</small>
-            </article>
-            <article class="dashboard-card accent-violet">
-                <span>Tổng văn bản</span>
-                <strong>@summary.TotalDocuments</strong>
-                <small>Văn bản và tài liệu công khai</small>
-            </article>
-            <article class="dashboard-card accent-rose">
-                <span>Văn bản chờ duyệt</span>
-                <strong>@summary.PendingDocuments</strong>
-                <small>Chờ kiểm duyệt nội dung</small>
-            </article>
-            <article class="dashboard-card accent-cyan">
-                <span>Văn bản đã công khai</span>
-                <strong>@summary.PublishedDocuments</strong>
-                <small>Đã sẵn sàng cho người dùng</small>
-            </article>
-        </section>
-
-        <section class="dashboard-panels">
-            <div class="dashboard-panel">
-                <div class="section-head">
-                    <h2>Hoạt động nhanh</h2>
-                </div>
-                <div class="quick-actions">
-                    <a class="quick-action" href="/admin/posts/edit">Tạo bài viết</a>
-                    <a class="quick-action" href="/admin/documents/edit">Tạo văn bản</a>
-                    <a class="quick-action" href="/admin/banners/edit">Quản lý banner</a>
-                    <a class="quick-action" href="/admin/menus/edit">Cấu hình menu</a>
+        <!-- KPI Cards -->
+        <div class="ev-kpi-grid">
+            <!-- Xe -->
+            <div class="ev-kpi-card ev-kpi-card--blue">
+                <div class="ev-kpi-icon">🚗</div>
+                <div class="ev-kpi-body">
+                    <div class="ev-kpi-label">Tổng xe</div>
+                    <div class="ev-kpi-value">@summary.TotalVehicles</div>
+                    <div class="ev-kpi-sub">
+                        <span class="ev-dot ev-dot--green"></span> @summary.XeTrong sẵn sàng &nbsp;
+                        <span class="ev-dot ev-dot--yellow"></span> @summary.XeDangThue đang thuê &nbsp;
+                        <span class="ev-dot ev-dot--gray"></span> @summary.XeBaoDuong bảo dưỡng
+                    </div>
                 </div>
             </div>
 
-            <div class="dashboard-panel">
-                <div class="section-head">
-                    <h2>Gợi ý vận hành</h2>
+            <!-- Đơn hôm nay -->
+            <div class="ev-kpi-card ev-kpi-card--green">
+                <div class="ev-kpi-icon">📋</div>
+                <div class="ev-kpi-body">
+                    <div class="ev-kpi-label">Đơn hôm nay</div>
+                    <div class="ev-kpi-value">@summary.DonHomNay</div>
+                    <div class="ev-kpi-sub">Hoàn thành: @summary.HoanThanhHomNay</div>
                 </div>
-                <ul class="dashboard-notes">
-                    <li>Kiểm tra các bài viết chờ duyệt trước khi xuất bản.</li>
-                    <li>Đảm bảo banner và menu đã khớp với cấu trúc site public.</li>
-                    <li>Cập nhật footer trong cột JSON <code>thongtin</code> của bảng <code>l_truong</code>.</li>
-                </ul>
             </div>
 
-
-        </section>
-        <div class="dashboard-panel dashboard-panel--wide">
-            <div class="section-head">
-                <h2>Top trang được xem</h2>
+            <!-- Chờ xử lý -->
+            <div class="ev-kpi-card @(summary.DonCho > 0 ? "ev-kpi-card--orange" : "ev-kpi-card--gray")">
+                <div class="ev-kpi-icon">⏳</div>
+                <div class="ev-kpi-body">
+                    <div class="ev-kpi-label">Chờ xử lý</div>
+                    <div class="ev-kpi-value">@summary.DonCho</div>
+                    <div class="ev-kpi-sub">Đã xác nhận: @summary.DonDaXacNhan</div>
+                </div>
+                @if (summary.DonCho > 0)
+                {
+                    <button class="ev-kpi-action" @onclick='() => Nav.NavigateTo("/admin/rentals?trang_thai=pending")'>
+                        Xử lý →
+                    </button>
+                }
             </div>
-            @if (trafficPages == null)
+
+            <!-- Doanh thu tháng -->
+            <div class="ev-kpi-card ev-kpi-card--purple">
+                <div class="ev-kpi-icon">💰</div>
+                <div class="ev-kpi-body">
+                    <div class="ev-kpi-label">Doanh thu tháng</div>
+                    <div class="ev-kpi-value">@FormatVnd(summary.DoanhThuThang)</div>
+                    <div class="ev-kpi-sub">Hôm nay: @FormatVnd(summary.DoanhThuHomNay)</div>
+                </div>
+            </div>
+
+            <!-- Khách hàng -->
+            <div class="ev-kpi-card ev-kpi-card--teal">
+                <div class="ev-kpi-icon">👥</div>
+                <div class="ev-kpi-body">
+                    <div class="ev-kpi-label">Khách hàng</div>
+                    <div class="ev-kpi-value">@summary.TotalCustomers</div>
+                    <div class="ev-kpi-sub">Đã đăng ký</div>
+                </div>
+            </div>
+
+            <!-- Đang thuê -->
+            <div class="ev-kpi-card ev-kpi-card--cyan">
+                <div class="ev-kpi-icon">🔑</div>
+                <div class="ev-kpi-body">
+                    <div class="ev-kpi-label">Đang thuê</div>
+                    <div class="ev-kpi-value">@summary.DonDangThue</div>
+                    <div class="ev-kpi-sub">Đơn đang active</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="ev-quick-actions">
+            <h2>⚡ Thao tác nhanh</h2>
+            <div class="ev-quick-grid">
+                <button class="ev-quick-btn" @onclick='() => Nav.NavigateTo("/admin/vehicles/create")'>
+                    <span>🚗</span> Thêm xe mới
+                </button>
+                <button class="ev-quick-btn" @onclick='() => Nav.NavigateTo("/admin/rentals?trang_thai=pending")'>
+                    <span>✅</span> Duyệt đơn chờ (@summary.DonCho)
+                </button>
+                <button class="ev-quick-btn" @onclick='() => Nav.NavigateTo("/admin/rentals?trang_thai=active")'>
+                    <span>🔑</span> Đang cho thuê (@summary.DonDangThue)
+                </button>
+                <button class="ev-quick-btn" @onclick='() => Nav.NavigateTo("/admin/vehicles")'>
+                    <span>📋</span> Quản lý xe
+                </button>
+            </div>
+        </div>
+
+        <!-- Đơn gần đây -->
+        <div class="ev-recent-section">
+            <div class="ev-section-header">
+                <h2>🕐 Đơn thuê gần nhất</h2>
+                <a href="/admin/rentals" class="ev-link-more">Xem tất cả →</a>
+            </div>
+
+            @if (recentRentals.Count == 0)
             {
-                <p>Đang tải...</p>
-            }
-            else if (!trafficPages.Any())
-            {
-                <p>Chưa có dữ liệu truy cập.</p>
+                <div class="ev-empty"><p>Chưa có đơn nào.</p></div>
             }
             else
             {
-                <div class="traffic-grid">
-                    @foreach (var trang in trafficPages)
-                    {
-                        <div class="dashboard-card traffic-card">
-                            <span class="traffic-page-path">@trang.PagePath</span>
-                            <strong class="traffic-view-count">@trang.Views</strong>
-                            <small>@trang.UniqueVisitors IP duy nhất</small>
-                        </div>
-                    }
+                <div class="ev-table-wrap">
+                    <table class="ev-table">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Xe</th>
+                                <th>Khách hàng</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Thời gian đặt</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var r in recentRentals)
+                            {
+                                <tr>
+                                    <td><strong>@r.MaDon</strong></td>
+                                    <td>@r.TenXe</td>
+                                    <td>@r.KhachTen<br /><small>@r.KhachSdt</small></td>
+                                    <td>@FormatVnd(r.TongTien)</td>
+                                    <td><span class="ev-badge ev-badge--@r.TrangThai">@r.TrangThaiLabel</span></td>
+                                    <td>@r.CreatedAt.ToString("dd/MM HH:mm")</td>
+                                    <td>
+                                        <a href="/admin/rentals/@r.Id" class="ev-btn ev-btn--sm ev-btn--ghost">Chi tiết</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 </div>
             }
         </div>
-
     }
 </div>
 
 @code {
-    private AdminDashboardSummary? summary;
-    private List<AdminTrafficPageItem>? trafficPages;
+    private EvDashboardSummary summary = new();
+    private List<EvRecentRentalItem> recentRentals = [];
+    private bool loading = true;
+
     protected override async Task OnInitializedAsync()
     {
-        summary = await DashboardService.GetSummaryAsync(PN_PublicVariables.MaTruong);
-        trafficPages = await DashboardService.GetTopTrafficPagesAsync(PN_PublicVariables.MaTruong, 6);
+        var summaryTask = DashboardService.GetSummaryAsync();
+        var recentTask = DashboardService.GetRecentRentalsAsync(10);
+
+        await Task.WhenAll(summaryTask, recentTask);
+
+        summary = await summaryTask;
+        recentRentals = await recentTask;
+        loading = false;
     }
+
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
 }

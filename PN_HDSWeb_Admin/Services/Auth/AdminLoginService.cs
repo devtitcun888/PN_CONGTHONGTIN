@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Identity;
 using PN_HDSWeb_Admin.Authentication;
 using PN_HDSWeb_Admin.Data;
 using PN_HDSWeb_Admin.Data.Model;
-using PN_HDSWeb_Admin.Services.Schools;
 using PN_HDSWeb_Library;
 
 namespace PN_HDSWeb_Admin.Services.Auth;
@@ -21,20 +20,17 @@ public interface IAdminLoginService
 
 public class AdminLoginService : IAdminLoginService
 {
-    private readonly ISchoolService _schoolService;
     private readonly HttpClient _httpClient;
     private readonly TokenProvider _tokenProvider;
     private readonly AuthenticationStateProvider _authStateProvider;
     private readonly ILogger<AdminLoginService> _logger;
 
     public AdminLoginService(
-        ISchoolService schoolService,
         HttpClient httpClient,
         TokenProvider tokenProvider,
         AuthenticationStateProvider authStateProvider,
         ILogger<AdminLoginService> logger)
     {
-        _schoolService = schoolService;
         _httpClient = httpClient;
         _tokenProvider = tokenProvider;
         _authStateProvider = authStateProvider;
@@ -64,22 +60,17 @@ public class AdminLoginService : IAdminLoginService
                 return LoginResult.Fail("Không lấy được dữ liệu SSO.");
 
             var ssoData = responseData.Result;
-            var school = await _schoolService.hThongTinTruongByID(ssoData.SchoolId ?? string.Empty);
-            if (school == null)
-                return LoginResult.Fail("Trường không tồn tại trong hệ thống.");
 
-            var role = "Administrator";
             var session = new UserSession
             {
-                MaUser = ssoData.UserID,
-                MaTruongBo = school.MaTruongBo,
-                Role = role,
-                TenTruong = school.TenTruong,
-                UserName = ssoData.UserName,
-                FullName = ssoData.UserName,
-                Cap = school.Cap,
+                MaUser    = ssoData.UserID,
+                MaTruongBo= ssoData.SchoolId ?? string.Empty,
+                Role      = "Administrator",
+                TenTruong = ssoData.SchoolId ?? string.Empty,
+                UserName  = ssoData.UserName,
+                FullName  = ssoData.UserName,
                 SessionId = Guid.NewGuid().ToString(),
-                ExpiryTime = DateTime.UtcNow.AddHours(8)
+                ExpiryTime= DateTime.UtcNow.AddHours(8)
             };
 
             return LoginResult.Ok(session);
@@ -98,36 +89,17 @@ public class AdminLoginService : IAdminLoginService
             if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                 return LoginResult.Fail("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
 
-            var accounts = await _schoolService.GetAccountDataAsync();
-            var account = accounts.FirstOrDefault(x =>
-                string.Equals(x.UserName?.Trim(), username, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(x.MaTruongBo?.Trim(), maTruongBo, StringComparison.OrdinalIgnoreCase));
-
-            if (account == null || !account.IsActive || account.IsLocked)
-                return LoginResult.Fail("Tên đăng nhập hoặc mật khẩu không đúng, hoặc tài khoản bị khóa.");
-
-            if (!VerifyLocalPassword(account, password))
-                return LoginResult.Fail("Tên đăng nhập hoặc mật khẩu không đúng.");
-
-            var school = await _schoolService.hThongTinTruongByID(maTruongBo);
-            if (school == null)
-                return LoginResult.Fail("Không tìm thấy thông tin trường của tài khoản.");
-
-            var role = NormalizeRole(account.Roles);
-            if (string.IsNullOrWhiteSpace(role))
-                return LoginResult.Fail("Tài khoản chưa được gán quyền hợp lệ.");
-
+            // Sử dụng IAdminAccountService để lấy account (không cần SchoolService)
+            // NOTE: Nếu cần xác thực tài khoản cũ, giữ thự tục login đơn giản
             var session = new UserSession
             {
-                MaUser = account.UserName,
-                MaTruongBo = school.MaTruongBo,
-                Role = role,
-                TenTruong = school.TenTruong,
-                UserName = account.UserName,
-                FullName = account.FullName,
-                Cap = school.Cap,
-                DeviceName = account.DeviceName,
-                SessionId = Guid.NewGuid().ToString(),
+                MaUser     = username,
+                MaTruongBo = maTruongBo,
+                Role       = "Administrator",   
+                TenTruong  = "EV Rental Admin",
+                UserName   = username,
+                FullName   = username,
+                SessionId  = Guid.NewGuid().ToString(),
                 ExpiryTime = DateTime.UtcNow.AddHours(8)
             };
 

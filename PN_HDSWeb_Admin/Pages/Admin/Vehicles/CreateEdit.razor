@@ -1,0 +1,368 @@
+
+@page "/admin/vehicles/create"
+@page "/admin/vehicles/{Id:int}/edit"
+@using Microsoft.AspNetCore.Components.Forms
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminVehicleService VehicleService
+@inject IAdminFileStorageService FileStorage
+@inject NavigationManager Nav
+
+<PageTitle>@(Id == 0 ? "Thêm xe mới" : "Sửa thông tin xe") — Admin</PageTitle>
+
+<div class="ev-admin-page">
+    <div class="ev-admin-header">
+        <div class="ev-admin-header__left">
+            <button class="ev-btn ev-btn--ghost ev-btn--sm" @onclick='() => Nav.NavigateTo("/admin/vehicles")'>
+                ← Quay lại
+            </button>
+            <h1>@(Id == 0 ? "➕ Thêm xe mới" : "✏️ Sửa thông tin xe")</h1>
+        </div>
+    </div>
+
+    @if (loading)
+    {
+        <div class="ev-loading"><div class="ev-spinner"></div></div>
+    }
+    else
+    {
+        @if (!string.IsNullOrEmpty(errorMsg))
+        {
+            <div class="ev-alert ev-alert--error">@errorMsg</div>
+        }
+        @if (!string.IsNullOrEmpty(successMsg))
+        {
+            <div class="ev-alert ev-alert--success">@successMsg</div>
+        }
+
+        <div class="ev-form-layout">
+            <!-- CỘT TRÁI -->
+            <div class="ev-form-main">
+                <!-- Thông tin cơ bản -->
+                <div class="ev-card ev-form-section">
+                    <h3 class="ev-section-title">📋 Thông tin cơ bản</h3>
+
+                    <div class="ev-form-row">
+                        <div class="ev-form-group ev-form-group--full">
+                            <label class="ev-label">Tên xe <span class="ev-required">*</span></label>
+                            <input class="ev-input @(errors.ContainsKey("TenXe") ? "ev-input--error" : "")"
+                                   @bind="dto.TenXe" placeholder="VD: Honda PCX Electric 2024" />
+                            @if (errors.ContainsKey("TenXe"))
+                            { <span class="ev-error-msg">@errors["TenXe"]</span> }
+                        </div>
+                    </div>
+
+                    <div class="ev-form-row">
+                        <div class="ev-form-group">
+                            <label class="ev-label">Loại xe <span class="ev-required">*</span></label>
+                            <select class="ev-select" @bind="dto.LoaiXe">
+                                <option value="scooter">🛵 Xe máy điện</option>
+                                <option value="car">🚗 Ô tô điện</option>
+                                <option value="bike">🚲 Xe đạp điện</option>
+                                <option value="van">🚐 Van điện</option>
+                            </select>
+                        </div>
+                        <div class="ev-form-group">
+                            <label class="ev-label">Biển số</label>
+                            <input class="ev-input" @bind="dto.BienSo" placeholder="VD: 51A-123.45" />
+                        </div>
+                    </div>
+
+                    <div class="ev-form-row">
+                        <div class="ev-form-group">
+                            <label class="ev-label">Hãng xe</label>
+                            <input class="ev-input" @bind="dto.HangXe" placeholder="VD: Honda, VinFast..." />
+                        </div>
+                        <div class="ev-form-group">
+                            <label class="ev-label">Màu xe</label>
+                            <input class="ev-input" @bind="dto.MauXe" placeholder="VD: Trắng ngọc trai" />
+                        </div>
+                        <div class="ev-form-group">
+                            <label class="ev-label">Năm SX</label>
+                            <input class="ev-input" type="number" @bind="dto.NamSanXuat"
+                                   min="2010" max="2030" placeholder="2024" />
+                        </div>
+                    </div>
+
+                    <div class="ev-form-group ev-form-group--full">
+                        <label class="ev-label">Mô tả</label>
+                        <textarea class="ev-textarea" rows="4" @bind="dto.MoTa"
+                                  placeholder="Mô tả chi tiết về xe, tính năng nổi bật..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Giá thuê -->
+                <div class="ev-card ev-form-section">
+                    <h3 class="ev-section-title">💰 Giá thuê</h3>
+                    <div class="ev-form-row">
+                        <div class="ev-form-group">
+                            <label class="ev-label">Giá thuê/giờ (đ) <span class="ev-required">*</span></label>
+                            <input class="ev-input @(errors.ContainsKey("GiaThueGio") ? "ev-input--error" : "")"
+                                   type="number" @bind="dto.GiaThueGio" min="0" placeholder="50000" />
+                            @if (errors.ContainsKey("GiaThueGio"))
+                            { <span class="ev-error-msg">@errors["GiaThueGio"]</span> }
+                        </div>
+                        <div class="ev-form-group">
+                            <label class="ev-label">Giá thuê/ngày (đ)</label>
+                            <input class="ev-input" type="number" @bind="dto.GiaThueNgay" min="0" placeholder="300000" />
+                        </div>
+                        <div class="ev-form-group">
+                            <label class="ev-label">Tiền đặt cọc (đ)</label>
+                            <input class="ev-input" type="number" @bind="dto.DatCoc" min="0" placeholder="500000" />
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tình trạng kỹ thuật -->
+                <div class="ev-card ev-form-section">
+                    <h3 class="ev-section-title">⚡ Tình trạng kỹ thuật</h3>
+                    <div class="ev-form-row">
+                        <div class="ev-form-group">
+                            <label class="ev-label">Pin hiện tại (%)</label>
+                            <div class="ev-slider-wrap">
+                                <input type="range" class="ev-slider" @bind="dto.PinPhanTram"
+                                       min="0" max="100" step="5" />
+                                <span class="ev-slider-val ev-pin-@GetPinLevel(dto.PinPhanTram)">@dto.PinPhanTram%</span>
+                            </div>
+                        </div>
+                        <div class="ev-form-group">
+                            <label class="ev-label">Hành trình/lần sạc (km)</label>
+                            <input class="ev-input" type="number" @bind="dto.KmHangLanSac" min="0" placeholder="80" />
+                        </div>
+                    </div>
+                    <div class="ev-form-group ev-form-group--full">
+                        <label class="ev-label">Địa chỉ / Vị trí xe</label>
+                        <input class="ev-input" @bind="dto.DiaChi"
+                               placeholder="VD: 123 Nguyễn Huệ, Q.1, TP.HCM" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- CỘT PHẢI -->
+            <div class="ev-form-sidebar">
+                <!-- Ảnh chính -->
+                <div class="ev-card ev-form-section">
+                    <h3 class="ev-section-title">🖼️ Hình ảnh chính</h3>
+                    @if (!string.IsNullOrWhiteSpace(imagePreviewUrl))
+                    {
+                        <div class="ev-img-preview">
+                            <img src="@imagePreviewUrl" alt="Preview" />
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="ev-img-placeholder">
+                            <span>@LoaiXeIcon(dto.LoaiXe)</span>
+                            <p>Chưa có ảnh</p>
+                        </div>
+                    }
+                    <InputFile class="ev-input ev-input--sm"
+                               OnChange="OnMainImageSelected"
+                               accept="image/png,image/jpeg,image/webp,image/gif" />
+                    @if (!string.IsNullOrWhiteSpace(selectedImageName))
+                    {
+                        <p class="ev-hint">@selectedImageName</p>
+                    }
+                    <input class="ev-input ev-input--sm" @bind="dto.HinhAnhChinh"
+                           placeholder="URL ảnh chính..." />
+                </div>
+
+                <!-- Tính năng -->
+                <div class="ev-card ev-form-section">
+                    <h3 class="ev-section-title">✨ Tính năng nổi bật</h3>
+                    <p class="ev-hint">Nhập JSON: ["ABS","GPS","USB"]</p>
+                    <textarea class="ev-textarea" rows="3" @bind="dto.TinhNangJson"
+                              placeholder='["ABS","Chống trộm GPS","Cổng USB"]'></textarea>
+                    @if (featuresPreview.Count > 0)
+                    {
+                        <div class="ev-tags-preview">
+                            @foreach (var f in featuresPreview)
+                            {
+                                <span class="ev-tag">@f</span>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Trạng thái -->
+                <div class="ev-card ev-form-section">
+                    <h3 class="ev-section-title">⚙️ Trạng thái</h3>
+                    <label class="ev-toggle-label">
+                        <input type="checkbox" @bind="dto_isActive" class="ev-checkbox" />
+                        <span>@(dto_isActive ? "✅ Đang hoạt động" : "⛔ Tạm ngừng")</span>
+                    </label>
+                </div>
+
+                <!-- Lưu -->
+                <div class="ev-form-actions">
+                    <button class="ev-btn ev-btn--ghost" @onclick='() => Nav.NavigateTo("/admin/vehicles")'>
+                        Hủy
+                    </button>
+                    <button class="ev-btn ev-btn--primary ev-btn--lg" @onclick="Save" disabled="@saving">
+                        @if (saving)
+                        { <span class="ev-spinner ev-spinner--sm"></span> }
+                        @(Id == 0 ? "Thêm xe" : "Lưu thay đổi")
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private AdminVehicleDto dto = new();
+    private bool dto_isActive = true;
+    private bool loading = true;
+    private bool saving = false;
+    private string? errorMsg;
+    private string? successMsg;
+    private Dictionary<string, string> errors = new();
+    private List<string> featuresPreview = new();
+    private IBrowserFile? selectedMainImage;
+    private string? selectedImageName;
+    private string? imagePreviewUrl;
+    private string? originalMainImageUrl;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        if (Id > 0)
+        {
+            var detail = await VehicleService.GetByIdAsync(Id);
+            if (detail == null)
+            {
+                Nav.NavigateTo("/admin/vehicles");
+                return;
+            }
+            dto = new AdminVehicleDto
+            {
+                TenXe        = detail.TenXe ?? "",
+                LoaiXe       = detail.LoaiXe ?? "scooter",
+                BienSo       = detail.BienSo,
+                HangXe       = detail.HangXe,
+                MauXe        = detail.MauXe,
+                NamSanXuat   = detail.NamSanXuat,
+                MoTa         = detail.MoTa,
+                GiaThueGio   = detail.GiaThueGio,
+                GiaThueNgay  = detail.GiaThueNgay,
+                DatCoc       = detail.DatCoc,
+                PinPhanTram  = detail.PinPhanTram,
+                KmHangLanSac = detail.KmHangLanSac,
+                HinhAnhChinh = detail.HinhAnhChinh,
+                HinhAnhJson  = detail.HinhAnhJson,
+                DiaChi       = detail.DiaChi,
+                TinhNangJson = detail.TinhNangJson
+            };
+            originalMainImageUrl = detail.HinhAnhChinh;
+            dto_isActive = detail.IsActive;
+            ParseFeatures();
+        }
+        imagePreviewUrl = dto.HinhAnhChinh;
+        loading = false;
+    }
+
+    private async Task OnMainImageSelected(InputFileChangeEventArgs e)
+    {
+        errorMsg = null;
+        var file = e.File;
+
+        if (file == null)
+            return;
+
+        if (!file.ContentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
+        {
+            errorMsg = "Vui lÃ²ng chá»n file áº£nh.";
+            return;
+        }
+
+        selectedMainImage = file;
+        selectedImageName = file.Name;
+
+        await using var stream = file.OpenReadStream(maxAllowedSize: 20 * 1024 * 1024);
+        using var ms = new MemoryStream();
+        await stream.CopyToAsync(ms);
+        imagePreviewUrl = $"data:{file.ContentType};base64,{Convert.ToBase64String(ms.ToArray())}";
+    }
+
+    private void ParseFeatures()
+    {
+        featuresPreview.Clear();
+        if (string.IsNullOrWhiteSpace(dto.TinhNangJson)) return;
+        try
+        {
+            var list = System.Text.Json.JsonSerializer.Deserialize<List<string>>(dto.TinhNangJson);
+            if (list != null) featuresPreview = list;
+        }
+        catch { /* ignore */ }
+    }
+
+    private bool Validate()
+    {
+        errors.Clear();
+        if (string.IsNullOrWhiteSpace(dto.TenXe))
+            errors["TenXe"] = "Tên xe không được trống.";
+        if (dto.GiaThueGio <= 0)
+            errors["GiaThueGio"] = "Giá thuê/giờ phải > 0.";
+        return errors.Count == 0;
+    }
+
+    private async Task Save()
+    {
+        errorMsg = null; successMsg = null;
+        if (!Validate()) return;
+
+        ParseFeatures();
+        saving = true;
+
+        if (selectedMainImage != null)
+        {
+            var imageUrl = await FileStorage.SaveImageAsync(selectedMainImage, "vehicles");
+            if (string.IsNullOrWhiteSpace(imageUrl))
+            {
+                saving = false;
+                errorMsg = "KhÃ´ng thá»ƒ lÆ°u áº£nh xe.";
+                return;
+            }
+
+            dto.HinhAnhChinh = imageUrl;
+        }
+
+        SaveVehicleResult result;
+        if (Id == 0)
+            result = await VehicleService.CreateAsync(dto);
+        else
+            result = await VehicleService.UpdateAsync(Id, dto);
+
+        saving = false;
+
+        if (result.IsSuccess)
+        {
+            if (selectedMainImage != null &&
+                !string.IsNullOrWhiteSpace(originalMainImageUrl) &&
+                !string.Equals(originalMainImageUrl, dto.HinhAnhChinh, StringComparison.OrdinalIgnoreCase))
+            {
+                await FileStorage.DeleteFileAsync(originalMainImageUrl);
+            }
+
+            successMsg = Id == 0 ? "✅ Thêm xe thành công!" : "✅ Cập nhật thành công!";
+            await Task.Delay(1200);
+            Nav.NavigateTo("/admin/vehicles");
+        }
+        else
+        {
+            errorMsg = result.Message ?? "Có lỗi xảy ra.";
+        }
+    }
+
+    private static string LoaiXeIcon(string? loai) => loai switch
+    {
+        "car"     => "🚗",
+        "scooter" => "🛵",
+        "bike"    => "🚲",
+        "van"     => "🚐",
+        _         => "⚡"
+    };
+
+    private static string GetPinLevel(int pin) => pin >= 80 ? "high" : pin >= 40 ? "mid" : "low";
+}

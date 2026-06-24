@@ -4021,21 +4021,18 @@ D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\Microso
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\Newtonsoft.Json.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\Npgsql.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\Npgsql.Json.NET.dll
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\PN_HDSWeb_Components.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\PN_HDSWeb_Library.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\Serilog.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\Serilog.Sinks.File.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\System.Data.SqlClient.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\PN_HDSWeb_Library.pdb
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\bin\Debug\net8.0\PN_HDSWeb_Components.pdb
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.csproj.AssemblyReference.cache
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rpswa.dswa.cache.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.GeneratedMSBuildEditorConfig.editorconfig
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.AssemblyInfoInputs.cache
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.AssemblyInfo.cs
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.csproj.CoreCompileInputs.cache
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.MvcApplicationPartsAssemblyInfo.cs
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.MvcApplicationPartsAssemblyInfo.cache
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.RazorAssemblyInfo.cache
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.RazorAssemblyInfo.cs
@@ -4043,17 +4040,12 @@ D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSW
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rjimswa.dswa.cache.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rjsmrazor.dswa.cache.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\rjsmcshtml.dswa.cache.json
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Shared\MainLayout.razor.rz.scp.css
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Shared\NavMenu.razor.rz.scp.css
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\Shared\TopNavbar.razor.rz.scp.css
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\bundle\PN_HDSWeb_Admin.styles.css
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\scopedcss\projectbundle\PN_HDSWeb_Admin.bundle.scp.css
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.build.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.build.json.cache
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.development.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.build.endpoints.json
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\swae.build.ex.cache
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWe.8C0465AA.Up2Date
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\refint\PN_HDSWeb_Admin.dll
@@ -4196,3 +4188,4 @@ D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.pdb
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.genruntimeconfig.cache
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.0\ref\PN_HDSWeb_Admin.dll
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt

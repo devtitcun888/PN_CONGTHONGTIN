@@ -1,0 +1,365 @@
+@page "/vehicles/{Id:int}"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicVehicleService VehicleService
+@inject NavigationManager Nav
+
+<PageTitle>@(xe?.TenXe ?? "Chi tiết xe") — EV Rental</PageTitle>
+
+@if (loading)
+{
+    <div class="ev-loading ev-loading--page">
+        <div class="ev-spinner ev-spinner--lg"></div>
+        <span>Đang tải thông tin xe...</span>
+    </div>
+}
+else if (xe == null)
+{
+    <div class="ev-container ev-error-page">
+        <div class="ev-empty">
+            <div class="ev-empty__icon">😔</div>
+            <h2>Không tìm thấy xe</h2>
+            <p>Xe không tồn tại hoặc đã ngừng hoạt động.</p>
+            <button class="ev-btn ev-btn--primary" @onclick='() => Nav.NavigateTo("/vehicles")'>
+                ← Quay lại danh sách
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="ev-vehicle-detail">
+        <div class="ev-container">
+
+            <!-- Breadcrumb -->
+            <nav class="ev-breadcrumb">
+                <a href="/">Trang chủ</a> › <a href="/vehicles">Xe điện</a> › @xe.TenXe
+            </nav>
+
+            <div class="ev-detail-layout">
+
+                <!-- LEFT: Ảnh -->
+                <div class="ev-detail-gallery">
+                    <div class="ev-gallery-main">
+                        @if (!string.IsNullOrWhiteSpace(activeImage))
+                        {
+                            <img src="@activeImage" alt="@xe.TenXe" />
+                        }
+                        else
+                        {
+                            <div class="ev-gallery-placeholder">@LoaiXeIcon(xe.LoaiXe)</div>
+                        }
+                    </div>
+                    @if (xe.HinhAnhList.Count > 1)
+                    {
+                        <div class="ev-gallery-thumbs">
+                            @foreach (var img in xe.HinhAnhList)
+                            {
+                                <img src="@img" alt="" class="@(img == activeImage ? "active" : "")"
+                                     @onclick="() => activeImage = img" />
+                            }
+                        </div>
+                    }
+
+                    <!-- Trạng thái -->
+                    <div class="ev-detail-status-bar">
+                        <div class="ev-status-item">
+                            <span class="ev-status-icon">⚡</span>
+                            <div>
+                                <div class="ev-status-label">Pin hiện tại</div>
+                                <div class="ev-progress-bar">
+                                    <div class="ev-progress-fill ev-pin-@GetPinLevel(xe.PinPhanTram)"
+                                         style="width:@xe.PinPhanTram%"></div>
+                                </div>
+                                <div class="ev-status-value">@xe.PinPhanTram%</div>
+                            </div>
+                        </div>
+                        @if (xe.KmHangLanSac > 0)
+                        {
+                            <div class="ev-status-item">
+                                <span class="ev-status-icon">🛣️</span>
+                                <div>
+                                    <div class="ev-status-label">Quãng đường/sạc</div>
+                                    <div class="ev-status-value">@xe.KmHangLanSac km</div>
+                                </div>
+                            </div>
+                        }
+                        @if (xe.KmTong > 0)
+                        {
+                            <div class="ev-status-item">
+                                <span class="ev-status-icon">📊</span>
+                                <div>
+                                    <div class="ev-status-label">Tổng km đã đi</div>
+                                    <div class="ev-status-value">@xe.KmTong km</div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <!-- RIGHT: Info + Form -->
+                <div class="ev-detail-info">
+                    <div class="ev-detail-type">@LoaiXeLabel(xe.LoaiXe)</div>
+                    <h1 class="ev-detail-title">@xe.TenXe</h1>
+
+                    <div class="ev-detail-meta">
+                        @if (!string.IsNullOrWhiteSpace(xe.BienSo))
+                        {
+                            <span>🔖 @xe.BienSo</span>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(xe.HangXe))
+                        {
+                            <span>🏭 @xe.HangXe</span>
+                        }
+                        @if (!string.IsNullOrWhiteSpace(xe.MauXe))
+                        {
+                            <span>🎨 @xe.MauXe</span>
+                        }
+                        @if (xe.NamSanXuat.HasValue)
+                        {
+                            <span>📅 @xe.NamSanXuat</span>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(xe.DiaChi))
+                    {
+                        <div class="ev-detail-location">📍 @xe.DiaChi</div>
+                    }
+
+                    <!-- Giá -->
+                    <div class="ev-detail-price-card">
+                        @if (xe.GiaThueGio > 0)
+                        {
+                            <div class="ev-price-row">
+                                <span class="ev-price-lbl">Thuê theo giờ</span>
+                                <span class="ev-price-val">@FormatVnd(xe.GiaThueGio)<small>/giờ</small></span>
+                            </div>
+                        }
+                        @if (xe.GiaThueNgay > 0)
+                        {
+                            <div class="ev-price-row">
+                                <span class="ev-price-lbl">Thuê theo ngày</span>
+                                <span class="ev-price-val ev-price-val--day">@FormatVnd(xe.GiaThueNgay)<small>/ngày</small></span>
+                            </div>
+                        }
+                        @if (xe.DatCoc > 0)
+                        {
+                            <div class="ev-price-row ev-price-row--deposit">
+                                <span class="ev-price-lbl">Đặt cọc</span>
+                                <span class="ev-price-val ev-price-val--deposit">@FormatVnd(xe.DatCoc)</span>
+                            </div>
+                        }
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(xe.MoTa))
+                    {
+                        <div class="ev-detail-desc">
+                            <h3>Mô tả</h3>
+                            <p>@xe.MoTa</p>
+                        </div>
+                    }
+
+                    <!-- Form đặt xe -->
+                    <div class="ev-booking-form">
+                        <h3 class="ev-form-title">⚡ Đặt xe ngay</h3>
+
+                        @if (xe.TinhTrang != "available")
+                        {
+                            <div class="ev-alert ev-alert--warning">
+                                🚫 Xe hiện không khả dụng. Vui lòng chọn xe khác.
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="ev-form-row">
+                                <div class="ev-form-field">
+                                    <label>Họ và tên *</label>
+                                    <input class="ev-input @(submitted && string.IsNullOrWhiteSpace(formTen) ? "ev-input--error" : "")"
+                                           @bind="formTen" placeholder="Nguyễn Văn A" />
+                                </div>
+                                <div class="ev-form-field">
+                                    <label>Số điện thoại *</label>
+                                    <input class="ev-input @(submitted && string.IsNullOrWhiteSpace(formSdt) ? "ev-input--error" : "")"
+                                           @bind="formSdt" placeholder="09xxxxxxxx" type="tel" />
+                                </div>
+                            </div>
+                            <div class="ev-form-row">
+                                <div class="ev-form-field">
+                                    <label>Email</label>
+                                    <input class="ev-input" @bind="formEmail" placeholder="email@example.com" type="email" />
+                                </div>
+                                <div class="ev-form-field">
+                                    <label>CMND/CCCD</label>
+                                    <input class="ev-input" @bind="formCmnd" placeholder="Số CMND/CCCD" />
+                                </div>
+                            </div>
+                            <div class="ev-form-row">
+                                <div class="ev-form-field">
+                                    <label>Từ ngày giờ *</label>
+                                    <input type="datetime-local" class="ev-input" @bind="formStart" />
+                                </div>
+                                <div class="ev-form-field">
+                                    <label>Đến ngày giờ *</label>
+                                    <input type="datetime-local" class="ev-input" @bind="formEnd" />
+                                </div>
+                            </div>
+                            <div class="ev-form-field">
+                                <label>Ghi chú</label>
+                                <textarea class="ev-input ev-textarea" @bind="formGhiChu" rows="2" placeholder="Yêu cầu đặc biệt, ghi chú..."></textarea>
+                            </div>
+
+                            @if (formStart < formEnd)
+                            {
+                                <div class="ev-estimate-box">
+                                    <div class="ev-estimate-row">
+                                        <span>Thời gian</span>
+                                        <span>@GetTimeSpanText()</span>
+                                    </div>
+                                    <div class="ev-estimate-row ev-estimate-row--total">
+                                        <span>Ước tính thanh toán</span>
+                                        <strong>@FormatVnd(EstimatePrice())</strong>
+                                    </div>
+                                    @if (xe.DatCoc > 0)
+                                    {
+                                        <div class="ev-estimate-row ev-estimate-row--deposit">
+                                            <span>Đặt cọc</span>
+                                            <span>@FormatVnd(xe.DatCoc)</span>
+                                        </div>
+                                    }
+                                </div>
+                            }
+
+                            @if (!string.IsNullOrWhiteSpace(errorMsg))
+                            {
+                                <div class="ev-alert ev-alert--danger">⚠️ @errorMsg</div>
+                            }
+
+                            <button class="ev-btn ev-btn--primary ev-btn--full ev-btn--lg"
+                                    @onclick="SubmitBooking" disabled="@submitting">
+                                @if (submitting)
+                                {
+                                    <span class="ev-spinner ev-spinner--sm"></span>
+                                    <span>Đang xử lý...</span>
+                                }
+                                else
+                                {
+                                    <span>Xác nhận đặt xe</span>
+                                }
+                            </button>
+                        }
+                    </div>
+                </div>
+
+            </div><!-- end ev-detail-layout -->
+        </div><!-- end container -->
+    </div><!-- end ev-vehicle-detail -->
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+    [Inject] private IPublicRentalService RentalService { get; set; } = default!;
+
+    private PublicVehicleDetail? xe;
+    private bool loading = true;
+    private string? activeImage;
+
+    // Form
+    private string formTen = "";
+    private string formSdt = "";
+    private string formEmail = "";
+    private string formCmnd = "";
+    private DateTime formStart = DateTime.Now;
+    private DateTime formEnd = DateTime.Now.AddDays(1);
+    private string formGhiChu = "";
+    private bool submitted;
+    private bool submitting;
+    private string? errorMsg;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        loading = true;
+        xe = await VehicleService.GetVehicleDetailAsync(Id);
+        if (xe != null)
+            activeImage = xe.HinhAnhList.Count > 0 ? xe.HinhAnhList[0] : xe.HinhAnhChinh;
+        loading = false;
+    }
+
+    private async Task SubmitBooking()
+    {
+        submitted = true;
+        errorMsg = null;
+
+        if (string.IsNullOrWhiteSpace(formTen) || string.IsNullOrWhiteSpace(formSdt))
+        {
+            errorMsg = "Vui lòng điền đầy đủ họ tên và số điện thoại.";
+            return;
+        }
+        if (formEnd <= formStart)
+        {
+            errorMsg = "Thời gian kết thúc phải sau thời gian bắt đầu.";
+            return;
+        }
+        if (formStart < DateTime.Now.AddMinutes(-5))
+        {
+            errorMsg = "Thời gian bắt đầu không thể là quá khứ.";
+            return;
+        }
+
+        submitting = true;
+        var dto = new CreateRentalDto
+        {
+            VehicleId = Id,
+            KhachTen = formTen,
+            KhachSdt = formSdt,
+            KhachEmail = formEmail,
+            KhachCmnd = formCmnd,
+            BatDauThue = formStart,
+            KetThucThue = formEnd,
+            GhiChu = formGhiChu
+        };
+
+        var result = await RentalService.CreateRentalAsync(dto);
+        submitting = false;
+
+        if (!result.IsSuccess)
+        {
+            errorMsg = result.Message;
+            return;
+        }
+
+        Nav.NavigateTo($"/booking/confirmation?ma={Uri.EscapeDataString(result.MaDon ?? "")}");
+    }
+
+    private decimal EstimatePrice()
+    {
+        if (xe == null || formEnd <= formStart) return 0;
+        var span = formEnd - formStart;
+        var soNgay = (int)Math.Ceiling(span.TotalDays);
+        var soGio = (int)Math.Ceiling(span.TotalHours);
+        if (soNgay >= 1 && xe.GiaThueNgay > 0)
+            return soNgay * xe.GiaThueNgay;
+        return soGio * xe.GiaThueGio;
+    }
+
+    private string GetTimeSpanText()
+    {
+        var span = formEnd - formStart;
+        if (span.TotalDays >= 1)
+        {
+            var days = (int)Math.Ceiling(span.TotalDays);
+            return $"{days} ngày";
+        }
+        var hours = (int)Math.Ceiling(span.TotalHours);
+        return $"{hours} giờ";
+    }
+
+    private static string GetPinLevel(int pin) => pin >= 80 ? "high" : pin >= 40 ? "mid" : "low";
+    private static string LoaiXeIcon(string? loai) => loai switch
+    {
+        "car" => "🚗", "scooter" => "🛵", "bike" => "🚲", "van" => "🚐", _ => "⚡"
+    };
+    private static string LoaiXeLabel(string? loai) => loai switch
+    {
+        "car" => "Ô tô điện", "scooter" => "Xe máy điện", "bike" => "Xe đạp điện", "van" => "Van điện", _ => "Xe điện"
+    };
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+}

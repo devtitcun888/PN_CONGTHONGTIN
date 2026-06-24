@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\PN_HDSWeb_Components.props" />
-</Project>

@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\buildMultiTargeting\PN_HDSWeb_Components.props" />
-</Project>

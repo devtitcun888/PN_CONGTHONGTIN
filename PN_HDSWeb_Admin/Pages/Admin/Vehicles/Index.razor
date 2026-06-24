@@ -1,0 +1,206 @@
+@page "/admin/vehicles"
+@using PN_HDSWeb_Admin.Services.Admin
+@inject IAdminVehicleService VehicleService
+@inject NavigationManager Nav
+
+<PageTitle>Quản lý xe điện — Admin</PageTitle>
+
+<div class="ev-admin-page">
+    <div class="ev-admin-header">
+        <h1>🚗 Quản lý xe điện</h1>
+        <button class="ev-btn ev-btn--primary" @onclick='() => Nav.NavigateTo("/admin/vehicles/create")'>
+            + Thêm xe mới
+        </button>
+    </div>
+
+    <!-- Filter -->
+    <div class="ev-filter-bar ev-filter-bar--admin">
+        <input class="ev-input" @bind="filter.Search" @bind:after="LoadData" placeholder="Tìm theo tên, biển số..." />
+        <select class="ev-select" @bind="filter.LoaiXe" @bind:after="LoadData">
+            <option value="">Tất cả loại</option>
+            <option value="scooter">Xe máy điện</option>
+            <option value="car">Ô tô điện</option>
+            <option value="bike">Xe đạp điện</option>
+            <option value="van">Van điện</option>
+        </select>
+        <select class="ev-select" @bind="filter.TinhTrang" @bind:after="LoadData">
+            <option value="">Tất cả trạng thái</option>
+            <option value="available">Sẵn sàng</option>
+            <option value="rented">Đang thuê</option>
+            <option value="maintenance">Bảo dưỡng</option>
+            <option value="inactive">Ngừng HĐ</option>
+        </select>
+    </div>
+
+    @if (loading)
+    {
+        <div class="ev-loading"><div class="ev-spinner"></div></div>
+    }
+    else
+    {
+        <div class="ev-results-info">Tổng: <strong>@total</strong> xe</div>
+
+        @if (vehicles.Count == 0)
+        {
+            <div class="ev-empty"><p>Không có xe nào. <a href="/admin/vehicles/create">Thêm xe mới</a></p></div>
+        }
+        else
+        {
+            <div class="ev-table-wrap">
+                <table class="ev-table">
+                    <thead>
+                        <tr>
+                            <th>Ảnh</th>
+                            <th>Tên xe</th>
+                            <th>Loại</th>
+                            <th>Biển số</th>
+                            <th>Giá/giờ</th>
+                            <th>Giá/ngày</th>
+                            <th>Pin</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var xe in vehicles)
+                        {
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrWhiteSpace(xe.HinhAnhChinh))
+                                    {
+                                        <img src="@xe.HinhAnhChinh" alt="@xe.TenXe" class="ev-table-thumb" />
+                                    }
+                                    else
+                                    {
+                                        <span class="ev-table-thumb ev-table-thumb--icon">@LoaiXeIcon(xe.LoaiXe)</span>
+                                    }
+                                </td>
+                                <td>
+                                    <strong>@xe.TenXe</strong>
+                                    @if (!string.IsNullOrWhiteSpace(xe.HangXe))
+                                    {
+                                        <br /><small class="ev-text-muted">@xe.HangXe @xe.MauXe</small>
+                                    }
+                                </td>
+                                <td>@LoaiXeLabel(xe.LoaiXe)</td>
+                                <td>@(xe.BienSo ?? "—")</td>
+                                <td>@(xe.GiaThueGio > 0 ? FormatVnd(xe.GiaThueGio) : "—")</td>
+                                <td>@(xe.GiaThueNgay > 0 ? FormatVnd(xe.GiaThueNgay) : "—")</td>
+                                <td>
+                                    <div class="ev-pin-cell">
+                                        <div class="ev-mini-bar">
+                                            <div class="ev-mini-fill ev-pin-@GetPinLevel(xe.PinPhanTram)"
+                                                 style="width:@xe.PinPhanTram%"></div>
+                                        </div>
+                                        <span>@xe.PinPhanTram%</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="ev-badge ev-badge--@xe.TinhTrang">@xe.TinhTrangLabel</span>
+                                </td>
+                                <td>
+                                    <div class="ev-action-group">
+                                        <a href="/admin/vehicles/@xe.Id/edit" class="ev-btn ev-btn--sm ev-btn--ghost">Sửa</a>
+                                        <button class="ev-btn ev-btn--sm ev-btn--ghost"
+                                                @onclick="() => ToggleStatus(xe)">
+                                            @(xe.TinhTrang == "available" ? "Bảo dưỡng" : "Sẵn sàng")
+                                        </button>
+                                        <button class="ev-btn ev-btn--sm ev-btn--danger-ghost"
+                                                @onclick="() => ConfirmDelete(xe)">
+                                            Xóa
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phân trang -->
+            @if (totalPages > 1)
+            {
+                <div class="ev-pagination">
+                    <button class="ev-btn ev-btn--ghost ev-btn--sm" disabled="@(filter.Page <= 1)"
+                            @onclick="() => GoPage(filter.Page - 1)">‹</button>
+                    @for (int p = 1; p <= totalPages; p++)
+                    {
+                        var pageNum = p;
+                        <button class="ev-btn ev-btn--sm @(filter.Page == pageNum ? "ev-btn--primary" : "ev-btn--ghost")"
+                                @onclick="() => GoPage(pageNum)">@pageNum</button>
+                    }
+                    <button class="ev-btn ev-btn--ghost ev-btn--sm" disabled="@(filter.Page >= totalPages)"
+                            @onclick="() => GoPage(filter.Page + 1)">›</button>
+                </div>
+            }
+        }
+    }
+
+    <!-- Delete Confirm -->
+    @if (deleteTarget != null)
+    {
+        <div class="ev-modal-overlay">
+            <div class="ev-modal">
+                <h3>Xác nhận xóa xe?</h3>
+                <p>Bạn có chắc muốn xóa xe <strong>@deleteTarget.TenXe</strong>?<br />
+                   Xe sẽ bị xóa mềm và không còn hiển thị.</p>
+                <div class="ev-modal-actions">
+                    <button class="ev-btn ev-btn--ghost" @onclick="() => deleteTarget = null">Hủy</button>
+                    <button class="ev-btn ev-btn--danger" @onclick="DoDelete">Xóa</button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private AdminVehicleFilter filter = new();
+    private List<AdminVehicleItem> vehicles = [];
+    private int total;
+    private int totalPages => (int)Math.Ceiling((double)total / filter.PageSize);
+    private bool loading = true;
+    private AdminVehicleItem? deleteTarget;
+
+    protected override async Task OnInitializedAsync() => await LoadData();
+
+    private async Task LoadData()
+    {
+        loading = true;
+        (vehicles, total) = await VehicleService.GetAllAsync(filter);
+        loading = false;
+    }
+
+    private async Task GoPage(int page)
+    {
+        filter.Page = page;
+        await LoadData();
+    }
+
+    private async Task ToggleStatus(AdminVehicleItem xe)
+    {
+        var newStatus = xe.TinhTrang == "available" ? "maintenance" : "available";
+        await VehicleService.UpdateStatusAsync(xe.Id, newStatus);
+        xe.TinhTrang = newStatus;
+    }
+
+    private void ConfirmDelete(AdminVehicleItem xe) => deleteTarget = xe;
+
+    private async Task DoDelete()
+    {
+        if (deleteTarget == null) return;
+        await VehicleService.DeleteAsync(deleteTarget.Id);
+        deleteTarget = null;
+        await LoadData();
+    }
+
+    private static string LoaiXeIcon(string? loai) => loai switch
+    {
+        "car" => "🚗", "scooter" => "🛵", "bike" => "🚲", "van" => "🚐", _ => "⚡"
+    };
+    private static string LoaiXeLabel(string? loai) => loai switch
+    {
+        "car" => "Ô tô điện", "scooter" => "Xe máy điện", "bike" => "Xe đạp điện", "van" => "Van điện", _ => "Xe điện"
+    };
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+    private static string GetPinLevel(int pin) => pin >= 80 ? "high" : pin >= 40 ? "mid" : "low";
+}

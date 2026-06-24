@@ -1,4 +1,4 @@
-﻿using hDataLibraryN8;
+using hDataLibraryN8;
 
 namespace PN_HDSWeb_Library
 {
@@ -10,6 +10,7 @@ namespace PN_HDSWeb_Library
 
 
         public static readonly string LoginID_School_Dev = hdataLib.hgetLoginID($"{PN_PublicVariables.ConfigLoginId}");
+        public static readonly string LoginID_XeDien = hdataLib.hgetLoginID("9200_hd_gdtxthuduc");
 
     }
 }

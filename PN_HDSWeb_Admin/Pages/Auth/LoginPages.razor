@@ -1,4 +1,170 @@
 @page "/login"
-@namespace LoginComponent
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicCustomerService CustomerService
+@inject NavigationManager Nav
+@inject ProtectedSessionStorage SessionStorage
 
-<h3>Trang đăng nhập công khai</h3>
+<PageTitle>Đăng nhập — EV Rental</PageTitle>
+
+<div class="ev-auth-page">
+    <div class="ev-auth-card">
+        <div class="ev-auth-logo">⚡</div>
+        <h1 class="ev-auth-title">Đăng nhập</h1>
+        <p class="ev-auth-sub">Quản lý đơn thuê xe của bạn</p>
+
+        @if (!showRegister)
+        {
+            <!-- LOGIN FORM -->
+            <div class="ev-form-field">
+                <label>Số điện thoại</label>
+                <input class="ev-input" @bind="loginSdt" type="tel" placeholder="09xxxxxxxx" />
+            </div>
+            <div class="ev-form-field">
+                <label>Mật khẩu</label>
+                <div class="ev-input-password">
+                    <input class="ev-input" @bind="loginPwd" type="@(showPwd ? "text" : "password")" placeholder="••••••" />
+                    <button class="ev-pwd-toggle" @onclick="() => showPwd = !showPwd" type="button">
+                        @(showPwd ? "🙈" : "👁️")
+                    </button>
+                </div>
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(loginMsg))
+            {
+                <div class="ev-alert ev-alert--@loginMsgType">@loginMsg</div>
+            }
+
+            <button class="ev-btn ev-btn--primary ev-btn--full" @onclick="DoLogin" disabled="@processing">
+                @(processing ? "Đang đăng nhập..." : "Đăng nhập")
+            </button>
+
+            <div class="ev-auth-divider">hoặc</div>
+
+            <button class="ev-btn ev-btn--ghost ev-btn--full" @onclick="() => showRegister = true">
+                Tạo tài khoản mới
+            </button>
+
+            <div class="ev-auth-footer">
+                <a href="/booking/track">Tra cứu đơn không cần đăng nhập →</a>
+            </div>
+        }
+        else
+        {
+            <!-- REGISTER FORM -->
+            <h2 class="ev-auth-subtitle">Tạo tài khoản</h2>
+
+            <div class="ev-form-field">
+                <label>Họ và tên *</label>
+                <input class="ev-input" @bind="regDto.HoTen" placeholder="Nguyễn Văn A" />
+            </div>
+            <div class="ev-form-field">
+                <label>Số điện thoại *</label>
+                <input class="ev-input" @bind="regDto.SoDienThoai" type="tel" placeholder="09xxxxxxxx" />
+            </div>
+            <div class="ev-form-field">
+                <label>Email</label>
+                <input class="ev-input" @bind="regDto.Email" type="email" placeholder="email@example.com" />
+            </div>
+            <div class="ev-form-field">
+                <label>CMND/CCCD</label>
+                <input class="ev-input" @bind="regDto.CmndCccd" placeholder="Số CMND/CCCD" />
+            </div>
+            <div class="ev-form-field">
+                <label>Mật khẩu *</label>
+                <input class="ev-input" @bind="regDto.Password" type="password" placeholder="Ít nhất 6 ký tự" />
+            </div>
+            <div class="ev-form-field">
+                <label>Xác nhận mật khẩu *</label>
+                <input class="ev-input" @bind="regDto.ConfirmPassword" type="password" placeholder="Nhập lại mật khẩu" />
+            </div>
+
+            @if (!string.IsNullOrWhiteSpace(regMsg))
+            {
+                <div class="ev-alert ev-alert--@regMsgType">@regMsg</div>
+            }
+
+            <button class="ev-btn ev-btn--primary ev-btn--full" @onclick="DoRegister" disabled="@processing">
+                @(processing ? "Đang tạo tài khoản..." : "Tạo tài khoản")
+            </button>
+
+            <button class="ev-btn ev-btn--ghost ev-btn--full" @onclick="() => { showRegister = false; regMsg = null; }">
+                ← Quay lại đăng nhập
+            </button>
+        }
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery] public string? returnUrl { get; set; }
+
+    // Login state
+    private string loginSdt = "";
+    private string loginPwd = "";
+    private bool showPwd;
+    private string? loginMsg;
+    private string loginMsgType = "danger";
+
+    // Register state
+    private bool showRegister;
+    private CustomerRegisterDto regDto = new();
+    private string? regMsg;
+    private string regMsgType = "danger";
+
+    private bool processing;
+
+    private async Task DoLogin()
+    {
+        loginMsg = null;
+        if (string.IsNullOrWhiteSpace(loginSdt) || string.IsNullOrWhiteSpace(loginPwd))
+        {
+            loginMsg = "Vui lòng nhập đầy đủ thông tin.";
+            return;
+        }
+
+        processing = true;
+        var result = await CustomerService.LoginAsync(loginSdt, loginPwd);
+        processing = false;
+
+        if (!result.IsSuccess)
+        {
+            loginMsg = result.Message;
+            return;
+        }
+
+        // Lưu session khách hàng
+        await SessionStorage.SetAsync("ev_customer_id", result.Customer!.Id);
+        await SessionStorage.SetAsync("ev_customer_name", result.Customer.HoTen ?? "");
+        await SessionStorage.SetAsync("ev_customer_sdt", result.Customer.SoDienThoai ?? "");
+
+        Nav.NavigateTo(string.IsNullOrWhiteSpace(returnUrl) ? "/my-rentals" : returnUrl);
+    }
+
+    private async Task DoRegister()
+    {
+        regMsg = null;
+        if (regDto.Password != regDto.ConfirmPassword)
+        {
+            regMsg = "Mật khẩu xác nhận không khớp.";
+            regMsgType = "danger";
+            return;
+        }
+
+        processing = true;
+        var result = await CustomerService.RegisterAsync(regDto);
+        processing = false;
+
+        if (!result.IsSuccess)
+        {
+            regMsg = result.Message;
+            regMsgType = "danger";
+            return;
+        }
+
+        regMsg = "✅ Tạo tài khoản thành công! Vui lòng đăng nhập.";
+        regMsgType = "success";
+        showRegister = false;
+        loginSdt = regDto.SoDienThoai;
+        regDto = new();
+    }
+}

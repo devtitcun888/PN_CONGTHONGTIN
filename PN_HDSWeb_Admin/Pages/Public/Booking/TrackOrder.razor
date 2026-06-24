@@ -1,0 +1,216 @@
+@page "/booking/track"
+@using PN_HDSWeb_Admin.Services.Public
+@inject IPublicRentalService RentalService
+@inject NavigationManager Nav
+
+<PageTitle>Tra cứu đơn thuê — EV Rental</PageTitle>
+
+<div class="ev-container ev-track-page">
+    <div class="ev-track-wrap">
+        <h1 class="ev-page-title">🔍 Tra cứu đơn thuê xe</h1>
+        <p class="ev-track-sub">Nhập mã đơn (VD: EV20260622001) để xem trạng thái đơn thuê của bạn</p>
+
+        <div class="ev-track-input-group ev-track-input-group--lg">
+            <input class="ev-input ev-input--lg" @bind="maDon" @bind:event="oninput"
+                   placeholder="Nhập mã đơn..." @onkeyup="OnKeyUp" />
+            <button class="ev-btn ev-btn--primary ev-btn--lg" @onclick="DoSearch" disabled="@searching">
+                @if (searching)
+                {
+                    <span class="ev-spinner ev-spinner--sm"></span>
+                }
+                else
+                {
+                    <span>Tra cứu</span>
+                }
+            </button>
+        </div>
+
+        @if (searched && rental == null)
+        {
+            <div class="ev-alert ev-alert--warning">
+                ❌ Không tìm thấy đơn thuê với mã <strong>@maDon</strong>. Vui lòng kiểm tra lại.
+            </div>
+        }
+
+        @if (rental != null)
+        {
+            <div class="ev-track-result">
+                <div class="ev-track-header">
+                    <div>
+                        <div class="ev-track-label">Mã đơn</div>
+                        <div class="ev-track-code">@rental.MaDon</div>
+                    </div>
+                    <span class="ev-badge ev-badge--lg ev-badge--@rental.TrangThai">@rental.TrangThaiLabel</span>
+                </div>
+
+                <!-- Timeline -->
+                <div class="ev-timeline">
+                    <div class="ev-timeline-item @(IsReached("pending") ? "reached" : "")">
+                        <div class="ev-timeline-dot"></div>
+                        <div class="ev-timeline-content">
+                            <strong>Đặt xe</strong>
+                            <span>@rental.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    </div>
+                    <div class="ev-timeline-item @(IsReached("confirmed") ? "reached" : "")">
+                        <div class="ev-timeline-dot"></div>
+                        <div class="ev-timeline-content">
+                            <strong>Xác nhận</strong>
+                            @if (rental.ConfirmedAt.HasValue)
+                            {
+                                <span>@rental.ConfirmedAt.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="ev-timeline-item @(IsReached("active") ? "reached" : "")">
+                        <div class="ev-timeline-dot"></div>
+                        <div class="ev-timeline-content">
+                            <strong>Đang thuê</strong>
+                            <span>@rental.BatDauThue.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    </div>
+                    <div class="ev-timeline-item @(IsReached("completed") ? "reached" : "")">
+                        <div class="ev-timeline-dot"></div>
+                        <div class="ev-timeline-content">
+                            <strong>Hoàn thành</strong>
+                            @if (rental.ReturnedAt.HasValue)
+                            {
+                                <span>@rental.ReturnedAt.Value.ToString("dd/MM/yyyy HH:mm")</span>
+                            }
+                            else
+                            {
+                                <span>Dự kiến: @rental.KetThucThue.ToString("dd/MM/yyyy HH:mm")</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="ev-track-detail">
+                    <div class="ev-track-detail-row">
+                        <span>Xe thuê</span><strong>@rental.TenXe</strong>
+                    </div>
+                    <div class="ev-track-detail-row">
+                        <span>Khách hàng</span><strong>@rental.KhachTen — @rental.KhachSdt</strong>
+                    </div>
+                    <div class="ev-track-detail-row">
+                        <span>Thời gian</span>
+                        <strong>@rental.BatDauThue.ToString("dd/MM HH:mm") → @rental.KetThucThue.ToString("dd/MM HH:mm")</strong>
+                    </div>
+                    <div class="ev-track-detail-row ev-track-detail-row--total">
+                        <span>Tổng tiền</span><strong>@FormatVnd(rental.TongTien)</strong>
+                    </div>
+                </div>
+
+                @if (rental.TrangThai == "pending" || rental.TrangThai == "confirmed")
+                {
+                    <div class="ev-track-actions">
+                        <button class="ev-btn ev-btn--danger-ghost" @onclick="ShowCancelConfirm">
+                            🚫 Hủy đơn
+                        </button>
+                    </div>
+                }
+
+                @if (showCancel)
+                {
+                    <div class="ev-cancel-modal">
+                        <div class="ev-cancel-modal__box">
+                            <h3>Xác nhận hủy đơn?</h3>
+                            <p>Bạn có chắc chắn muốn hủy đơn <strong>@rental.MaDon</strong>?</p>
+                            <div class="ev-form-field">
+                                <label>Lý do hủy</label>
+                                <textarea class="ev-input ev-textarea" @bind="lyDoHuy" rows="2" placeholder="Nhập lý do..."></textarea>
+                            </div>
+                            @if (!string.IsNullOrWhiteSpace(cancelMsg))
+                            {
+                                <div class="ev-alert ev-alert--danger">@cancelMsg</div>
+                            }
+                            <div class="ev-cancel-modal__actions">
+                                <button class="ev-btn ev-btn--ghost" @onclick="() => showCancel = false">Không</button>
+                                <button class="ev-btn ev-btn--danger" @onclick="ConfirmCancel" disabled="@cancelling">
+                                    @(cancelling ? "Đang hủy..." : "Xác nhận hủy")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromQuery] public string? ma { get; set; }
+
+    private string maDon = "";
+    private PublicRentalInfo? rental;
+    private bool searching;
+    private bool searched;
+
+    private bool showCancel;
+    private string lyDoHuy = "";
+    private string? cancelMsg;
+    private bool cancelling;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(ma))
+        {
+            maDon = ma;
+            await DoSearch();
+        }
+    }
+
+    private async Task DoSearch()
+    {
+        if (string.IsNullOrWhiteSpace(maDon)) return;
+        searching = true;
+        rental = null;
+        rental = await RentalService.GetRentalByMaDonAsync(maDon.Trim().ToUpper());
+        searched = true;
+        searching = false;
+    }
+
+    private async Task OnKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await DoSearch();
+    }
+
+    private void ShowCancelConfirm()
+    {
+        showCancel = true;
+        cancelMsg = null;
+        lyDoHuy = "";
+    }
+
+    private async Task ConfirmCancel()
+    {
+        if (rental == null) return;
+        cancelling = true;
+        var result = await RentalService.CancelRentalAsync(rental.MaDon!, lyDoHuy);
+        cancelling = false;
+
+        if (!result.IsSuccess)
+        {
+            cancelMsg = result.Message;
+            return;
+        }
+
+        showCancel = false;
+        await DoSearch(); // Refresh
+    }
+
+    private bool IsReached(string status)
+    {
+        if (rental == null) return false;
+        return rental.TrangThai switch
+        {
+            "pending"   => status == "pending",
+            "confirmed" => status is "pending" or "confirmed",
+            "active"    => status is "pending" or "confirmed" or "active",
+            "completed" => true,
+            _ => false
+        };
+    }
+
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+}

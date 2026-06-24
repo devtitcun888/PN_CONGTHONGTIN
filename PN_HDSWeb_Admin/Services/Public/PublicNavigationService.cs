@@ -283,3 +283,13 @@ public class PublicFooterInfo
     public bool ShowSocial { get; set; } = true;
     public bool FeatureSearchEnabled { get; set; } = true;
 }
+
+public class PublicBannerItem
+{
+    public string? Id { get; set; }
+    public string? Title { get; set; }
+    public string? ImageUrl { get; set; }
+    public string? LinkUrl { get; set; }
+    public string? Position { get; set; }
+    public int SortOrder { get; set; }
+}

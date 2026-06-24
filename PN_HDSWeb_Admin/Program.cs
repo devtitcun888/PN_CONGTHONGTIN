@@ -11,12 +11,11 @@ using MudBlazor.Services;
 using PN_HDSWeb_Library;
 using PN_HDSWeb_Admin.Hubs;
 using Syncfusion.Licensing;
-using PN_HDSWeb_Components.Data;
+
 using Radzen;
 using PN_HDSWeb_Admin.Services.Auth;
-using PN_HDSWeb_Admin.Services.Schools;
 using PN_HDSWeb_Admin.Services.Admin;
-using PN_HDSWeb_Admin.Services.Content;
+using PN_HDSWeb_Admin.Services.Public;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,57 +49,47 @@ builder.Services.AddServerSideBlazor()
         options.ClientTimeoutInterval = TimeSpan.FromMinutes(2);
     });
 
+// ---- Core / Infrastructure ----
 builder.Services.AddScoped<HttpContentService>();
 builder.Services.AddScoped<HttpClient>();
 builder.Services.AddScoped<TokenProvider>();
 builder.Services.AddScoped<ProtectedSessionStorage>();
 builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthenticationStateProvider>();
-builder.Services.AddScoped<IAdminLoginService, AdminLoginService>();
-builder.Services.AddScoped<ISchoolService, SchoolService>();
-builder.Services.AddScoped<IAdminAuthorizationService, AdminAuthorizationService>();
-builder.Services.AddScoped<IAdminAccountService, AdminAccountService>();
-builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
-builder.Services.AddScoped<IAdminPostService, AdminPostService>();
-builder.Services.AddScoped<IAdminPostCategoryService, AdminPostCategoryService>();
-builder.Services.AddScoped<IAdminPostTagService, AdminPostTagService>();
-builder.Services.AddScoped<IAdminPostMediaService, AdminPostMediaService>();
-builder.Services.AddScoped<IAdminPostTagMapService, AdminPostTagMapService>();
-builder.Services.AddScoped<IAdminDocumentService, AdminDocumentService>();
-builder.Services.AddScoped<IAdminDocumentTypeService, AdminDocumentTypeService>();
-builder.Services.AddScoped<IAdminDocumentVersionService, AdminDocumentVersionService>();
-builder.Services.AddScoped<IAdminBannerService, AdminBannerService>();
-builder.Services.AddScoped<IAdminMenuService, AdminMenuService>();
-builder.Services.AddScoped<IAdminSiteSettingService, AdminSiteSettingService>();
-builder.Services.AddScoped<IAdminFileStorageService, AdminFileStorageService>();
-builder.Services.AddScoped<IAdminStaticPageService, AdminStaticPageService>();
-builder.Services.AddScoped<IAdminStaffProfileService, AdminStaffProfileService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicSiteSettingService, PN_HDSWeb_Admin.Services.Public.PublicSiteSettingService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicNavigationService, PN_HDSWeb_Admin.Services.Public.PublicNavigationService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicHomepageService, PN_HDSWeb_Admin.Services.Public.PublicHomepageService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicStaticPageService, PN_HDSWeb_Admin.Services.Public.PublicStaticPageService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicPostCategoryService, PN_HDSWeb_Admin.Services.Public.PublicPostCategoryService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicPostTagService, PN_HDSWeb_Admin.Services.Public.PublicPostTagService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicPostMediaService, PN_HDSWeb_Admin.Services.Public.PublicPostMediaService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicPostService, PN_HDSWeb_Admin.Services.Public.PublicPostService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicDocumentService, PN_HDSWeb_Admin.Services.Public.PublicDocumentService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicDocumentVersionService, PN_HDSWeb_Admin.Services.Public.PublicDocumentVersionService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicDocumentTypeService, PN_HDSWeb_Admin.Services.Public.PublicDocumentTypeService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicContactService, PN_HDSWeb_Admin.Services.Public.PublicContactService>();
-builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicSearchService, PN_HDSWeb_Admin.Services.Public.PublicSearchService>();
-builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<BrowserStorageService>();
-builder.Services.AddScoped<TabSessionService>();
 builder.Services.AddScoped<UserState>();
-builder.Services.AddAuthenticationCore();
-builder.Services.AddAuthorizationCore();
-builder.Services.AddHttpContextAccessor();
 builder.Services.AddSingleton<PN_Sessions>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddHttpContextAccessor();
+
+// ---- Auth ----
+builder.Services.AddScoped<IAdminLoginService, AdminLoginService>();
+builder.Services.AddScoped<IAdminAuthorizationService, AdminAuthorizationService>();
+builder.Services.AddScoped<IAdminAccountService, AdminAccountService>();
+
+// ---- Admin Services (Xe điện) ----
+builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();
+builder.Services.AddScoped<IAdminVehicleService, AdminVehicleService>();
+builder.Services.AddScoped<IAdminRentalService, AdminRentalService>();
+builder.Services.AddScoped<IAdminFileStorageService, AdminFileStorageService>();
+
+// ---- Public Services (Luồng khách) ----
+builder.Services.AddScoped<IPublicVehicleService, PublicVehicleService>();
+builder.Services.AddScoped<IPublicRentalService, PublicRentalService>();
+builder.Services.AddScoped<IPublicCustomerService, PublicCustomerService>();
+builder.Services.AddScoped<IPublicSiteSettingService, PublicSiteSettingService>();
+builder.Services.AddScoped<IPublicNavigationService, PublicNavigationService>();
+
+// ---- Authorization ----
+builder.Services.AddAuthenticationCore();
+builder.Services.AddAuthorizationCore();
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("AdministratorOnly", policy =>
         policy.RequireRole("Administrator"));
 });
+
+// ---- 3rd party ----
+builder.Services.AddRadzenComponents();
 
 SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBMAY9C3t2U1hhQlJBfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX5bdEZjXHxecnZVQGRa");
 

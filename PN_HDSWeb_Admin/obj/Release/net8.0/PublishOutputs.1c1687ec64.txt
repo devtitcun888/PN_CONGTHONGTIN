@@ -94,11 +94,9 @@ D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTm
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\Newtonsoft.Json.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\Npgsql.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\Npgsql.Json.NET.dll
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\PN_HDSWeb_Components.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\PN_HDSWeb_Library.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\Serilog.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\Serilog.Sinks.File.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\System.Data.SqlClient.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\System.IdentityModel.Tokens.Jwt.dll
 D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\PN_HDSWeb_Library.pdb
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Release\net8.0\PubTmp\Out\PN_HDSWeb_Components.pdb
