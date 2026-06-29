@@ -22,6 +22,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddAuthenticationCore();
 builder.Services.AddRazorPages();
+builder.Services.AddControllers()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
 builder.Services.AddServerSideBlazor();
 builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
@@ -87,6 +91,7 @@ builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicDocumentVersio
 builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicDocumentTypeService, PN_HDSWeb_Admin.Services.Public.PublicDocumentTypeService>();
 builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicContactService, PN_HDSWeb_Admin.Services.Public.PublicContactService>();
 builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicSearchService, PN_HDSWeb_Admin.Services.Public.PublicSearchService>();
+builder.Services.AddScoped<PN_HDSWeb_Admin.Services.Public.IPublicStaffProfileService, PN_HDSWeb_Admin.Services.Public.PublicStaffProfileService>();
 builder.Services.AddRadzenComponents();
 builder.Services.AddScoped<BrowserStorageService>();
 builder.Services.AddScoped<TabSessionService>();

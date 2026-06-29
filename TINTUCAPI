@@ -1,0 +1,247 @@
+# Kế hoạch triển khai xây dựng Bộ API Tin tức (Public View Only)
+
+Tài liệu này đánh giá cấu trúc source code hiện tại và đề xuất thiết kế chi tiết cho bộ API Tin tức (chỉ dành cho public xem) của cổng thông tin trường học/đơn vị.
+
+## Phân tích cấu trúc hiện tại
+
+Hệ thống được xây dựng trên nền tảng **ASP.NET Core Blazor Server** với cấu trúc 3 dự án chính:
+- `PN_HDSWeb_Admin`: Dự án chính chạy Blazor Server, chứa các Web API Controllers và Views/Pages.
+- `PN_HDSWeb_Components`: Chứa các Component UI tái sử dụng.
+- `PN_HDSWeb_Library`: Thư viện tiện ích, session, state và các cấu hình chung.
+
+Hiện tại, hệ thống đã cài đặt sẵn cơ chế để chạy Web API (sử dụng `app.MapControllers()` ở [Program.cs](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Program.cs#L150)) và đã có các service nghiệp vụ public được đăng ký sẵn trong DI container:
+- [IPublicPostCategoryService](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Services/Public/PublicPostCategoryService.cs)
+- [IPublicPostService](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Services/Public/PublicPostService.cs)
+- [IPublicPostTagService](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Services/Public/PublicPostTagService.cs)
+- [IPublicPostMediaService](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Services/Public/PublicPostMediaService.cs)
+
+Toàn bộ các service này sử dụng mã trường mặc định lấy từ file config (`PN_PublicVariables.MaTruong`) hoặc truyền trực tiếp vào các hàm thông qua tham số `maTruongBo`.
+
+## Thiết kế chi tiết bộ API Public Tin tức
+
+Chúng tôi đề xuất tạo một Controller mới tên là [PublicNewsController](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Controllers/PublicNewsController.cs) kế thừa từ `ControllerBase` với route prefix là `api/public/posts` hoặc `api/public/news`. Các API này hoàn toàn public, không yêu cầu xác thực (`[AllowAnonymous]`).
+
+Mặc định, các API sẽ nhận `maTruongBo` làm query parameter. Nếu không truyền, hệ thống sẽ tự động dùng giá trị mặc định của trường từ cấu hình `PN_PublicVariables.MaTruong`.
+
+### 1. Danh mục bài viết (Categories)
+- **API 1.1: Lấy danh sách danh mục**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts/categories`
+  - **Query Parameters:**
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:** `IPublicPostCategoryService.GetCategoriesAsync(maTruongBo)`
+  - **Phản hồi mẫu:**
+    ```json
+    [
+      {
+        "id": "cat_001",
+        "categoryName": "Tin hoạt động",
+        "slug": "tin-hoat-dong",
+        "parentId": null,
+        "description": "Các tin tức về hoạt động của nhà trường",
+        "sortOrder": 1
+      }
+    ]
+    ```
+
+- **API 1.2: Lấy chi tiết danh mục theo Slug**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts/categories/{slug}`
+  - **Query Parameters:**
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:** `IPublicPostCategoryService.GetCategoryBySlugAsync(maTruongBo, slug)`
+  - **Phản hồi mẫu:**
+    ```json
+    {
+      "id": "cat_001",
+      "categoryName": "Tin hoạt động",
+      "slug": "tin-hoat-dong",
+      "parentId": null,
+      "description": "Các tin tức về hoạt động của nhà trường",
+      "sortOrder": 1
+    }
+    ```
+
+### 2. Danh sách tin tức & bài viết (Posts)
+- **API 2.1: Lấy danh sách bài viết (Phân trang, Tìm kiếm, Lọc theo Danh mục)**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts`
+  - **Query Parameters:**
+    - `categoryId` (string, optional) - Lọc theo mã danh mục
+    - `keyword` (string, optional) - Tìm kiếm theo tiêu đề/tóm tắt bài viết
+    - `page` (int, optional, default: 1) - Số trang hiện tại
+    - `pageSize` (int, optional, default: 10) - Số lượng bài viết trên 1 trang
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:** 
+    - `IPublicPostService.GetPostsAsync(maTruongBo, keyword, categoryId, page, pageSize)`
+    - `IPublicPostService.GetPostsCountAsync(maTruongBo, keyword, categoryId)`
+  - **Phản hồi mẫu:**
+    ```json
+    {
+      "items": [
+        {
+          "id": "post_001",
+          "title": "Lễ tổng kết năm học 2025-2026",
+          "slug": "le-tong-ket-nam-hoc-2025-2026",
+          "summary": "Nhà trường tổ chức lễ tổng kết năm học...",
+          "coverImageUrl": "/uploads/posts/cover.jpg",
+          "publishAt": "2026-06-25T08:00:00Z",
+          "viewCount": 245,
+          "categoryId": "cat_001",
+          "categoryName": "Tin hoạt động",
+          "categorySlug": "tin-hoat-dong",
+          "tags": []
+        }
+      ],
+      "totalItems": 45,
+      "page": 1,
+      "pageSize": 10,
+      "totalPages": 5
+    }
+    ```
+
+- **API 2.2: Lấy chi tiết bài viết theo Slug (Bao gồm File đính kèm và Tags)**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts/{slug}`
+  - **Query Parameters:**
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:**
+    - `IPublicPostService.GetPostBySlugAsync(maTruongBo, slug)`
+    - `IPublicPostMediaService.GetMediaAsync(maTruongBo, postId)` (nếu bài viết tồn tại)
+    - `IPublicPostTagService.GetTagsByPostIdAsync(postId)` (nếu bài viết tồn tại)
+  - **Phản hồi mẫu:**
+    ```json
+    {
+      "id": "post_001",
+      "title": "Lễ tổng kết năm học 2025-2026",
+      "slug": "le-tong-ket-nam-hoc-2025-2026",
+      "summary": "Nhà trường tổ chức lễ tổng kết năm học...",
+      "content": "<p>Nội dung chi tiết của bài viết được định dạng HTML ở đây...</p>",
+      "coverImageUrl": "/uploads/posts/cover.jpg",
+      "publishAt": "2026-06-25T08:00:00Z",
+      "viewCount": 245,
+      "categoryId": "cat_001",
+      "categoryName": "Tin hoạt động",
+      "categorySlug": "tin-hoat-dong",
+      "tags": [
+        {
+          "id": "tag_001",
+          "tagName": "Lễ tổng kết",
+          "slug": "le-tong-ket"
+        }
+      ],
+      "attachments": [
+        {
+          "id": "media_001",
+          "mediaType": "pdf",
+          "fileName": "QuyetDinhKhenThuong.pdf",
+          "fileUrl": "/uploads/posts/QuyetDinhKhenThuong.pdf",
+          "thumbnailUrl": null,
+          "fileSize": 1048576,
+          "mimeType": "application/pdf",
+          "sortOrder": 1,
+          "caption": "Quyết định khen thưởng học sinh giỏi"
+        }
+      ]
+    }
+    ```
+
+- **API 2.3: Lấy bài viết liên quan (Related Posts)**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts/{slug}/related`
+  - **Query Parameters:**
+    - `take` (int, optional, default: 4) - Số lượng bài viết liên quan muốn lấy
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:**
+    - `IPublicPostService.GetPostBySlugAsync(maTruongBo, slug)` để xác định `categoryId` và `id` hiện tại.
+    - `IPublicPostService.GetRelatedPostsAsync(maTruongBo, categoryId, currentPostId, take)`
+  - **Phản hồi mẫu:**
+    `List<PublicPostListItem>` tương tự định dạng mảng của API 2.1.
+
+- **API 2.4: Lấy bài viết xem nhiều nhất (Popular/Most Viewed Posts)**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts/popular`
+  - **Query Parameters:**
+    - `take` (int, optional, default: 8) - Số lượng bài viết muốn lấy
+    - `excludePostId` (string, optional) - Loại trừ bài viết (ví dụ bài đang xem chi tiết)
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:** `IPublicPostService.GetMostViewedPostsAsync(maTruongBo, take, excludePostId)`
+  - **Phản hồi mẫu:**
+    `List<PublicPostListItem>` tương tự định dạng mảng của API 2.1.
+
+- **API 2.5: Lấy danh sách bài viết theo Tag**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/posts/tag/{tagSlug}`
+  - **Query Parameters:**
+    - `page` (int, optional, default: 1)
+    - `pageSize` (int, optional, default: 30)
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:**
+    - `IPublicPostTagService.GetTagBySlugAsync(maTruongBo, tagSlug)` để lấy `tagId`
+    - `IPublicPostService.GetPostsByTagIdAsync(maTruongBo, tagId, page, pageSize)`
+  - **Phản hồi mẫu:**
+    `List<PublicPostListItem>` tương tự định dạng mảng của API 2.1.
+
+- **API 2.6: Tăng lượt xem bài viết (Increment View Count)**
+  - **Phương thức:** `POST`
+  - **Route:** `api/public/posts/{postId}/view`
+  - **Query Parameters:**
+    - `maTruongBo` (string, optional)
+  - **Dịch vụ sử dụng:** `IPublicPostService.IncrementPostViewAsync(maTruongBo, postId)`
+  - **Phản hồi mẫu:**
+    ```json
+    {
+      "success": true
+    }
+    ```
+
+---
+
+## Mở rộng thêm cho Bộ tài liệu API Public (Tùy chọn thêm để đầy đủ)
+Hệ thống hiện tại có thêm dịch vụ văn bản và cấu trúc tổ chức public, chúng tôi thiết kế thêm tài liệu bộ API này nếu phía FE/đối tác cần tích hợp đầy đủ.
+
+### 3. Văn bản (Documents)
+- **API 3.1: Danh sách văn bản**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/documents`
+  - **Dịch vụ:** `IPublicDocumentService`
+- **API 3.2: Chi tiết văn bản**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/documents/{id}`
+
+### 4. Sơ đồ tổ chức & Danh bạ (Staff Profiles)
+- **API 4.1: Danh sách cán bộ giáo viên**
+  - **Phương thức:** `GET`
+  - **Route:** `api/public/staff-profiles`
+  - **Dịch vụ:** `IPublicStaffProfileService`
+
+---
+
+## Các thay đổi dự kiến trong source code
+
+### 1. [Program.cs](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Program.cs)
+- Đăng ký Controllers với JSON format chuẩn (lựa chọn lạc quan: camelCase cho dễ tích hợp FE).
+```csharp
+builder.Services.AddControllers()
+    .AddJsonOptions(options => {
+        options.JsonSerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+    });
+```
+
+### 2. Tạo File Controller mới [PublicNewsController.cs](file:///d:/TITKUL/1. FE/2_DEV/PN_CONGTHONGTIN/PN_HDSWeb_Admin/Controllers/PublicNewsController.cs) [NEW]
+- Chứa các endpoint của API Public Tin tức như đã thiết kế ở trên, inject các service thông qua Dependency Injection.
+
+---
+
+## Kế hoạch kiểm thử & nghiệm thu
+
+### Kiểm thử thủ công bằng Postman/Curl
+- Gọi API danh mục tin tức:
+  ```bash
+  curl -X GET "https://localhost:port/api/public/posts/categories"
+  ```
+- Gọi API danh sách tin tức:
+  ```bash
+  curl -X GET "https://localhost:port/api/public/posts?pageSize=5&page=1"
+  ```
+- Gọi API chi tiết tin tức bằng slug hợp lệ.

@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PN_HDSWeb_Library")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+01543544f54285337dae5c2d76245f6b94f8c3f4")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+37f19ae3264ed2e0d532a43b51855c46cf4930c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("PN_HDSWeb_Library")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PN_HDSWeb_Library")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
