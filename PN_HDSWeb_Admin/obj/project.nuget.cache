@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "6rbZPxz0twg=",
+  "dgSpecHash": "SraKzwGNfvg=",
   "success": true,
-  "projectFilePath": "d:\\TITKUL\\1. FE\\2_DEV\\PN_CONGTHONGTIN\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
+  "projectFilePath": "D:\\TITKUL\\1. FE\\2_DEV\\PN_CONGTHONGTIN\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\bitmiracle.libtiff.net\\2.4.649\\bitmiracle.libtiff.net.2.4.649.nupkg.sha512",
@@ -173,9 +173,9 @@
       "code": "NU1603",
       "level": "Warning",
       "message": "PN_HDSWeb_Admin depends on EPPlus (>= 6.3.0) but EPPlus 6.3.0 was not found. EPPlus 7.0.0 was resolved instead.",
-      "projectPath": "d:\\TITKUL\\1. FE\\2_DEV\\PN_CONGTHONGTIN\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
+      "projectPath": "D:\\TITKUL\\1. FE\\2_DEV\\PN_CONGTHONGTIN\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
       "warningLevel": 1,
-      "filePath": "d:\\TITKUL\\1. FE\\2_DEV\\PN_CONGTHONGTIN\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
+      "filePath": "D:\\TITKUL\\1. FE\\2_DEV\\PN_CONGTHONGTIN\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
       "libraryId": "EPPlus",
       "targetGraphs": [
         "net8.0"
