@@ -46,11 +46,11 @@
                 </div>
                 <div class="ev-confirm-row">
                     <span>Bắt đầu</span>
-                    <strong>@rental.BatDauThue.ToString("dd/MM/yyyy HH:mm")</strong>
+                    <strong>@rental.BatDauThue.ToString("dd/MM/yyyy")</strong>
                 </div>
                 <div class="ev-confirm-row">
                     <span>Kết thúc</span>
-                    <strong>@rental.KetThucThue.ToString("dd/MM/yyyy HH:mm")</strong>
+                    <strong>@rental.KetThucThue.ToString("dd/MM/yyyy")</strong>
                 </div>
                 <div class="ev-confirm-row">
                     <span>Thời gian</span>
@@ -74,7 +74,7 @@
             </div>
 
             <div class="ev-confirm-note">
-                <strong>📞 Lưu ý:</strong> Vui lòng đến đúng giờ và mang theo CMND/CCCD.
+                <strong>📞 Lưu ý:</strong> Vui lòng đến đúng ngày hẹn và mang theo CMND/CCCD.
                 Liên hệ chúng tôi nếu cần thay đổi hoặc hủy đơn.
             </div>
 
@@ -113,8 +113,7 @@
     private string GetTimeText()
     {
         if (rental == null) return "";
-        if (rental.SoNgay >= 1) return $"{rental.SoNgay} ngày";
-        return $"{rental.SoGio} giờ";
+        return $"{Math.Max(1, rental.SoNgay)} ngày";
     }
 
     private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";

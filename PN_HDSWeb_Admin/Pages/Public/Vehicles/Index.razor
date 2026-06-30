@@ -35,11 +35,11 @@
                 </div>
                 <div class="ev-filter-item">
                     <label>Ngày bắt đầu</label>
-                    <input type="datetime-local" @bind="filterStart" @bind:after="ApplyFilter" class="ev-input" />
+                    <input type="date" @bind="filterStart" @bind:after="ApplyFilter" class="ev-input" />
                 </div>
                 <div class="ev-filter-item">
                     <label>Ngày kết thúc</label>
-                    <input type="datetime-local" @bind="filterEnd" @bind:after="ApplyFilter" class="ev-input" />
+                    <input type="date" @bind="filterEnd" @bind:after="ApplyFilter" class="ev-input" />
                 </div>
                 @if (IsFiltered())
                 {
@@ -144,17 +144,10 @@
                             <!-- Price + CTA -->
                             <div class="ev-vehicle-card__right">
                                 <div class="ev-vehicle-card__price-block">
-                                    @if (xe.GiaThueGio > 0)
-                                    {
-                                        <div class="ev-price-line">
-                                            <span class="ev-price">@FormatVnd(xe.GiaThueGio)</span>
-                                            <span class="ev-price-unit">/giờ</span>
-                                        </div>
-                                    }
                                     @if (xe.GiaThueNgay > 0)
                                     {
                                         <div class="ev-price-line">
-                                            <span class="ev-price ev-price--day">@FormatVnd(xe.GiaThueNgay)</span>
+                                            <span class="ev-price">@FormatVnd(xe.GiaThueNgay)</span>
                                             <span class="ev-price-unit">/ngày</span>
                                         </div>
                                     }
@@ -189,8 +182,8 @@
 
     private string filterLoai = "";
     private decimal? filterGiaMax;
-    private DateTime filterStart = DateTime.Now;
-    private DateTime filterEnd = DateTime.Now.AddDays(1);
+    private DateTime filterStart = DateTime.Today;
+    private DateTime filterEnd = DateTime.Today.AddDays(1);
 
     protected override async Task OnParametersSetAsync()
     {
@@ -211,8 +204,8 @@
         {
             LoaiXe   = filterLoai,
             GiaMax   = filterGiaMax,
-            BatDauThue  = filterStart,
-            KetThucThue = filterEnd
+            BatDauThue  = filterStart.Date,
+            KetThucThue = filterEnd.Date
         };
 
         try { vehicles = await VehicleService.GetAvailableVehiclesAsync(filter); }
@@ -224,8 +217,8 @@
     {
         filterLoai  = "";
         filterGiaMax = null;
-        filterStart  = DateTime.Now;
-        filterEnd    = DateTime.Now.AddDays(1);
+        filterStart  = DateTime.Today;
+        filterEnd    = DateTime.Today.AddDays(1);
         await LoadVehicles();
     }
 

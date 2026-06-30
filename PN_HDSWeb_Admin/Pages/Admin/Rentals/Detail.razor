@@ -94,17 +94,16 @@
                     <div class="ev-info-grid">
                         <div class="ev-info-item">
                             <span class="ev-info-label">Bắt đầu thuê</span>
-                            <span class="ev-info-value">@rental.BatDauThue.ToString("HH:mm dd/MM/yyyy")</span>
+                            <span class="ev-info-value">@rental.BatDauThue.ToString("dd/MM/yyyy")</span>
                         </div>
                         <div class="ev-info-item">
                             <span class="ev-info-label">Kết thúc thuê</span>
-                            <span class="ev-info-value">@rental.KetThucThue.ToString("HH:mm dd/MM/yyyy")</span>
+                            <span class="ev-info-value">@rental.KetThucThue.ToString("dd/MM/yyyy")</span>
                         </div>
                         <div class="ev-info-item">
                             <span class="ev-info-label">Thời lượng</span>
                             <span class="ev-info-value">
-                                @(rental.SoNgay > 0 ? $"{rental.SoNgay} ngày" : "")
-                                @(rental.SoGio > 0 ? $"{rental.SoGio} giờ" : "")
+                                @($"{Math.Max(1, rental.SoNgay)} ngày")
                             </span>
                         </div>
                         <div class="ev-info-item">

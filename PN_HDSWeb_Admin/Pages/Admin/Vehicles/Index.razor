@@ -54,7 +54,6 @@
                             <th>Tên xe</th>
                             <th>Loại</th>
                             <th>Biển số</th>
-                            <th>Giá/giờ</th>
                             <th>Giá/ngày</th>
                             <th>Pin</th>
                             <th>Trạng thái</th>
@@ -84,7 +83,6 @@
                                 </td>
                                 <td>@LoaiXeLabel(xe.LoaiXe)</td>
                                 <td>@(xe.BienSo ?? "—")</td>
-                                <td>@(xe.GiaThueGio > 0 ? FormatVnd(xe.GiaThueGio) : "—")</td>
                                 <td>@(xe.GiaThueNgay > 0 ? FormatVnd(xe.GiaThueNgay) : "—")</td>
                                 <td>
                                     <div class="ev-pin-cell">

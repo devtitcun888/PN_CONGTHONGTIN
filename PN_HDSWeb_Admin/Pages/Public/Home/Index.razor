@@ -53,11 +53,11 @@
                 </div>
                 <div class="ev-booking-panel__field">
                     <span class="ev-booking-panel__label">📅 Ngày bắt đầu</span>
-                    <input type="datetime-local" @bind="filterStart" class="ev-input" style="color:black" />
+                    <input type="date" @bind="filterStart" class="ev-input" style="color:black" />
                 </div>
                 <div class="ev-booking-panel__field">
                     <span class="ev-booking-panel__label">🏁 Ngày kết thúc</span>
-                    <input type="datetime-local" @bind="filterEnd" class="ev-input" style="color:black"   />
+                    <input type="date" @bind="filterEnd" class="ev-input" style="color:black"   />
                 </div>
                 <button class="ev-btn ev-btn--primary ev-booking-panel__btn" @onclick="DoSearch">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -202,12 +202,6 @@
                                 </div>
 
                                 <div class="ev-vehicle-card__price-row">
-                                    @if (xe.GiaThueGio > 0)
-                                    {
-                                        <span class="ev-price-hour">
-                                            @FormatVnd(xe.GiaThueGio)<small>/giờ</small>
-                                        </span>
-                                    }
                                     @if (xe.GiaThueNgay > 0)
                                     {
                                         <span class="ev-price-day">@FormatVnd(xe.GiaThueNgay)<small>/ngày</small></span>
@@ -312,7 +306,7 @@
                     <div class="ev-feature-card__icon ev-feature-card__icon--green">💳</div>
                     <div class="ev-feature-card__body">
                         <h4>Giá minh bạch</h4>
-                        <p>Không phụ phí ẩn. Giá hiển thị rõ ràng theo giờ và theo ngày từ trước.</p>
+                        <p>Không phụ phí ẩn. Giá thuê theo ngày được hiển thị rõ ràng từ trước.</p>
                     </div>
                 </div>
                 <div class="ev-feature-card ev-reveal" data-reveal="left">
@@ -397,8 +391,8 @@
     private string contactAddress = "";
 
     private string filterLoai = "";
-    private DateTime filterStart = DateTime.Now;
-    private DateTime filterEnd = DateTime.Now.AddDays(1);
+    private DateTime filterStart = DateTime.Today;
+    private DateTime filterEnd = DateTime.Today.AddDays(1);
     private string trackCode = "";
 
     protected override async Task OnInitializedAsync()
@@ -436,7 +430,7 @@
 
     private void DoSearch()
     {
-        var query = $"?loai={Uri.EscapeDataString(filterLoai)}&start={filterStart:yyyy-MM-ddTHH:mm}&end={filterEnd:yyyy-MM-ddTHH:mm}";
+        var query = $"?loai={Uri.EscapeDataString(filterLoai)}&start={filterStart:yyyy-MM-dd}&end={filterEnd:yyyy-MM-dd}";
         Nav.NavigateTo("/vehicles" + query);
     }
 

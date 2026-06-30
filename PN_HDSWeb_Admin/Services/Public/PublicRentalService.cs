@@ -29,8 +29,13 @@ public class PublicRentalService : IPublicRentalService
     {
         try
         {
+            var batDauThue = dto.BatDauThue.Date;
+            var ketThucThue = dto.KetThucThue.Date;
+            if (ketThucThue <= batDauThue)
+                return CreateRentalResult.Fail("Ngày kết thúc phải sau ngày bắt đầu.");
+
             // 1. Kiểm tra xe còn trống
-            var available = await _vehicleService.CheckAvailabilityAsync(dto.VehicleId, dto.BatDauThue, dto.KetThucThue);
+            var available = await _vehicleService.CheckAvailabilityAsync(dto.VehicleId, batDauThue, ketThucThue);
             if (!available)
                 return CreateRentalResult.Fail("Xe đã được đặt trong khoảng thời gian này.");
 
@@ -41,16 +46,13 @@ public class PublicRentalService : IPublicRentalService
             if (xe.TinhTrang != "available")
                 return CreateRentalResult.Fail("Xe hiện không khả dụng.");
 
-            // 3. Tính tiền
-            var span = dto.KetThucThue - dto.BatDauThue;
-            var soGio = (int)Math.Ceiling(span.TotalHours);
-            var soNgay = (int)Math.Ceiling(span.TotalDays);
-            decimal tongTien;
+            // 3. Tính tiền theo ngày
+            if (xe.GiaThueNgay <= 0)
+                return CreateRentalResult.Fail("Xe chưa có giá thuê theo ngày.");
 
-            if (soNgay >= 1 && xe.GiaThueNgay > 0)
-                tongTien = soNgay * xe.GiaThueNgay;
-            else
-                tongTien = soGio * xe.GiaThueGio;
+            var soNgay = (ketThucThue - batDauThue).Days;
+            var soGio = soNgay * 24;
+            var tongTien = soNgay * xe.GiaThueNgay;
 
             // 4. Sinh mã đơn
             var maDon = await GenerateMaDonAsync();
@@ -66,9 +68,9 @@ public class PublicRentalService : IPublicRentalService
                     '{Escape(maDon)}', {dto.VehicleId}, {(dto.CustomerId.HasValue ? dto.CustomerId.Value.ToString() : "NULL")},
                     '{Escape(dto.KhachTen)}', '{Escape(dto.KhachSdt)}',
                     {SqlStr(dto.KhachEmail)}, {SqlStr(dto.KhachCmnd)},
-                    '{dto.BatDauThue:yyyy-MM-dd HH:mm:ss}', '{dto.KetThucThue:yyyy-MM-dd HH:mm:ss}',
+                    '{batDauThue:yyyy-MM-dd HH:mm:ss}', '{ketThucThue:yyyy-MM-dd HH:mm:ss}',
                     {soGio}, {soNgay},
-                    {(xe.GiaThueNgay > 0 ? xe.GiaThueNgay : xe.GiaThueGio)},
+                    {xe.GiaThueNgay},
                     {tongTien}, {xe.DatCoc},
                     {SqlStr(dto.GhiChu)}, 'pending'
                 )

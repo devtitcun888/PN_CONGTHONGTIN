@@ -128,13 +128,6 @@ else
 
                     <!-- Giá -->
                     <div class="ev-detail-price-card">
-                        @if (xe.GiaThueGio > 0)
-                        {
-                            <div class="ev-price-row">
-                                <span class="ev-price-lbl">Thuê theo giờ</span>
-                                <span class="ev-price-val">@FormatVnd(xe.GiaThueGio)<small>/giờ</small></span>
-                            </div>
-                        }
                         @if (xe.GiaThueNgay > 0)
                         {
                             <div class="ev-price-row">
@@ -195,12 +188,12 @@ else
                             </div>
                             <div class="ev-form-row">
                                 <div class="ev-form-field">
-                                    <label>Từ ngày giờ *</label>
-                                    <input type="datetime-local" class="ev-input" @bind="formStart" />
+                                    <label>Từ ngày *</label>
+                                    <input type="date" class="ev-input" @bind="formStart" />
                                 </div>
                                 <div class="ev-form-field">
-                                    <label>Đến ngày giờ *</label>
-                                    <input type="datetime-local" class="ev-input" @bind="formEnd" />
+                                    <label>Đến ngày *</label>
+                                    <input type="date" class="ev-input" @bind="formEnd" />
                                 </div>
                             </div>
                             <div class="ev-form-field">
@@ -268,8 +261,8 @@ else
     private string formSdt = "";
     private string formEmail = "";
     private string formCmnd = "";
-    private DateTime formStart = DateTime.Now;
-    private DateTime formEnd = DateTime.Now.AddDays(1);
+    private DateTime formStart = DateTime.Today;
+    private DateTime formEnd = DateTime.Today.AddDays(1);
     private string formGhiChu = "";
     private bool submitted;
     private bool submitting;
@@ -299,9 +292,9 @@ else
             errorMsg = "Thời gian kết thúc phải sau thời gian bắt đầu.";
             return;
         }
-        if (formStart < DateTime.Now.AddMinutes(-5))
+        if (formStart.Date < DateTime.Today)
         {
-            errorMsg = "Thời gian bắt đầu không thể là quá khứ.";
+            errorMsg = "Ngày bắt đầu không thể là quá khứ.";
             return;
         }
 
@@ -313,8 +306,8 @@ else
             KhachSdt = formSdt,
             KhachEmail = formEmail,
             KhachCmnd = formCmnd,
-            BatDauThue = formStart,
-            KetThucThue = formEnd,
+            BatDauThue = formStart.Date,
+            KetThucThue = formEnd.Date,
             GhiChu = formGhiChu
         };
 
@@ -333,24 +326,14 @@ else
     private decimal EstimatePrice()
     {
         if (xe == null || formEnd <= formStart) return 0;
-        var span = formEnd - formStart;
-        var soNgay = (int)Math.Ceiling(span.TotalDays);
-        var soGio = (int)Math.Ceiling(span.TotalHours);
-        if (soNgay >= 1 && xe.GiaThueNgay > 0)
-            return soNgay * xe.GiaThueNgay;
-        return soGio * xe.GiaThueGio;
+        var soNgay = (formEnd.Date - formStart.Date).Days;
+        return soNgay * xe.GiaThueNgay;
     }
 
     private string GetTimeSpanText()
     {
-        var span = formEnd - formStart;
-        if (span.TotalDays >= 1)
-        {
-            var days = (int)Math.Ceiling(span.TotalDays);
-            return $"{days} ngày";
-        }
-        var hours = (int)Math.Ceiling(span.TotalHours);
-        return $"{hours} giờ";
+        var days = (formEnd.Date - formStart.Date).Days;
+        return $"{days} ngày";
     }
 
     private static string GetPinLevel(int pin) => pin >= 80 ? "high" : pin >= 40 ? "mid" : "low";

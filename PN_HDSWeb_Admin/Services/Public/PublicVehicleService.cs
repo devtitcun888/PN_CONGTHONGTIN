@@ -32,7 +32,7 @@ public class PublicVehicleService : IPublicVehicleService
 
         var loaiWhere = string.IsNullOrWhiteSpace(filter.LoaiXe) ? "" : $"AND loai_xe = '{Escape(filter.LoaiXe)}'";
         var giaWhere = filter.GiaMax.HasValue
-            ? $"AND (gia_thue_ngay <= {filter.GiaMax.Value} OR gia_thue_gio <= {filter.GiaMax.Value / 8})"
+            ? $"AND gia_thue_ngay <= {filter.GiaMax.Value}"
             : "";
 
         // Loại trừ xe đang có đơn active trong khoảng thời gian yêu cầu

@@ -137,7 +137,7 @@ public class AdminVehicleService : IAdminVehicleService
                     {SqlStr(dto.BienSo)}, {SqlStr(dto.HangXe)}, {SqlStr(dto.MauXe)},
                     {(dto.NamSanXuat.HasValue ? dto.NamSanXuat.Value.ToString() : "NULL")},
                     {SqlStr(dto.MoTa)},
-                    {dto.GiaThueGio}, {dto.GiaThueNgay}, {dto.DatCoc},
+                    0, {dto.GiaThueNgay}, {dto.DatCoc},
                     {dto.PinPhanTram}, {dto.KmHangLanSac},
                     {SqlStr(dto.HinhAnhChinh)}, {SqlStr(dto.HinhAnhJson)},
                     {SqlStr(dto.DiaChi)}, {SqlStr(dto.TinhNangJson)}, TRUE
@@ -170,7 +170,7 @@ public class AdminVehicleService : IAdminVehicleService
                     mau_xe = {SqlStr(dto.MauXe)},
                     nam_san_xuat = {(dto.NamSanXuat.HasValue ? dto.NamSanXuat.Value.ToString() : "NULL")},
                     mo_ta = {SqlStr(dto.MoTa)},
-                    gia_thue_gio = {dto.GiaThueGio},
+                    gia_thue_gio = 0,
                     gia_thue_ngay = {dto.GiaThueNgay},
                     dat_coc = {dto.DatCoc},
                     pin_phan_tram = {dto.PinPhanTram},

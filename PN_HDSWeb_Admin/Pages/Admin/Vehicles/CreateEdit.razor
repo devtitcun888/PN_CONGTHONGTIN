@@ -95,15 +95,11 @@
                     <h3 class="ev-section-title">💰 Giá thuê</h3>
                     <div class="ev-form-row">
                         <div class="ev-form-group">
-                            <label class="ev-label">Giá thuê/giờ (đ) <span class="ev-required">*</span></label>
-                            <input class="ev-input @(errors.ContainsKey("GiaThueGio") ? "ev-input--error" : "")"
-                                   type="number" @bind="dto.GiaThueGio" min="0" placeholder="50000" />
-                            @if (errors.ContainsKey("GiaThueGio"))
-                            { <span class="ev-error-msg">@errors["GiaThueGio"]</span> }
-                        </div>
-                        <div class="ev-form-group">
-                            <label class="ev-label">Giá thuê/ngày (đ)</label>
-                            <input class="ev-input" type="number" @bind="dto.GiaThueNgay" min="0" placeholder="300000" />
+                            <label class="ev-label">Giá thuê/ngày (đ) <span class="ev-required">*</span></label>
+                            <input class="ev-input @(errors.ContainsKey("GiaThueNgay") ? "ev-input--error" : "")"
+                                   type="number" @bind="dto.GiaThueNgay" min="0" placeholder="300000" />
+                            @if (errors.ContainsKey("GiaThueNgay"))
+                            { <span class="ev-error-msg">@errors["GiaThueNgay"]</span> }
                         </div>
                         <div class="ev-form-group">
                             <label class="ev-label">Tiền đặt cọc (đ)</label>
@@ -244,7 +240,7 @@
                 MauXe        = detail.MauXe,
                 NamSanXuat   = detail.NamSanXuat,
                 MoTa         = detail.MoTa,
-                GiaThueGio   = detail.GiaThueGio,
+                GiaThueGio   = 0,
                 GiaThueNgay  = detail.GiaThueNgay,
                 DatCoc       = detail.DatCoc,
                 PinPhanTram  = detail.PinPhanTram,
@@ -302,8 +298,8 @@
         errors.Clear();
         if (string.IsNullOrWhiteSpace(dto.TenXe))
             errors["TenXe"] = "Tên xe không được trống.";
-        if (dto.GiaThueGio <= 0)
-            errors["GiaThueGio"] = "Giá thuê/giờ phải > 0.";
+        if (dto.GiaThueNgay <= 0)
+            errors["GiaThueNgay"] = "Giá thuê/ngày phải > 0.";
         return errors.Count == 0;
     }
 
@@ -313,6 +309,7 @@
         if (!Validate()) return;
 
         ParseFeatures();
+        dto.GiaThueGio = 0;
         saving = true;
 
         if (selectedMainImage != null)

@@ -66,7 +66,7 @@
                         <div class="ev-timeline-dot"></div>
                         <div class="ev-timeline-content">
                             <strong>Đang thuê</strong>
-                            <span>@rental.BatDauThue.ToString("dd/MM/yyyy HH:mm")</span>
+                            <span>@rental.BatDauThue.ToString("dd/MM/yyyy")</span>
                         </div>
                     </div>
                     <div class="ev-timeline-item @(IsReached("completed") ? "reached" : "")">
@@ -79,7 +79,7 @@
                             }
                             else
                             {
-                                <span>Dự kiến: @rental.KetThucThue.ToString("dd/MM/yyyy HH:mm")</span>
+                                <span>Dự kiến: @rental.KetThucThue.ToString("dd/MM/yyyy")</span>
                             }
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                     </div>
                     <div class="ev-track-detail-row">
                         <span>Thời gian</span>
-                        <strong>@rental.BatDauThue.ToString("dd/MM HH:mm") → @rental.KetThucThue.ToString("dd/MM HH:mm")</strong>
+                        <strong>@rental.BatDauThue.ToString("dd/MM/yyyy") → @rental.KetThucThue.ToString("dd/MM/yyyy")</strong>
                     </div>
                     <div class="ev-track-detail-row ev-track-detail-row--total">
                         <span>Tổng tiền</span><strong>@FormatVnd(rental.TongTien)</strong>
