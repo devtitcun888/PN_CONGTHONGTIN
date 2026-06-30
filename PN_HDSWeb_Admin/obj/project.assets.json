@@ -8586,11 +8586,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
+      "projectUniqueName": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
       "projectName": "PN_HDSWeb_Admin",
-      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
+      "projectPath": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Admin\\PN_HDSWeb_Admin.csproj",
       "packagesPath": "C:\\Users\\hgggg\\.nuget\\packages\\",
-      "outputPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Admin\\obj\\",
+      "outputPath": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Admin\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -8612,8 +8612,8 @@
           "framework": "net8.0",
           "targetAlias": "net8.0",
           "projectReferences": {
-            "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
-              "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj"
+            "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
+              "projectPath": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj"
             }
           }
         }

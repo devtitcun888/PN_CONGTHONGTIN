@@ -2,6 +2,7 @@
 @using PN_HDSWeb_Admin.Services.Public
 @inject IPublicVehicleService VehicleService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <PageTitle>@(xe?.TenXe ?? "Chi tiết xe") — EV Rental</PageTitle>
 
@@ -27,18 +28,18 @@ else if (xe == null)
 }
 else
 {
-    <div class="ev-vehicle-detail">
+    <div class="ev-vehicle-detail ev-anim-ready">
         <div class="ev-container">
 
             <!-- Breadcrumb -->
-            <nav class="ev-breadcrumb">
+            <nav class="ev-breadcrumb ev-reveal" data-reveal="left">
                 <a href="/">Trang chủ</a> › <a href="/vehicles">Xe điện</a> › @xe.TenXe
             </nav>
 
-            <div class="ev-detail-layout">
+            <div class="ev-detail-layout ev-stagger">
 
                 <!-- LEFT: Ảnh -->
-                <div class="ev-detail-gallery">
+                <div class="ev-detail-gallery ev-reveal" data-reveal="left">
                     <div class="ev-gallery-main">
                         @if (!string.IsNullOrWhiteSpace(activeImage))
                         {

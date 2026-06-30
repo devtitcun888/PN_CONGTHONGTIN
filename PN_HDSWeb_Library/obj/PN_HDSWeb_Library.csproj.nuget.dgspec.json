@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {}
+    "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {}
   },
   "projects": {
-    "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
+    "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+        "projectUniqueName": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
         "projectName": "PN_HDSWeb_Library",
-        "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
+        "projectPath": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\PN_HDSWeb_Library.csproj",
         "packagesPath": "C:\\Users\\hgggg\\.nuget\\packages\\",
-        "outputPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\obj\\",
+        "outputPath": "d:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\PN_HDSWeb_Library\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

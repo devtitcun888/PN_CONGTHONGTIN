@@ -1,6 +1,6 @@
 /**
- * EV Rental — Public JS v2
- * Scroll header, reveal, counter, card interactions
+ * EV Rental — Public JS v3
+ * Scroll header, reveal, counter, card interactions, particles
  */
 
 (function () {
@@ -23,19 +23,30 @@
     }, { passive: true });
   }
 
-  /* ── Scroll Reveal ── */
+  /* ── Scroll Reveal with direction ── */
   function initScrollReveal() {
     var els = document.querySelectorAll('.ev-reveal');
     if (!els.length) return;
 
+    // Add ready class to enable initial hidden state
+    document.body.classList.add('ev-anim-ready');
+
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-          io.unobserve(entry.target);
+          var el = entry.target;
+          var revealType = el.getAttribute('data-reveal');
+          
+          // Remove transform based on direction for final state
+          if (revealType === 'left') el.classList.add('visible', 'fade-in-left');
+          else if (revealType === 'right') el.classList.add('visible', 'fade-in-right');
+          else if (revealType === 'scale') el.classList.add('visible', 'scale-in');
+          else el.classList.add('visible');
+          
+          io.unobserve(el);
         }
       });
-    }, { threshold: 0.10, rootMargin: '0px 0px -30px 0px' });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
 
     els.forEach(function (el) { io.observe(el); });
   }
@@ -56,17 +67,21 @@
 
   /* ── Counter Animation for Stats ── */
   function animateCounters() {
-    var counters = document.querySelectorAll('.ev-stat__num[data-count]');
+    var counters = document.querySelectorAll('.ev-stat-item__num');
     if (!counters.length) return;
 
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
         var el = entry.target;
-        var target = parseInt(el.dataset.count, 10) || 0;
-        var suffix = el.dataset.suffix || '';
+        var text = el.textContent || '';
+        var match = text.match(/(\d+)/);
+        if (!match) { io.unobserve(el); return; }
+        
+        var target = parseInt(match[1], 10);
+        var suffix = text.replace(match[1], '');
         var start = 0;
-        var duration = 1600;
+        var duration = 1800;
         var startTime = null;
 
         function step(ts) {
@@ -98,14 +113,16 @@
   /* ── Vehicle Card tilt on hover ── */
   function initCardTilt() {
     document.querySelectorAll('.ev-vehicle-card').forEach(function (card) {
+      if (card.getAttribute('data-tilt') !== 'true') return;
+      
       card.addEventListener('mousemove', function (e) {
         var rect = card.getBoundingClientRect();
         var x = e.clientX - rect.left;
         var y = e.clientY - rect.top;
         var cx = rect.width / 2;
         var cy = rect.height / 2;
-        var rx = ((y - cy) / cy) * 3;
-        var ry = ((x - cx) / cx) * -3;
+        var rx = ((y - cy) / cy) * 4;
+        var ry = ((x - cx) / cx) * -4;
         card.style.transform = 'translateY(-6px) rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
         card.style.transition = 'transform 0.1s ease';
       });
@@ -129,6 +146,21 @@
     });
   }
 
+  /* ── Floating particles ── */
+  function initParticles() {
+    var container = document.getElementById('hero-particles');
+    if (!container) return;
+    
+    // Particles are already in DOM, just add random animation for variety
+    var particles = container.querySelectorAll('.ev-particle');
+    particles.forEach(function (p, i) {
+      var delay = Math.random() * 10;
+      var dur = 20 + Math.random() * 20;
+      p.style.animationDelay = delay + 's';
+      p.style.animationDuration = dur + 's';
+    });
+  }
+
   /* ── Init all ── */
   function init() {
     initScrollReveal();
@@ -137,6 +169,7 @@
     animatePinBars();
     initCardTilt();
     initSmoothScroll();
+    initParticles();
   }
 
   // Run after DOM ready

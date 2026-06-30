@@ -3,33 +3,44 @@
 @inject IPublicVehicleService VehicleService
 @inject IPublicSiteSettingService SiteSettingService
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
 <PageTitle>@siteName — Thuê Xe Điện Nhanh, Sạch, Thông Minh</PageTitle>
 
 <div class="ev-home">
+
+    <!-- Floating particles -->
+    <div class="ev-hero-particles" id="hero-particles">
+        @for (int i = 0; i < 12; i++)
+        {
+            var delay = (i * 2).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var dur = (15 + i * 3).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var top = (i * 8).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            var left = (i * 8).ToString(System.Globalization.CultureInfo.InvariantCulture);
+            <div class="ev-particle" style="width:@(8 + i * 2)px;height:@(8 + i * 2)px;top:@(top)%;left:@(left)%;animation-duration:@(dur)s;animation-delay:-@(delay)s;"></div>
+        }
+    </div>
 
     <!-- ===== HERO ===== -->
     <section class="ev-hero">
         <div class="ev-hero-bg-grid"></div>
         <div class="ev-hero__content">
             <!-- Badge -->
-            <div class="ev-hero__badge">
+            <div class="ev-hero__badge" data-reveal="scale">
                 <span class="ev-hero__badge-dot"></span>
                 ⚡ Thuê xe điện thông minh · Sạch · Nhanh
             </div>
 
             <!-- Title -->
-            <h1 class="ev-hero__title">
+            <h1 class="ev-hero__title" data-reveal="left">
                 Trải nghiệm<br />
                 <span class="ev-hero__title-accent">xe điện</span> thế hệ mới
             </h1>
 
-            <p class="ev-hero__sub">
-                @siteSlogan — Đặt xe trong vài giây, nhận xe tận nơi, hành trình không khí thải.
-            </p>
+            <p class="ev-hero__sub" data-reveal="right">@siteSlogan — Đặt xe trong vài giây, nhận xe tận nơi, hành trình không khí thải.</p>
 
             <!-- Booking panel -->
-            <div class="ev-booking-panel">
+            <div class="ev-booking-panel" data-reveal="up">
                 <div class="ev-booking-panel__field">
                     <span class="ev-booking-panel__label">🚗 Loại xe</span>
                     <select @bind="filterLoai" class="ev-select" style="color:black">
@@ -58,19 +69,19 @@
 
             <!-- Trust row -->
             <div class="ev-hero-trust">
-                <div class="ev-hero-trust-item">
+                <div class="ev-hero-trust-item" data-reveal="left">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     Đặt xe miễn phí
                 </div>
-                <div class="ev-hero-trust-item">
+                <div class="ev-hero-trust-item" data-reveal="up">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     Hủy linh hoạt
                 </div>
-                <div class="ev-hero-trust-item">
+                <div class="ev-hero-trust-item" data-reveal="right">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     Hỗ trợ 24/7
                 </div>
-                <div class="ev-hero-trust-item">
+                <div class="ev-hero-trust-item" data-reveal="up">
                     <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     100% xe điện
                 </div>
@@ -82,19 +93,19 @@
     <section class="ev-stats-section">
         <div class="ev-container">
             <div class="ev-stats-grid">
-                <div class="ev-stat-item ev-reveal">
+                <div class="ev-stat-item ev-reveal" data-reveal="left">
                     <span class="ev-stat-item__num ev-stat-item__num--blue">@vehicles.Count+</span>
                     <span class="ev-stat-item__label">Xe sẵn sàng</span>
                 </div>
-                <div class="ev-stat-item ev-reveal">
+                <div class="ev-stat-item ev-reveal" data-reveal="up">
                     <span class="ev-stat-item__num ev-stat-item__num--green">0g</span>
                     <span class="ev-stat-item__label">CO₂ phát thải</span>
                 </div>
-                <div class="ev-stat-item ev-reveal">
+                <div class="ev-stat-item ev-reveal" data-reveal="up">
                     <span class="ev-stat-item__num ev-stat-item__num--purple">24/7</span>
                     <span class="ev-stat-item__label">Hỗ trợ liên tục</span>
                 </div>
-                <div class="ev-stat-item ev-reveal">
+                <div class="ev-stat-item ev-reveal" data-reveal="right">
                     <span class="ev-stat-item__num">100%</span>
                     <span class="ev-stat-item__label">Xe điện xanh</span>
                 </div>
@@ -146,7 +157,7 @@
                 <div class="ev-vehicle-grid ev-stagger">
                     @foreach (var xe in vehicles.Take(8))
                     {
-                        <div class="ev-vehicle-card ev-reveal" @onclick="() => GoToDetail(xe.Id)">
+                        <div class="ev-vehicle-card ev-reveal" @onclick="() => GoToDetail(xe.Id)" data-tilt="true">
                             <!-- Image -->
                             <div class="ev-vehicle-card__img-wrap">
                                 @if (!string.IsNullOrWhiteSpace(xe.HinhAnhChinh))
@@ -245,19 +256,19 @@
             </div>
 
             <div class="ev-how-grid ev-stagger">
-                <div class="ev-step-card ev-reveal">
+                <div class="ev-step-card ev-reveal" data-reveal="left">
                     <div class="ev-step-card__num">1</div>
                     <div class="ev-step-card__icon">🔍</div>
                     <h3>Chọn xe phù hợp</h3>
                     <p>Duyệt danh sách xe điện đa dạng, lọc theo loại, giá, khu vực và thời gian bạn muốn thuê.</p>
                 </div>
-                <div class="ev-step-card ev-reveal">
+                <div class="ev-step-card ev-reveal" data-reveal="up">
                     <div class="ev-step-card__num ev-step-card__num--2">2</div>
                     <div class="ev-step-card__icon">📝</div>
                     <h3>Đặt & xác nhận</h3>
                     <p>Nhập thông tin cá nhân, chọn thời gian thuê và nhận xác nhận đặt xe ngay lập tức.</p>
                 </div>
-                <div class="ev-step-card ev-reveal">
+                <div class="ev-step-card ev-reveal" data-reveal="right">
                     <div class="ev-step-card__num ev-step-card__num--3">3</div>
                     <div class="ev-step-card__icon">🚀</div>
                     <h3>Nhận xe & lên đường</h3>
@@ -276,42 +287,42 @@
             </div>
 
             <div class="ev-features-grid ev-stagger">
-                <div class="ev-feature-card ev-reveal">
+                <div class="ev-feature-card ev-reveal" data-reveal="left">
                     <div class="ev-feature-card__icon ev-feature-card__icon--blue">⚡</div>
                     <div class="ev-feature-card__body">
                         <h4>100% Xe điện</h4>
                         <p>Tất cả phương tiện đều chạy điện, không khí thải, thân thiện môi trường.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal">
+                <div class="ev-feature-card ev-reveal" data-reveal="up">
                     <div class="ev-feature-card__icon ev-feature-card__icon--green">🌿</div>
                     <div class="ev-feature-card__body">
                         <h4>Xanh & Sạch</h4>
                         <p>Góp phần giảm thiểu ô nhiễm không khí, bảo vệ môi trường cho thế hệ tương lai.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal">
+                <div class="ev-feature-card ev-reveal" data-reveal="up">
                     <div class="ev-feature-card__icon ev-feature-card__icon--blue">🔒</div>
                     <div class="ev-feature-card__body">
                         <h4>An toàn & Bảo hiểm</h4>
                         <p>Xe được bảo dưỡng định kỳ, bảo hiểm đầy đủ, GPS theo dõi thời gian thực.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal">
+                <div class="ev-feature-card ev-reveal" data-reveal="right">
                     <div class="ev-feature-card__icon ev-feature-card__icon--green">💳</div>
                     <div class="ev-feature-card__body">
                         <h4>Giá minh bạch</h4>
                         <p>Không phụ phí ẩn. Giá hiển thị rõ ràng theo giờ và theo ngày từ trước.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal">
+                <div class="ev-feature-card ev-reveal" data-reveal="left">
                     <div class="ev-feature-card__icon ev-feature-card__icon--purple">📱</div>
                     <div class="ev-feature-card__body">
                         <h4>Theo dõi đơn realtime</h4>
                         <p>Kiểm tra trạng thái đơn thuê, lịch sử và thông tin xe mọi lúc mọi nơi.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal">
+                <div class="ev-feature-card ev-reveal" data-reveal="up">
                     <div class="ev-feature-card__icon ev-feature-card__icon--purple">🎯</div>
                     <div class="ev-feature-card__body">
                         <h4>Hỗ trợ 24/7</h4>
@@ -405,6 +416,14 @@
         }
         catch { vehicles = []; }
         finally { loading = false; }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await JS.InvokeVoidAsync("evPublic.init");
+        }
     }
 
     private async Task Reload()

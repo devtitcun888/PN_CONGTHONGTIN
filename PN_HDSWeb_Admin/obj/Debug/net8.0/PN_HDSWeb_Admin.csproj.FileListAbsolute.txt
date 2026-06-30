@@ -4188,4 +4188,12 @@ D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.pdb
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.0\PN_HDSWeb_Admin.genruntimeconfig.cache
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Admin\obj\Debug\net8.0\ref\PN_HDSWeb_Admin.dll
-D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\obj\Debug\net8.0\staticwebassets.upToDateCheck.txt
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\appsettings.Development.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\appsettings.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.staticwebassets.runtime.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.staticwebassets.endpoints.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.exe
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.deps.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.runtimeconfig.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.dll
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Admin.pdb

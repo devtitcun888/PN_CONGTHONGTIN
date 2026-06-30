@@ -12,117 +12,117 @@ build_property.EntryPointFilePath =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = PN_HDSWeb_Admin
 build_property.RootNamespace = PN_HDSWeb_Admin
-build_property.ProjectDir = D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\
+build_property.ProjectDir = d:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin
+build_property.MSBuildProjectDirectory = d:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\PN_HDSWeb_Admin
 build_property._RazorSourceGeneratorDebug = 
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/App.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/App.razor]
 build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Accounts/Edit.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Accounts/Edit.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWNjb3VudHNcRWRpdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Accounts/Index.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Accounts/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cQWNjb3VudHNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Dashboard/Index.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Dashboard/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cRGFzaGJvYXJkXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Rentals/Detail.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Rentals/Detail.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUmVudGFsc1xEZXRhaWwucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Rentals/Index.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Rentals/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cUmVudGFsc1xJbmRleC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Vehicles/CreateEdit.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Vehicles/CreateEdit.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVmVoaWNsZXNcQ3JlYXRlRWRpdC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Vehicles/Index.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Admin/Vehicles/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQWRtaW5cVmVoaWNsZXNcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Auth/LoginPages.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Auth/LoginPages.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxMb2dpblBhZ2VzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Auth/LoginPagesAdmin.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Auth/LoginPagesAdmin.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQXV0aFxMb2dpblBhZ2VzQWRtaW4ucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Booking/Confirmation.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Booking/Confirmation.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXEJvb2tpbmdcQ29uZmlybWF0aW9uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Booking/TrackOrder.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Booking/TrackOrder.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXEJvb2tpbmdcVHJhY2tPcmRlci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Home/Index.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Home/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXEhvbWVcSW5kZXgucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Vehicles/Detail.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Vehicles/Detail.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFZlaGljbGVzXERldGFpbC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Vehicles/Index.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Public/Vehicles/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcUHVibGljXFZlaGljbGVzXEluZGV4LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/AdminLayout.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/AdminLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXEFkbWluTGF5b3V0LnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/MainLayout.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/MainLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE1haW5MYXlvdXQucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/NavMenu.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/NavMenu.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXE5hdk1lbnUucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/Pagination_Custom.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/Pagination_Custom.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFBhZ2luYXRpb25fQ3VzdG9tLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/PublicLayout.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/PublicLayout.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFB1YmxpY0xheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/RedirectToLogin.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/RedirectToLogin.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFJlZGlyZWN0VG9Mb2dpbi5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/ToastMessage.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/ToastMessage.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFRvYXN0TWVzc2FnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/TopNavbar.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Shared/TopNavbar.razor]
 build_metadata.AdditionalFiles.TargetPath = U2hhcmVkXFRvcE5hdmJhci5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/_Imports.razor]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/_Imports.razor]
 build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Error.cshtml]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/Error.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRXJyb3IuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/_Host.cshtml]
+[d:/WORK/TITKUL/2_CONGTHONGITN/PN_HDSWeb/PN_HDSWeb_Admin/Pages/_Host.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 

@@ -482,6 +482,22 @@ input, select, textarea { font-family: inherit; }
   margin-bottom: 5px;
 }
 
+/* Hero title accent animation */
+.ev-hero__title-accent {
+  background: linear-gradient(135deg, #2563EB 0%, #7C3AED 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradientShift 4s ease infinite;
+  background-size: 200% 200%;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
 /* ── 8. HERO SECTION ── */
 .ev-hero {
   position: relative;
@@ -499,6 +515,28 @@ input, select, textarea { font-family: inherit; }
     #F5F3FF 100%);
 }
 
+/* Floating particles */
+.ev-hero-particles {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.ev-particle {
+  position: absolute;
+  background: rgba(37, 99, 235, 0.08);
+  border-radius: 50%;
+  animation: floatParticle linear infinite;
+}
+
+@keyframes floatParticle {
+  0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+  10% { opacity: 0.6; }
+  90% { opacity: 0.3; }
+  100% { transform: translateY(-100px) translateX(100px); opacity: 0; }
+}
+
 /* Decorative background shapes */
 .ev-hero::before {
   content: '';
@@ -508,6 +546,7 @@ input, select, textarea { font-family: inherit; }
   background: radial-gradient(circle, rgba(37,99,235,0.07) 0%, transparent 70%);
   top: -200px; right: -100px;
   pointer-events: none;
+  animation: pulse 8s ease-in-out infinite;
 }
 
 .ev-hero::after {
@@ -518,6 +557,23 @@ input, select, textarea { font-family: inherit; }
   background: radial-gradient(circle, rgba(124,58,237,0.07) 0%, transparent 70%);
   bottom: -100px; left: -100px;
   pointer-events: none;
+  animation: pulse 10s ease-in-out infinite 2s;
+}
+
+.ev-hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(37,99,235,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37,99,235,0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  pointer-events: none;
+  animation: gridMove 30s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 64px 64px; }
 }
 
 .ev-hero-bg-grid {
@@ -553,7 +609,7 @@ input, select, textarea { font-family: inherit; }
   letter-spacing: 0.01em;
   margin-bottom: var(--space-6);
   box-shadow: var(--shadow-sm);
-  animation: fadeInDown 0.5s ease both;
+  animation: fadeScaleIn 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
 }
 
 .ev-hero__badge-dot {
@@ -566,7 +622,7 @@ input, select, textarea { font-family: inherit; }
 
 @keyframes pulseDot {
   0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129,0.4); }
-  50% { box-shadow: 0 0 0 5px rgba(16,185,129,0); }
+  50% { box-shadow: 0 0 0 8px rgba(16,185,129,0); }
 }
 
 /* Title */
@@ -1062,6 +1118,7 @@ input, select, textarea { font-family: inherit; }
   box-shadow: var(--shadow-md);
 }
 
+/* Feature card icon pulse */
 .ev-feature-card__icon {
   width: 44px; height: 44px;
   border-radius: var(--r-md);
@@ -1070,6 +1127,11 @@ input, select, textarea { font-family: inherit; }
   justify-content: center;
   font-size: 1.4rem;
   flex-shrink: 0;
+  transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.ev-feature-card:hover .ev-feature-card__icon {
+  transform: scale(1.15) rotate(5deg);
 }
 
 .ev-feature-card__icon--blue   { background: var(--c-primary-10); }
@@ -1958,17 +2020,47 @@ input, select, textarea { font-family: inherit; }
   to   { opacity:1; }
 }
 
+@keyframes fadeScaleIn {
+  from { opacity:0; transform:scale(0.92) translateY(20px); }
+  to   { opacity:1; transform:scale(1) translateY(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity:0; transform:translateX(-30px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+
+@keyframes slideInRight {
+  from { opacity:0; transform:translateX(30px); }
+  to   { opacity:1; transform:translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform:scale(1); }
+  50% { transform:scale(1.05); }
+}
+
+@keyframes float {
+  0%, 100% { transform:translateY(0); }
+  50% { transform:translateY(-10px); }
+}
+
+@keyframes glowPulse {
+  0%, 100% { box-shadow:0 0 0 0 rgba(37,99,235,0.4); }
+  50% { box-shadow:0 0 0 12px rgba(37,99,235,0); }
+}
+
 /* Scroll reveal — visible by default, animate when JS adds .visible */
 .ev-reveal {
   opacity: 1;
   transform: translateY(0);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition: opacity 0.6s cubic-bezier(0.34,1.56,0.64,1), transform 0.6s cubic-bezier(0.34,1.56,0.64,1);
 }
 
 /* JS thêm class .ev-anim khi IntersectionObserver ready, khi đó mới ẩn trước */
 .ev-anim-ready .ev-reveal {
   opacity: 0;
-  transform: translateY(20px);
+  transform: translateY(24px);
 }
 
 .ev-anim-ready .ev-reveal.visible {
@@ -1976,12 +2068,35 @@ input, select, textarea { font-family: inherit; }
   transform: translateY(0);
 }
 
+.ev-anim-ready .ev-reveal.visible.fade-in-left {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ev-anim-ready .ev-reveal.visible.fade-in-right {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.ev-anim-ready .ev-reveal.visible.scale-in {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+}
+
 /* Stagger children */
 .ev-stagger > *:nth-child(1) { transition-delay: 0ms; }
-.ev-stagger > *:nth-child(2) { transition-delay: 60ms; }
-.ev-stagger > *:nth-child(3) { transition-delay: 120ms; }
-.ev-stagger > *:nth-child(4) { transition-delay: 180ms; }
-.ev-stagger > *:nth-child(5) { transition-delay: 240ms; }
+.ev-stagger > *:nth-child(2) { transition-delay: 80ms; }
+.ev-stagger > *:nth-child(3) { transition-delay: 160ms; }
+.ev-stagger > *:nth-child(4) { transition-delay: 240ms; }
+.ev-stagger > *:nth-child(5) { transition-delay: 320ms; }
+.ev-stagger > *:nth-child(6) { transition-delay: 400ms; }
+.ev-stagger > *:nth-child(7) { transition-delay: 480ms; }
+.ev-stagger > *:nth-child(8) { transition-delay: 560ms; }
+
+/* Reveal with different directions */
+.ev-reveal[data-reveal="left"] { transform: translateX(-24px); }
+.ev-reveal[data-reveal="right"] { transform: translateX(24px); }
+.ev-reveal[data-reveal="scale"] { transform: scale(0.92) translateY(24px); }
 
 /* ── 33. TEXT UTILITIES ── */
 .ev-text-primary  { color: var(--c-primary); }
@@ -2094,3 +2209,85 @@ input, select, textarea { font-family: inherit; }
 
 /* Ensure MudBlazor/Bootstrap don't override our styles */
 .ev-public-layout * { box-sizing: border-box; }
+
+/* ── VEHICLE DETAIL PAGE ANIMATIONS ── */
+.ev-vehicle-detail {
+  background: var(--c-gray-50);
+  min-height: calc(100vh - var(--header-h));
+  padding: 40px 0 80px;
+}
+
+.ev-gallery-main img {
+  opacity: 0;
+  animation: fadeScaleIn 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  transition: transform 0.6s ease;
+}
+
+.ev-gallery-main img:hover {
+  transform: scale(1.03);
+}
+
+.ev-gallery-thumbs img {
+  opacity: 0;
+  animation: fadeIn 0.4s ease forwards;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.ev-gallery-thumbs img:nth-child(1) { animation-delay: 100ms; }
+.ev-gallery-thumbs img:nth-child(2) { animation-delay: 150ms; }
+.ev-gallery-thumbs img:nth-child(3) { animation-delay: 200ms; }
+.ev-gallery-thumbs img:nth-child(4) { animation-delay: 250ms; }
+
+.ev-detail-status-bar {
+  margin-top: var(--space-6);
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--border);
+}
+
+.ev-status-item {
+  opacity: 0;
+  animation: slideInLeft 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+.ev-status-item:nth-child(1) { animation-delay: 200ms; }
+.ev-status-item:nth-child(2) { animation-delay: 300ms; }
+.ev-status-item:nth-child(3) { animation-delay: 400ms; }
+
+.ev-progress-fill {
+  height: 6px;
+  border-radius: var(--r-full);
+  transition: width 1.2s cubic-bezier(0.34,1.56,0.64,1);
+}
+
+.ev-progress-fill.ev-pin-high { background: linear-gradient(90deg, var(--c-green), var(--c-green-light)); }
+.ev-progress-fill.ev-pin-mid { background: linear-gradient(90deg, var(--c-warning), #FCD34D); }
+.ev-progress-fill.ev-pin-low { background: linear-gradient(90deg, var(--c-danger), #F87171); }
+
+.ev-detail-info > * {
+  opacity: 0;
+  animation: fadeInUp 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+
+.ev-detail-info > .ev-detail-type { animation-delay: 100ms; }
+.ev-detail-info > .ev-detail-title { animation-delay: 150ms; }
+.ev-detail-info > .ev-detail-meta { animation-delay: 200ms; }
+.ev-detail-info > .ev-detail-location { animation-delay: 250ms; }
+.ev-detail-info > .ev-detail-price-card { animation-delay: 300ms; }
+.ev-detail-info > .ev-detail-desc { animation-delay: 350ms; }
+.ev-detail-info > .ev-booking-form { animation-delay: 400ms; }
+
+.ev-form-title {
+  position: relative;
+  padding-bottom: 8px;
+}
+
+.ev-form-title::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 40px;
+  height: 2px;
+  background: var(--c-primary);
+  border-radius: 2px;
+}

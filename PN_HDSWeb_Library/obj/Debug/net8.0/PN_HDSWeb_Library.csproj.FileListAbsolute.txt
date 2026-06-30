@@ -831,3 +831,6 @@ D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\refint\PN_HDSWeb_Library.dll
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\PN_HDSWeb_Library.pdb
 D:\STUDY\VS CSharp\TITKUL_TINTUC\PN_CONGTHONGTIN\PN_HDSWeb_Library\obj\Debug\net8.0\ref\PN_HDSWeb_Library.dll
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Library.deps.json
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Library.dll
+D:\WORK\TITKUL\2_CONGTHONGITN\PN_HDSWeb\artifacts\codex-build-check\PN_HDSWeb_Library.pdb
