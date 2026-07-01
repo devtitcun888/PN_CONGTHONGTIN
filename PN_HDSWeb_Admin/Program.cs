@@ -65,6 +65,7 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IAdminLoginService, AdminLoginService>();
 builder.Services.AddScoped<IAdminAuthorizationService, AdminAuthorizationService>();
 builder.Services.AddScoped<IAdminAccountService, AdminAccountService>();
+builder.Services.AddScoped<IUserAccountService, UserAccountService>();
 
 // ---- Admin Services (Xe điện) ----
 builder.Services.AddScoped<IAdminDashboardService, AdminDashboardService>();

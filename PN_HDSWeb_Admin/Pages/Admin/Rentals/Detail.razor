@@ -1,8 +1,11 @@
-@page "/admin/rentals/{Id:int}"
+﻿@page "/admin/rentals/{Id:int}"
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminRentalService RentalService
 @inject NavigationManager Nav
 
+<HeadContent>
+<style>/* Rentals/Detail - page specific only */</style>
+</HeadContent>
 <PageTitle>Chi tiết đơn #@Id — Admin</PageTitle>
 
 <div class="ev-admin-page">

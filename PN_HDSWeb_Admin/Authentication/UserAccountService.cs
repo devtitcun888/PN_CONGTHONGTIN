@@ -30,8 +30,8 @@ public class UserAccountService : IUserAccountService
         if (string.IsNullOrEmpty(PN_LoginService.LoginID_School_Dev))
             throw new InvalidOperationException("LoginID_School_Dev chưa được khởi tạo");
 
-        _loginID_Index = PN_LoginService.LoginID_CongThongTin;
-        _loginID_TruongData = PN_LoginService.LoginID_School_Dev;
+        _loginID_Index = PN_LoginService.LoginID_XeDien;
+        _loginID_TruongData = PN_LoginService.LoginID_XeDien;
     }
 
     public async Task<ThongTinTruongV2?> GetThongTinTruong(string maTruongBo)
@@ -126,7 +126,8 @@ public class UserAccountService : IUserAccountService
                   AND username = '{username.Replace("'", "''")}'
                   AND is_deleted = FALSE
                 LIMIT 1";
-
+            
+            Console.WriteLine(sql);
             var dt = await hdataLib.hgetDataTableAsync(_loginID_Index, sql);
             return MapLocalAccount(dt);
         }

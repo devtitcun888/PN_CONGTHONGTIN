@@ -3,91 +3,322 @@
 @inject IPublicRentalService RentalService
 @inject NavigationManager Nav
 
+<HeadContent>
+<style>
+/* === BOOKING CONFIRMATION PAGE — Self-contained CSS === */
+:root {
+  --cp:#2563EB;--cp-10:rgba(37,99,235,.09);
+  --cg:#10B981;--cw:#F59E0B;--cd:#EF4444;
+  --bg:#F1F5F9;--w:#fff;--b:#E2E8F0;
+  --t1:#0F172A;--t2:#475569;--tm:#94A3B8;
+  --sh-sm:0 1px 6px rgba(0,0,0,.07);
+  --sh-md:0 6px 20px rgba(0,0,0,.10);
+  --r-xs:8px;--r-sm:12px;--r:18px;--r-f:9999px;
+}
+*{box-sizing:border-box;}
+.cf-page {
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  min-height:100vh;
+  padding:36px 16px 80px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* Loading */
+.cf-loading {
+  min-height:50vh;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  color:var(--tm);
+  font-size:.9rem;
+}
+.cf-spinner {
+  width:40px;height:40px;
+  border:3px solid rgba(37,99,235,.15);
+  border-top-color:var(--cp);
+  border-radius:50%;
+  animation:cf-spin .75s linear infinite;
+}
+@@keyframes cf-spin{to{transform:rotate(360deg);}}
+
+/* Empty */
+.cf-empty {
+  text-align:center;
+  padding:60px 24px;
+  color:var(--tm);
+}
+.cf-empty-icon{font-size:3.5rem;margin-bottom:12px;}
+.cf-empty h2{color:var(--t1);font-size:1.15rem;font-weight:700;margin-bottom:6px;}
+.cf-empty p{font-size:.875rem;margin-bottom:20px;}
+
+/* Card wrap */
+.cf-wrap {
+  width:100%;max-width:520px;
+  animation:cf-pop .5s cubic-bezier(.34,1.56,.64,1) both;
+}
+@@keyframes cf-pop{
+  from{opacity:0;transform:scale(.95) translateY(14px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+.cf-card {
+  background:var(--w);
+  border-radius:24px;
+  padding:36px 30px 30px;
+  box-shadow:var(--sh-md);
+  border:1px solid var(--b);
+}
+
+/* Success icon */
+.cf-icon {
+  width:70px;height:70px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#D1FAE5,#A7F3D0);
+  border:3px solid #6EE7B7;
+  display:flex;align-items:center;justify-content:center;
+  font-size:2rem;
+  margin:0 auto 18px;
+  animation:cf-bounce .6s cubic-bezier(.34,1.56,.64,1) .15s both;
+}
+@@keyframes cf-bounce{
+  from{opacity:0;transform:scale(0);}
+  to{opacity:1;transform:scale(1);}
+}
+
+.cf-card h1 {
+  text-align:center;
+  font-size:1.5rem;
+  font-weight:800;
+  color:var(--t1);
+  letter-spacing:-.025em;
+  margin-bottom:6px;
+}
+.cf-sub {
+  text-align:center;
+  color:var(--t2);
+  font-size:.875rem;
+  margin-bottom:22px;
+  line-height:1.6;
+}
+
+/* Order code box */
+.cf-code-box {
+  background:linear-gradient(135deg,#EFF6FF,#F0FDF4);
+  border:1px solid rgba(37,99,235,.15);
+  border-radius:var(--r-sm);
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+}
+.cf-code-label {
+  font-size:.7rem;
+  font-weight:600;
+  color:var(--tm);
+  text-transform:uppercase;
+  letter-spacing:.08em;
+}
+.cf-code-val {
+  font-size:1.15rem;
+  font-weight:800;
+  color:var(--cp);
+  letter-spacing:.05em;
+  font-family:'SF Mono','Cascadia Code',monospace;
+}
+
+/* Details */
+.cf-details {
+  background:var(--bg);
+  border-radius:var(--r-sm);
+  overflow:hidden;
+  margin-bottom:18px;
+}
+.cf-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:10px 15px;
+  font-size:.84rem;
+  border-bottom:1px solid var(--b);
+  gap:12px;
+}
+.cf-row:last-child{border-bottom:none;}
+.cf-row-lbl{color:var(--t2);font-weight:500;flex-shrink:0;}
+.cf-row-val{color:var(--t1);font-weight:600;text-align:right;}
+.cf-row--total{
+  background:var(--w);
+  border-top:2px solid var(--b) !important;
+  font-size:.9rem;
+}
+.cf-row--total .cf-row-lbl{font-weight:600;color:var(--t1);}
+.cf-row--total .cf-row-val{color:var(--cp);font-size:1.1rem;font-weight:800;}
+.cf-row--dep .cf-row-val{color:var(--cw);}
+
+/* Status badge */
+.cf-badge {
+  display:inline-flex;align-items:center;gap:4px;
+  padding:3px 10px;border-radius:var(--r-f);
+  font-size:.7rem;font-weight:700;
+}
+.cf-badge--pending   {background:rgba(245,158,11,.10);color:#92400E;}
+.cf-badge--confirmed {background:rgba(37,99,235,.10); color:var(--cp);}
+.cf-badge--active    {background:rgba(16,185,129,.10); color:#065F46;}
+.cf-badge--completed {background:rgba(100,116,139,.10);color:#334155;}
+.cf-badge--cancelled {background:rgba(239,68,68,.10);  color:var(--cd);}
+
+/* Note */
+.cf-note {
+  background:rgba(37,99,235,.05);
+  border:1px solid rgba(37,99,235,.12);
+  border-radius:var(--r-xs);
+  padding:12px 14px;
+  font-size:.8rem;
+  color:var(--t2);
+  line-height:1.65;
+  margin-bottom:22px;
+}
+
+/* Actions */
+.cf-actions{display:flex;gap:10px;}
+.cf-btn {
+  flex:1;
+  padding:12px 16px;
+  border-radius:var(--r-sm);
+  font-size:.875rem;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  border:none;
+  transition:all .18s;
+  text-align:center;
+}
+.cf-btn--ghost {
+  background:var(--bg);
+  border:1.5px solid var(--b);
+  color:var(--t2);
+}
+.cf-btn--ghost:hover{background:var(--b);color:var(--t1);}
+.cf-btn--primary {
+  background:linear-gradient(135deg,var(--cp),#7C3AED);
+  color:#fff;
+  box-shadow:0 4px 14px rgba(37,99,235,.28);
+}
+.cf-btn--primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.38);}
+
+@@media(max-width:480px){
+  .cf-card{padding:24px 18px;}
+  .cf-actions{flex-direction:column;}
+}
+</style>
+</HeadContent>
+
 <PageTitle>Đặt xe thành công — EV Rental</PageTitle>
 
-<div class="ev-container ev-confirmation-page">
+<div class="cf-page">
 
     @if (loading)
     {
-        <div class="ev-loading"><div class="ev-spinner"></div></div>
+        <div class="cf-loading">
+            <div class="cf-spinner"></div>
+            <span>Đang tải thông tin đơn...</span>
+        </div>
     }
     else if (rental == null)
     {
-        <div class="ev-empty">
-            <div class="ev-empty__icon">😔</div>
+        <div class="cf-empty">
+            <div class="cf-empty-icon">😔</div>
             <h2>Không tìm thấy đơn</h2>
-            <button class="ev-btn ev-btn--primary" @onclick='() => Nav.NavigateTo("/")'>Về trang chủ</button>
+            <p>Mã đơn không hợp lệ hoặc đã bị xóa.</p>
+            <button class="cf-btn cf-btn--primary" style="max-width:200px;margin:0 auto"
+                    @onclick='() => Nav.NavigateTo("/")'>
+                Về trang chủ
+            </button>
         </div>
     }
     else
     {
-        <div class="ev-confirm-card">
-            <div class="ev-confirm-icon">✅</div>
-            <h1>Đặt xe thành công!</h1>
-            <p class="ev-confirm-sub">Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
+        <div class="cf-wrap">
+            <div class="cf-card">
 
-            <div class="ev-confirm-code">
-                <span>Mã đơn của bạn</span>
-                <strong>@rental.MaDon</strong>
-            </div>
+                <div class="cf-icon">✅</div>
+                <h1>Đặt xe thành công!</h1>
+                <p class="cf-sub">Chúng tôi sẽ liên hệ xác nhận trong thời gian sớm nhất.</p>
 
-            <div class="ev-confirm-detail">
-                <div class="ev-confirm-row">
-                    <span>Xe</span>
-                    <strong>@rental.TenXe</strong>
+                <!-- Mã đơn -->
+                <div class="cf-code-box">
+                    <span class="cf-code-label">Mã đơn của bạn</span>
+                    <span class="cf-code-val">@rental.MaDon</span>
                 </div>
-                <div class="ev-confirm-row">
-                    <span>Khách hàng</span>
-                    <strong>@rental.KhachTen</strong>
-                </div>
-                <div class="ev-confirm-row">
-                    <span>Số điện thoại</span>
-                    <strong>@rental.KhachSdt</strong>
-                </div>
-                <div class="ev-confirm-row">
-                    <span>Bắt đầu</span>
-                    <strong>@rental.BatDauThue.ToString("dd/MM/yyyy")</strong>
-                </div>
-                <div class="ev-confirm-row">
-                    <span>Kết thúc</span>
-                    <strong>@rental.KetThucThue.ToString("dd/MM/yyyy")</strong>
-                </div>
-                <div class="ev-confirm-row">
-                    <span>Thời gian</span>
-                    <strong>@GetTimeText()</strong>
-                </div>
-                <div class="ev-confirm-row ev-confirm-row--total">
-                    <span>Tổng tiền (ước tính)</span>
-                    <strong>@FormatVnd(rental.TongTien)</strong>
-                </div>
-                @if (rental.TienDatCoc > 0)
-                {
-                    <div class="ev-confirm-row ev-confirm-row--deposit">
-                        <span>Đặt cọc</span>
-                        <strong>@FormatVnd(rental.TienDatCoc)</strong>
+
+                <!-- Chi tiết -->
+                <div class="cf-details">
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">🚗 Xe thuê</span>
+                        <span class="cf-row-val">@rental.TenXe</span>
                     </div>
-                }
-                <div class="ev-confirm-row">
-                    <span>Trạng thái</span>
-                    <span class="ev-badge ev-badge--@rental.TrangThai">@rental.TrangThaiLabel</span>
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">👤 Khách hàng</span>
+                        <span class="cf-row-val">@rental.KhachTen</span>
+                    </div>
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">📞 Số điện thoại</span>
+                        <span class="cf-row-val">@rental.KhachSdt</span>
+                    </div>
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">📅 Bắt đầu</span>
+                        <span class="cf-row-val">@rental.BatDauThue.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">🏁 Kết thúc</span>
+                        <span class="cf-row-val">@rental.KetThucThue.ToString("dd/MM/yyyy")</span>
+                    </div>
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">🕐 Thời gian</span>
+                        <span class="cf-row-val">@GetTimeText()</span>
+                    </div>
+                    <div class="cf-row cf-row--total">
+                        <span class="cf-row-lbl">💰 Tổng tiền (ước tính)</span>
+                        <span class="cf-row-val">@FormatVnd(rental.TongTien)</span>
+                    </div>
+                    @if (rental.TienDatCoc > 0)
+                    {
+                        <div class="cf-row cf-row--dep">
+                            <span class="cf-row-lbl">Đặt cọc</span>
+                            <span class="cf-row-val">@FormatVnd(rental.TienDatCoc)</span>
+                        </div>
+                    }
+                    <div class="cf-row">
+                        <span class="cf-row-lbl">Trạng thái</span>
+                        <span class="cf-badge cf-badge--@rental.TrangThai">@rental.TrangThaiLabel</span>
+                    </div>
                 </div>
-            </div>
 
-            <div class="ev-confirm-note">
-                <strong>📞 Lưu ý:</strong> Vui lòng đến đúng ngày hẹn và mang theo CMND/CCCD.
-                Liên hệ chúng tôi nếu cần thay đổi hoặc hủy đơn.
-            </div>
+                <!-- Lưu ý -->
+                <div class="cf-note">
+                    <strong>📞 Lưu ý:</strong> Vui lòng đến đúng ngày hẹn và mang theo CMND/CCCD.
+                    Liên hệ chúng tôi nếu cần thay đổi hoặc hủy đơn.
+                </div>
 
-            <div class="ev-confirm-actions">
-                <button class="ev-btn ev-btn--ghost" @onclick="GoToTrack">
-                    Theo dõi đơn
-                </button>
-                <button class="ev-btn ev-btn--primary" @onclick='() => Nav.NavigateTo("/vehicles")'>
-                    Đặt thêm xe
-                </button>
+                <!-- Hành động -->
+                <div class="cf-actions">
+                    <button class="cf-btn cf-btn--ghost" @onclick="GoToTrack">
+                        🔍 Theo dõi đơn
+                    </button>
+                    <button class="cf-btn cf-btn--primary"
+                            @onclick='() => Nav.NavigateTo("/vehicles")'>
+                        ⚡ Đặt thêm xe
+                    </button>
+                </div>
+
             </div>
         </div>
     }
+
 </div>
 
 @code {

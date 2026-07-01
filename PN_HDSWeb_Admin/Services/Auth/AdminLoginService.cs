@@ -1,4 +1,4 @@
-using System.Security.Cryptography;
+﻿using System.Security.Cryptography;
 using System.Text;
 using System.Text.Json;
 using Microsoft.AspNetCore.Components.Authorization;
@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using PN_HDSWeb_Admin.Authentication;
 using PN_HDSWeb_Admin.Data;
 using PN_HDSWeb_Admin.Data.Model;
+using PN_HDSWeb_Admin.Services.Admin;
 using PN_HDSWeb_Library;
 
 namespace PN_HDSWeb_Admin.Services.Auth;
@@ -23,17 +24,23 @@ public class AdminLoginService : IAdminLoginService
     private readonly HttpClient _httpClient;
     private readonly TokenProvider _tokenProvider;
     private readonly AuthenticationStateProvider _authStateProvider;
+    private readonly IUserAccountService _userAccountService;
+    private readonly IAdminAccountService _adminAccountService;
     private readonly ILogger<AdminLoginService> _logger;
 
     public AdminLoginService(
         HttpClient httpClient,
         TokenProvider tokenProvider,
         AuthenticationStateProvider authStateProvider,
+        IUserAccountService userAccountService,
+        IAdminAccountService adminAccountService,
         ILogger<AdminLoginService> logger)
     {
         _httpClient = httpClient;
         _tokenProvider = tokenProvider;
         _authStateProvider = authStateProvider;
+        _userAccountService = userAccountService;
+        _adminAccountService = adminAccountService;
         _logger = logger;
     }
 
@@ -86,33 +93,71 @@ public class AdminLoginService : IAdminLoginService
     {
         try
         {
-            if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
-                return LoginResult.Fail("Vui lòng nhập đầy đủ tên đăng nhập và mật khẩu.");
-
-            // Sử dụng IAdminAccountService để lấy account (không cần SchoolService)
-            // NOTE: Nếu cần xác thực tài khoản cũ, giữ thự tục login đơn giản
-            var session = new UserSession
-            {
-                MaUser     = username,
-                MaTruongBo = maTruongBo,
-                Role       = "Administrator",   
-                TenTruong  = "EV Rental Admin",
-                UserName   = username,
-                FullName   = username,
-                SessionId  = Guid.NewGuid().ToString(),
-                ExpiryTime = DateTime.UtcNow.AddHours(8)
-            };
-
-            return LoginResult.Ok(session);
+            return await LoginByVerifiedLocalAccountAsync(username, password, maTruongBo);
         }
         catch (Exception ex)
         {
             _logger.LogError(ex, "Local account login failed");
-            return LoginResult.Fail("Không thể đăng nhập bằng tài khoản.");
+            return LoginResult.Fail("Khong the dang nhap bang tai khoan.");
         }
     }
-
     public Task LogoutAsync() => Task.CompletedTask;
+
+    private async Task<LoginResult> LoginByVerifiedLocalAccountAsync(string username, string password, string maTruongBo)
+    {
+        var loginName = username?.Trim() ?? string.Empty;
+        var schoolCode = maTruongBo?.Trim() ?? string.Empty;
+
+        if (string.IsNullOrWhiteSpace(loginName) || string.IsNullOrWhiteSpace(password))
+            return LoginResult.Fail("Vui long nhap day du ten dang nhap va mat khau.");
+
+        if (string.IsNullOrWhiteSpace(schoolCode))
+            return LoginResult.Fail("Khong xac dinh duoc ma truong.");
+
+        var account = await _userAccountService.GetLocalAccountAsync(schoolCode, loginName);
+        if (account == null || !VerifyLocalPassword(account, password))
+            return LoginResult.Fail("Ten dang nhap hoac mat khau khong dung.");
+
+        if (!account.IsActive)
+            return LoginResult.Fail("Tai khoan da bi tam ngung.");
+
+        if (account.IsLocked)
+        {
+            var reason = string.IsNullOrWhiteSpace(account.LockReason) ? string.Empty : $": {account.LockReason}";
+            return LoginResult.Fail($"Tai khoan dang bi khoa{reason}.");
+        }
+
+        var role = NormalizeRole(account.Roles);
+        if (!string.Equals(role, "Administrator", StringComparison.Ordinal))
+            return LoginResult.Fail("Tai khoan khong co quyen quan tri.");
+
+        var displayName = FirstNonEmpty(account.DisplayName, account.FullName, account.UserName, loginName);
+        var session = new UserSession
+        {
+            MaUser     = FirstNonEmpty(account.Id, account.UserName, loginName),
+            MaTruongBo = FirstNonEmpty(account.MaTruongBo, schoolCode),
+            Role       = role,
+            TenTruong  = FirstNonEmpty(account.MaTruongBo, schoolCode),
+            UserName   = FirstNonEmpty(account.UserName, loginName),
+            FullName   = displayName,
+            SessionId  = Guid.NewGuid().ToString(),
+            ExpiryTime = DateTime.UtcNow.AddHours(8)
+        };
+
+        if (!string.IsNullOrWhiteSpace(account.Id))
+        {
+            try
+            {
+                await _adminAccountService.UpdateLastLoginAsync(account.Id);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning(ex, "Could not update last login for account {AccountId}", account.Id);
+            }
+        }
+
+        return LoginResult.Ok(session);
+    }
 
     public async Task UpdateSessionAsync(UserSession session)
     {
@@ -137,6 +182,22 @@ public class AdminLoginService : IAdminLoginService
             var hash = Convert.ToHexString(System.Security.Cryptography.MD5.HashData(Encoding.UTF8.GetBytes(password)));
             return string.Equals(storedPassword, hash, StringComparison.OrdinalIgnoreCase);
         }
+        if (IsBCryptHash(storedPassword))
+        {
+            try
+            {
+                return BCrypt.Net.BCrypt.Verify(password, storedPassword);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+        if (!IsBase64Hash(storedPassword))
+        {
+            return false;
+        }
+
         try
         {
             var hasher = new PasswordHasher<UserAccountData_>();
@@ -151,6 +212,22 @@ public class AdminLoginService : IAdminLoginService
 
     private static bool IsSha256Hex(string value) => value.Length == 64 && value.All(Uri.IsHexDigit);
     private static bool IsMd5Hex(string value) => value.Length == 32 && value.All(Uri.IsHexDigit);
+    private static bool IsBCryptHash(string value)
+        => value.Length >= 59
+           && (value.StartsWith("$2a$", StringComparison.Ordinal)
+               || value.StartsWith("$2b$", StringComparison.Ordinal)
+               || value.StartsWith("$2x$", StringComparison.Ordinal)
+               || value.StartsWith("$2y$", StringComparison.Ordinal));
+
+    private static bool IsBase64Hash(string value)
+    {
+        Span<byte> buffer = stackalloc byte[value.Length];
+        return Convert.TryFromBase64String(value, buffer, out _);
+    }
+
+    private static string FirstNonEmpty(params string?[] values)
+        => values.FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))?.Trim() ?? string.Empty;
+
     private static string NormalizeRole(string? role)
     {
         var normalized = (role ?? string.Empty).Trim();

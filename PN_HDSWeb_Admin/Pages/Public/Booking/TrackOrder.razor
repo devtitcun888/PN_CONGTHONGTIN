@@ -3,20 +3,303 @@
 @inject IPublicRentalService RentalService
 @inject NavigationManager Nav
 
+<HeadContent>
+<style>
+/* === TRACK ORDER PAGE — Self-contained CSS === */
+:root {
+  --cp:#2563EB;--cp-10:rgba(37,99,235,.09);
+  --cg:#10B981;--cw:#F59E0B;--cd:#EF4444;
+  --bg:#F1F5F9;--w:#fff;--b:#E2E8F0;
+  --t1:#0F172A;--t2:#475569;--tm:#94A3B8;
+  --sh-sm:0 1px 4px rgba(0,0,0,.06);
+  --sh-md:0 6px 20px rgba(0,0,0,.09);
+  --r-xs:8px;--r-sm:12px;--r:18px;--r-f:9999px;
+}
+*{box-sizing:border-box;}
+
+.tk-page {
+  font-family:'Inter',system-ui,sans-serif;
+  background:var(--bg);
+  min-height:100vh;
+  padding:40px 16px 80px;
+  display:flex;
+  justify-content:center;
+}
+.tk-wrap {
+  width:100%;
+  max-width:560px;
+}
+.tk-title {
+  font-size:1.5rem;
+  font-weight:800;
+  color:var(--t1);
+  letter-spacing:-.025em;
+  margin-bottom:6px;
+}
+.tk-sub {
+  color:var(--tm);
+  font-size:.875rem;
+  margin-bottom:24px;
+  line-height:1.6;
+}
+
+/* Search group */
+.tk-search {
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+.tk-input {
+  flex:1;
+  padding:12px 15px;
+  background:var(--w);
+  border:1.5px solid var(--b);
+  border-radius:var(--r-sm);
+  color:var(--t1);
+  font-size:.9rem;
+  font-family:inherit;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.tk-input:focus {
+  border-color:var(--cp);
+  box-shadow:0 0 0 3px rgba(37,99,235,.10);
+}
+.tk-input::placeholder{color:var(--tm);}
+.tk-btn {
+  padding:12px 20px;
+  background:linear-gradient(135deg,var(--cp),#7C3AED);
+  color:#fff;
+  border:none;
+  border-radius:var(--r-sm);
+  font-size:.875rem;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  transition:all .18s;
+  white-space:nowrap;
+  box-shadow:0 4px 14px rgba(37,99,235,.25);
+}
+.tk-btn:hover:not(:disabled){transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.38);}
+.tk-btn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.tk-spinner {
+  width:16px;height:16px;
+  border:2.5px solid rgba(255,255,255,.4);
+  border-top-color:#fff;
+  border-radius:50%;
+  animation:tk-spin .75s linear infinite;
+}
+@@keyframes tk-spin{to{transform:rotate(360deg);}}
+
+/* Alerts */
+.tk-alert {
+  display:flex;align-items:flex-start;gap:9px;
+  padding:11px 14px;
+  border-radius:var(--r-xs);
+  font-size:.83rem;font-weight:500;
+  margin-bottom:16px;
+  line-height:1.5;
+}
+.tk-alert--warn{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:#92400E;}
+.tk-alert--danger{background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.18);color:#B91C1C;}
+
+/* Result card */
+.tk-result {
+  background:var(--w);
+  border-radius:var(--r);
+  box-shadow:var(--sh-md);
+  border:1px solid var(--b);
+  overflow:hidden;
+  animation:tk-pop .4s cubic-bezier(.34,1.56,.64,1) both;
+}
+@@keyframes tk-pop{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
+.tk-result-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 22px;
+  background:linear-gradient(135deg,#F8FAFF,#F0FDF4);
+  border-bottom:1px solid var(--b);
+  gap:12px;
+}
+.tk-code-label {
+  font-size:.7rem;font-weight:600;
+  color:var(--tm);text-transform:uppercase;letter-spacing:.08em;
+  margin-bottom:4px;
+}
+.tk-code-val {
+  font-size:1.1rem;font-weight:800;color:var(--t1);
+  font-family:'SF Mono','Cascadia Code',monospace;letter-spacing:.03em;
+}
+
+/* Status badge */
+.tk-badge {
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 12px;border-radius:var(--r-f);
+  font-size:.73rem;font-weight:700;white-space:nowrap;
+}
+.tk-badge--pending   {background:rgba(245,158,11,.12);color:#92400E;}
+.tk-badge--confirmed {background:rgba(37,99,235,.12); color:var(--cp);}
+.tk-badge--active    {background:rgba(16,185,129,.12); color:#065F46;}
+.tk-badge--completed {background:rgba(100,116,139,.12);color:#334155;}
+.tk-badge--cancelled {background:rgba(239,68,68,.12);  color:var(--cd);}
+
+/* Timeline */
+.tk-timeline {
+  padding:20px 22px;
+  border-bottom:1px solid var(--b);
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+.tk-tl-item {
+  display:flex;
+  align-items:flex-start;
+  gap:14px;
+  padding-bottom:20px;
+  position:relative;
+}
+.tk-tl-item:last-child{padding-bottom:0;}
+.tk-tl-item::before {
+  content:'';
+  position:absolute;
+  left:17px;top:36px;bottom:0;
+  width:2px;
+  background:var(--b);
+}
+.tk-tl-item:last-child::before{display:none;}
+.tk-tl-item.reached::before{background:rgba(37,99,235,.3);}
+
+.tk-tl-dot {
+  width:36px;height:36px;flex-shrink:0;
+  border-radius:50%;
+  background:var(--bg);
+  border:2px solid var(--b);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.85rem;
+  position:relative;z-index:1;
+  transition:all .3s;
+}
+.tk-tl-item.reached .tk-tl-dot {
+  background:rgba(37,99,235,.08);
+  border-color:var(--cp);color:var(--cp);
+  box-shadow:0 0 0 3px rgba(37,99,235,.12);
+}
+
+.tk-tl-body{padding-top:4px;}
+.tk-tl-body strong{display:block;font-size:.875rem;font-weight:700;color:var(--t2);}
+.tk-tl-item.reached .tk-tl-body strong{color:var(--cp);}
+.tk-tl-body span{font-size:.75rem;color:var(--tm);}
+
+/* Detail section */
+.tk-detail {
+  padding:18px 22px;
+  border-bottom:1px solid var(--b);
+}
+.tk-detail-row {
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;
+  font-size:.84rem;
+  border-bottom:1px solid rgba(226,232,240,.5);
+  gap:12px;
+}
+.tk-detail-row:last-child{border-bottom:none;}
+.tk-detail-row > span:first-child{color:var(--t2);font-weight:500;flex-shrink:0;}
+.tk-detail-row > strong{color:var(--t1);font-weight:700;text-align:right;}
+.tk-detail-row--total > strong{color:var(--cp);font-size:.95rem;}
+
+/* Actions */
+.tk-actions {
+  padding:16px 22px;
+  display:flex;gap:10px;
+}
+.tk-btn-secondary {
+  flex:1;
+  padding:10px 16px;
+  border-radius:var(--r-sm);
+  font-size:.83rem;font-weight:700;font-family:inherit;
+  cursor:pointer;border:none;transition:all .18s;
+}
+.tk-btn-danger {
+  background:rgba(239,68,68,.08);
+  border:1.5px solid rgba(239,68,68,.2);
+  color:var(--cd);
+}
+.tk-btn-danger:hover{background:rgba(239,68,68,.14);}
+
+/* Cancel modal */
+.tk-modal-bg {
+  position:fixed;inset:0;
+  background:rgba(15,23,42,.5);
+  backdrop-filter:blur(4px);
+  z-index:500;
+  display:flex;align-items:center;justify-content:center;
+  padding:24px;
+  animation:tk-fade .2s ease;
+}
+@@keyframes tk-fade{from{opacity:0;}to{opacity:1;}}
+.tk-modal {
+  background:var(--w);
+  border-radius:var(--r);
+  padding:30px;
+  max-width:440px;width:100%;
+  box-shadow:0 20px 50px rgba(0,0,0,.18);
+  animation:tk-pop .25s cubic-bezier(.34,1.56,.64,1) both;
+}
+.tk-modal h3{font-size:1.05rem;font-weight:700;color:var(--t1);margin-bottom:8px;}
+.tk-modal p{color:var(--t2);font-size:.875rem;margin-bottom:14px;}
+.tk-modal-label{display:block;font-size:.73rem;font-weight:600;color:var(--t2);margin-bottom:5px;}
+.tk-textarea {
+  width:100%;padding:10px 13px;
+  background:var(--bg);border:1.5px solid var(--b);
+  border-radius:var(--r-xs);
+  font-size:.875rem;font-family:inherit;
+  color:var(--t1);outline:none;resize:vertical;min-height:72px;
+  transition:border-color .2s;
+}
+.tk-textarea:focus{border-color:var(--cp);}
+.tk-modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;}
+.tk-mbtn {
+  padding:9px 20px;
+  border-radius:var(--r-sm);
+  font-size:.875rem;font-weight:700;font-family:inherit;
+  cursor:pointer;border:none;transition:all .18s;
+}
+.tk-mbtn--ghost{background:var(--bg);border:1.5px solid var(--b);color:var(--t2);}
+.tk-mbtn--ghost:hover{background:var(--b);}
+.tk-mbtn--danger{background:var(--cd);color:#fff;box-shadow:0 3px 10px rgba(239,68,68,.3);}
+.tk-mbtn--danger:hover{background:#DC2626;transform:translateY(-1px);}
+.tk-mbtn:disabled{opacity:.6;cursor:not-allowed;transform:none !important;}
+
+@@media(max-width:480px){
+  .tk-search{flex-direction:column;}
+  .tk-result-head{flex-direction:column;align-items:flex-start;gap:10px;}
+}
+</style>
+</HeadContent>
+
 <PageTitle>Tra cứu đơn thuê — EV Rental</PageTitle>
 
-<div class="ev-container ev-track-page">
-    <div class="ev-track-wrap">
-        <h1 class="ev-page-title">🔍 Tra cứu đơn thuê xe</h1>
-        <p class="ev-track-sub">Nhập mã đơn (VD: EV20260622001) để xem trạng thái đơn thuê của bạn</p>
+<div class="tk-page">
+    <div class="tk-wrap">
 
-        <div class="ev-track-input-group ev-track-input-group--lg">
-            <input class="ev-input ev-input--lg" @bind="maDon" @bind:event="oninput"
+        <h1 class="tk-title">🔍 Tra cứu đơn thuê xe</h1>
+        <p class="tk-sub">Nhập mã đơn (VD: EV20260622001) để xem trạng thái đơn thuê của bạn</p>
+
+        <!-- Search -->
+        <div class="tk-search">
+            <input class="tk-input" @bind="maDon" @bind:event="oninput"
                    placeholder="Nhập mã đơn..." @onkeyup="OnKeyUp" />
-            <button class="ev-btn ev-btn--primary ev-btn--lg" @onclick="DoSearch" disabled="@searching">
+            <button class="tk-btn" @onclick="DoSearch" disabled="@searching">
                 @if (searching)
                 {
-                    <span class="ev-spinner ev-spinner--sm"></span>
+                    <div class="tk-spinner"></div>
+                    <span>Đang tìm...</span>
                 }
                 else
                 {
@@ -25,36 +308,40 @@
             </button>
         </div>
 
+        <!-- Alert: not found -->
         @if (searched && rental == null)
         {
-            <div class="ev-alert ev-alert--warning">
+            <div class="tk-alert tk-alert--warn">
                 ❌ Không tìm thấy đơn thuê với mã <strong>@maDon</strong>. Vui lòng kiểm tra lại.
             </div>
         }
 
+        <!-- Result -->
         @if (rental != null)
         {
-            <div class="ev-track-result">
-                <div class="ev-track-header">
+            <div class="tk-result">
+
+                <!-- Header: code + status -->
+                <div class="tk-result-head">
                     <div>
-                        <div class="ev-track-label">Mã đơn</div>
-                        <div class="ev-track-code">@rental.MaDon</div>
+                        <div class="tk-code-label">Mã đơn</div>
+                        <div class="tk-code-val">@rental.MaDon</div>
                     </div>
-                    <span class="ev-badge ev-badge--lg ev-badge--@rental.TrangThai">@rental.TrangThaiLabel</span>
+                    <span class="tk-badge tk-badge--@rental.TrangThai">@rental.TrangThaiLabel</span>
                 </div>
 
                 <!-- Timeline -->
-                <div class="ev-timeline">
-                    <div class="ev-timeline-item @(IsReached("pending") ? "reached" : "")">
-                        <div class="ev-timeline-dot"></div>
-                        <div class="ev-timeline-content">
+                <div class="tk-timeline">
+                    <div class="tk-tl-item @(IsReached("pending") ? "reached" : "")">
+                        <div class="tk-tl-dot">📝</div>
+                        <div class="tk-tl-body">
                             <strong>Đặt xe</strong>
                             <span>@rental.CreatedAt.ToString("dd/MM/yyyy HH:mm")</span>
                         </div>
                     </div>
-                    <div class="ev-timeline-item @(IsReached("confirmed") ? "reached" : "")">
-                        <div class="ev-timeline-dot"></div>
-                        <div class="ev-timeline-content">
+                    <div class="tk-tl-item @(IsReached("confirmed") ? "reached" : "")">
+                        <div class="tk-tl-dot">✅</div>
+                        <div class="tk-tl-body">
                             <strong>Xác nhận</strong>
                             @if (rental.ConfirmedAt.HasValue)
                             {
@@ -62,16 +349,16 @@
                             }
                         </div>
                     </div>
-                    <div class="ev-timeline-item @(IsReached("active") ? "reached" : "")">
-                        <div class="ev-timeline-dot"></div>
-                        <div class="ev-timeline-content">
+                    <div class="tk-tl-item @(IsReached("active") ? "reached" : "")">
+                        <div class="tk-tl-dot">🚗</div>
+                        <div class="tk-tl-body">
                             <strong>Đang thuê</strong>
                             <span>@rental.BatDauThue.ToString("dd/MM/yyyy")</span>
                         </div>
                     </div>
-                    <div class="ev-timeline-item @(IsReached("completed") ? "reached" : "")">
-                        <div class="ev-timeline-dot"></div>
-                        <div class="ev-timeline-content">
+                    <div class="tk-tl-item @(IsReached("completed") ? "reached" : "")">
+                        <div class="tk-tl-dot">🏁</div>
+                        <div class="tk-tl-body">
                             <strong>Hoàn thành</strong>
                             @if (rental.ReturnedAt.HasValue)
                             {
@@ -85,58 +372,68 @@
                     </div>
                 </div>
 
-                <div class="ev-track-detail">
-                    <div class="ev-track-detail-row">
-                        <span>Xe thuê</span><strong>@rental.TenXe</strong>
+                <!-- Detail -->
+                <div class="tk-detail">
+                    <div class="tk-detail-row">
+                        <span>🚗 Xe thuê</span>
+                        <strong>@rental.TenXe</strong>
                     </div>
-                    <div class="ev-track-detail-row">
-                        <span>Khách hàng</span><strong>@rental.KhachTen — @rental.KhachSdt</strong>
+                    <div class="tk-detail-row">
+                        <span>👤 Khách hàng</span>
+                        <strong>@rental.KhachTen — @rental.KhachSdt</strong>
                     </div>
-                    <div class="ev-track-detail-row">
-                        <span>Thời gian</span>
+                    <div class="tk-detail-row">
+                        <span>📅 Thời gian</span>
                         <strong>@rental.BatDauThue.ToString("dd/MM/yyyy") → @rental.KetThucThue.ToString("dd/MM/yyyy")</strong>
                     </div>
-                    <div class="ev-track-detail-row ev-track-detail-row--total">
-                        <span>Tổng tiền</span><strong>@FormatVnd(rental.TongTien)</strong>
+                    <div class="tk-detail-row tk-detail-row--total">
+                        <span>💰 Tổng tiền</span>
+                        <strong>@FormatVnd(rental.TongTien)</strong>
                     </div>
                 </div>
 
+                <!-- Cancel action -->
                 @if (rental.TrangThai == "pending" || rental.TrangThai == "confirmed")
                 {
-                    <div class="ev-track-actions">
-                        <button class="ev-btn ev-btn--danger-ghost" @onclick="ShowCancelConfirm">
-                            🚫 Hủy đơn
+                    <div class="tk-actions">
+                        <button class="tk-btn-secondary tk-btn-danger"
+                                @onclick="ShowCancelConfirm">
+                            🚫 Hủy đơn thuê
                         </button>
                     </div>
                 }
 
-                @if (showCancel)
-                {
-                    <div class="ev-cancel-modal">
-                        <div class="ev-cancel-modal__box">
-                            <h3>Xác nhận hủy đơn?</h3>
-                            <p>Bạn có chắc chắn muốn hủy đơn <strong>@rental.MaDon</strong>?</p>
-                            <div class="ev-form-field">
-                                <label>Lý do hủy</label>
-                                <textarea class="ev-input ev-textarea" @bind="lyDoHuy" rows="2" placeholder="Nhập lý do..."></textarea>
-                            </div>
-                            @if (!string.IsNullOrWhiteSpace(cancelMsg))
-                            {
-                                <div class="ev-alert ev-alert--danger">@cancelMsg</div>
-                            }
-                            <div class="ev-cancel-modal__actions">
-                                <button class="ev-btn ev-btn--ghost" @onclick="() => showCancel = false">Không</button>
-                                <button class="ev-btn ev-btn--danger" @onclick="ConfirmCancel" disabled="@cancelling">
-                                    @(cancelling ? "Đang hủy..." : "Xác nhận hủy")
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                }
             </div>
         }
+
     </div>
 </div>
+
+<!-- Cancel Modal -->
+@if (showCancel)
+{
+    <div class="tk-modal-bg">
+        <div class="tk-modal">
+            <h3>Xác nhận hủy đơn?</h3>
+            <p>Bạn có chắc chắn muốn hủy đơn <strong>@rental?.MaDon</strong>?</p>
+            <label class="tk-modal-label">Lý do hủy</label>
+            <textarea class="tk-textarea" @bind="lyDoHuy" rows="2"
+                      placeholder="Nhập lý do..."></textarea>
+            @if (!string.IsNullOrWhiteSpace(cancelMsg))
+            {
+                <div class="tk-alert tk-alert--danger" style="margin-top:10px">@cancelMsg</div>
+            }
+            <div class="tk-modal-actions">
+                <button class="tk-mbtn tk-mbtn--ghost"
+                        @onclick="() => showCancel = false">Không</button>
+                <button class="tk-mbtn tk-mbtn--danger"
+                        @onclick="ConfirmCancel" disabled="@cancelling">
+                    @(cancelling ? "Đang hủy..." : "Xác nhận hủy")
+                </button>
+            </div>
+        </div>
+    </div>
+}
 
 @code {
     [SupplyParameterFromQuery] public string? ma { get; set; }
@@ -196,7 +493,7 @@
         }
 
         showCancel = false;
-        await DoSearch(); // Refresh
+        await DoSearch();
     }
 
     private bool IsReached(string status)

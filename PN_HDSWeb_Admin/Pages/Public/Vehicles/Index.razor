@@ -3,170 +3,576 @@
 @inject IPublicVehicleService VehicleService
 @inject NavigationManager Nav
 
-<PageTitle>Xe Điện Cho Thuê — Tìm xe phù hợp</PageTitle>
+<HeadContent>
+<style>
+/* === VEHICLES LIST PAGE — Self-contained CSS (v2, redesigned) === */
+:root {
+  --cp:#4F46E5;--cp2:#0EA5E9;--cp-d:#3730A3;--cp-10:rgba(79,70,229,.08);--cp-18:rgba(79,70,229,.16);
+  --cg:#10B981;--cg-10:rgba(16,185,129,.1);--cg-18:rgba(16,185,129,.18);
+  --cw:#F59E0B;--cw-10:rgba(245,158,11,.1);--pink-10:#FDF2F8;--blue-10:#EFF6FF;
+  --cd:#EF4444;
+  --bg:#F5F7FB;--w:#fff;--b:#E2E8F0;--b-soft:#EEF2F7;
+  --t1:#0F172A;--t2:#475569;--tm:#94A3B8;
+  --sh-xs:0 1px 2px rgba(15,23,42,.04);
+  --sh-sm:0 10px 28px rgba(15,23,42,.07),0 1px 2px rgba(15,23,42,.04);
+  --sh-md:0 18px 46px rgba(15,23,42,.10),0 2px 8px rgba(15,23,42,.04);
+  --sh-lg:0 26px 70px rgba(15,23,42,.18),0 8px 26px rgba(79,70,229,.14);
+  --r-xs:12px;--r-sm:16px;--r:24px;--r-lg:30px;--r-f:9999px;
+}
+*{box-sizing:border-box;}
+.vl-page {
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:
+    radial-gradient(900px 420px at 8% -8%, rgba(79,70,229,.07), transparent 60%),
+    radial-gradient(700px 380px at 100% 0%, rgba(16,185,129,.06), transparent 55%),
+    var(--bg);
+  min-height:100vh;
+  padding:32px 0 90px;
+}
+.vl-container {
+  max-width:1240px;
+  margin:0 auto;
+  padding:0 24px;
+}
 
-<div class="ev-page-vehicles">
-    <div class="ev-container">
+/* ── FILTER BAR ── */
+.vl-filter {
+  background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(255,255,255,.92));
+  border-radius:var(--r-lg);
+  padding:28px;
+  box-shadow:var(--sh-md);
+  border:1px solid rgba(226,232,240,.9);
+  margin-bottom:30px;
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(18px);
+}
+.vl-filter::before{
+  content:"";position:absolute;inset:0 0 auto 0;height:4px;
+  background:linear-gradient(90deg,var(--cp),var(--cp2),var(--cg));
+}
+.vl-page-title {
+  font-size:1.65rem;
+  font-weight:850;
+  color:var(--t1);
+  letter-spacing:0;
+  margin-bottom:22px;
+  display:flex;align-items:center;gap:10px;
+}
+.vl-page-title .vl-bolt{
+  display:inline-flex;align-items:center;justify-content:center;
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--cp),var(--cp2));
+  font-size:1.1rem;box-shadow:0 4px 12px rgba(79,70,229,.3);
+}
+.vl-filter-row {
+  display:grid;
+  grid-template-columns:1.2fr 1fr 1fr 1fr auto;
+  gap:14px;
+  align-items:flex-end;
+}
+.vl-filter-item {
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  min-width:160px;
+}
+.vl-filter-item label {
+  font-size:.7rem;
+  font-weight:700;
+  color:var(--tm);
+  text-transform:uppercase;
+  letter-spacing:.07em;
+  display:flex;align-items:center;gap:5px;
+}
+.vl-field-wrap{ position:relative; }
+.vl-field-icon{
+  position:absolute;left:13px;top:50%;transform:translateY(-50%);
+  width:24px;height:24px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  background:#fff;color:var(--cp);
+  font-size:.78rem;box-shadow:var(--sh-xs);pointer-events:none;
+}
+.vl-select, .vl-input {
+  width:100%;
+  min-height:48px;
+  padding:12px 14px 12px 44px;
+  background:#F8FAFC;
+  border:1px solid var(--b);
+  border-radius:16px;
+  color:var(--t1);
+  font-size:.875rem;
+  font-weight:650;
+  font-family:inherit;
+  outline:none;
+  transition:border-color .18s,box-shadow .18s,background .18s;
+  -webkit-appearance:none;
+}
+.vl-select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394A0B5' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:34px;}
+.vl-select:focus,.vl-input:focus {border-color:var(--cp);background:white;box-shadow:0 0 0 4px var(--cp-10);}
 
-        <!-- ===== FILTER ===== -->
-        <div class="ev-filter-bar">
-            <h1 class="ev-page-title">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:#2563EB">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                </svg>
-                Tìm xe điện
-            </h1>
+.vl-btn-reset {
+  padding:12px 18px;
+  background:var(--bg);
+  border:1px solid var(--b);
+  border-radius:16px;
+  color:var(--t2);
+  font-size:.83rem;
+  font-weight:700;
+  font-family:inherit;
+  cursor:pointer;
+  transition:all .18s;
+  white-space:nowrap;
+  min-height:48px;
+  align-self:flex-end;
+}
+.vl-btn-reset:hover{background:#FEE2E2;border-color:#FCA5A5;color:#B91C1C;}
 
-            <div class="ev-filter-row">
-                <div class="ev-filter-item">
+/* ── RESULTS INFO ── */
+.vl-info {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:18px;
+  font-size:.85rem;
+  color:var(--tm);
+  font-weight:500;
+  padding:0 4px;
+}
+.vl-info strong{color:var(--t1);font-weight:800;}
+.vl-info-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:4px 11px;border-radius:var(--r-f);
+  background:var(--cp-10);color:var(--cp);
+  font-size:.74rem;font-weight:700;
+}
+
+/* ── VEHICLE LIST ── */
+.vl-list {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:18px;
+  align-items:stretch;
+}
+
+/* ── VEHICLE CARD ── */
+.vl-card {
+  background:var(--w);
+  border-radius:20px;
+  border:1px solid var(--b-soft);
+  box-shadow:var(--sh-sm);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  cursor:pointer;
+  transition:box-shadow .25s ease,transform .25s ease,border-color .25s ease;
+  animation:vl-slide .45s ease both;
+  min-height:100%;
+}
+.vl-card:hover {
+  box-shadow:var(--sh-lg);
+  transform:translateY(-4px);
+  border-color:var(--cp-18);
+}
+@@keyframes vl-slide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* Image column */
+.vl-card-img {
+  position:relative;
+  width:100%;
+  height:176px;
+  flex:0 0 176px;
+  overflow:hidden;
+  background:linear-gradient(135deg,#EEF2FF,#ECFDF5);
+}
+.vl-card-img img {
+  position:absolute;
+  inset:0;
+  width:100% !important;
+  height:100% !important;
+  object-fit:cover;
+  display:block;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
+}
+.vl-card:hover .vl-card-img img{transform:scale(1.07);}
+.vl-card-placeholder {
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:3.8rem;
+}
+.vl-card-img-fade{
+  position:absolute;inset:auto 0 0 0;height:60%;
+  background:linear-gradient(180deg,transparent,rgba(15,23,42,.62));
+  pointer-events:none;
+}
+
+/* Status badge on image */
+.vl-card-badge {
+  position:absolute;bottom:12px;left:12px;
+  display:inline-flex;align-items:center;gap:4px;
+  padding:6px 11px;border-radius:var(--r-f);
+  font-size:.7rem;font-weight:800;
+  color:#fff;
+  box-shadow:0 10px 22px rgba(0,0,0,.22);
+  backdrop-filter:blur(10px);
+}
+.vl-card-badge--available  {background:rgba(16,185,129,.92);}
+.vl-card-badge--rented      {background:rgba(245,158,11,.92);}
+.vl-card-badge--maintenance {background:rgba(79,70,229,.92);}
+.vl-card-badge--inactive    {background:rgba(100,116,139,.85);}
+
+.vl-card-battery{
+  position:absolute;top:12px;right:12px;
+  display:inline-flex;align-items:center;gap:4px;
+  padding:5px 10px;border-radius:var(--r-f);
+  background:rgba(255,255,255,.92);color:var(--t1);
+  font-size:.72rem;font-weight:850;
+  box-shadow:0 10px 22px rgba(15,23,42,.14);
+  backdrop-filter:blur(10px);
+}
+
+/* Body column */
+.vl-card-body {
+  padding:14px 16px 10px;
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  flex:0 0 auto;
+}
+.vl-card-type-row {
+  display:flex;align-items:center;gap:8px;
+  margin-bottom:4px;
+}
+.vl-tag {
+  display:inline-flex;align-items:center;gap:4px;
+  padding:4px 10px;border-radius:var(--r-f);
+  background:var(--cp-10);color:var(--cp);
+  font-size:.68rem;font-weight:850;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.vl-card-name {
+  font-size:1.02rem;
+  font-weight:850;
+  color:var(--t1);
+  letter-spacing:0;
+  line-height:1.28;
+  min-height:0;
+}
+.vl-card-plate {
+  display:inline-flex;align-items:center;gap:5px;
+  font-size:.76rem;
+  color:var(--tm);
+  font-weight:700;
+}
+.vl-card-specs {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:6px;
+}
+.vl-spec-chip {
+  display:inline-flex;align-items:center;gap:5px;
+  padding:5px 9px;
+  border-radius:var(--r-f);
+  font-size:.7rem;font-weight:750;
+  border:1px solid transparent;
+}
+.vl-spec-chip--brand{background:var(--cp-10);color:var(--cp-d);}
+.vl-spec-chip--color{background:#FDF2F8;color:#BE185D;}
+.vl-spec-chip--range{background:var(--cg-10);color:#047857;}
+.vl-spec-chip--loc{background:var(--blue-10);color:#1D4ED8;border-color:#DBEAFE;}
+
+/* Right column: price + button */
+.vl-card-right {
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  align-items:stretch;
+  gap:10px;
+  margin:auto 12px 12px;
+  padding:12px;
+  border:1px solid rgba(226,232,240,.9);
+  border-radius:16px;
+  background:linear-gradient(180deg,#F8FAFF,#FFFFFF);
+}
+.vl-price-block{ text-align:left; }
+.vl-price-day {
+  font-size:1.2rem;
+  font-weight:900;
+  color:var(--cp);
+  letter-spacing:0;
+  line-height:1.1;
+}
+.vl-price-day small {
+  font-size:.72rem;font-weight:600;color:var(--tm);margin-left:3px;
+}
+.vl-price-dep {
+  font-size:.76rem;color:var(--tm);font-weight:600;margin-top:4px;
+}
+.vl-btn-book {
+  padding:11px 14px;
+  background:linear-gradient(135deg,var(--cp),var(--cp2));
+  color:#fff;border:none;
+  border-radius:13px;
+  font-size:.8rem;font-weight:850;font-family:inherit;
+  cursor:pointer;
+  transition:all .2s;
+  box-shadow:0 12px 24px rgba(79,70,229,.26);
+  white-space:nowrap;
+  width:100%;
+}
+.vl-btn-book:hover{transform:translateY(-2px);box-shadow:0 16px 30px rgba(79,70,229,.36);}
+.vl-btn-book:active{transform:translateY(0);}
+
+/* ── SKELETON LOADING ── */
+.vl-skeleton-list{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:18px;
+}
+.vl-skeleton-card {
+  background:var(--w);
+  border-radius:var(--r);
+  border:1px solid var(--b-soft);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:var(--sh-sm);
+}
+.vl-sk {
+  background:linear-gradient(90deg,#E9EDF5 25%,#F4F6FB 50%,#E9EDF5 75%);
+  background-size:200% 100%;
+  animation:vl-shimmer 1.4s infinite;
+}
+.vl-sk-img{height:176px;}
+.vl-sk-body{padding:22px;display:flex;flex-direction:column;gap:10px;justify-content:center;}
+.vl-sk-line{border-radius:6px;}
+.vl-sk-line--sm{height:11px;width:35%;}
+.vl-sk-line--md{height:18px;width:55%;}
+.vl-sk-line--full{height:11px;width:75%;}
+@@keyframes vl-shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+/* ── EMPTY ── */
+.vl-empty {
+  text-align:center;
+  padding:70px 24px;
+  color:var(--tm);
+  background:var(--w);
+  border-radius:var(--r-lg);
+  border:1px solid var(--b-soft);
+  box-shadow:var(--sh-sm);
+}
+.vl-empty-icon{font-size:3.8rem;margin-bottom:14px;}
+.vl-empty h3{color:var(--t1);font-size:1.15rem;font-weight:800;margin-bottom:6px;}
+.vl-empty p{font-size:.875rem;margin-bottom:22px;}
+.vl-btn-reload {
+  padding:11px 26px;
+  background:linear-gradient(135deg,var(--cp),var(--cp2));
+  color:#fff;border:none;border-radius:var(--r-xs);
+  font-size:.875rem;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all .18s;
+  box-shadow:0 6px 16px rgba(79,70,229,.28);
+}
+.vl-btn-reload:hover{transform:translateY(-2px);box-shadow:0 10px 22px rgba(79,70,229,.38);}
+
+@@media(max-width:1120px){
+  .vl-filter-row{grid-template-columns:1fr 1fr;}
+  .vl-btn-reset{width:100%;}
+}
+
+@@media(max-width:720px){
+  .vl-page{padding:20px 0 64px;}
+  .vl-container{padding:0 14px;}
+  .vl-filter{padding:22px 16px;border-radius:24px;}
+  .vl-page-title{font-size:1.35rem;}
+  .vl-list,
+  .vl-skeleton-list{grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px;}
+  .vl-card{border-radius:18px;}
+  .vl-card-img{height:136px;flex-basis:136px;}
+  .vl-sk-img{height:136px;}
+  .vl-card-body{padding:12px 13px 8px;gap:5px;}
+  .vl-card-type-row{margin-bottom:2px;}
+  .vl-tag{font-size:.62rem;padding:3px 8px;}
+  .vl-card-name{font-size:.96rem;line-height:1.24;}
+  .vl-card-plate{font-size:.72rem;}
+  .vl-spec-chip{font-size:.66rem;padding:4px 8px;}
+  .vl-spec-chip--loc{display:none;}
+  .vl-card-right{margin:auto 10px 10px;padding:10px;border-radius:14px;gap:8px;}
+  .vl-price-day{font-size:1.05rem;}
+  .vl-price-dep{display:none;}
+  .vl-btn-book{padding:10px 12px;font-size:.76rem;}
+  .vl-card-badge{bottom:9px;left:9px;font-size:.66rem;padding:5px 9px;}
+  .vl-card-battery{top:9px;right:9px;font-size:.66rem;padding:4px 8px;}
+  .vl-card-name{min-height:auto;}
+  .vl-filter-row{grid-template-columns:1fr;}
+  .vl-filter-item{min-width:100%;}
+  .vl-info{align-items:flex-start;gap:8px;flex-direction:column;}
+}
+</style>
+</HeadContent>
+
+<PageTitle>Xe điện cho thuê — EV Rental</PageTitle>
+
+<div class="vl-page">
+    <div class="vl-container">
+
+        <!-- Filter bar -->
+        <div class="vl-filter">
+            <h1 class="vl-page-title"><span class="vl-bolt">⚡</span> Xe điện cho thuê</h1>
+            <div class="vl-filter-row">
+                <div class="vl-filter-item">
                     <label>Loại xe</label>
-                    <select @bind="filterLoai" @bind:after="ApplyFilter" class="ev-select">
-                        <option value="">Tất cả loại xe</option>
-                        <option value="scooter">🛵 Xe máy điện</option>
-                        <option value="car">🚗 Ô tô điện</option>
-                        <option value="bike">🚲 Xe đạp điện</option>
-                        <option value="van">🚐 Van điện</option>
-                    </select>
+                    <div class="vl-field-wrap">
+                        <span class="vl-field-icon">⚙</span>
+                        <select @bind="filterLoai" @bind:after="ApplyFilter" class="vl-select">
+                            <option value="">Tất cả xe</option>
+                            <option value="scooter">Xe máy điện</option>
+                            <option value="car">Ô tô điện</option>
+                            <option value="bike">Xe đạp điện</option>
+                            <option value="van">Van điện</option>
+                        </select>
+                    </div>
                 </div>
-                <div class="ev-filter-item">
-                    <label>Giá tối đa/ngày (đ)</label>
-                    <input type="number" @bind="filterGiaMax" @bind:after="ApplyFilter"
-                           class="ev-input" placeholder="Không giới hạn" min="0" step="100000" />
+                <div class="vl-filter-item">
+                    <label>Giá tối đa/ngày</label>
+                    <div class="vl-field-wrap">
+                        <span class="vl-field-icon">₫</span>
+                        <input type="number" @bind="filterMaxPrice" @bind:after="ApplyFilter"
+                               class="vl-input" placeholder="VD: 500.000" min="0" step="50000" />
+                    </div>
                 </div>
-                <div class="ev-filter-item">
-                    <label>Ngày bắt đầu</label>
-                    <input type="date" @bind="filterStart" @bind:after="ApplyFilter" class="ev-input" />
+                <div class="vl-filter-item">
+                    <label>Từ ngày</label>
+                    <div class="vl-field-wrap">
+                        <span class="vl-field-icon">📅</span>
+                        <input type="date" @bind="filterStart" @bind:after="ApplyFilter"
+                               class="vl-input" />
+                    </div>
                 </div>
-                <div class="ev-filter-item">
-                    <label>Ngày kết thúc</label>
-                    <input type="date" @bind="filterEnd" @bind:after="ApplyFilter" class="ev-input" />
+                <div class="vl-filter-item">
+                    <label>Đến ngày</label>
+                    <div class="vl-field-wrap">
+                        <span class="vl-field-icon">📅</span>
+                        <input type="date" @bind="filterEnd" @bind:after="ApplyFilter"
+                               class="vl-input" />
+                    </div>
                 </div>
                 @if (IsFiltered())
                 {
-                    <button class="ev-btn ev-btn--ghost ev-filter-reset" @onclick="ResetFilter">
-                        ✕ Xóa bộ lọc
-                    </button>
+                    <button class="vl-btn-reset" @onclick="ResetFilter">✕ Xóa lọc</button>
                 }
             </div>
         </div>
 
-        <!-- ===== RESULTS ===== -->
+        <!-- Results info -->
+        @if (!loading)
+        {
+            <div class="vl-info">
+                <span>Hiển thị <strong>@vehicles.Count</strong> xe@(vehicles.Count != totalCount ? $" / {totalCount}" : "")</span>
+                @if (IsFiltered())
+                {
+                    <span class="vl-info-badge">🔍 Đang lọc theo tiêu chí</span>
+                }
+            </div>
+        }
+
+        <!-- Loading -->
         @if (loading)
         {
-            <!-- Skeleton -->
-            <div style="display:flex;flex-direction:column;gap:16px">
-                @for (int i = 0; i < 3; i++)
+            <div class="vl-skeleton-list">
+                @for (int i = 0; i < 4; i++)
                 {
-                    <div class="ev-vehicle-card--row" style="cursor:default;pointer-events:none">
-                        <div class="ev-skeleton" style="height:160px"></div>
-                        <div style="padding:20px;display:flex;flex-direction:column;gap:10px">
-                            <div class="ev-skeleton ev-skeleton-line" style="height:12px;width:40%"></div>
-                            <div class="ev-skeleton ev-skeleton-line" style="height:18px;width:70%"></div>
-                            <div class="ev-skeleton ev-skeleton-line" style="height:12px;width:55%"></div>
-                        </div>
-                        <div style="padding:20px;min-width:180px;border-left:1px solid #E2E8F0;display:flex;flex-direction:column;gap:12px;align-items:flex-end">
-                            <div class="ev-skeleton" style="height:24px;width:100px;border-radius:6px"></div>
-                            <div class="ev-skeleton" style="height:38px;width:130px;border-radius:8px"></div>
+                    <div class="vl-skeleton-card">
+                        <div class="vl-sk vl-sk-img"></div>
+                        <div class="vl-sk-body">
+                            <div class="vl-sk vl-sk-line vl-sk-line--sm"></div>
+                            <div class="vl-sk vl-sk-line vl-sk-line--md"></div>
+                            <div class="vl-sk vl-sk-line vl-sk-line--full"></div>
                         </div>
                     </div>
                 }
             </div>
         }
+        else if (vehicles.Count == 0)
+        {
+            <div class="vl-empty">
+                <div class="vl-empty-icon">🔌</div>
+                <h3>Không tìm thấy xe</h3>
+                <p>Thử thay đổi bộ lọc hoặc kiểm tra lại sau.</p>
+                <button class="vl-btn-reload" @onclick="ResetFilter">Xóa bộ lọc</button>
+            </div>
+        }
         else
         {
-            <div class="ev-results-info">
-                @if (IsFiltered())
+            <div class="vl-list">
+                @foreach (var xe in vehicles)
                 {
-                    <span>Kết quả bộ lọc: </span>
-                }
-                Tìm thấy <strong>@vehicles.Count</strong> xe @(vehicles.Count == 1 ? "" : "phù hợp")
-            </div>
+                    <div class="vl-card" @onclick="() => GoToDetail(xe.Id)">
 
-            @if (vehicles.Count == 0)
-            {
-                <div class="ev-empty">
-                    <div class="ev-empty__icon">🔌</div>
-                    <p>Không tìm thấy xe phù hợp với điều kiện tìm kiếm.</p>
-                    <button class="ev-btn ev-btn--primary" @onclick="ResetFilter">
-                        Xem tất cả xe
-                    </button>
-                </div>
-            }
-            else
-            {
-                <div class="ev-vehicle-grid--list">
-                    @foreach (var xe in vehicles)
-                    {
-                        <div class="ev-vehicle-card--row" @onclick="() => GoToDetail(xe.Id)">
-                            <!-- Image -->
-                            <div class="ev-vehicle-card__img-wrap">
-                                @if (!string.IsNullOrWhiteSpace(xe.HinhAnhChinh))
-                                {
-                                    <img src="@xe.HinhAnhChinh" alt="@xe.TenXe" loading="lazy" />
-                                }
-                                else
-                                {
-                                    <div class="ev-vehicle-card__img-placeholder">
-                                        @LoaiXeIcon(xe.LoaiXe)
-                                    </div>
-                                }
+                        <!-- Image -->
+                        <div class="vl-card-img">
+                            @if (!string.IsNullOrWhiteSpace(xe.HinhAnhChinh))
+                            {
+                                <img src="@xe.HinhAnhChinh" alt="@xe.TenXe" loading="lazy" />
+                            }
+                            else
+                            {
+                                <div class="vl-card-placeholder">@LoaiXeIcon(xe.LoaiXe)</div>
+                            }
+                            <div class="vl-card-img-fade"></div>
+                            @if (xe.PinPhanTram > 0)
+                            {
+                                <span class="vl-card-battery">⚡ @xe.PinPhanTram%</span>
+                            }
+                            <span class="vl-card-badge vl-card-badge--@xe.TinhTrang">
+                                @(xe.TinhTrang == "available" ? "✓ Sẵn sàng" : StatusLabel(xe.TinhTrang))
+                            </span>
+                        </div>
+
+                        <!-- Body -->
+                        <div class="vl-card-body">
+                            <div class="vl-card-type-row">
+                                <span class="vl-tag">@LoaiXeLabel(xe.LoaiXe)</span>
                             </div>
-
-                            <!-- Info -->
-                            <div class="ev-vehicle-card__body">
-                                <div class="ev-vehicle-card__type-row">
-                                    <span class="ev-tag">@LoaiXeLabel(xe.LoaiXe)</span>
-                                    <span class="ev-badge ev-badge--@xe.TinhTrang">
-                                        @(xe.TinhTrang == "available" ? "✓ Sẵn sàng" : xe.TinhTrang)
-                                    </span>
-                                </div>
-
-                                <h2 class="ev-vehicle-card__name">@xe.TenXe</h2>
-
-                                @if (!string.IsNullOrWhiteSpace(xe.BienSo))
-                                {
-                                    <div class="ev-bien-so">🔖 @xe.BienSo</div>
-                                }
-
-                                <div class="ev-vehicle-card__specs-row">
-                                    @if (!string.IsNullOrWhiteSpace(xe.MauXe))
-                                    { <span>🎨 @xe.MauXe</span> }
-                                    @if (!string.IsNullOrWhiteSpace(xe.HangXe))
-                                    { <span>🏭 @xe.HangXe</span> }
-                                    <span>⚡ Pin: @xe.PinPhanTram%</span>
-                                    @if (xe.KmHangLanSac > 0)
-                                    { <span>🛣️ @xe.KmHangLanSac km/sạc</span> }
-                                    @if (!string.IsNullOrWhiteSpace(xe.DiaChi))
-                                    { <span>📍 @xe.DiaChi</span> }
-                                </div>
-                            </div>
-
-                            <!-- Price + CTA -->
-                            <div class="ev-vehicle-card__right">
-                                <div class="ev-vehicle-card__price-block">
-                                    @if (xe.GiaThueNgay > 0)
-                                    {
-                                        <div class="ev-price-line">
-                                            <span class="ev-price">@FormatVnd(xe.GiaThueNgay)</span>
-                                            <span class="ev-price-unit">/ngày</span>
-                                        </div>
-                                    }
-                                    @if (xe.DatCoc > 0)
-                                    {
-                                        <div class="ev-price-deposit">Đặt cọc: @FormatVnd(xe.DatCoc)</div>
-                                    }
-                                </div>
-                                <button class="ev-btn ev-btn--primary"
-                                        style="white-space:nowrap"
-                                        @onclick:stopPropagation="true"
-                                        @onclick="() => GoToDetail(xe.Id)">
-                                    Xem & Đặt xe
-                                </button>
+                            <div class="vl-card-name">@xe.TenXe</div>
+                            @if (!string.IsNullOrWhiteSpace(xe.BienSo))
+                            {
+                                <div class="vl-card-plate">🔖 @xe.BienSo</div>
+                            }
+                            <div class="vl-card-specs">
+                                @if (!string.IsNullOrWhiteSpace(xe.HangXe))
+                                { <span class="vl-spec-chip vl-spec-chip--brand">🏭 @xe.HangXe</span> }
+                                @if (!string.IsNullOrWhiteSpace(xe.MauXe))
+                                { <span class="vl-spec-chip vl-spec-chip--color">🎨 @xe.MauXe</span> }
+                                @if (xe.KmHangLanSac > 0)
+                                { <span class="vl-spec-chip vl-spec-chip--range">🛣️ @xe.KmHangLanSac km</span> }
+                                @if (!string.IsNullOrWhiteSpace(xe.DiaChi))
+                                { <span class="vl-spec-chip vl-spec-chip--loc">📍 @xe.DiaChi</span> }
                             </div>
                         </div>
-                    }
-                </div>
-            }
+
+                        <!-- Right: price + CTA -->
+                        <div class="vl-card-right">
+                            <div class="vl-price-block">
+                                @if (xe.GiaThueNgay > 0)
+                                {
+                                    <div class="vl-price-day">@FormatVnd(xe.GiaThueNgay)<small>/ngày</small></div>
+                                }
+                                @if (xe.DatCoc > 0)
+                                {
+                                    <div class="vl-price-dep">Cọc: @FormatVnd(xe.DatCoc)</div>
+                                }
+                            </div>
+                            <button class="vl-btn-book"
+                                    @onclick:stopPropagation="true"
+                                    @onclick="() => GoToDetail(xe.Id)">
+                                Xem &amp; Đặt xe
+                            </button>
+                        </div>
+
+                    </div>
+                }
+            </div>
         }
 
     </div>
@@ -178,64 +584,69 @@
     [SupplyParameterFromQuery] public string? end { get; set; }
 
     private List<PublicVehicleItem> vehicles = [];
+    private int totalCount;
     private bool loading = true;
 
     private string filterLoai = "";
-    private decimal? filterGiaMax;
+    private decimal filterMaxPrice;
     private DateTime filterStart = DateTime.Today;
-    private DateTime filterEnd = DateTime.Today.AddDays(1);
+    private DateTime filterEnd   = DateTime.Today.AddDays(1);
 
-    protected override async Task OnParametersSetAsync()
+    protected override async Task OnInitializedAsync()
     {
-        if (!string.IsNullOrWhiteSpace(loai)) filterLoai = loai;
-        if (DateTime.TryParse(start, out var s)) filterStart = s;
-        if (DateTime.TryParse(end, out var e)) filterEnd = e;
-        await LoadVehicles();
+        filterLoai  = loai ?? "";
+        filterStart = DateTime.TryParse(start, out var s) ? s : DateTime.Today;
+        filterEnd   = DateTime.TryParse(end, out var e)   ? e : DateTime.Today.AddDays(1);
+        await Load();
     }
 
-    private async Task ApplyFilter() => await LoadVehicles();
-
-    private async Task LoadVehicles()
+    private async Task Load()
     {
         loading = true;
-        StateHasChanged();
-
         var filter = new VehicleFilter
         {
-            LoaiXe   = filterLoai,
-            GiaMax   = filterGiaMax,
-            BatDauThue  = filterStart.Date,
-            KetThucThue = filterEnd.Date
+            LoaiXe       = filterLoai,
+            GiaMax       = filterMaxPrice > 0 ? filterMaxPrice : null,
+            BatDauThue   = filterStart,
+            KetThucThue  = filterEnd
         };
-
-        try { vehicles = await VehicleService.GetAvailableVehiclesAsync(filter); }
-        catch { vehicles = []; }
+        try
+        {
+            var all = await VehicleService.GetAvailableVehiclesAsync(new VehicleFilter());
+            totalCount = all.Count;
+            vehicles   = await VehicleService.GetAvailableVehiclesAsync(filter);
+        }
+        catch { vehicles = []; totalCount = 0; }
         finally { loading = false; }
     }
 
+    private async Task ApplyFilter() => await Load();
+
     private async Task ResetFilter()
     {
-        filterLoai  = "";
-        filterGiaMax = null;
-        filterStart  = DateTime.Today;
-        filterEnd    = DateTime.Today.AddDays(1);
-        await LoadVehicles();
+        filterLoai     = "";
+        filterMaxPrice = 0;
+        filterStart    = DateTime.Today;
+        filterEnd      = DateTime.Today.AddDays(1);
+        await Load();
     }
 
     private bool IsFiltered() =>
-        !string.IsNullOrWhiteSpace(filterLoai) || filterGiaMax.HasValue;
+        !string.IsNullOrWhiteSpace(filterLoai) || filterMaxPrice > 0;
 
     private void GoToDetail(int id) => Nav.NavigateTo($"/vehicles/{id}");
 
-    private static string LoaiXeIcon(string? loai) => loai switch
+    private static string LoaiXeIcon(string? l) => l switch
     {
         "car" => "🚗", "scooter" => "🛵", "bike" => "🚲", "van" => "🚐", _ => "⚡"
     };
-
-    private static string LoaiXeLabel(string? loai) => loai switch
+    private static string LoaiXeLabel(string? l) => l switch
     {
         "car" => "Ô tô điện", "scooter" => "Xe máy điện", "bike" => "Xe đạp điện", "van" => "Van điện", _ => "Xe điện"
     };
-
-    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+    private static string StatusLabel(string? s) => s switch
+    {
+        "rented" => "Đang thuê", "maintenance" => "Bảo dưỡng", "inactive" => "Tạm dừng", _ => s ?? ""
+    };
+    private static string FormatVnd(decimal v) => v.ToString("N0").Replace(",", ".") + "đ";
 }

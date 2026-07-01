@@ -1,4 +1,4 @@
-
+﻿
 @page "/admin/vehicles/create"
 @page "/admin/vehicles/{Id:int}/edit"
 @using Microsoft.AspNetCore.Components.Forms
@@ -7,6 +7,9 @@
 @inject IAdminFileStorageService FileStorage
 @inject NavigationManager Nav
 
+<HeadContent>
+<style>/* Vehicles/CreateEdit - page specific only */</style>
+</HeadContent>
 <PageTitle>@(Id == 0 ? "Thêm xe mới" : "Sửa thông tin xe") — Admin</PageTitle>
 
 <div class="ev-admin-page">

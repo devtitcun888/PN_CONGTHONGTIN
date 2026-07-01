@@ -4,6 +4,11 @@
 @using PN_HDSWeb_Admin.Services.Admin
 @inject IAdminAccountService AdminAccountService
 @inject NavigationManager Nav
+<HeadContent>
+<style>/* Accounts/Edit — page-specific only */
+@@keyframes ace-spin{to{transform:rotate(360deg);}}
+</style>
+</HeadContent>
 <div class="ac-root">
     <!-- Breadcrumb -->
     <div class="ac-topbar">

@@ -5,45 +5,768 @@
 @inject NavigationManager Nav
 @inject IJSRuntime JS
 
-<PageTitle>@siteName — Thuê Xe Điện Nhanh, Sạch, Thông Minh</PageTitle>
+<HeadContent>
+<style>
+/* === HOME PAGE — Self-contained CSS (hero, stats, vehicle grid, features, CTA, contact) === */
+:root {
+  --cp:#2563EB;--cp-d:#1D4ED8;--cp-10:rgba(37,99,235,.09);
+  --cg:#10B981;--cw:#F59E0B;--cd:#EF4444;--cv:#7C3AED;
+  --bg:#F1F5F9;--w:#fff;--b:#E2E8F0;
+  --t1:#0F172A;--t2:#475569;--tm:#94A3B8;
+  --sh-sm:0 1px 4px rgba(0,0,0,.06);
+  --sh-md:0 4px 20px rgba(0,0,0,.09);
+  --r-xs:8px;--r-sm:12px;--r:16px;--r-xl:20px;--r-f:9999px;
+}
+*{box-sizing:border-box;}
+a{text-decoration:none;}
+
+/* Page fonts */
+body{font-family:'Inter',system-ui,sans-serif;}
+
+/* Container */
+.ev-container{max-width:1160px;margin:0 auto;padding:0 24px;}
+
+/* ── HOME ── */
+.ev-home{overflow-x:hidden;}
+
+.ev-hero {
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  background:url('/image/Background.png') center center / cover no-repeat;
+  overflow:hidden;
+  z-index:1;
+}
+/* Dark overlay so text stays readable over the photo */
+.ev-hero::before {
+  content:'';
+  position:absolute;inset:0;z-index:0;
+  background:linear-gradient(
+    160deg,
+    rgba(3,7,18,.40) 0%,
+    rgba(15,23,42,.45) 45%,
+    rgba(30,27,75,.20) 100%
+  );
+}
+/* Ẩn hình tròn trang trí từ ev-public.css (::after = vòng tròn góc trái) */
+.ev-hero::after { display:none !important; }
+/* All hero children must sit above the overlay */
+.ev-hero > * { position:relative; z-index:1; }
+.ev-hero-bg-grid {
+  position:absolute;inset:0;z-index:0;
+  background-image:linear-gradient(rgba(37,99,235,.10) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.10) 1px,transparent 1px);
+  background-size:60px 60px;
+  opacity:.6;
+  mix-blend-mode:overlay;
+}
+.ev-hero__content {
+  position:relative;z-index:2;
+  max-width:800px;
+  margin:0 auto;
+  padding:0 24px;
+  text-align:center;
+  width:100%;
+}
+
+.ev-hero__badge {
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 16px;
+  background:rgba(255,255,255,.07);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--r-f);
+  color:rgba(255,255,255,.8);
+  font-size:.78rem;font-weight:600;
+  margin-bottom:28px;
+  backdrop-filter:blur(10px);
+}
+.ev-hero__badge-dot {
+  width:7px;height:7px;border-radius:50%;
+  background:var(--cg);
+  animation:hp-pulse 1.5s infinite;
+}
+@@keyframes hp-pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
+
+.ev-hero__title {
+  font-size:clamp(2.2rem,6vw,4rem);
+  font-weight:900;
+  color:#fff;
+  letter-spacing:-.04em;
+  line-height:1.1;
+  margin-bottom:18px;
+}
+.ev-hero__title-accent {
+  background:linear-gradient(90deg,#60A5FA,#A78BFA,#34D399);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+
+.ev-hero__sub {
+  color:rgba(255,255,255,.6);
+  font-size:1rem;
+  line-height:1.7;
+  max-width:560px;
+  margin:0 auto 32px;
+}
+
+/* ── BOOKING PANEL ── */
+.ev-booking-panel {
+  background:rgba(255,255,255,.08);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--r-xl);
+  padding:20px;
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-bottom:28px;
+  box-shadow:0 8px 30px rgba(0,0,0,.3);
+}
+.ev-booking-panel__field {
+  display:flex;flex-direction:column;gap:5px;flex:1;min-width:160px;
+}
+.ev-booking-panel__label {
+  font-size:.7rem;font-weight:600;
+  color:rgba(255,255,255,.6);
+  text-transform:uppercase;letter-spacing:.07em;
+}
+.ev-select,.ev-input {
+  width:100%;
+  padding:10px 13px;
+  background:rgba(255,255,255,.12);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:var(--r-sm);
+  color:#fff;
+  font-size:.875rem;font-family:inherit;
+  outline:none;
+  transition:border-color .2s;
+  -webkit-appearance:none;
+}
+.ev-select:focus,.ev-input:focus {
+  border-color:rgba(37,99,235,.6);
+  background:rgba(255,255,255,.18);
+}
+.ev-select option{background:#1E293B;color:#fff;}
+
+.ev-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  padding:11px 24px;
+  border:none;border-radius:var(--r-sm);
+  font-size:.875rem;font-weight:700;font-family:inherit;
+  cursor:pointer;transition:all .18s;
+  text-decoration:none;
+}
+.ev-btn--primary {
+  background:linear-gradient(135deg,var(--cp),var(--cv));
+  color:#fff;
+  box-shadow:0 4px 14px rgba(37,99,235,.4);
+}
+.ev-btn--primary:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.5);}
+.ev-booking-panel__btn {width:100%;}
+
+/* Trust badges */
+.ev-hero-trust {
+  display:flex;flex-wrap:wrap;justify-content:center;gap:16px;
+}
+.ev-hero-trust-item {
+  display:flex;align-items:center;gap:6px;
+  color:rgba(255,255,255,.55);
+  font-size:.78rem;font-weight:500;
+}
+.ev-hero-trust-item svg{color:var(--cg);}
+
+/* ── STATS ── */
+.ev-stats-section {
+  background:#fff;
+  border-bottom:1px solid var(--b);
+  position:relative;z-index:2;
+}
+.ev-stats-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+}
+.ev-stat-item {
+  padding:28px 24px;
+  text-align:center;
+  border-right:1px solid var(--b);
+  display:flex;flex-direction:column;gap:6px;
+}
+.ev-stat-item:last-child{border-right:none;}
+.ev-stat-item__num {
+  font-size:2rem;font-weight:900;letter-spacing:-.04em;
+  background:linear-gradient(135deg,var(--cp),var(--cv));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.ev-stat-item__num--green{background:linear-gradient(135deg,var(--cg),#059669);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ev-stat-item__num--purple{background:linear-gradient(135deg,var(--cv),#DB2777);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.ev-stat-item__label{font-size:.8rem;color:var(--tm);font-weight:500;}
+
+/* ── SECTIONS ── */
+.ev-section{padding:72px 0;}
+.ev-section--white{background:#fff;}
+.ev-section--gray{background:var(--bg);}
+.ev-section__eyebrow {
+  display:inline-flex;align-items:center;gap:6px;
+  padding:3px 12px;
+  background:var(--cp-10);color:var(--cp);
+  border-radius:var(--r-f);font-size:.72rem;font-weight:700;
+  text-transform:uppercase;letter-spacing:.07em;
+  margin-bottom:12px;
+}
+.ev-section__title {
+  font-size:clamp(1.5rem,3vw,2rem);
+  font-weight:800;color:var(--t1);
+  letter-spacing:-.03em;margin-bottom:12px;
+}
+.ev-section__sub {
+  color:var(--t2);font-size:.925rem;line-height:1.7;
+  max-width:560px;
+}
+.ev-section__header{margin-bottom:40px;}
+.ev-section-header-row {
+  display:flex;justify-content:space-between;align-items:flex-end;
+  flex-wrap:wrap;gap:16px;
+  margin-bottom:24px;
+}
+.ev-section-header-row__copy{
+  max-width:560px;
+}
+.ev-section-kicker{
+  color:var(--t2);
+  font-size:.9rem;
+  line-height:1.65;
+  margin:0;
+}
+.ev-link-more {
+  display:inline-flex;align-items:center;gap:5px;
+  color:var(--cp);font-size:.83rem;font-weight:600;
+  text-decoration:none;white-space:nowrap;
+  transition:gap .2s;
+}
+.ev-link-more:hover{gap:8px;}
+
+/* ── VEHICLE TOOLBAR (filter chips + sort) ── */
+.ev-vehicle-toolbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:14px;
+  margin-bottom:28px;
+  padding-bottom:20px;
+  border-bottom:1px solid var(--b);
+}
+.ev-vehicle-toolbar::after{
+  content:'';
+  flex-basis:100%;
+  height:1px;
+  display:none;
+}
+.ev-filter-chips {
+  display:flex;
+  gap:8px;
+  flex-wrap:nowrap;
+  overflow-x:auto;
+  padding-bottom:2px;
+  scrollbar-width:none;
+}
+.ev-filter-chips::-webkit-scrollbar{display:none;}
+.ev-chip {
+  flex-shrink:0;
+  padding:8px 16px;
+  border-radius:var(--r-f);
+  border:1.5px solid var(--b);
+  background:var(--w);
+  font-size:.8rem;font-weight:600;color:var(--t2);
+  cursor:pointer;transition:all .18s;white-space:nowrap;
+  font-family:inherit;
+}
+.ev-chip:hover{border-color:var(--cp);color:var(--cp);}
+.ev-chip--active {
+  background:linear-gradient(135deg,var(--cp),var(--cv));
+  border-color:transparent;color:#fff;
+  box-shadow:0 4px 12px rgba(37,99,235,.3);
+}
+.ev-toolbar-right {
+  display:flex;align-items:center;gap:12px;flex-shrink:0;
+}
+.ev-result-count {
+  font-size:.8rem;color:var(--tm);font-weight:500;white-space:nowrap;
+}
+.ev-sort-select {
+  padding:9px 32px 9px 13px;
+  background:var(--w) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E") no-repeat right 10px center;
+  border:1.5px solid var(--b);
+  border-radius:var(--r-sm);
+  color:var(--t1);
+  font-size:.8rem;font-weight:600;font-family:inherit;
+  outline:none;cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  transition:border-color .18s;
+}
+.ev-sort-select:focus{border-color:var(--cp);}
+
+.ev-mobile-swipe-hint{
+  display:none;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:-8px 0 14px;
+  color:var(--t2);
+  font-size:.78rem;
+  font-weight:600;
+}
+.ev-mobile-swipe-hint__line{
+  flex:1;
+  height:1px;
+  background:linear-gradient(90deg,rgba(37,99,235,.18),transparent);
+}
+.ev-mobile-swipe-hint__pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:6px 10px;
+  border-radius:var(--r-f);
+  background:rgba(37,99,235,.08);
+  color:var(--cp);
+}
+
+/* ── VEHICLE GRID (cards) ── */
+.ev-vehicle-grid {
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:24px;
+}
+
+.ev-vehicle-card {
+  background:var(--w);
+  border-radius:var(--r);
+  border:1px solid var(--b);
+  box-shadow:var(--sh-sm);
+  overflow:hidden;
+  cursor:pointer;
+  transition:transform .25s,box-shadow .25s,border-color .25s;
+  display:flex;flex-direction:column;
+}
+.ev-vehicle-card:hover {
+  transform:translateY(-4px);
+  box-shadow:var(--sh-md),0 0 0 1px rgba(37,99,235,.12);
+  border-color:rgba(37,99,235,.25);
+}
+
+.ev-vehicle-card__img-wrap {
+  position:relative;
+  aspect-ratio:4/3;
+  overflow:hidden;
+  background:linear-gradient(135deg,#EFF6FF,#F0FDF4);
+}
+.ev-vehicle-card__img-wrap img {
+  width:100%;height:100%;object-fit:cover;
+  transition:transform .4s;
+  display:block;
+}
+.ev-vehicle-card:hover .ev-vehicle-card__img-wrap img{transform:scale(1.07);}
+.ev-vehicle-card__img-placeholder {
+  width:100%;height:100%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:4rem;
+}
+.ev-vehicle-card__img-fade {
+  position:absolute;left:0;right:0;bottom:0;height:46%;
+  background:linear-gradient(to top,rgba(0,0,0,.28),transparent);
+  pointer-events:none;
+}
+.ev-vehicle-card__status {
+  position:absolute;top:10px;left:10px;
+}
+.ev-badge {
+  display:inline-flex;align-items:center;gap:3px;
+  padding:3px 9px;border-radius:var(--r-f);
+  font-size:.68rem;font-weight:700;
+  box-shadow:0 1px 4px rgba(0,0,0,.15);
+}
+.ev-badge--available  {background:rgba(16,185,129,.92);color:#fff;}
+.ev-badge--rented      {background:rgba(245,158,11,.92);color:#fff;}
+.ev-badge--maintenance {background:rgba(37,99,235,.92); color:#fff;}
+.ev-badge--inactive    {background:rgba(100,116,139,.88);color:#fff;}
+
+.ev-vehicle-card__battery {
+  position:absolute;top:10px;right:10px;
+  background:rgba(255,255,255,.94);
+  border-radius:var(--r-f);
+  padding:3px 9px;font-size:.73rem;font-weight:700;
+  display:flex;align-items:center;gap:3px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 1px 4px rgba(0,0,0,.1);
+}
+.ev-vehicle-card__battery-icon{font-size:.8rem;}
+
+.ev-vehicle-card__body {
+  padding:16px 18px 18px;
+  display:flex;flex-direction:column;gap:6px;
+  flex:1;
+}
+.ev-vehicle-card__type {
+  font-size:.68rem;font-weight:700;color:var(--cp);
+  text-transform:uppercase;letter-spacing:.07em;
+}
+.ev-vehicle-card__name {
+  font-size:1rem;font-weight:800;color:var(--t1);
+  letter-spacing:-.02em;
+  margin:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ev-vehicle-card__specs {
+  display:flex;flex-wrap:wrap;gap:5px 10px;
+  min-height:20px;
+}
+.ev-vehicle-card__spec {
+  font-size:.73rem;color:var(--t2);font-weight:500;
+  display:inline-flex;align-items:center;gap:3px;
+}
+.ev-vehicle-card__divider{
+  height:1px;background:var(--b);margin:6px 0 2px;
+}
+.ev-vehicle-card__price-row{
+  margin-top:auto;padding-top:6px;
+  display:flex;align-items:baseline;justify-content:space-between;
+}
+.ev-price-day {
+  font-size:1.15rem;font-weight:800;color:var(--cp);letter-spacing:-.02em;
+}
+.ev-price-day small{font-size:.7rem;font-weight:500;color:var(--tm);}
+
+.ev-vehicle-card__actions {
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin-top:14px;
+}
+.ev-btn--sm{padding:9px 14px;font-size:.78rem;border-radius:var(--r-xs);}
+.ev-btn--ghost {
+  background:var(--bg);border:1.5px solid var(--b);color:var(--t2);
+}
+.ev-btn--ghost:hover{background:var(--b);color:var(--t1);}
+.ev-btn--outline {
+  background:transparent;
+  border:1.5px solid var(--cp);
+  color:var(--cp);
+}
+.ev-btn--outline:hover{background:var(--cp-10);}
+.ev-btn--lg{padding:13px 28px;font-size:.95rem;}
+
+/* Skeleton */
+.ev-skeleton-card {
+  background:var(--w);
+  border-radius:var(--r);
+  border:1px solid var(--b);
+  overflow:hidden;
+}
+.ev-skeleton {
+  background:linear-gradient(90deg,#E2E8F0 25%,#F1F5F9 50%,#E2E8F0 75%);
+  background-size:200% 100%;
+  animation:hp-shimmer 1.4s infinite;
+}
+.ev-skeleton-img{aspect-ratio:4/3;}
+.ev-skeleton-body{padding:16px 18px;display:flex;flex-direction:column;gap:8px;}
+.ev-skeleton-line{border-radius:4px;height:12px;}
+.ev-skeleton-line--sm{width:40%;}
+.ev-skeleton-line--lg{width:70%;height:16px;}
+@@keyframes hp-shimmer{from{background-position:200% 0;}to{background-position:-200% 0;}}
+
+/* Empty */
+.ev-empty {text-align:center;padding:56px 24px;color:var(--tm);background:var(--w);border-radius:var(--r);border:1px dashed var(--b);}
+.ev-empty__icon{font-size:3rem;margin-bottom:12px;}
+.ev-empty p{margin-bottom:16px;font-size:.875rem;}
+.ev-empty .ev-btn{margin:0 6px;}
+
+/* ── PAGINATION ── */
+.ev-pagination {
+  display:flex;justify-content:center;align-items:center;
+  gap:6px;margin-top:40px;flex-wrap:wrap;
+}
+.ev-page-btn {
+  min-width:38px;height:38px;padding:0 10px;
+  border-radius:var(--r-sm);
+  border:1.5px solid var(--b);
+  background:var(--w);color:var(--t2);
+  font-weight:700;font-size:.85rem;font-family:inherit;
+  cursor:pointer;transition:all .18s;
+  display:inline-flex;align-items:center;justify-content:center;gap:4px;
+}
+.ev-page-btn:hover:not(:disabled):not(.ev-page-btn--active){
+  border-color:var(--cp);color:var(--cp);
+}
+.ev-page-btn--active {
+  background:linear-gradient(135deg,var(--cp),var(--cv));
+  border-color:transparent;color:#fff;
+  box-shadow:0 4px 12px rgba(37,99,235,.3);
+}
+.ev-page-btn:disabled{opacity:.4;cursor:not-allowed;}
+.ev-page-ellipsis {
+  min-width:24px;text-align:center;color:var(--tm);font-weight:700;font-size:.85rem;
+}
+.ev-pagination-info{
+  text-align:center;font-size:.78rem;color:var(--tm);margin-top:12px;
+}
+.ev-vehicle-bottom-actions{
+  display:flex;
+  justify-content:center;
+  margin-top:22px;
+}
+
+/* ── HOW IT WORKS ── */
+.ev-how-grid {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:24px;
+  margin-top:40px;
+}
+.ev-step-card {
+  background:var(--w);
+  border-radius:var(--r);
+  padding:28px 24px;
+  border:1px solid var(--b);
+  box-shadow:var(--sh-sm);
+  position:relative;
+  transition:transform .25s,box-shadow .25s;
+}
+.ev-step-card:hover{transform:translateY(-3px);box-shadow:var(--sh-md);}
+.ev-step-card__num {
+  position:absolute;top:-16px;left:20px;
+  width:36px;height:36px;border-radius:50%;
+  background:linear-gradient(135deg,var(--cp),var(--cv));
+  color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.875rem;font-weight:800;
+  box-shadow:0 4px 12px rgba(37,99,235,.3);
+}
+.ev-step-card__num--2{background:linear-gradient(135deg,var(--cg),#059669);}
+.ev-step-card__num--3{background:linear-gradient(135deg,var(--cv),#DB2777);}
+.ev-step-card__icon{font-size:2rem;margin-bottom:12px;margin-top:8px;}
+.ev-step-card h3{font-size:.95rem;font-weight:700;color:var(--t1);margin-bottom:8px;}
+.ev-step-card p{font-size:.83rem;color:var(--t2);line-height:1.65;}
+
+/* ── FEATURES ── */
+.ev-features-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:16px;
+  margin-top:36px;
+}
+.ev-feature-card {
+  display:flex;align-items:flex-start;gap:14px;
+  padding:20px;
+  background:var(--w);
+  border-radius:var(--r);
+  border:1px solid var(--b);
+  box-shadow:var(--sh-sm);
+  transition:transform .22s,box-shadow .22s;
+}
+.ev-feature-card:hover{transform:translateY(-2px);box-shadow:var(--sh-md);}
+.ev-feature-card__icon {
+  width:44px;height:44px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:1.3rem;flex-shrink:0;
+}
+.ev-feature-card__icon--blue  {background:rgba(37,99,235,.09);}
+.ev-feature-card__icon--green {background:rgba(16,185,129,.09);}
+.ev-feature-card__icon--purple{background:rgba(124,58,237,.09);}
+.ev-feature-card__body h4{font-size:.875rem;font-weight:700;color:var(--t1);margin-bottom:5px;}
+.ev-feature-card__body p{font-size:.8rem;color:var(--t2);line-height:1.6;margin:0;}
+
+/* ── CTA ── */
+.ev-cta-section {
+  background:linear-gradient(135deg,#030712,#1E1B4B);
+  border-radius:var(--r-xl);
+  padding:52px 40px;
+  text-align:center;
+  position:relative;
+  overflow:hidden;
+}
+.ev-cta-section::before{
+  content:'';position:absolute;inset:0;
+  background-image:linear-gradient(rgba(37,99,235,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.08) 1px,transparent 1px);
+  background-size:40px 40px;
+}
+.ev-cta-section h2 {
+  font-size:1.8rem;font-weight:800;color:#fff;
+  letter-spacing:-.03em;margin-bottom:10px;
+  position:relative;
+}
+.ev-cta-section p{color:rgba(255,255,255,.6);font-size:.925rem;margin-bottom:26px;position:relative;}
+.ev-cta-actions {
+  display:flex;flex-wrap:wrap;justify-content:center;gap:12px;position:relative;
+}
+.ev-btn--white {background:#fff;color:var(--t1);}
+.ev-btn--white:hover{background:#F1F5F9;}
+
+/* ── CONTACT ── */
+.ev-contact-section {
+  background:linear-gradient(135deg,var(--t1),#1E1B4B);
+  padding:60px 0;
+}
+.ev-contact-grid {
+  display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;
+}
+.ev-contact-section h2 {
+  font-size:1.4rem;font-weight:800;color:#fff;margin-bottom:8px;
+}
+.ev-contact-sub {color:rgba(255,255,255,.5);font-size:.875rem;margin-bottom:22px;}
+.ev-contact-item {
+  display:flex;align-items:center;gap:8px;
+  padding:10px 0;
+  font-size:.9rem;color:rgba(255,255,255,.8);
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+.ev-contact-item a{color:rgba(255,255,255,.9);}
+.ev-track-box {
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:var(--r-xl);
+  padding:28px;
+}
+.ev-track-box h3{font-size:1rem;font-weight:700;color:#fff;margin-bottom:6px;}
+.ev-track-box p{color:rgba(255,255,255,.55);font-size:.83rem;margin-bottom:14px;}
+.ev-track-input-group{display:flex;gap:10px;}
+.ev-track-input-group .ev-input {
+  flex:1;background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.15);
+}
+.ev-track-input-group .ev-btn--primary{
+  background:linear-gradient(135deg,var(--cp),var(--cv));white-space:nowrap;
+}
+
+/* ── RESPONSIVE ── */
+@@media(max-width:1100px){
+  .ev-vehicle-grid{grid-template-columns:repeat(3,1fr);}
+}
+@@media(max-width:900px){
+  .ev-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .ev-how-grid{grid-template-columns:1fr;}
+  .ev-contact-grid{grid-template-columns:1fr;}
+}
+@@media(max-width:820px){
+  .ev-vehicle-grid{grid-template-columns:repeat(2,1fr);gap:16px;}
+  .ev-vehicle-toolbar{flex-direction:column;align-items:stretch;}
+  .ev-toolbar-right{justify-content:space-between;}
+}
+@@media(max-width:600px){
+  .ev-hero__title{font-size:2rem;}
+  .ev-booking-panel{flex-direction:column;}
+  .ev-booking-panel__field{min-width:100%;}
+  .ev-cta-section{padding:36px 22px;}
+  .ev-stats-grid{grid-template-columns:repeat(2,1fr);}
+  .ev-section{padding:52px 0;}
+  .ev-section-header-row{flex-direction:column;align-items:flex-start;}
+  .ev-section-kicker{font-size:.84rem;}
+  .ev-vehicle-toolbar{
+    margin-bottom:18px;
+    padding-bottom:14px;
+    border-bottom:none;
+  }
+  .ev-filter-chips{
+    margin-left:-20px;
+    margin-right:-20px;
+    padding:0 20px 4px;
+  }
+  .ev-toolbar-right{
+    display:grid;
+    grid-template-columns:1fr auto;
+    gap:10px;
+    align-items:center;
+  }
+  .ev-sort-select{
+    max-width:154px;
+  }
+  .ev-mobile-swipe-hint{display:flex;}
+  .ev-vehicle-grid{
+    display:flex;
+    grid-template-columns:none;
+    gap:14px;
+    overflow-x:auto;
+    overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    margin-left:-20px;
+    margin-right:-20px;
+    padding:4px 20px 18px;
+    scrollbar-width:none;
+  }
+  .ev-vehicle-grid::-webkit-scrollbar{display:none;}
+  .ev-vehicle-card,
+  .ev-skeleton-card{
+    flex:0 0 min(84vw,330px);
+    scroll-snap-align:start;
+  }
+  .ev-vehicle-card:hover{
+    transform:none;
+  }
+  .ev-vehicle-card__img-wrap{
+    aspect-ratio:16/11;
+  }
+  .ev-vehicle-card__name{
+    white-space:normal;
+    display:-webkit-box;
+    -webkit-line-clamp:2;
+    -webkit-box-orient:vertical;
+  }
+  .ev-vehicle-card__actions{
+    grid-template-columns:1fr 1fr;
+  }
+  .ev-pagination{
+    margin-top:16px;
+    padding:10px;
+    border:1px solid var(--b);
+    border-radius:var(--r);
+    background:rgba(255,255,255,.78);
+    box-shadow:var(--sh-sm);
+  }
+  .ev-page-btn{
+    min-width:34px;
+    height:34px;
+    font-size:.78rem;
+  }
+  .ev-page-ellipsis{display:none;}
+  .ev-pagination-info{
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .ev-vehicle-bottom-actions{
+    margin-top:16px;
+  }
+  .ev-vehicle-bottom-actions .ev-btn{
+    width:100%;
+  }
+}
+</style>
+</HeadContent>
+
+<PageTitle>EV Rental — Thuê xe điện thông minh</PageTitle>
 
 <div class="ev-home">
 
-    <!-- Floating particles -->
-    <div class="ev-hero-particles" id="hero-particles">
-        @for (int i = 0; i < 12; i++)
-        {
-            var delay = (i * 2).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var dur = (15 + i * 3).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var top = (i * 8).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            var left = (i * 8).ToString(System.Globalization.CultureInfo.InvariantCulture);
-            <div class="ev-particle" style="width:@(8 + i * 2)px;height:@(8 + i * 2)px;top:@(top)%;left:@(left)%;animation-duration:@(dur)s;animation-delay:-@(delay)s;"></div>
-        }
-    </div>
+
 
     <!-- ===== HERO ===== -->
     <section class="ev-hero">
         <div class="ev-hero-bg-grid"></div>
         <div class="ev-hero__content">
-            <!-- Badge -->
-            <div class="ev-hero__badge" data-reveal="scale">
+            <div class="ev-hero__badge">
                 <span class="ev-hero__badge-dot"></span>
                 ⚡ Thuê xe điện thông minh · Sạch · Nhanh
             </div>
-
-            <!-- Title -->
-            <h1 class="ev-hero__title" data-reveal="left">
+            <h1 class="ev-hero__title">
                 Trải nghiệm<br />
                 <span class="ev-hero__title-accent">xe điện</span> thế hệ mới
             </h1>
-
-            <p class="ev-hero__sub" data-reveal="right">@siteSlogan — Đặt xe trong vài giây, nhận xe tận nơi, hành trình không khí thải.</p>
+            <p class="ev-hero__sub">@siteSlogan — Đặt xe trong vài giây, nhận xe tận nơi, hành trình không khí thải.</p>
 
             <!-- Booking panel -->
-            <div class="ev-booking-panel" data-reveal="up">
+            <div class="ev-booking-panel">
                 <div class="ev-booking-panel__field">
                     <span class="ev-booking-panel__label">🚗 Loại xe</span>
-                    <select @bind="filterLoai" class="ev-select" style="color:black">
+                    <select @bind="filterLoai" class="ev-select" style="color:white">
                         <option value="">Tất cả xe</option>
                         <option value="scooter">🛵 Xe máy điện</option>
                         <option value="car">🚗 Ô tô điện</option>
@@ -53,11 +776,11 @@
                 </div>
                 <div class="ev-booking-panel__field">
                     <span class="ev-booking-panel__label">📅 Ngày bắt đầu</span>
-                    <input type="date" @bind="filterStart" class="ev-input" style="color:black" />
+                    <input type="date" @bind="filterStart" class="ev-input" style="color:white;color-scheme:dark" />
                 </div>
                 <div class="ev-booking-panel__field">
                     <span class="ev-booking-panel__label">🏁 Ngày kết thúc</span>
-                    <input type="date" @bind="filterEnd" class="ev-input" style="color:black"   />
+                    <input type="date" @bind="filterEnd" class="ev-input" style="color:white;color-scheme:dark" />
                 </div>
                 <button class="ev-btn ev-btn--primary ev-booking-panel__btn" @onclick="DoSearch">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
@@ -67,22 +790,22 @@
                 </button>
             </div>
 
-            <!-- Trust row -->
+            <!-- Trust -->
             <div class="ev-hero-trust">
-                <div class="ev-hero-trust-item" data-reveal="left">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     Đặt xe miễn phí
                 </div>
-                <div class="ev-hero-trust-item" data-reveal="up">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     Hủy linh hoạt
                 </div>
-                <div class="ev-hero-trust-item" data-reveal="right">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     Hỗ trợ 24/7
                 </div>
-                <div class="ev-hero-trust-item" data-reveal="up">
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
+                <div class="ev-hero-trust-item">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"/></svg>
                     100% xe điện
                 </div>
             </div>
@@ -93,19 +816,19 @@
     <section class="ev-stats-section">
         <div class="ev-container">
             <div class="ev-stats-grid">
-                <div class="ev-stat-item ev-reveal" data-reveal="left">
-                    <span class="ev-stat-item__num ev-stat-item__num--blue">@vehicles.Count+</span>
+                <div class="ev-stat-item">
+                    <span class="ev-stat-item__num">@vehicles.Count+</span>
                     <span class="ev-stat-item__label">Xe sẵn sàng</span>
                 </div>
-                <div class="ev-stat-item ev-reveal" data-reveal="up">
+                <div class="ev-stat-item">
                     <span class="ev-stat-item__num ev-stat-item__num--green">0g</span>
                     <span class="ev-stat-item__label">CO₂ phát thải</span>
                 </div>
-                <div class="ev-stat-item ev-reveal" data-reveal="up">
+                <div class="ev-stat-item">
                     <span class="ev-stat-item__num ev-stat-item__num--purple">24/7</span>
                     <span class="ev-stat-item__label">Hỗ trợ liên tục</span>
                 </div>
-                <div class="ev-stat-item ev-reveal" data-reveal="right">
+                <div class="ev-stat-item">
                     <span class="ev-stat-item__num">100%</span>
                     <span class="ev-stat-item__label">Xe điện xanh</span>
                 </div>
@@ -116,8 +839,8 @@
     <!-- ===== VEHICLE LIST ===== -->
     <section class="ev-section ev-section--gray">
         <div class="ev-container">
-            <div class="ev-section-header-row ev-reveal">
-                <div>
+            <div class="ev-section-header-row">
+                <div class="ev-section-header-row__copy">
                     <span class="ev-section__eyebrow">Xe sẵn sàng</span>
                     <h2 class="ev-section__title">Chọn xe phù hợp với bạn</h2>
                 </div>
@@ -127,18 +850,43 @@
                 </a>
             </div>
 
+            @if (!loading && vehicles.Count > 0)
+            {
+                <div class="ev-vehicle-toolbar">
+                    <div class="ev-filter-chips">
+                        <button type="button" class="ev-chip @(gridLoai == "" ? "ev-chip--active" : "")" @onclick='() => SetGridLoai("")'>Tất cả</button>
+                        <button type="button" class="ev-chip @(gridLoai == "scooter" ? "ev-chip--active" : "")" @onclick='() => SetGridLoai("scooter")'>🛵 Xe máy điện</button>
+                        <button type="button" class="ev-chip @(gridLoai == "car" ? "ev-chip--active" : "")" @onclick='() => SetGridLoai("car")'>🚗 Ô tô điện</button>
+                        <button type="button" class="ev-chip @(gridLoai == "bike" ? "ev-chip--active" : "")" @onclick='() => SetGridLoai("bike")'>🚲 Xe đạp điện</button>
+                        <button type="button" class="ev-chip @(gridLoai == "van" ? "ev-chip--active" : "")" @onclick='() => SetGridLoai("van")'>🚐 Van điện</button>
+                    </div>
+                    <div class="ev-toolbar-right">
+                        <span class="ev-result-count">@FilteredSorted.Count xe</span>
+                        <select class="ev-sort-select" @bind="sortBy" @bind:after="OnSortChanged">
+                            <option value="default">Mặc định</option>
+                            <option value="price_asc">Giá tăng dần</option>
+                            <option value="price_desc">Giá giảm dần</option>
+                            <option value="battery_desc">Pin nhiều nhất</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="ev-mobile-swipe-hint" aria-hidden="true">
+                    <span class="ev-mobile-swipe-hint__pill">Lướt ngang để xem xe</span>
+                    <span class="ev-mobile-swipe-hint__line"></span>
+                </div>
+            }
+
             @if (loading)
             {
-                <!-- Skeleton loading -->
-                <div class="ev-vehicle-grid ev-stagger">
-                    @for (int i = 0; i < 4; i++)
+                <div class="ev-vehicle-grid">
+                    @for (int i = 0; i < 8; i++)
                     {
                         <div class="ev-skeleton-card">
                             <div class="ev-skeleton ev-skeleton-img"></div>
                             <div class="ev-skeleton-body">
                                 <div class="ev-skeleton ev-skeleton-line ev-skeleton-line--sm" style="margin-bottom:8px"></div>
                                 <div class="ev-skeleton ev-skeleton-line ev-skeleton-line--lg" style="margin-bottom:12px"></div>
-                                <div class="ev-skeleton ev-skeleton-line ev-skeleton-line--sm"></div>
+                                <div class="ev-skeleton ev-skeleton-line" style="width:90%;height:10px;border-radius:4px;"></div>
                             </div>
                         </div>
                     }
@@ -146,19 +894,26 @@
             }
             else if (vehicles.Count == 0)
             {
-                <div class="ev-empty ev-reveal">
+                <div class="ev-empty">
                     <div class="ev-empty__icon">🔌</div>
                     <p>Hiện chưa có xe sẵn sàng. Vui lòng thử lại sau.</p>
                     <button class="ev-btn ev-btn--primary" @onclick="Reload">Tải lại</button>
                 </div>
             }
+            else if (FilteredSorted.Count == 0)
+            {
+                <div class="ev-empty">
+                    <div class="ev-empty__icon">🔍</div>
+                    <p>Không tìm thấy xe phù hợp với bộ lọc đã chọn.</p>
+                    <button class="ev-btn ev-btn--primary" @onclick='() => SetGridLoai("")'>Xóa bộ lọc</button>
+                </div>
+            }
             else
             {
-                <div class="ev-vehicle-grid ev-stagger">
-                    @foreach (var xe in vehicles.Take(8))
+                <div class="ev-vehicle-grid">
+                    @foreach (var xe in PagedVehicles)
                     {
-                        <div class="ev-vehicle-card ev-reveal" @onclick="() => GoToDetail(xe.Id)" data-tilt="true">
-                            <!-- Image -->
+                        <div class="ev-vehicle-card" @onclick="() => GoToDetail(xe.Id)">
                             <div class="ev-vehicle-card__img-wrap">
                                 @if (!string.IsNullOrWhiteSpace(xe.HinhAnhChinh))
                                 {
@@ -166,10 +921,9 @@
                                 }
                                 else
                                 {
-                                    <div class="ev-vehicle-card__img-placeholder">
-                                        @LoaiXeIcon(xe.LoaiXe)
-                                    </div>
+                                    <div class="ev-vehicle-card__img-placeholder">@LoaiXeIcon(xe.LoaiXe)</div>
                                 }
+                                <div class="ev-vehicle-card__img-fade"></div>
                                 <div class="ev-vehicle-card__status">
                                     <span class="ev-badge ev-badge--@xe.TinhTrang">
                                         @(xe.TinhTrang == "available" ? "✓ Sẵn sàng" : xe.TinhTrang)
@@ -180,34 +934,24 @@
                                     @xe.PinPhanTram%
                                 </div>
                             </div>
-
-                            <!-- Body -->
                             <div class="ev-vehicle-card__body">
                                 <div class="ev-vehicle-card__type">@LoaiXeLabel(xe.LoaiXe)</div>
-                                <h3 class="ev-vehicle-card__name">@xe.TenXe</h3>
-
+                                <h3 class="ev-vehicle-card__name" title="@xe.TenXe">@xe.TenXe</h3>
                                 <div class="ev-vehicle-card__specs">
                                     @if (!string.IsNullOrWhiteSpace(xe.MauXe))
-                                    {
-                                        <span class="ev-vehicle-card__spec">🎨 @xe.MauXe</span>
-                                    }
+                                    { <span class="ev-vehicle-card__spec">🎨 @xe.MauXe</span> }
                                     @if (xe.KmHangLanSac > 0)
-                                    {
-                                        <span class="ev-vehicle-card__spec">🛣️ @xe.KmHangLanSac km</span>
-                                    }
+                                    { <span class="ev-vehicle-card__spec">🛣️ @xe.KmHangLanSac km</span> }
                                     @if (!string.IsNullOrWhiteSpace(xe.HangXe))
-                                    {
-                                        <span class="ev-vehicle-card__spec">🏭 @xe.HangXe</span>
-                                    }
+                                    { <span class="ev-vehicle-card__spec">🏭 @xe.HangXe</span> }
                                 </div>
-
+                                <div class="ev-vehicle-card__divider"></div>
                                 <div class="ev-vehicle-card__price-row">
                                     @if (xe.GiaThueNgay > 0)
                                     {
                                         <span class="ev-price-day">@FormatVnd(xe.GiaThueNgay)<small>/ngày</small></span>
                                     }
                                 </div>
-
                                 <div class="ev-vehicle-card__actions">
                                     <button class="ev-btn ev-btn--primary ev-btn--sm"
                                             @onclick:stopPropagation="true"
@@ -225,15 +969,41 @@
                     }
                 </div>
 
-                <!-- View all CTA -->
-                @if (vehicles.Count > 8)
+                @if (TotalPages > 1)
                 {
-                    <div style="text-align:center;margin-top:40px;" class="ev-reveal">
-                        <a href="/vehicles" class="ev-btn ev-btn--outline ev-btn--lg">
-                            Xem thêm @(vehicles.Count - 8) xe khác →
-                        </a>
+                    <div class="ev-pagination">
+                        <button type="button" class="ev-page-btn" disabled="@(currentPage == 1)" @onclick="PrevPage" aria-label="Trang trước">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+                        </button>
+
+                        @foreach (var p in GetPageNumbers())
+                        {
+                            @if (p is null)
+                            {
+                                <span class="ev-page-ellipsis">…</span>
+                            }
+                            else
+                            {
+                                <button type="button" class="ev-page-btn @(p == currentPage ? "ev-page-btn--active" : "")" @onclick="() => GoToPage(p.Value)">
+                                    @p
+                                </button>
+                            }
+                        }
+
+                        <button type="button" class="ev-page-btn" disabled="@(currentPage == TotalPages)" @onclick="NextPage" aria-label="Trang sau">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+                        </button>
                     </div>
+                    <p class="ev-pagination-info">
+                        Hiển thị @(((currentPage - 1) * pageSize) + 1)–@(Math.Min(currentPage * pageSize, FilteredSorted.Count)) trong tổng số @FilteredSorted.Count xe
+                    </p>
                 }
+
+                <div class="ev-vehicle-bottom-actions">
+                    <a href="/vehicles" class="ev-btn ev-btn--outline ev-btn--lg">
+                        Xem tất cả @FilteredSorted.Count xe phù hợp
+                    </a>
+                </div>
             }
         </div>
     </section>
@@ -241,31 +1011,30 @@
     <!-- ===== HOW IT WORKS ===== -->
     <section class="ev-section ev-section--white">
         <div class="ev-container">
-            <div class="ev-section__header ev-reveal" style="text-align:center">
+            <div class="ev-section__header" style="text-align:center">
                 <span class="ev-section__eyebrow">Đơn giản</span>
                 <h2 class="ev-section__title">Đặt xe trong 3 bước</h2>
                 <p class="ev-section__sub" style="margin:0 auto">
                     Quy trình thuê xe được tối ưu để bạn có thể đặt xe nhanh nhất có thể.
                 </p>
             </div>
-
-            <div class="ev-how-grid ev-stagger">
-                <div class="ev-step-card ev-reveal" data-reveal="left">
+            <div class="ev-how-grid">
+                <div class="ev-step-card">
                     <div class="ev-step-card__num">1</div>
                     <div class="ev-step-card__icon">🔍</div>
                     <h3>Chọn xe phù hợp</h3>
                     <p>Duyệt danh sách xe điện đa dạng, lọc theo loại, giá, khu vực và thời gian bạn muốn thuê.</p>
                 </div>
-                <div class="ev-step-card ev-reveal" data-reveal="up">
+                <div class="ev-step-card">
                     <div class="ev-step-card__num ev-step-card__num--2">2</div>
                     <div class="ev-step-card__icon">📝</div>
-                    <h3>Đặt & xác nhận</h3>
+                    <h3>Đặt &amp; xác nhận</h3>
                     <p>Nhập thông tin cá nhân, chọn thời gian thuê và nhận xác nhận đặt xe ngay lập tức.</p>
                 </div>
-                <div class="ev-step-card ev-reveal" data-reveal="right">
+                <div class="ev-step-card">
                     <div class="ev-step-card__num ev-step-card__num--3">3</div>
                     <div class="ev-step-card__icon">🚀</div>
-                    <h3>Nhận xe & lên đường</h3>
+                    <h3>Nhận xe &amp; lên đường</h3>
                     <p>Nhận xe tại điểm hẹn, tận hưởng hành trình xanh và theo dõi đơn thuê realtime.</p>
                 </div>
             </div>
@@ -275,48 +1044,47 @@
     <!-- ===== FEATURES ===== -->
     <section class="ev-section ev-section--gray">
         <div class="ev-container">
-            <div class="ev-section__header ev-reveal" style="text-align:center">
+            <div class="ev-section__header" style="text-align:center">
                 <span class="ev-section__eyebrow">Tại sao chọn chúng tôi</span>
                 <h2 class="ev-section__title">Trải nghiệm thuê xe cao cấp</h2>
             </div>
-
-            <div class="ev-features-grid ev-stagger">
-                <div class="ev-feature-card ev-reveal" data-reveal="left">
+            <div class="ev-features-grid">
+                <div class="ev-feature-card">
                     <div class="ev-feature-card__icon ev-feature-card__icon--blue">⚡</div>
                     <div class="ev-feature-card__body">
                         <h4>100% Xe điện</h4>
                         <p>Tất cả phương tiện đều chạy điện, không khí thải, thân thiện môi trường.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal" data-reveal="up">
+                <div class="ev-feature-card">
                     <div class="ev-feature-card__icon ev-feature-card__icon--green">🌿</div>
                     <div class="ev-feature-card__body">
-                        <h4>Xanh & Sạch</h4>
+                        <h4>Xanh &amp; Sạch</h4>
                         <p>Góp phần giảm thiểu ô nhiễm không khí, bảo vệ môi trường cho thế hệ tương lai.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal" data-reveal="up">
+                <div class="ev-feature-card">
                     <div class="ev-feature-card__icon ev-feature-card__icon--blue">🔒</div>
                     <div class="ev-feature-card__body">
-                        <h4>An toàn & Bảo hiểm</h4>
+                        <h4>An toàn &amp; Bảo hiểm</h4>
                         <p>Xe được bảo dưỡng định kỳ, bảo hiểm đầy đủ, GPS theo dõi thời gian thực.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal" data-reveal="right">
+                <div class="ev-feature-card">
                     <div class="ev-feature-card__icon ev-feature-card__icon--green">💳</div>
                     <div class="ev-feature-card__body">
                         <h4>Giá minh bạch</h4>
                         <p>Không phụ phí ẩn. Giá thuê theo ngày được hiển thị rõ ràng từ trước.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal" data-reveal="left">
+                <div class="ev-feature-card">
                     <div class="ev-feature-card__icon ev-feature-card__icon--purple">📱</div>
                     <div class="ev-feature-card__body">
                         <h4>Theo dõi đơn realtime</h4>
                         <p>Kiểm tra trạng thái đơn thuê, lịch sử và thông tin xe mọi lúc mọi nơi.</p>
                     </div>
                 </div>
-                <div class="ev-feature-card ev-reveal" data-reveal="up">
+                <div class="ev-feature-card">
                     <div class="ev-feature-card__icon ev-feature-card__icon--purple">🎯</div>
                     <div class="ev-feature-card__body">
                         <h4>Hỗ trợ 24/7</h4>
@@ -330,14 +1098,13 @@
     <!-- ===== CTA ===== -->
     <section class="ev-section ev-section--white">
         <div class="ev-container">
-            <div class="ev-cta-section ev-reveal">
+            <div class="ev-cta-section">
                 <h2>Sẵn sàng trải nghiệm?</h2>
                 <p>Đặt xe điện ngay hôm nay — nhanh, sạch và hoàn toàn miễn phí đặt cọc.</p>
                 <div class="ev-cta-actions">
-                    <a href="/vehicles" class="ev-btn ev-btn--white ev-btn--lg">
-                        🚗 Tìm xe ngay
-                    </a>
-                    <a href="/booking/track" class="ev-btn ev-btn--lg" style="background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.3);">
+                    <a href="/vehicles" class="ev-btn ev-btn--white ev-btn--lg">🚗 Tìm xe ngay</a>
+                    <a href="/booking/track" class="ev-btn ev-btn--lg"
+                       style="background:rgba(255,255,255,0.15);color:white;border:1.5px solid rgba(255,255,255,0.3);">
                         📦 Tra cứu đơn
                     </a>
                 </div>
@@ -348,7 +1115,7 @@
     <!-- ===== CONTACT & TRACK ===== -->
     <section class="ev-contact-section">
         <div class="ev-container ev-contact-grid">
-            <div class="ev-reveal">
+            <div>
                 <h2>Liên hệ với chúng tôi</h2>
                 <p class="ev-contact-sub">Hỗ trợ 24/7 — luôn sẵn sàng giúp bạn trên mọi hành trình</p>
                 @if (!string.IsNullOrWhiteSpace(contactPhone))
@@ -368,7 +1135,7 @@
                     <div class="ev-contact-item">📍 @contactAddress</div>
                 }
             </div>
-            <div class="ev-track-box ev-reveal">
+            <div class="ev-track-box">
                 <h3>🔍 Tra cứu đơn thuê</h3>
                 <p>Nhập mã đơn để xem trạng thái và thông tin đơn thuê của bạn</p>
                 <div class="ev-track-input-group">
@@ -392,20 +1159,52 @@
 
     private string filterLoai = "";
     private DateTime filterStart = DateTime.Today;
-    private DateTime filterEnd = DateTime.Today.AddDays(1);
+    private DateTime filterEnd   = DateTime.Today.AddDays(1);
     private string trackCode = "";
+
+    // ── Vehicle list toolbar / pagination state ──
+    private string gridLoai = "";
+    private string sortBy = "default";
+    private int currentPage = 1;
+    private const int pageSize = 8;
+
+    /// <summary>Vehicles filtered by the grid's own chip filter and sorted by the chosen criterion.</summary>
+    private List<PublicVehicleItem> FilteredSorted
+    {
+        get
+        {
+            IEnumerable<PublicVehicleItem> q = vehicles;
+
+            if (!string.IsNullOrEmpty(gridLoai))
+                q = q.Where(v => v.LoaiXe == gridLoai);
+
+            q = sortBy switch
+            {
+                "price_asc"     => q.OrderBy(v => v.GiaThueNgay),
+                "price_desc"    => q.OrderByDescending(v => v.GiaThueNgay),
+                "battery_desc"  => q.OrderByDescending(v => v.PinPhanTram),
+                _               => q
+            };
+
+            return q.ToList();
+        }
+    }
+
+    private int TotalPages => Math.Max(1, (int)Math.Ceiling(FilteredSorted.Count / (double)pageSize));
+
+    private List<PublicVehicleItem> PagedVehicles =>
+        FilteredSorted.Skip((currentPage - 1) * pageSize).Take(pageSize).ToList();
 
     protected override async Task OnInitializedAsync()
     {
         try
         {
             var settings = await SiteSettingService.GetSettingsAsync("xedien");
-            siteName = GetSetting(settings, "site_name", "EV Rental");
-            siteSlogan = GetSetting(settings, "site_slogan", "Đặt xe điện — Nhanh, sạch, thông minh");
-            contactPhone = GetSetting(settings, "contact_phone", "");
-            contactEmail = GetSetting(settings, "contact_email", "");
+            siteName       = GetSetting(settings, "site_name",       "EV Rental");
+            siteSlogan     = GetSetting(settings, "site_slogan",     "Đặt xe điện — Nhanh, sạch, thông minh");
+            contactPhone   = GetSetting(settings, "contact_phone",   "");
+            contactEmail   = GetSetting(settings, "contact_email",   "");
             contactAddress = GetSetting(settings, "contact_address", "");
-
             vehicles = await VehicleService.GetAvailableVehiclesAsync(new VehicleFilter());
         }
         catch { vehicles = []; }
@@ -416,13 +1215,14 @@
     {
         if (firstRender)
         {
-            await JS.InvokeVoidAsync("evPublic.init");
+            try { await JS.InvokeVoidAsync("evPublic.init"); } catch { }
         }
     }
 
     private async Task Reload()
     {
         loading = true;
+        currentPage = 1;
         try { vehicles = await VehicleService.GetAvailableVehiclesAsync(new VehicleFilter()); }
         catch { vehicles = []; }
         finally { loading = false; }
@@ -442,27 +1242,61 @@
             Nav.NavigateTo($"/booking/track?ma={Uri.EscapeDataString(trackCode.Trim())}");
     }
 
+    // ── Toolbar / pagination handlers ──
+    private void SetGridLoai(string loai)
+    {
+        gridLoai = loai;
+        currentPage = 1;
+    }
+
+    private void OnSortChanged() => currentPage = 1;
+
+    private void GoToPage(int page)
+    {
+        if (page < 1 || page > TotalPages) return;
+        currentPage = page;
+    }
+
+    private void PrevPage() => GoToPage(currentPage - 1);
+    private void NextPage() => GoToPage(currentPage + 1);
+
+    /// <summary>Builds a compact page-number sequence with ellipses, e.g. 1 … 4 5 6 … 12.</summary>
+    private List<int?> GetPageNumbers()
+    {
+        var total = TotalPages;
+        var result = new List<int?>();
+
+        if (total <= 7)
+        {
+            for (int i = 1; i <= total; i++) result.Add(i);
+            return result;
+        }
+
+        result.Add(1);
+
+        int start = Math.Max(2, currentPage - 1);
+        int end = Math.Min(total - 1, currentPage + 1);
+
+        if (start > 2) result.Add(null);
+
+        for (int i = start; i <= end; i++) result.Add(i);
+
+        if (end < total - 1) result.Add(null);
+
+        result.Add(total);
+
+        return result;
+    }
+
     private static string LoaiXeIcon(string? loai) => loai switch
     {
-        "car"     => "🚗",
-        "scooter" => "🛵",
-        "bike"    => "🚲",
-        "van"     => "🚐",
-        _ => "⚡"
+        "car" => "🚗", "scooter" => "🛵", "bike" => "🚲", "van" => "🚐", _ => "⚡"
     };
-
     private static string LoaiXeLabel(string? loai) => loai switch
     {
-        "car"     => "Ô tô điện",
-        "scooter" => "Xe máy điện",
-        "bike"    => "Xe đạp điện",
-        "van"     => "Van điện",
-        _ => "Xe điện"
+        "car" => "Ô tô điện", "scooter" => "Xe máy điện", "bike" => "Xe đạp điện", "van" => "Van điện", _ => "Xe điện"
     };
-
-    private static string FormatVnd(decimal val) =>
-        val.ToString("N0").Replace(",", ".") + "đ";
-
-    private static string GetSetting(IReadOnlyDictionary<string, string> dict, string key, string fallback) =>
-        dict.TryGetValue(key, out var v) && !string.IsNullOrWhiteSpace(v) ? v : fallback;
+    private static string FormatVnd(decimal val) => val.ToString("N0").Replace(",", ".") + "đ";
+    private static string GetSetting(IReadOnlyDictionary<string, string> dict, string key, string fallback)
+        => dict.TryGetValue(key, out var v) && !string.IsNullOrWhiteSpace(v) ? v : fallback;
 }

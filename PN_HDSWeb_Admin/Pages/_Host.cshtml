@@ -54,11 +54,11 @@
     </noscript>
 
     <!-- LOCAL CSS (phục vụ từ server → không block nhiều) -->
+    <!-- app.css: Styles cho Blazor framework (loading overlay, reconnect toast, spinner) -->
     <link rel="stylesheet" href="css/app.css" asp-append-version="true" />
-    <link rel="stylesheet" href="css/public-layout-fix.css" asp-append-version="true" />
-    <!-- EV RENTAL PUBLIC CSS -->
+    <!-- ev-public.css: Layout + shared styles cho public (navbar, footer, hero, cards...) -->
     <link rel="stylesheet" href="css/ev-public.css" asp-append-version="true" />
-    <!-- EV RENTAL ADMIN CSS -->
+    <!-- ev-admin.css: Layout + shared styles cho admin (sidebar, topbar, nav menu...) -->
     <link rel="stylesheet" href="css/ev-admin.css" asp-append-version="true" />
 
     <!-- QUILL RICH TEXT EDITOR -->
@@ -164,7 +164,7 @@
  @*    <script src="https://cdn.ckbox.io/ckbox/2.9.2/ckbox.js" crossorigin="anonymous" defer></script> *@
     <script src="/js/scn-khen.js" defer></script>
     <script src="/js/scn-khcn.js" defer></script>
-    <script src="/js/adminSidebar.js" defer></script>
+    <script src="/js/adminSidebar.js" asp-append-version="true"></script>
     <!--
         BLAZOR SERVER — script duy nhất cần thiết cho Blazor Server app
         KHÔNG cần: blazor.webassembly.js, blazor.web.js (dành cho WebAssembly/Unified mode)

@@ -1,0 +1,125 @@
+{
+  "version": 2,
+  "dgSpecHash": "Q2OOBnW4fw8=",
+  "success": false,
+  "projectFilePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.NETCore.App.Ref' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.netcore.app.ref/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.AspNetCore.App.Ref' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.aspnetcore.app.ref/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.WindowsDesktop.App.Ref' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.windowsdesktop.app.ref/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.NETCore.App.Host.win-x64' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.netcore.app.host.win-x64/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.NETCore.App.Ref' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.netcore.app.ref/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.WindowsDesktop.App.Ref' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.windowsdesktop.app.ref/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.AspNetCore.App.Ref' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.aspnetcore.app.ref/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1801",
+      "level": "Warning",
+      "message": "Failed to retrieve information about 'Microsoft.NETCore.App.Host.win-x64' from remote source 'https://api.nuget.org/v3-flatcontainer/microsoft.netcore.app.host.win-x64/index.json'.",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "warningLevel": 1,
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "targetGraphs": []
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.NETCore.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "libraryId": "Microsoft.NETCore.App.Ref",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.WindowsDesktop.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "libraryId": "Microsoft.WindowsDesktop.App.Ref",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.AspNetCore.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "libraryId": "Microsoft.AspNetCore.App.Ref",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.NETCore.App.Host.win-x64. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages, nuget.org",
+      "projectPath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "filePath": "D:\\WORK\\TITKUL\\2_CONGTHONGITN\\PN_HDSWeb\\artifacts\\bcrypt-gen\\bcrypt-gen.csproj",
+      "libraryId": "Microsoft.NETCore.App.Host.win-x64",
+      "targetGraphs": [
+        "net8.0"
+      ]
+    }
+  ]
+}

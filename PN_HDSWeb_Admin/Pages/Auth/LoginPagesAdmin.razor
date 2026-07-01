@@ -1,4 +1,4 @@
-﻿@page "/login-admin"
+@page "/login-admin"
 @namespace LoginComponent
 @using Microsoft.AspNetCore.WebUtilities
 @using PN_HDSWeb_Admin.Services.Auth
@@ -8,6 +8,214 @@
 @inject HttpContentService HttpContentService
 @inject IPublicNavigationService PublicNavigationService
 @inject NavigationManager navManager
+
+<HeadContent>
+    <style>
+        .lg-root {
+            min-height: 100vh;
+            display: grid;
+            place-items: center;
+            padding: 32px 16px;
+            position: relative;
+            overflow: hidden;
+            background:
+                radial-gradient(circle at 14% 18%, rgba(20, 184, 166, .22), transparent 28%),
+                radial-gradient(circle at 82% 12%, rgba(59, 130, 246, .18), transparent 26%),
+                linear-gradient(135deg, #f8fafc 0%, #eef7f5 44%, #f9fbff 100%);
+        }
+
+        .lg-root::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(15, 23, 42, .045) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(15, 23, 42, .045) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, .82), transparent 86%);
+        }
+
+        .lg-card {
+            position: relative;
+            width: min(440px, 100%);
+            padding: 34px;
+            border: 1px solid rgba(15, 23, 42, .08);
+            border-radius: 22px;
+            background: rgba(255, 255, 255, .94);
+            box-shadow: 0 24px 70px rgba(15, 23, 42, .16);
+            backdrop-filter: blur(18px);
+        }
+
+        .lg-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 22px;
+            color: #0f172a;
+        }
+
+        .lg-brand img,
+        .lg-brand span {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            flex: 0 0 auto;
+            object-fit: cover;
+            display: grid;
+            place-items: center;
+            background: linear-gradient(135deg, #0f766e, #2563eb);
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: 0;
+            box-shadow: 0 12px 26px rgba(15, 118, 110, .26);
+        }
+
+        .lg-brand strong {
+            font-size: 15px;
+            line-height: 1.35;
+            font-weight: 800;
+        }
+
+        .lg-card h1 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 30px;
+            line-height: 1.18;
+            font-weight: 850;
+            letter-spacing: 0;
+        }
+
+        .lg-sub {
+            margin: 10px 0 24px;
+            color: #64748b;
+            font-size: 15px;
+            line-height: 1.55;
+        }
+
+        .lg-field {
+            margin-bottom: 16px;
+        }
+
+        .lg-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-size: 13px;
+            font-weight: 750;
+        }
+
+        .lg-input {
+            width: 100%;
+            height: 48px;
+            border: 1px solid #dbe3ef;
+            border-radius: 12px;
+            padding: 0 14px;
+            background: #fff;
+            color: #0f172a;
+            outline: none;
+            transition: border-color .18s ease, box-shadow .18s ease, background .18s ease;
+        }
+
+        .lg-input:focus {
+            border-color: #0f766e;
+            box-shadow: 0 0 0 4px rgba(15, 118, 110, .12);
+        }
+
+        .lg-btn {
+            width: 100%;
+            min-height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            border: 0;
+            border-radius: 12px;
+            padding: 12px 16px;
+            font-weight: 800;
+            line-height: 1.25;
+            cursor: pointer;
+            transition: transform .18s ease, box-shadow .18s ease, background .18s ease, opacity .18s ease;
+        }
+
+        .lg-btn:hover {
+            transform: translateY(-1px);
+        }
+
+        .lg-btn:disabled {
+            cursor: not-allowed;
+            opacity: .68;
+            transform: none;
+        }
+
+        .lg-btn-primary {
+            color: #fff;
+            background: linear-gradient(135deg, #0f766e, #2563eb);
+            box-shadow: 0 16px 28px rgba(37, 99, 235, .24);
+        }
+
+        .lg-btn-ghost {
+            color: #0f172a;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 10px 22px rgba(15, 23, 42, .06);
+        }
+
+        .lg-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 20px 0;
+            color: #94a3b8;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .lg-divider::before,
+        .lg-divider::after {
+            content: "";
+            height: 1px;
+            flex: 1;
+            background: #e2e8f0;
+        }
+
+        .lg-error {
+            margin-top: 16px;
+            padding: 12px 14px;
+            border: 1px solid #fecaca;
+            border-radius: 12px;
+            background: #fff1f2;
+            color: #be123c;
+            font-size: 14px;
+            font-weight: 700;
+            line-height: 1.45;
+        }
+
+        @@media (max-width: 560px) {
+            .lg-root {
+                align-items: stretch;
+                padding: 18px 12px;
+            }
+
+            .lg-card {
+                align-self: center;
+                padding: 24px 18px;
+                border-radius: 18px;
+            }
+
+            .lg-card h1 {
+                font-size: 25px;
+            }
+
+            .lg-brand {
+                margin-bottom: 18px;
+            }
+
+            .lg-brand strong {
+                font-size: 14px;
+            }
+        }
+    </style>
+</HeadContent>
 
 
 <div class="lg-root">
@@ -27,7 +235,7 @@
         <p class="lg-sub">@LoginSubtitle</p>
 
         <!-- SSO -->
-        <button class="lg-btn lg-btn-ghost" @onclick="LoginSSO">
+        <button type="button" class="lg-btn lg-btn-ghost" disabled="@busy" @onclick="LoginSSO">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
             Đăng nhập SSO
         </button>
@@ -44,7 +252,7 @@
             <input class="lg-input" @bind="password" type="password" placeholder="Nhập mật khẩu" />
         </div>
 
-        <button class="lg-btn lg-btn-primary" @onclick="LoginLocal">
+        <button type="button" class="lg-btn lg-btn-primary" disabled="@busy" @onclick="LoginLocal">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" /><polyline points="10 17 15 12 10 7" /><line x1="15" y1="12" x2="3" y2="12" /></svg>
             Đăng nhập tài khoản
         </button>
@@ -60,6 +268,7 @@
     private string username = string.Empty;
     private string password = string.Empty;
     private string message = string.Empty;
+    private bool busy;
     private bool _handledToken;
     private PublicFooterInfo? siteInfo;
 
@@ -86,11 +295,12 @@
         if (!query.TryGetValue("token", out var tokenValues) || string.IsNullOrWhiteSpace(tokenValues.FirstOrDefault()))
             return;
 
-        var token = tokenValues.First();
+        string token = tokenValues.FirstOrDefault() ?? string.Empty;
         var result = await AdminLoginService.LoginBySsoAsync(token, navManager.Uri);
         if (!result.IsSuccess)
         {
             message = result.Message;
+            busy = false;
             return;
         }
 
@@ -100,10 +310,15 @@
 
     private async Task LoginSSO()
     {
+        if (busy)
+            return;
+
+        busy = true;
         message = string.Empty;
         var ssoUrl = await HttpContentService.HandleDirectToSSO(0, navManager.Uri, PN_PublicVariables.MaTruong);
         if (ssoUrl == null || string.IsNullOrWhiteSpace(ssoUrl.Result))
         {
+            busy = false;
             message = "Không lấy được URL đăng nhập SSO.";
             return;
         }
@@ -113,10 +328,16 @@
 
     private async Task LoginLocal()
     {
+        if (busy)
+            return;
+
+        busy = true;
+        message = string.Empty;
         var result = await AdminLoginService.LoginByLocalAccountAsync(username, password, PN_PublicVariables.MaTruong);
         if (!result.IsSuccess)
         {
             message = result.Message;
+            busy = false;
             return;
         }
 
